@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone, Workflow, Server } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone, Workflow, Server, LogOut } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
 
 export default function Layout() {
+  const { logout, user } = useAuth();
   return (
     <div className="flex h-screen bg-slate-50 text-slate-700 font-sans">
       {/* Sidebar */}

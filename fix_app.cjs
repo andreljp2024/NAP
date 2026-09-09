@@ -1,3 +1,6 @@
+const fs = require('fs');
+
+let appCode = `
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
@@ -56,3 +59,7 @@ export default function App() {
     </AuthProvider>
   );
 }
+`;
+
+fs.writeFileSync('src/App.tsx', appCode.trim());
+console.log('App fixed');
