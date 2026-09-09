@@ -49,7 +49,7 @@ async function startServer() {
     ]);
   });
 
-  // 9router AI Gateway Abstraction using Gemini SDK
+  // Mock 9router AI Gateway Abstraction using Gemini SDK
   app.post("/api/ia/chat", async (req, res) => {
     const { mensagem, vertical } = req.body;
     try {
@@ -91,6 +91,39 @@ async function startServer() {
         detalhes: error.message 
       });
     }
+  });
+
+  // --- SGP Integration Mocks (Webhooks & Transactions) ---
+
+  // Generate PIX
+  app.post("/api/sgp/pix/:id", (req, res) => {
+    const { id } = req.params;
+    // Em um cenário real, o N8N ou integração direta faria a chamada pro SGP aqui
+    setTimeout(() => {
+      res.json({
+        sucesso: true,
+        fatura_id: id,
+        codigo_pix: `00020126580014br.gov.bcb.pix0136mock-pix-key-${id}-84a2-9999999999995204000053039865802BR5915PROVEDOR NAP6009SAO PAULO62070503***6304ABCD`,
+      });
+    }, 800);
+  });
+
+  // Generate Boleto PDF
+  app.post("/api/sgp/boleto/:id", (req, res) => {
+    const { id } = req.params;
+    setTimeout(() => {
+      res.json({
+        sucesso: true,
+        fatura_id: id,
+        url_pdf: `https://sgp.provedormock.com.br/boletos/v2/${id}_emitido.pdf`
+      });
+    }, 600);
+  });
+
+  // N8N Webhook Listener Mock (Sync from SGP to NAP)
+  app.post("/api/webhooks/n8n/sgp-sync", (req, res) => {
+    console.log("[N8N Webhook] Evento recebido do SGP:", req.body);
+    res.json({ status: "processed", synced_to_db: true });
   });
 
   // --- Vite Middleware for Development ---
