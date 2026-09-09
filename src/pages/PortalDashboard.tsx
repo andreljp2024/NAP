@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode } from 'lucide-react';
+import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings } from 'lucide-react';
 
 export default function PortalDashboard() {
   const [faturas, setFaturas] = useState<any[]>([]);
