@@ -54,7 +54,7 @@ export default function CTIReverso() {
           </button>
           <button 
             onClick={() => setCall(null)}
-            className="w-12 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-white rounded-xl flex items-center justify-center transition-all shadow-inner"
+            className="w-12 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 rounded-xl flex items-center justify-center transition-all shadow-inner"
           >
             <X size={20} />
           </button>

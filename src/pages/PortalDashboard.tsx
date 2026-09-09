@@ -179,10 +179,10 @@ export default function PortalDashboard() {
 function QuickAction({ icon, label }: { icon: React.ReactNode, label: string }) {
   return (
     <button className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg shadow-sm flex flex-col items-center justify-center gap-4 hover:border-blue-600/50 hover:bg-slate-50 hover:-translate-y-1 transition-all group">
-      <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 shadow-inner flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-blue-600/40 transition-all">
+      <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 shadow-inner flex items-center justify-center group-hover:bg-blue-600 group-hover:text-slate-900 group-hover:shadow-blue-600/40 transition-all">
         {icon}
       </div>
-      <span className="text-xs md:text-sm font-bold text-slate-600 text-center group-hover:text-white transition-colors">{label}</span>
+      <span className="text-xs md:text-sm font-bold text-slate-600 text-center group-hover:text-slate-900 transition-colors">{label}</span>
     </button>
   );
 }

@@ -172,7 +172,7 @@ export default function SuperAdmin() {
               </button>
               <button 
                 onClick={() => fetch('/api/webhooks/freepbx/incoming', { method: 'POST' })}
-                className="text-xs font-bold uppercase tracking-wider bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-200 text-emerald-600 hover:text-white px-4 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-emerald-600/20"
+                className="text-xs font-bold uppercase tracking-wider bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-200 text-emerald-600 hover:text-slate-900 px-4 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-emerald-600/20"
               >
                 Simular Chamada FreePBX
               </button>

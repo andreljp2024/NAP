@@ -35,10 +35,10 @@ export default function PortalSuporte() {
       ) : (
         <div className="grid gap-4">
           {chamados.map(chamado => (
-            <div key={chamado.id} className="bg-white p-5 md:p-6 rounded-3xl shadow-md shadow-sm border border-slate-200 hover:border-blue-600/50 transition-all group hover:-translate-y-1">
+            <div key={chamado.id} className="bg-white p-5 md:p-6 rounded-3xl shadow-md border border-slate-200 hover:border-blue-600/50 transition-all group hover:-translate-y-1">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600 border border-slate-200 shadow-inner group-hover:bg-blue-600/10 group-hover:border-blue-200 transition-all">
+                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600 border border-slate-200 shadow-inner group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
                     <HeadphonesIcon size={22} />
                   </div>
                   <div>
@@ -47,11 +47,11 @@ export default function PortalSuporte() {
                   </div>
                 </div>
                 {chamado.estagio === 'Resolvido' ? (
-                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-500/10 border border-emerald-200 px-3 py-1.5 rounded-md">
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-md">
                     <CheckCircle2 size={14} /> Resolvido
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-600/10 border border-blue-200 px-3 py-1.5 rounded-md">
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-md">
                     <Clock size={14} /> {chamado.estagio}
                   </span>
                 )}

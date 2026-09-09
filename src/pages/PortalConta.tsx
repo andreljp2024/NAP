@@ -18,7 +18,7 @@ export default function PortalConta() {
 
       <div className="space-y-6">
         {/* Dados Pessoais */}
-        <div className="bg-white rounded-3xl shadow-md shadow-sm border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
           <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 flex items-center justify-center">
               <User size={20} />
@@ -80,7 +80,7 @@ export default function PortalConta() {
         </div>
 
         {/* Segurança */}
-        <div className="bg-white rounded-3xl shadow-md shadow-sm border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
           <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center">
               <Shield size={20} />

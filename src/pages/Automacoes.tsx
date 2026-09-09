@@ -65,7 +65,7 @@ export default function Automacoes() {
             <span className="bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-mono px-2 py-1 rounded">ID: wkf_982jh3</span>
           </div>
           <div className="flex items-center gap-3">
-            <button className="p-2 text-slate-600 hover:text-white hover:bg-slate-100 rounded-lg transition-colors">
+            <button className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-lg transition-colors">
               <Settings size={18} />
             </button>
             <button className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-inner">
@@ -145,9 +145,9 @@ export default function Automacoes() {
           
           {/* Zoom Controls */}
           <div className="absolute bottom-6 left-6 flex bg-white border border-slate-200 rounded-lg shadow-md z-20">
-            <button className="px-3 py-1.5 text-slate-600 hover:text-white border-r border-slate-200 transition-colors font-mono font-bold">-</button>
+            <button className="px-3 py-1.5 text-slate-600 hover:text-slate-900 border-r border-slate-200 transition-colors font-mono font-bold">-</button>
             <span className="px-4 py-1.5 text-slate-600 text-xs font-mono flex items-center">100%</span>
-            <button className="px-3 py-1.5 text-slate-600 hover:text-white border-l border-slate-200 transition-colors font-mono font-bold">+</button>
+            <button className="px-3 py-1.5 text-slate-600 hover:text-slate-900 border-l border-slate-200 transition-colors font-mono font-bold">+</button>
           </div>
 
           {/* Powered by N8N badge */}

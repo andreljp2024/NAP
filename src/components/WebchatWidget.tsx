@@ -53,7 +53,7 @@ export default function WebchatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-blue-700 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-white hover:scale-105 transition-all z-50"
+          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-blue-700 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-105 transition-all z-50"
         >
           <MessageCircle size={28} />
         </button>
@@ -63,7 +63,7 @@ export default function WebchatWidget() {
       {isOpen && (
         <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 w-full md:w-[380px] h-[85vh] md:h-[600px] bg-slate-50 md:rounded-3xl border-slate-200 shadow-sm shadow-lg flex flex-col z-50 overflow-hidden  transition-all">
           {/* Header */}
-          <div className="bg-white text-white p-4 flex justify-between items-center shrink-0">
+          <div className="bg-white text-slate-900 p-4 flex justify-between border-b border-slate-200 items-center shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600/10 border border-blue-200 rounded-2xl flex items-center justify-center">
                 <Bot size={22} className="text-blue-600" />
@@ -74,7 +74,7 @@ export default function WebchatWidget() {
               </div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-blue-600/10 border border-blue-200 rounded-2xl transition-colors">
+              <button onClick={() => setIsOpen(false)} className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-2xl transition-colors">
                 <Minus size={20} />
               </button>
             </div>

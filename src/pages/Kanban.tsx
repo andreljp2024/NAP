@@ -97,7 +97,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" }) {
                                 
                                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-200">
                                   <div className="flex -space-x-2">
-                                     <div className="w-7 h-7 rounded-full bg-blue-600 to-purple-600 border-2 border-[#1a2333] flex items-center justify-center text-[9px] text-white font-bold shadow-sm">
+                                     <div className="w-7 h-7 rounded-full bg-blue-600 to-purple-600 border-2 border-slate-50 flex items-center justify-center text-[9px] text-white font-bold shadow-sm">
                                        IA
                                      </div>
                                   </div>

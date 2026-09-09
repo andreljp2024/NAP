@@ -157,7 +157,7 @@ export default function Operadores() {
                     <td className="px-6 py-4 text-center">
                       <button 
                         onClick={() => openEditModal(op)}
-                        className="p-2 text-slate-500 hover:text-white hover:bg-slate-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                       >
                         <Settings size={18} />
                       </button>
@@ -179,7 +179,7 @@ export default function Operadores() {
               <h2 className="text-xl font-bold text-slate-900 font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
               </h2>
-              <button onClick={closeModal} className="text-slate-500 hover:text-white transition-colors">
+              <button onClick={closeModal} className="text-slate-500 hover:text-slate-900 transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -235,7 +235,7 @@ export default function Operadores() {
             <div className="p-6 border-t border-slate-200 bg-white flex justify-end gap-3">
               <button 
                 onClick={closeModal}
-                className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-white hover:bg-slate-100 transition-colors"
+                className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition-colors"
               >
                 Cancelar
               </button>

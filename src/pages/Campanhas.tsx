@@ -154,7 +154,7 @@ export default function Campanhas() {
                             <Play size={14} className="ml-0.5" />
                           </button>
                         ) : (
-                          <button className="w-8 h-8 bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-700 hover:text-white rounded-lg flex items-center justify-center transition-all mx-auto">
+                          <button className="w-8 h-8 bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-700 hover:text-slate-900 rounded-lg flex items-center justify-center transition-all mx-auto">
                             <BarChart2 size={14} />
                           </button>
                         )}

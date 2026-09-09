@@ -134,7 +134,7 @@ export default function CRM() {
             </div>
             <button 
               onClick={() => setSelectedContato(null)}
-              className="p-2 hover:bg-slate-100/80 rounded-full text-slate-600 hover:text-white transition-colors border border-transparent hover:border-slate-200"
+              className="p-2 hover:bg-slate-100/80 rounded-full text-slate-600 hover:text-slate-900 transition-colors border border-transparent hover:border-slate-200"
             >
               <X size={20} />
             </button>
