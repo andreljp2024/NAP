@@ -32,6 +32,7 @@ export default function App() {
               <Route index element={<Inbox />} />
               <Route path="dashboard" element={<Analytics />} />
               <Route path="suporte" element={<Kanban type="Suporte" />} />
+              <Route path="cobranca" element={<Kanban type="Cobranca" />} />
               <Route path="vendas" element={<Kanban type="Vendas" />} />
               <Route path="crm" element={<CRM />} />
               <Route path="sgp" element={<ConsultaSGP />} />

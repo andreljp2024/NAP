@@ -1,10 +1,12 @@
-import { Bell } from 'lucide-react';
-import { usePushNotifications } from '../hooks/usePushNotifications';
 import React, { useState, useEffect } from 'react';
-import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2 } from 'lucide-react';
+import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2, Bell, Smartphone } from 'lucide-react';
+import { usePushNotifications } from '../hooks/usePushNotifications';
+import { PWAInstallButton } from '../components/PWAInstallButton';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 
 export default function PortalDashboard() {
-  const { simulatePush } = usePushNotifications();
+  const { triggerTestPush, permission, requestPermission } = usePushNotifications();
+  const { isInstallable, isInstalled } = usePWAInstall();
   const [faturas, setFaturas] = useState<any[]>([]);
   const [loadingPix, setLoadingPix] = useState(false);
   const [loadingBoleto, setLoadingBoleto] = useState(false);
@@ -60,9 +62,24 @@ export default function PortalDashboard() {
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-1">Olá, João!</h1>
-        <p className="text-slate-600 text-sm md:text-base">Acompanhe sua conexão e faturas.</p>
+      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-1">Olá, João!</h1>
+          <p className="text-slate-600 text-sm md:text-base">Acompanhe sua conexão e faturas em tempo real.</p>
+        </div>
+        {(!isInstalled || permission !== 'granted') && (
+          <div className="flex items-center gap-2">
+            {!isInstalled && isInstallable && <PWAInstallButton />}
+            {permission !== 'granted' && (
+              <button
+                onClick={requestPermission}
+                className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-100 transition-all shadow-xs"
+              >
+                <Bell size={14} /> Ativar Alertas
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
@@ -175,7 +192,7 @@ export default function PortalDashboard() {
         <QuickAction 
           icon={<Bell />} 
           label="Testar Push" 
-          onClick={() => simulatePush('Aviso NAP', 'A sua conexão está operando perfeitamente!')}
+          onClick={() => triggerTestPush({ title: 'Portal NAP', body: 'A sua conexão está operando perfeitamente!' })}
         />
         <QuickAction icon={<Settings />} label="Alterar Senha" />
       </div>

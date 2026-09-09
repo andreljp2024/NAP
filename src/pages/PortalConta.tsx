@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Lock, Save, Shield } from 'lucide-react';
+import { User, Mail, Phone, Lock, Save, Shield, Bell, BellRing, Smartphone, CheckCircle2 } from 'lucide-react';
+import { usePushNotifications } from '../hooks/usePushNotifications';
+import { PWAInstallButton } from '../components/PWAInstallButton';
 
 export default function PortalConta() {
   const [loading, setLoading] = useState(false);
+  const { permission, loading: loadingPush, requestPermission, triggerTestPush } = usePushNotifications();
 
   const handleSave = () => {
     setLoading(true);
@@ -102,6 +105,74 @@ export default function PortalConta() {
             <button className="text-sm font-bold text-blue-600 hover:text-blue-600 transition-colors flex items-center gap-2">
               <Shield size={16} /> Habilitar Autenticação em 2 Fatores (2FA)
             </button>
+          </div>
+        </div>
+
+        {/* Notificações Push & Instalação PWA */}
+        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
+          <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center">
+                <Bell size={20} />
+              </div>
+              <div>
+                <h2 className="font-bold text-slate-900 font-outfit">Notificações Push & PWA</h2>
+                <p className="text-xs text-slate-500">Alertas em tempo real sobre faturas, manutenções e suporte.</p>
+              </div>
+            </div>
+            <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${
+              permission === 'granted' 
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                : 'bg-amber-50 text-amber-700 border-amber-200'
+            }`}>
+              {permission === 'granted' ? 'Push Ativo' : 'Não Ativado'}
+            </span>
+          </div>
+
+          <div className="p-5 md:p-6 space-y-6 relative z-10">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-blue-600 shadow-xs">
+                  <BellRing size={20} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Alertas de Faturas e Rede</h4>
+                  <p className="text-xs text-slate-500">Receba a 2ª via e aviso de quedas sem precisar abrir o e-mail.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {permission !== 'granted' ? (
+                  <button
+                    onClick={requestPermission}
+                    disabled={loadingPush}
+                    className="px-4 py-2.5 bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                  >
+                    {loadingPush ? 'Ativando...' : 'Permitir Notificações'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => triggerTestPush({ title: 'Portal NAP', body: 'Push de teste entregue com sucesso no seu dispositivo!' })}
+                    className="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl transition-all shadow-xs active:scale-95 flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 size={14} className="text-emerald-600" />
+                    Enviar Teste Push
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 shadow-xs">
+                  <Smartphone size={20} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Aplicativo Instalado (PWA)</h4>
+                  <p className="text-xs text-slate-500">Acesse o portal diretamente da tela inicial do seu celular ou PC.</p>
+                </div>
+              </div>
+              <PWAInstallButton />
+            </div>
           </div>
         </div>
       </div>

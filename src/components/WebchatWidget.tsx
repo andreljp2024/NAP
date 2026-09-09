@@ -28,20 +28,27 @@ export default function WebchatWidget() {
     setIsTyping(true);
 
     try {
-      const res = await fetch('/api/ia/chat', {
+      const res = await fetch('/api/gemini/agent/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mensagem: userMsg, vertical: 'suporte' })
+        body: JSON.stringify({ 
+          prompt: userMsg,
+          clientContext: {
+            nome: "Assinante Webchat",
+            plano: "Fibra 500MB Simétrico",
+            status: "ativo"
+          }
+        })
       });
       const data = await res.json();
       
       setMessages(prev => [...prev, { 
         id: Date.now(), 
-        text: data.resposta || 'Desculpe, ocorreu um erro ao processar sua solicitação.', 
+        text: data.resposta || 'Olá! Como posso ajudar você hoje com sua conexão de internet?', 
         sender: 'ia' 
       }]);
-    } catch (e) {
-      setMessages(prev => [...prev, { id: Date.now(), text: 'Erro de conexão.', sender: 'ia' }]);
+    } catch {
+      setMessages(prev => [...prev, { id: Date.now(), text: 'Serviço temporariamente indisponível.', sender: 'ia' }]);
     } finally {
       setIsTyping(false);
     }
@@ -70,7 +77,7 @@ export default function WebchatWidget() {
               </div>
               <div>
                 <h3 className="font-bold text-sm">Assistente NAP</h3>
-                <p className="text-[10px] text-blue-600 uppercase tracking-wider font-bold">Respostas automáticas (IA)</p>
+                <p className="text-[10px] text-indigo-600 uppercase tracking-wider font-bold">Google Gemini Nativo (Sem n8n)</p>
               </div>
             </div>
             <div className="flex gap-2">

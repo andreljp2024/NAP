@@ -3,7 +3,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   BarChart, Bar, LineChart, Line, Legend
 } from 'recharts';
-import { Users, Bot, Clock, TrendingUp, TrendingDown, Phone, MessageSquare, Zap } from 'lucide-react';
+import { Users, Bot, Clock, TrendingUp, TrendingDown, Phone, MessageSquare, Zap, Radio, Signal, Headphones } from 'lucide-react';
+import Webphone from '../components/Webphone';
 
 const dataResolucao = [
   { name: 'Seg', humano: 120, ia: 250 },
@@ -26,7 +27,7 @@ const dataTMR = [
 
 export default function Analytics() {
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-slate-50">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-slate-50">
       <div className="max-w-7xl mx-auto space-y-8">
         
         <div className="flex justify-between items-end">
@@ -131,44 +132,84 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Live Operators */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-md shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
-            <h3 className="text-lg font-bold text-slate-900 font-outfit">Operadores Online</h3>
-            <span className="bg-emerald-500/10 text-emerald-600 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">4 Ativos</span>
-          </div>
-          <div className="divide-y divide-slate-800/60">
-            {[
-              { nome: 'Ana Costa', status: 'Em Atendimento', canal: 'WhatsApp', fila: 'Suporte N1' },
-              { nome: 'Carlos Silva', status: 'Disponível', canal: 'Omni', fila: 'Vendas' },
-              { nome: 'João Dev', status: 'Em Atendimento', canal: 'Webchat', fila: 'Suporte N2' },
-              { nome: 'Mariana Lima', status: 'Pausa (Lanche)', canal: 'Telefonia', fila: 'Cobrança' },
-            ].map((op, i) => (
-              <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-100/20 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold border border-slate-200">
-                    {op.nome.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div>
-                    <p className="text-white font-medium text-sm">{op.nome}</p>
-                    <p className="text-xs text-slate-600">{op.fila}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                    {op.canal === 'Telefonia' ? <Phone size={14} /> : <MessageSquare size={14} />}
-                    {op.canal}
-                  </div>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-md border ${
-                    op.status === 'Disponível' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200' :
-                    op.status === 'Em Atendimento' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                    'bg-amber-500/10 text-amber-600 border-amber-200'
-                  }`}>
-                    {op.status}
-                  </span>
-                </div>
+        {/* Live Operators & Embedded Asterisk Webphone */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Operadores Online (2 Cols) */}
+          <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-md shadow-sm overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 font-outfit">Operadores Online & Filas FreePBX</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Ramais SIP ativos no Asterisk 21 e distribuição de canais</p>
               </div>
-            ))}
+              <span className="bg-emerald-500/10 text-emerald-600 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
+                4 Ativos
+              </span>
+            </div>
+            <div className="divide-y divide-slate-100 flex-1">
+              {[
+                { nome: 'Ana Costa', status: 'Em Atendimento', canal: 'WhatsApp', fila: 'Suporte N1', ramal: '2004' },
+                { nome: 'Carlos Silva', status: 'Disponível', canal: 'Omni', fila: 'Vendas', ramal: '2002' },
+                { nome: 'João Dev (Você)', status: 'Disponível', canal: 'WebRTC Telephony', fila: 'Suporte N2', ramal: '2001' },
+                { nome: 'Mariana Lima', status: 'Pausa (Lanche)', canal: 'Telefonia', fila: 'Cobrança', ramal: '2003' },
+              ].map((op, i) => (
+                <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold border border-slate-200">
+                      {op.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-slate-900 font-semibold text-sm">{op.nome}</p>
+                        <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                          Ramal {op.ramal}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500">{op.fila}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                      {op.canal.includes('Telefonia') || op.canal.includes('Telephony') ? <Phone size={14} /> : <MessageSquare size={14} />}
+                      <span>{op.canal}</span>
+                    </div>
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-md border ${
+                      op.status === 'Disponível' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      op.status === 'Em Atendimento' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                      'bg-amber-50 text-amber-700 border-amber-200'
+                    }`}>
+                      {op.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Rodapé de Status do Servidor de Telefonia */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 font-mono">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>Asterisk PBX: v21.4.1 (Debian 12)</span>
+              </div>
+              <div className="flex items-center gap-3 text-[11px]">
+                <span>Codecs: Opus, G.711u</span>
+                <span>Porta AMI: 5038</span>
+                <span>SRTP: Ativo</span>
+              </div>
+            </div>
+          </div>
+
+          {/* WebPhone Embutido no Dashboard (1 Col) */}
+          <div className="flex flex-col items-center">
+            <div className="w-full mb-2 flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <Headphones size={14} className="text-blue-600" />
+                Console Webphone Operador
+              </span>
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">
+                SIP Pronto
+              </span>
+            </div>
+            <Webphone embedded={true} className="w-full" defaultExtension="2001" />
           </div>
         </div>
       </div>
