@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { MessageSquare, LayoutDashboard, Settings, Users, Trello } from 'lucide-react';
+import CTIReverso from './CTIReverso';
 
 export default function Layout() {
   return (
@@ -34,7 +35,8 @@ export default function Layout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        <CTIReverso />
         <Outlet />
       </main>
     </div>

@@ -18,12 +18,11 @@ export default function SuperAdmin() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Integrações Ativas */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
             <div className="border-b border-slate-200 p-5 flex justify-between items-center bg-slate-50">
                <h2 className="text-lg font-bold text-slate-900">Integrações Ativas</h2>
-               <button className="text-sm font-medium text-blue-600 hover:text-blue-800">Forçar Sincronização SGP</button>
             </div>
-            <div className="p-5 grid gap-4">
+            <div className="p-5 flex-1 grid gap-4">
               <IntegrationRow 
                 title="SGP (Sistema de Gestão)" 
                 status="Conectado"
@@ -45,9 +44,20 @@ export default function SuperAdmin() {
               <IntegrationRow 
                 title="FreePBX (AVA)" 
                 status="Aviso"
-                description="Falha no último ping do AMI na porta 5038."
+                description="CTI Reverso e URA Ativos na porta 5038."
                 icon={<Server />}
               />
+            </div>
+            <div className="bg-slate-50 p-4 border-t border-slate-200 flex gap-2 justify-end">
+              <button className="text-xs bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded font-medium transition-colors">
+                Forçar Sinc. SGP
+              </button>
+              <button 
+                onClick={() => fetch('/api/webhooks/freepbx/incoming', { method: 'POST' })}
+                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded font-medium transition-colors"
+              >
+                Simular Chamada FreePBX
+              </button>
             </div>
           </div>
 

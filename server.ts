@@ -64,13 +64,19 @@ async function startServer() {
         httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
       });
 
-      let systemInstruction = "Você é um assistente do Núcleo de Atendimento ao Provedor (NAP). Responda de forma curta e objetiva.";
+      let systemInstruction = "";
+      let bookstackContext = "";
+
+      // Simulated Vector DB (BookStack) Retrieval based on Vertical
       if (vertical === "suporte") {
-        systemInstruction = "Você é um assistente técnico de um provedor de internet. Diagnostique problemas técnicos de forma empática e direta. Limite a 2 frases.";
+        bookstackContext = "[RAG BookStack]: Artigo ID #401 - Resolução de ONU com LOS Vermelho: Instruir cliente a verificar se o cabo óptico está dobrado ou rompido. Artigo ID #204: Lentidão - verificar uptime da ONU e dispositivos conectados via Wi-Fi vs Cabo.";
+        systemInstruction = "Você é um assistente técnico do NAP. Use o seguinte contexto da base de conhecimento BookStack para responder: " + bookstackContext + " Responda de forma curta e empática.";
       } else if (vertical === "vendas") {
-        systemInstruction = "Você é um assistente de vendas consultivo. Foque em qualificar o lead rapidamente. Limite a 2 frases.";
-      } else if (vertical === "cobranca") {
-        systemInstruction = "Você é um assistente de cobrança empático. Ofereça opções como PIX ou boleto. Limite a 2 frases.";
+        bookstackContext = "[RAG BookStack]: Planos atuais: 500MB por R$99,90, 700MB por R$119,90. Promoção vigente: Instalação grátis para fidelidade de 12 meses.";
+        systemInstruction = "Você é um consultor de vendas do NAP. Use este contexto do BookStack: " + bookstackContext + " Seja persuasivo, simpático e conciso.";
+      } else {
+        bookstackContext = "[RAG BookStack]: Regras: Faturas atrasadas em 15 dias reduzem banda. PIX baixa na hora, boleto em 1 dia útil.";
+        systemInstruction = "Você é um agente de cobrança do NAP. Use este contexto do BookStack: " + bookstackContext + " Seja educado e focado na solução.";
       }
 
       const response = await ai.models.generateContent({
@@ -98,7 +104,6 @@ async function startServer() {
   // Generate PIX
   app.post("/api/sgp/pix/:id", (req, res) => {
     const { id } = req.params;
-    // Em um cenário real, o N8N ou integração direta faria a chamada pro SGP aqui
     setTimeout(() => {
       res.json({
         sucesso: true,
@@ -125,6 +130,39 @@ async function startServer() {
     console.log("[N8N Webhook] Evento recebido do SGP:", req.body);
     res.json({ status: "processed", synced_to_db: true });
   });
+
+  // --- FreePBX CTI Reverso (SSE Mock) ---
+  let sseClients: any[] = [];
+
+  app.get("/api/events/calls", (req, res) => {
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
+
+    sseClients.push(res);
+
+    req.on("close", () => {
+      sseClients = sseClients.filter(client => client !== res);
+    });
+  });
+
+  app.post("/api/webhooks/freepbx/incoming", (req, res) => {
+    const callData = {
+      id: Math.floor(Math.random() * 10000),
+      telefone: "+55 11 99999-9999",
+      contato: "João Silva",
+      fila: "Suporte N1",
+      timestamp: new Date().toISOString()
+    };
+
+    sseClients.forEach(client => {
+      client.write(`data: ${JSON.stringify(callData)}\n\n`);
+    });
+
+    res.json({ status: "ringing", call: callData });
+  });
+
 
   // --- Vite Middleware for Development ---
   if (process.env.NODE_ENV !== "production") {
