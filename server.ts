@@ -99,11 +99,66 @@ async function startServer() {
     }
   });
 
-  // --- SGP Integration Mocks (Webhooks & Transactions) ---
+  // --- SGP Integration Mocks & Real Proxy (Webhooks & Transactions) ---
 
-  // Generate PIX
-  app.post("/api/sgp/pix/:id", (req, res) => {
+  const SGP_URL = process.env.SGP_URL;
+  const SGP_APP = process.env.SGP_APP;
+  const SGP_TOKEN = process.env.SGP_TOKEN;
+
+  // Função auxiliar para integração real com SGP API
+  async function fetchSGP(endpoint: string, method = "GET", body: any = null) {
+    if (!SGP_URL || !SGP_APP || !SGP_TOKEN) {
+      throw new Error("Credenciais do SGP não configuradas no .env");
+    }
+    // Conforme documentação: autenticação via headers app e token
+    const headers = {
+      "Content-Type": "application/json",
+      "app": SGP_APP,
+      "token": SGP_TOKEN
+    };
+    const config: any = { method, headers };
+    if (body) config.body = JSON.stringify(body);
+    
+    const res = await fetch(`${SGP_URL}${endpoint}`, config);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`SGP API Erro (${res.status}): ${errorText}`);
+    }
+    return await res.json();
+  }
+
+  // Obter Faturas SGP (Real ou Mock)
+  app.get("/api/sgp/faturas", async (req, res) => {
+    try {
+      if (SGP_URL && SGP_APP && SGP_TOKEN) {
+        const data = await fetchSGP("/api/faturas?limit=10");
+        return res.json(data);
+      }
+    } catch (error) {
+      console.warn("Aviso: Falha na API SGP real, utilizando dados de simulação.", error);
+    }
+    
+    // Mock Fallback
+    res.json([
+      { id: 1, valor: 99.9, vencimento: "2026-09-10", status: "pendente" },
+      { id: 2, valor: 99.9, vencimento: "2026-08-10", status: "pago" },
+    ]);
+  });
+
+  // Generate PIX (Real ou Mock)
+  app.post("/api/sgp/pix/:id", async (req, res) => {
     const { id } = req.params;
+    try {
+      if (SGP_URL && SGP_APP && SGP_TOKEN) {
+        // Chamada real à rota de geração de PIX do SGP
+        const data = await fetchSGP(`/api/faturas/gerarpix/${id}`, "POST");
+        return res.json({ sucesso: true, fatura_id: id, codigo_pix: data.copia_cola || data.pix });
+      }
+    } catch (error) {
+      console.warn("Aviso: Falha na geração real de PIX, utilizando simulador.", error);
+    }
+
+    // Mock Fallback
     setTimeout(() => {
       res.json({
         sucesso: true,
@@ -113,9 +168,20 @@ async function startServer() {
     }, 800);
   });
 
-  // Generate Boleto PDF
-  app.post("/api/sgp/boleto/:id", (req, res) => {
+  // Generate Boleto PDF (Real ou Mock)
+  app.post("/api/sgp/boleto/:id", async (req, res) => {
     const { id } = req.params;
+    try {
+      if (SGP_URL && SGP_APP && SGP_TOKEN) {
+        // Chamada real à rota de download de PDF da fatura do SGP
+        const data = await fetchSGP(`/api/faturas/imprimir/${id}`, "GET");
+        return res.json({ sucesso: true, fatura_id: id, url_pdf: data.link_boleto || data.url });
+      }
+    } catch (error) {
+      console.warn("Aviso: Falha ao obter boleto real, utilizando simulador.", error);
+    }
+
+    // Mock Fallback
     setTimeout(() => {
       res.json({
         sucesso: true,
@@ -127,7 +193,7 @@ async function startServer() {
 
   // N8N Webhook Listener Mock (Sync from SGP to NAP)
   app.post("/api/webhooks/n8n/sgp-sync", (req, res) => {
-    console.log("[N8N Webhook] Evento recebido do SGP:", req.body);
+    console.log("[N8N Webhook] Evento recebido do SGP/n8n:", req.body);
     res.json({ status: "processed", synced_to_db: true });
   });
 

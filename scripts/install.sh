@@ -25,6 +25,9 @@ if [ ! -f .env ]; then
     cat <<EOT > .env
 NODE_ENV=production
 GEMINI_API_KEY=sua_chave_gemini_aqui
+SGP_URL=https://api.sgp.net.br
+SGP_APP=seu_app_id_aqui
+SGP_TOKEN=seu_token_api_aqui
 DATABASE_URL=postgres://postgres:nap_secure_pwd@db:5432/nap_crm
 REDIS_URL=redis://redis:6379
 EOT
