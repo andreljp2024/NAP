@@ -70,10 +70,14 @@ function NavItem({ to, icon, label }: { to: string; icon: React.ReactNode; label
         }`
       }
     >
-      <div className={`${({ isActive }: any) => isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`}>
-        {icon}
-      </div>
-      <span>{label}</span>
+      {({ isActive }) => (
+        <>
+          <div className={`${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`}>
+            {icon}
+          </div>
+          <span>{label}</span>
+        </>
+      )}
     </NavLink>
   );
 }

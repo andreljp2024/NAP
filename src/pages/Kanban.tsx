@@ -75,9 +75,11 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" }) {
                           snapshot.isDraggingOver ? 'bg-indigo-500/5 border border-indigo-500/20' : ''
                         }`}
                       >
-                        {stageDeals.map((deal, index) => (
-                          <Draggable key={deal.id} draggableId={deal.id.toString()} index={index}>
-                            {(provided, snapshot) => (
+                        {stageDeals.map((deal, index) => {
+                          const draggableProps = { key: deal.id, draggableId: String(deal.id), index } as any;
+                          return (
+                            <Draggable {...draggableProps}>
+                              {(provided: any, snapshot: any) => (
                               <div 
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
@@ -104,7 +106,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" }) {
                               </div>
                             )}
                           </Draggable>
-                        ))}
+                        )})}
                         {provided.placeholder}
                         
                         {stageDeals.length === 0 && !snapshot.isDraggingOver && (

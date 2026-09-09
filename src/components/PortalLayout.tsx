@@ -83,10 +83,14 @@ function NavItem({ to, icon, label, exact = false }: { to: string; icon: React.R
         }`
       }
     >
-      <div className={`${({ isActive }: any) => isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`}>
-        {icon}
-      </div>
-      <span>{label}</span>
+      {({ isActive }) => (
+        <>
+          <div className={`${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`}>
+            {icon}
+          </div>
+          <span>{label}</span>
+        </>
+      )}
     </NavLink>
   );
 }
@@ -102,10 +106,14 @@ function MobileNavItem({ to, icon, label, exact = false }: { to: string; icon: R
         }`
       }
     >
-      <div className={`p-1.5 rounded-xl transition-all ${({ isActive }: any) => isActive ? 'bg-indigo-500/10 shadow-inner' : ''}`}>
-         {icon}
-      </div>
-      <span className="text-[10px] font-bold uppercase tracking-wider mt-0.5">{label}</span>
+      {({ isActive }) => (
+        <>
+          <div className={`p-1.5 rounded-xl transition-all ${isActive ? 'bg-indigo-500/10 shadow-inner' : ''}`}> 
+             {icon}
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider mt-0.5">{label}</span>
+        </>
+      )}
     </NavLink>
   );
 }
