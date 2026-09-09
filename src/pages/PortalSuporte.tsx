@@ -22,10 +22,10 @@ export default function PortalSuporte() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white font-outfit mb-2">Suporte Técnico</h1>
-          <p className="text-slate-400 text-sm md:text-base">Meus chamados e solicitações.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-2">Suporte Técnico</h1>
+          <p className="text-slate-600 text-sm md:text-base">Meus chamados e solicitações.</p>
         </div>
-        <button className="w-full md:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95">
+        <button className="w-full md:w-auto flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95">
           <Plus size={18} /> Novo Chamado
         </button>
       </div>
@@ -35,33 +35,33 @@ export default function PortalSuporte() {
       ) : (
         <div className="grid gap-4">
           {chamados.map(chamado => (
-            <div key={chamado.id} className="bg-[#101726] p-5 md:p-6 rounded-3xl shadow-xl shadow-black/20 border border-slate-800/60 hover:border-indigo-500/50 transition-all group hover:-translate-y-1">
+            <div key={chamado.id} className="bg-white p-5 md:p-6 rounded-3xl shadow-md shadow-sm border border-slate-200 hover:border-blue-600/50 transition-all group hover:-translate-y-1">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#1a2333] rounded-2xl flex items-center justify-center text-indigo-400 border border-slate-700/50 shadow-inner group-hover:bg-indigo-500/10 group-hover:border-indigo-500/20 transition-all">
+                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600 border border-slate-200 shadow-inner group-hover:bg-blue-600/10 group-hover:border-blue-200 transition-all">
                     <HeadphonesIcon size={22} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white font-outfit text-lg">{chamado.titulo}</h3>
-                    <p className="text-sm text-slate-400 font-mono mt-0.5">#{chamado.id}</p>
+                    <h3 className="font-bold text-slate-900 font-outfit text-lg">{chamado.titulo}</h3>
+                    <p className="text-sm text-slate-600 font-mono mt-0.5">#{chamado.id}</p>
                   </div>
                 </div>
                 {chamado.estagio === 'Resolvido' ? (
-                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-md">
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-500/10 border border-emerald-200 px-3 py-1.5 rounded-md">
                     <CheckCircle2 size={14} /> Resolvido
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-md">
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-600/10 border border-blue-200 px-3 py-1.5 rounded-md">
                     <Clock size={14} /> {chamado.estagio}
                   </span>
                 )}
               </div>
               
-              <div className="flex items-center justify-between border-t border-slate-800/60 pt-5 mt-3">
-                <p className="text-sm text-slate-400 line-clamp-1 flex-1 mr-4">
+              <div className="flex items-center justify-between border-t border-slate-200 pt-5 mt-3">
+                <p className="text-sm text-slate-600 line-clamp-1 flex-1 mr-4">
                   Acompanhe o andamento pelo chat.
                 </p>
-                <button className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-bold text-sm transition-colors uppercase tracking-wider">
+                <button className="flex items-center gap-2 text-blue-600 hover:text-blue-600 font-bold text-sm transition-colors uppercase tracking-wider">
                   <MessageSquare size={16} /> Ver Chat
                 </button>
               </div>
@@ -69,12 +69,12 @@ export default function PortalSuporte() {
           ))}
 
           {chamados.length === 0 && (
-            <div className="bg-[#101726] p-10 rounded-3xl border border-dashed border-slate-700/50 flex flex-col items-center justify-center text-center shadow-inner">
-              <div className="w-16 h-16 bg-[#1a2333] border border-slate-700/50 rounded-2xl flex items-center justify-center text-emerald-400 mb-5 shadow-inner">
+            <div className="bg-white p-10 rounded-3xl border border-dashed border-slate-200 flex flex-col items-center justify-center text-center shadow-inner">
+              <div className="w-16 h-16 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center text-emerald-600 mb-5 shadow-inner">
                 <CheckCircle2 size={32} />
               </div>
-              <h3 className="text-xl font-bold text-white font-outfit mb-2">Nenhum chamado aberto</h3>
-              <p className="text-slate-400 text-sm max-w-sm">
+              <h3 className="text-xl font-bold text-slate-900 font-outfit mb-2">Nenhum chamado aberto</h3>
+              <p className="text-slate-600 text-sm max-w-sm">
                 Sua conexão está estável. Caso precise de ajuda, clique em "Novo Chamado".
               </p>
             </div>

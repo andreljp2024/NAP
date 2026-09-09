@@ -38,16 +38,16 @@ export default function Operadores() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19] relative">
+    <div className="flex flex-col h-full bg-slate-50 relative">
       {/* Header */}
-      <header className="h-16 border-b border-slate-800/60 flex items-center justify-between px-6 bg-[#0d1321] shrink-0">
+      <header className="h-16 border-b border-slate-200 flex items-center justify-between px-6 bg-white shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-white font-outfit">Gestão de Operadores</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Administre acessos, ramais (FreePBX) e roteamento omnichannel.</p>
+          <h1 className="text-xl font-bold text-slate-900 font-outfit">Gestão de Operadores</h1>
+          <p className="text-xs text-slate-600 mt-0.5">Administre acessos, ramais (FreePBX) e roteamento omnichannel.</p>
         </div>
         <button 
           onClick={openNewModal}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20"
+          className="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-700/20"
         >
           <Plus size={16} />
           Novo Operador
@@ -65,10 +65,10 @@ export default function Operadores() {
               <input 
                 type="text" 
                 placeholder="Buscar por nome, e-mail ou ramal..." 
-                className="w-full bg-[#101726] border border-slate-800/60 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-inner"
+                className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-600/50 focus:ring-2 focus:ring-blue-600/20 transition-all shadow-inner"
               />
             </div>
-            <select className="bg-[#101726] border border-slate-800/60 rounded-xl px-4 py-3 text-sm text-slate-300 outline-none focus:border-indigo-500/50 transition-all">
+            <select className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-600 outline-none focus:border-blue-600/50 transition-all">
               <option>Todas as Filas</option>
               <option>Suporte N1</option>
               <option>Suporte N2</option>
@@ -77,10 +77,10 @@ export default function Operadores() {
           </div>
 
           {/* Table */}
-          <div className="bg-[#101726] rounded-3xl border border-slate-800/60 overflow-hidden shadow-xl shadow-black/20">
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md shadow-sm">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#0d1321] border-b border-slate-800/60">
+                <tr className="bg-white border-b border-slate-200">
                   <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Operador</th>
                   <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Comunicação</th>
                   <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Acessos & Filas</th>
@@ -90,15 +90,15 @@ export default function Operadores() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {operadores.map((op) => (
-                  <tr key={op.id} className="hover:bg-[#1a2333]/50 transition-colors group">
+                  <tr key={op.id} className="hover:bg-slate-50/50 transition-colors group">
                     
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold">
+                        <div className="w-10 h-10 rounded-xl bg-blue-600/20 to-purple-500/20 border border-blue-200 flex items-center justify-center text-blue-600 font-bold">
                           {op.nome.charAt(0)}
                         </div>
                         <div>
-                          <p className="font-bold text-white text-sm">{op.nome}</p>
+                          <p className="font-bold text-slate-900 text-sm">{op.nome}</p>
                           <p className="text-xs text-slate-500">{op.email}</p>
                         </div>
                       </div>
@@ -106,11 +106,11 @@ export default function Operadores() {
 
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-1.5 text-xs text-slate-300">
-                          <Phone size={12} className="text-emerald-400" />
-                          <span className="font-mono bg-[#1a2333] px-1.5 py-0.5 rounded text-emerald-400 border border-emerald-500/20">SIP/{op.ramal}</span>
+                        <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                          <Phone size={12} className="text-emerald-600" />
+                          <span className="font-mono bg-slate-50 px-1.5 py-0.5 rounded text-emerald-600 border border-emerald-200">SIP/{op.ramal}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <div className="flex items-center gap-1.5 text-xs text-slate-600">
                           <MessageCircle size={12} className="text-blue-400" />
                           <span>WhatsApp API</span>
                         </div>
@@ -121,18 +121,18 @@ export default function Operadores() {
                       <div className="flex flex-col items-start gap-2">
                         <div className="flex items-center gap-1.5">
                           {op.permissao === 'Admin' ? (
-                            <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                            <span className="bg-blue-600/10 text-blue-600 border border-blue-200 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                               <Shield size={10} /> {op.permissao}
                             </span>
                           ) : (
-                            <span className="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                            <span className="bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                               <User size={10} /> {op.permissao}
                             </span>
                           )}
                         </div>
                         <div className="flex gap-1 flex-wrap">
                           {op.filas.map((fila, idx) => (
-                            <span key={idx} className="bg-[#1a2333] border border-slate-700/50 text-slate-400 px-2 py-0.5 rounded text-[10px] font-medium">
+                            <span key={idx} className="bg-slate-50 border border-slate-200 text-slate-600 px-2 py-0.5 rounded text-[10px] font-medium">
                               {fila}
                             </span>
                           ))}
@@ -142,9 +142,9 @@ export default function Operadores() {
 
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold ${
-                        op.status === 'online' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                        op.status === 'pausa' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                        'bg-slate-800 text-slate-400 border border-slate-700'
+                        op.status === 'online' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                        op.status === 'pausa' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                        'bg-slate-100 text-slate-600 border border-slate-200'
                       }`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${
                           op.status === 'online' ? 'bg-emerald-400 animate-pulse' :
@@ -157,7 +157,7 @@ export default function Operadores() {
                     <td className="px-6 py-4 text-center">
                       <button 
                         onClick={() => openEditModal(op)}
-                        className="p-2 text-slate-500 hover:text-white hover:bg-[#1a2333] rounded-lg transition-colors"
+                        className="p-2 text-slate-500 hover:text-white hover:bg-slate-50 rounded-lg transition-colors"
                       >
                         <Settings size={18} />
                       </button>
@@ -174,9 +174,9 @@ export default function Operadores() {
       {/* Modal Overlay */}
       {isModalOpen && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-slate-800 rounded-3xl shadow-2xl shadow-black w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-slate-800/60 bg-[#0d1321] flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white font-outfit">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-lg shadow-sm w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center">
+              <h2 className="text-xl font-bold text-slate-900 font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
               </h2>
               <button onClick={closeModal} className="text-slate-500 hover:text-white transition-colors">
@@ -191,7 +191,7 @@ export default function Operadores() {
                   <input 
                     type="text" 
                     defaultValue={editingOp?.nome}
-                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -199,7 +199,7 @@ export default function Operadores() {
                   <input 
                     type="email" 
                     defaultValue={editingOp?.email}
-                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -207,14 +207,14 @@ export default function Operadores() {
                   <input 
                     type="text" 
                     defaultValue={editingOp?.ramal}
-                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm font-mono text-emerald-400 outline-none focus:border-indigo-500/50 shadow-inner"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-emerald-600 outline-none focus:border-blue-600/50 shadow-inner"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nível de Acesso</label>
                   <select 
                     defaultValue={editingOp?.permissao || 'Operador'}
-                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner appearance-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner appearance-none"
                   >
                     <option value="Operador">Operador (Padrão)</option>
                     <option value="Admin">Administrador</option>
@@ -226,22 +226,22 @@ export default function Operadores() {
                     type="text" 
                     defaultValue={editingOp?.filas.join(', ')}
                     placeholder="Ex: Suporte N1, Vendas"
-                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="p-6 border-t border-slate-800/60 bg-[#0d1321] flex justify-end gap-3">
+            <div className="p-6 border-t border-slate-200 bg-white flex justify-end gap-3">
               <button 
                 onClick={closeModal}
-                className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-white hover:bg-slate-100 transition-colors"
               >
                 Cancelar
               </button>
               <button 
                 onClick={closeModal}
-                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/20"
+                className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20"
               >
                 <Save size={16} /> Salvar Operador
               </button>

@@ -26,20 +26,20 @@ const dataTMR = [
 
 export default function Analytics() {
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-[#0b0f19]">
+    <div className="flex-1 overflow-y-auto p-8 bg-slate-50">
       <div className="max-w-7xl mx-auto space-y-8">
         
         <div className="flex justify-between items-end">
           <div>
-            <h1 className="text-3xl font-bold text-white font-outfit mb-2">Visão Geral da Operação</h1>
-            <p className="text-slate-400">Monitoramento em tempo real do ecossistema NAP.</p>
+            <h1 className="text-3xl font-bold text-slate-900 font-outfit mb-2">Visão Geral da Operação</h1>
+            <p className="text-slate-600">Monitoramento em tempo real do ecossistema NAP.</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
             </span>
-            <span className="text-sm font-medium text-emerald-400">Tempo Real (9router)</span>
+            <span className="text-sm font-medium text-emerald-600">Tempo Real (9router)</span>
           </div>
         </div>
 
@@ -50,7 +50,7 @@ export default function Analytics() {
             value="74.2%" 
             trend="+5.1%" 
             trendUp={true}
-            icon={<Bot className="text-indigo-400" size={24} />} 
+            icon={<Bot className="text-blue-600" size={24} />} 
           />
           <MetricCard 
             title="TMR (Humano)" 
@@ -64,23 +64,23 @@ export default function Analytics() {
             value="1,842" 
             trend="+12%" 
             trendUp={true}
-            icon={<MessageSquare className="text-emerald-400" size={24} />} 
+            icon={<MessageSquare className="text-emerald-600" size={24} />} 
           />
           <MetricCard 
             title="Economia Estimada" 
             value="R$ 14.5k" 
             trend="Mensal" 
             trendUp={true}
-            icon={<TrendingUp className="text-amber-400" size={24} />} 
+            icon={<TrendingUp className="text-amber-600" size={24} />} 
           />
         </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Chart */}
-          <div className="lg:col-span-2 bg-[#101726] border border-slate-800/60 rounded-2xl p-6 shadow-xl shadow-black/20">
-            <h3 className="text-lg font-bold text-white font-outfit mb-6 flex items-center gap-2">
-              <Zap size={18} className="text-indigo-400" />
+          <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-md shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 font-outfit mb-6 flex items-center gap-2">
+              <Zap size={18} className="text-blue-600" />
               Volume de Resolução: Humano vs IA
             </h3>
             <div className="h-72">
@@ -112,8 +112,8 @@ export default function Analytics() {
           </div>
 
           {/* Secondary Chart */}
-          <div className="bg-[#101726] border border-slate-800/60 rounded-2xl p-6 shadow-xl shadow-black/20">
-            <h3 className="text-lg font-bold text-white font-outfit mb-6">Tempo Médio de Resposta (s)</h3>
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-md shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 font-outfit mb-6">Tempo Médio de Resposta (s)</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={dataTMR} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -132,10 +132,10 @@ export default function Analytics() {
         </div>
 
         {/* Live Operators */}
-        <div className="bg-[#101726] border border-slate-800/60 rounded-2xl shadow-xl shadow-black/20 overflow-hidden">
-          <div className="p-6 border-b border-slate-800/60 flex justify-between items-center bg-[#0d1321]">
-            <h3 className="text-lg font-bold text-white font-outfit">Operadores Online</h3>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20">4 Ativos</span>
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-md shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
+            <h3 className="text-lg font-bold text-slate-900 font-outfit">Operadores Online</h3>
+            <span className="bg-emerald-500/10 text-emerald-600 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">4 Ativos</span>
           </div>
           <div className="divide-y divide-slate-800/60">
             {[
@@ -144,25 +144,25 @@ export default function Analytics() {
               { nome: 'João Dev', status: 'Em Atendimento', canal: 'Webchat', fila: 'Suporte N2' },
               { nome: 'Mariana Lima', status: 'Pausa (Lanche)', canal: 'Telefonia', fila: 'Cobrança' },
             ].map((op, i) => (
-              <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-800/20 transition-colors">
+              <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-100/20 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold border border-slate-700">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold border border-slate-200">
                     {op.nome.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
                     <p className="text-white font-medium text-sm">{op.nome}</p>
-                    <p className="text-xs text-slate-400">{op.fila}</p>
+                    <p className="text-xs text-slate-600">{op.fila}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600">
                     {op.canal === 'Telefonia' ? <Phone size={14} /> : <MessageSquare size={14} />}
                     {op.canal}
                   </div>
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-md border ${
-                    op.status === 'Disponível' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                    op.status === 'Disponível' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200' :
                     op.status === 'Em Atendimento' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                    'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                    'bg-amber-500/10 text-amber-600 border-amber-200'
                   }`}>
                     {op.status}
                   </span>
@@ -178,21 +178,21 @@ export default function Analytics() {
 
 function MetricCard({ title, value, trend, trendUp, icon }: any) {
   return (
-    <div className="bg-[#101726] border border-slate-800/60 p-6 rounded-2xl shadow-xl shadow-black/20 flex flex-col relative overflow-hidden group">
+    <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-md shadow-sm flex flex-col relative overflow-hidden group">
       <div className="absolute -right-6 -top-6 text-slate-800/30 group-hover:text-slate-700/30 transition-colors duration-500 rotate-12 scale-150">
         {icon}
       </div>
       <div className="flex items-start justify-between mb-4 relative z-10">
-        <div className="p-3 bg-[#0b0f19] rounded-xl border border-slate-800 shadow-inner">
+        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
           {icon}
         </div>
-        <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${trendUp ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+        <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${trendUp ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
           {trend}
         </span>
       </div>
       <div className="relative z-10">
-        <h4 className="text-slate-400 text-sm font-medium mb-1">{title}</h4>
-        <span className="text-3xl font-bold text-white font-outfit">{value}</span>
+        <h4 className="text-slate-600 text-sm font-medium mb-1">{title}</h4>
+        <span className="text-3xl font-bold text-slate-900 font-outfit">{value}</span>
       </div>
     </div>
   );

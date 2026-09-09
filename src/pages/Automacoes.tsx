@@ -11,16 +11,16 @@ export default function Automacoes() {
   ];
 
   return (
-    <div className="flex-1 flex h-full bg-[#0b0f19] overflow-hidden">
+    <div className="flex-1 flex h-full bg-slate-50 overflow-hidden">
       
       {/* Sidebar - Lista de Fluxos */}
-      <div className="w-72 bg-[#101726] border-r border-slate-800/60 flex flex-col z-20">
-        <div className="p-5 border-b border-slate-800/60 bg-[#0d1321]">
-          <h2 className="text-lg font-bold text-white font-outfit flex items-center gap-2">
-            <Workflow className="text-indigo-400" size={20} />
+      <div className="w-72 bg-white border-r border-slate-200 flex flex-col z-20">
+        <div className="p-5 border-b border-slate-200 bg-white">
+          <h2 className="text-lg font-bold text-slate-900 font-outfit flex items-center gap-2">
+            <Workflow className="text-blue-600" size={20} />
             Motor Visual (n8n)
           </h2>
-          <p className="text-xs text-slate-400 mt-1">Automação de processos via nós.</p>
+          <p className="text-xs text-slate-600 mt-1">Automação de processos via nós.</p>
         </div>
         
         <div className="p-4 flex-1 overflow-y-auto space-y-2">
@@ -30,48 +30,48 @@ export default function Automacoes() {
               onClick={() => setActiveFlow(flow.name)}
               className={`p-3 rounded-xl border cursor-pointer transition-all ${
                 activeFlow === flow.name 
-                  ? 'bg-[#1a2333] border-indigo-500/50 shadow-inner' 
-                  : 'bg-transparent border-transparent hover:bg-slate-800/40 hover:border-slate-800'
+                  ? 'bg-slate-50 border-blue-600/50 shadow-inner' 
+                  : 'bg-transparent border-transparent hover:bg-slate-100/40 hover:border-slate-200'
               }`}
             >
               <div className="flex justify-between items-start mb-2">
-                <p className={`font-bold text-sm ${activeFlow === flow.name ? 'text-indigo-300' : 'text-slate-300'}`}>
+                <p className={`font-bold text-sm ${activeFlow === flow.name ? 'text-blue-600' : 'text-slate-600'}`}>
                   {flow.name}
                 </p>
               </div>
               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
                 flow.status === 'Ativo' 
-                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                  : 'bg-slate-800 text-slate-400 border-slate-700'
+                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200'
+                  : 'bg-slate-100 text-slate-600 border-slate-200'
               }`}>
                 {flow.status}
               </span>
             </div>
           ))}
           
-          <button className="w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-slate-700 hover:border-indigo-500 hover:bg-indigo-500/5 text-slate-400 hover:text-indigo-400 transition-colors text-sm font-bold">
+          <button className="w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-slate-200 hover:border-blue-600 hover:bg-blue-600/5 text-slate-600 hover:text-blue-600 transition-colors text-sm font-bold">
             <Plus size={16} /> Novo Workflow
           </button>
         </div>
       </div>
 
       {/* Main Canvas (Mocking N8N interface) */}
-      <div className="flex-1 flex flex-col relative bg-[#0b0f19]">
+      <div className="flex-1 flex flex-col relative bg-slate-50">
         
         {/* Canvas Header */}
-        <div className="h-16 border-b border-slate-800/60 bg-[#101726]/80 backdrop-blur-md flex items-center justify-between px-6 z-20">
+        <div className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 z-20">
           <div className="flex items-center gap-4">
-            <h1 className="font-bold text-white text-lg font-outfit">{activeFlow}</h1>
-            <span className="bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-mono px-2 py-1 rounded">ID: wkf_982jh3</span>
+            <h1 className="font-bold text-slate-900 text-lg font-outfit">{activeFlow}</h1>
+            <span className="bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-mono px-2 py-1 rounded">ID: wkf_982jh3</span>
           </div>
           <div className="flex items-center gap-3">
-            <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+            <button className="p-2 text-slate-600 hover:text-white hover:bg-slate-100 rounded-lg transition-colors">
               <Settings size={18} />
             </button>
-            <button className="flex items-center gap-2 bg-[#1a2333] hover:bg-slate-800 border border-slate-700/50 text-slate-300 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-inner">
-              <Play size={16} className="text-emerald-400" /> Executar Teste
+            <button className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-inner">
+              <Play size={16} className="text-emerald-600" /> Executar Teste
             </button>
-            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-indigo-600/20">
+            <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-blue-700/20">
               <Save size={16} /> Salvar e Ativar
             </button>
           </div>
@@ -99,7 +99,7 @@ export default function Automacoes() {
             {/* Column 1: Trigger */}
             <div className="relative z-10">
               <NodeCard 
-                icon={<Webhook className="text-emerald-400" size={20} />}
+                icon={<Webhook className="text-emerald-600" size={20} />}
                 title="Webhook WABA"
                 subtitle="Gatilho WABA Oficial"
                 type="trigger"
@@ -109,7 +109,7 @@ export default function Automacoes() {
             {/* Column 2: Agent */}
             <div className="relative z-10">
               <NodeCard 
-                icon={<Bot className="text-indigo-400" size={20} />}
+                icon={<Bot className="text-blue-600" size={20} />}
                 title="Agente IA (9router)"
                 subtitle="Análise de Intenção"
                 type="action"
@@ -119,7 +119,7 @@ export default function Automacoes() {
             {/* Column 3: Logic Router */}
             <div className="relative z-10">
               <NodeCard 
-                icon={<GitFork className="text-amber-400" size={20} />}
+                icon={<GitFork className="text-amber-600" size={20} />}
                 title="Roteador Lógico"
                 subtitle="Regras de Transbordo"
                 type="logic"
@@ -144,17 +144,17 @@ export default function Automacoes() {
           </div>
           
           {/* Zoom Controls */}
-          <div className="absolute bottom-6 left-6 flex bg-[#101726] border border-slate-800 rounded-lg shadow-xl z-20">
-            <button className="px-3 py-1.5 text-slate-400 hover:text-white border-r border-slate-800 transition-colors font-mono font-bold">-</button>
-            <span className="px-4 py-1.5 text-slate-300 text-xs font-mono flex items-center">100%</span>
-            <button className="px-3 py-1.5 text-slate-400 hover:text-white border-l border-slate-800 transition-colors font-mono font-bold">+</button>
+          <div className="absolute bottom-6 left-6 flex bg-white border border-slate-200 rounded-lg shadow-md z-20">
+            <button className="px-3 py-1.5 text-slate-600 hover:text-white border-r border-slate-200 transition-colors font-mono font-bold">-</button>
+            <span className="px-4 py-1.5 text-slate-600 text-xs font-mono flex items-center">100%</span>
+            <button className="px-3 py-1.5 text-slate-600 hover:text-white border-l border-slate-200 transition-colors font-mono font-bold">+</button>
           </div>
 
           {/* Powered by N8N badge */}
           <div className="absolute bottom-6 right-6 z-20">
-            <div className="bg-[#101726]/80 backdrop-blur-md border border-slate-800/60 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
+            <div className="bg-white/80 backdrop-blur-md border border-slate-200 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
               <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Powered by</span>
-              <div className="flex items-center gap-1 font-bold text-white text-lg">
+              <div className="flex items-center gap-1 font-bold text-slate-900 text-lg">
                 <span className="text-orange-500">n8</span>n
               </div>
             </div>
@@ -167,27 +167,27 @@ export default function Automacoes() {
 
 function NodeCard({ icon, title, subtitle, type }: { icon: React.ReactNode, title: string, subtitle: string, type: 'trigger' | 'action' | 'logic' }) {
   return (
-    <div className="w-[170px] bg-[#1a2333] border border-slate-700/50 rounded-xl shadow-xl shadow-black/40 flex flex-col relative group hover:border-indigo-500/50 transition-colors cursor-grab">
+    <div className="w-[170px] bg-slate-50 border border-slate-200 rounded-xl shadow-md shadow-sm flex flex-col relative group hover:border-blue-600/50 transition-colors cursor-grab">
       {/* Input Port (Left) */}
       {type !== 'trigger' && (
-        <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-slate-800 border-2 border-slate-500 rounded-full group-hover:border-indigo-400 transition-colors"></div>
+        <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-slate-100 border-2 border-slate-500 rounded-full group-hover:border-blue-600 transition-colors"></div>
       )}
       
       {/* Output Port (Right) */}
-      <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-slate-800 border-2 border-slate-500 rounded-full group-hover:border-indigo-400 transition-colors"></div>
+      <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-slate-100 border-2 border-slate-500 rounded-full group-hover:border-blue-600 transition-colors"></div>
 
       <div className="p-3 flex items-start gap-3">
-        <div className="mt-1 bg-[#101726] p-1.5 rounded-lg border border-slate-800/60 shadow-inner">
+        <div className="mt-1 bg-white p-1.5 rounded-lg border border-slate-200 shadow-inner">
           {icon}
         </div>
         <div className="flex-1 overflow-hidden">
-          <p className="text-[11px] font-bold text-white leading-tight truncate">{title}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5 truncate">{subtitle}</p>
+          <p className="text-[11px] font-bold text-slate-900 leading-tight truncate">{title}</p>
+          <p className="text-[9px] text-slate-600 mt-0.5 truncate">{subtitle}</p>
         </div>
       </div>
       
       <div className={`h-1 w-full rounded-b-xl ${
-        type === 'trigger' ? 'bg-emerald-500' : type === 'logic' ? 'bg-amber-500' : 'bg-indigo-500'
+        type === 'trigger' ? 'bg-emerald-500' : type === 'logic' ? 'bg-amber-500' : 'bg-blue-600'
       }`}></div>
     </div>
   )

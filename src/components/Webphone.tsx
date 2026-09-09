@@ -37,38 +37,38 @@ export default function Webphone() {
       {/* Botão de Toggle do Webphone */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-[#1a2333] hover:bg-slate-800 border border-slate-700/50 px-3 py-1.5 rounded-xl transition-all"
+        className="flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl transition-all shadow-sm"
       >
         <div className="relative">
-          <Phone size={16} className={onCall ? 'text-emerald-400' : 'text-slate-400'} />
-          <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 border border-[#0b0f19]"></div>
+          <Phone size={16} className={onCall ? 'text-emerald-600' : 'text-slate-500'} />
+          <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 border border-white"></div>
         </div>
-        <span className="text-xs font-bold text-slate-300">Ramal {ramal}</span>
+        <span className="text-xs font-bold text-slate-700">Ramal {ramal}</span>
       </button>
 
       {/* Janela do Webphone */}
       {isOpen && (
-        <div className="absolute top-16 right-6 w-72 bg-[#101726] border border-slate-800/60 shadow-2xl shadow-black/60 rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-4">
+        <div className="absolute top-16 right-6 w-72 bg-white border border-slate-200 shadow-md rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-4">
           
           {/* Header */}
-          <div className="bg-[#0d1321] border-b border-slate-800/60 p-4 flex justify-between items-center">
+          <div className="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">{sipStatus}</span>
+              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">{sipStatus}</span>
             </div>
-            <span className="text-xs text-slate-500 font-mono">SIP/FreePBX</span>
+            <span className="text-xs text-slate-600 font-mono">SIP/FreePBX</span>
           </div>
 
           {/* Visor */}
-          <div className="p-5 flex flex-col items-center justify-center border-b border-slate-800/60 bg-[#0b0f19]/50 min-h-[100px]">
+          <div className="p-5 flex flex-col items-center justify-center border-b border-slate-100 bg-white min-h-[100px]">
             {onCall ? (
               <>
-                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">Em Chamada</p>
-                <h3 className="text-2xl font-mono text-white tracking-widest">{dialNumber}</h3>
-                <p className="text-sm font-mono text-slate-400 mt-2">{callDuration}</p>
+                <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Em Chamada</p>
+                <h3 className="text-2xl font-mono text-slate-900 tracking-widest">{dialNumber}</h3>
+                <p className="text-sm font-mono text-slate-500 mt-2">{callDuration}</p>
               </>
             ) : (
-              <h3 className="text-3xl font-mono text-slate-200 tracking-widest min-h-[36px]">
+              <h3 className="text-3xl font-mono text-slate-800 tracking-widest min-h-[36px]">
                 {dialNumber || '...'}
               </h3>
             )}
@@ -76,13 +76,13 @@ export default function Webphone() {
 
           {/* Teclado */}
           {!onCall ? (
-            <div className="p-5">
+            <div className="p-5 bg-slate-50">
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'].map((key) => (
                   <button 
                     key={key}
                     onClick={() => handleKeyPress(key)}
-                    className="h-12 bg-[#1a2333] hover:bg-slate-800 border border-slate-700/50 rounded-xl text-lg font-bold text-slate-300 flex items-center justify-center transition-colors active:scale-95"
+                    className="h-12 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-lg font-bold text-slate-700 flex items-center justify-center transition-colors active:scale-95 shadow-sm"
                   >
                     {key}
                   </button>
@@ -92,44 +92,43 @@ export default function Webphone() {
                 <button 
                   onClick={toggleCall}
                   disabled={dialNumber.length === 0}
-                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-emerald-600/20 active:scale-95"
+                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl flex items-center justify-center transition-all shadow-md active:scale-95"
                 >
                   <Phone size={20} />
                 </button>
                 <button 
                   onClick={handleBackspace}
                   disabled={dialNumber.length === 0}
-                  className="w-12 h-12 bg-[#1a2333] hover:bg-slate-800 disabled:opacity-50 border border-slate-700/50 text-slate-400 hover:text-white rounded-xl flex items-center justify-center transition-all active:scale-95"
+                  className="w-12 h-12 bg-white hover:bg-slate-100 disabled:opacity-50 border border-slate-200 text-slate-500 hover:text-slate-700 rounded-xl flex items-center justify-center transition-all active:scale-95 shadow-sm"
                 >
                   <Delete size={20} />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="p-6 flex flex-col gap-4">
+            <div className="p-6 flex flex-col gap-4 bg-slate-50">
               <div className="flex justify-center gap-4 mb-2">
                 <button 
                   onClick={() => setMuted(!muted)}
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${muted ? 'bg-amber-500/20 border-amber-500/30 text-amber-400' : 'bg-[#1a2333] border-slate-700/50 text-slate-400 hover:text-white'} border`}
+                  className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-sm ${muted ? 'bg-amber-50 border-amber-200 text-amber-600' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'} border`}
                 >
                   {muted ? <MicOff size={22} /> : <Mic size={22} />}
                 </button>
-                <button className="w-14 h-14 bg-[#1a2333] border border-slate-700/50 text-slate-400 hover:text-white rounded-2xl flex items-center justify-center transition-all">
+                <button className="w-14 h-14 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 rounded-2xl flex items-center justify-center transition-all shadow-sm">
                   <Pause size={22} />
                 </button>
-                <button className="w-14 h-14 bg-[#1a2333] border border-slate-700/50 text-slate-400 hover:text-white rounded-2xl flex items-center justify-center transition-all">
+                <button className="w-14 h-14 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 rounded-2xl flex items-center justify-center transition-all shadow-sm">
                   <Hash size={22} />
                 </button>
               </div>
               <button 
                 onClick={toggleCall}
-                className="w-full h-14 bg-red-500 hover:bg-red-400 text-white rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-red-500/20 active:scale-95"
+                className="w-full h-14 bg-red-600 hover:bg-red-700 text-white rounded-2xl flex items-center justify-center transition-all shadow-md active:scale-95"
               >
                 <PhoneOff size={24} />
               </button>
             </div>
           )}
-
         </div>
       )}
     </>

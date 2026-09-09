@@ -34,24 +34,24 @@ export default function Inbox() {
 
   const getChannelIcon = (canal: string) => {
     switch (canal) {
-      case 'whatsapp': return <MessageCircle size={14} className="text-emerald-400" />;
+      case 'whatsapp': return <MessageCircle size={14} className="text-emerald-600" />;
       case 'webchat': return <MonitorSmartphone size={14} className="text-blue-400" />;
-      default: return <Phone size={14} className="text-slate-400" />;
+      default: return <Phone size={14} className="text-slate-600" />;
     }
   };
 
   return (
-    <div className="flex-1 flex h-full bg-[#0b0f19]">
+    <div className="flex-1 flex h-full bg-slate-50">
       {/* Lista de Conversas */}
-      <div className="w-80 border-r border-slate-800/60 bg-[#0d1321] flex flex-col z-10">
-        <div className="p-5 border-b border-slate-800/60">
-          <h1 className="font-bold text-xl text-white font-outfit mb-4">Inbox</h1>
+      <div className="w-80 border-r border-slate-200 bg-white flex flex-col z-10">
+        <div className="p-5 border-b border-slate-200">
+          <h1 className="font-bold text-xl text-slate-600 font-outfit mb-4">Inbox</h1>
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-slate-500" size={18} />
             <input 
               type="text" 
               placeholder="Buscar conversas..." 
-              className="w-full pl-10 pr-4 py-2 bg-[#1a2333] border border-slate-700/50 rounded-lg text-sm text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder:text-slate-500"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -60,19 +60,19 @@ export default function Inbox() {
             <div 
               key={chat.id} 
               onClick={() => setActiveChat(chat.id)}
-              className={`p-4 border-b border-slate-800/40 cursor-pointer transition-all ${activeChat === chat.id ? 'bg-[#1a2333] border-l-4 border-l-indigo-500' : 'hover:bg-slate-800/30 border-l-4 border-l-transparent'}`}
+              className={`p-4 border-b border-slate-200 cursor-pointer transition-all ${activeChat === chat.id ? 'bg-slate-50 border-l-4 border-l-blue-600' : 'hover:bg-slate-100/30 border-l-4 border-l-transparent'}`}
             >
               <div className="flex justify-between items-start mb-1.5">
-                <span className="font-bold text-slate-200">Cliente #{chat.contato_id}</span>
+                <span className="font-bold text-slate-900">Cliente #{chat.contato_id}</span>
                 <span className="text-xs font-medium text-slate-500">{chat.mensagens[chat.mensagens.length - 1].enviada_em}</span>
               </div>
-              <p className="text-sm text-slate-400 truncate mb-3">{chat.mensagens[chat.mensagens.length - 1].conteudo}</p>
+              <p className="text-sm text-slate-600 truncate mb-3">{chat.mensagens[chat.mensagens.length - 1].conteudo}</p>
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-800/50 border border-slate-700/30">
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-50 border border-slate-200">
                   {getChannelIcon(chat.canal)}
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">{chat.canal}</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">{chat.canal}</span>
                 </div>
-                {chat.prioridade === 1 && <span className="text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-1 rounded-md font-bold uppercase tracking-wider animate-pulse">Urgente</span>}
+                {chat.prioridade === 1 && <span className="text-[10px] bg-red-50 text-red-700 border border-red-200 px-2 py-1 rounded-md font-bold uppercase tracking-wider animate-pulse">Urgente</span>}
               </div>
             </div>
           ))}
@@ -81,26 +81,26 @@ export default function Inbox() {
 
       {/* Área de Chat */}
       {activeConversation ? (
-        <div className="flex-1 flex flex-col bg-[#0b0f19] relative">
+        <div className="flex-1 flex flex-col bg-slate-50 relative">
           {/* Header */}
-          <div className="h-16 border-b border-slate-800/60 bg-[#101726]/80 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-10">
+          <div className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-600/10 border border-blue-200 text-blue-600 rounded-full flex items-center justify-center">
                 <User size={20} />
               </div>
               <div>
-                <h2 className="font-bold text-white font-outfit text-lg">Cliente #{activeConversation.contato_id}</h2>
+                <h2 className="font-bold text-slate-600 font-outfit text-lg">Cliente #{activeConversation.contato_id}</h2>
                 <div className="flex items-center gap-2">
                   <span className="flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Autenticado via SGP</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Autenticado via SGP</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-lg hover:bg-indigo-500/20 hover:text-indigo-200 transition-all">
+              <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-blue-600 bg-blue-600/10 border border-blue-200 rounded-lg hover:bg-blue-600/20 hover:text-blue-700 transition-all">
                 <Phone size={16} /> Ligar
               </button>
             </div>
@@ -112,19 +112,19 @@ export default function Inbox() {
               <div key={msg.id} className={`flex ${msg.autor_tipo === 'cliente' ? 'justify-start' : 'justify-end'}`}>
                 <div className={`max-w-[75%] rounded-2xl p-4 shadow-sm ${
                   msg.autor_tipo === 'cliente' 
-                    ? 'bg-[#1a2333] border border-slate-700/50 text-slate-200 rounded-tl-sm' 
+                    ? 'bg-slate-50 border border-slate-200 text-slate-900 rounded-tl-sm' 
                     : msg.autor_tipo === 'ia' 
-                      ? 'bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border border-indigo-500/30 text-indigo-100 rounded-tr-sm' 
-                      : 'bg-indigo-600 text-white rounded-tr-sm shadow-indigo-500/20'
+                      ? 'bg-blue-50 border border-blue-200 text-blue-800 rounded-tr-sm' 
+                      : 'bg-blue-700 text-white rounded-tr-sm shadow-blue-600/20'
                 }`}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                      msg.autor_tipo === 'cliente' ? 'text-slate-400' : msg.autor_tipo === 'ia' ? 'text-indigo-300 flex items-center gap-1' : 'text-indigo-200'
+                      msg.autor_tipo === 'cliente' ? 'text-slate-600' : msg.autor_tipo === 'ia' ? 'text-blue-600 flex items-center gap-1' : 'text-blue-700'
                     }`}>
-                      {msg.autor_tipo === 'ia' && <Zap size={10} className="fill-indigo-400" />}
+                      {msg.autor_tipo === 'ia' && <Zap size={10} className="fill-blue-600" />}
                       {msg.autor_tipo === 'ia' ? 'Assistente IA' : msg.autor_tipo === 'cliente' ? 'Cliente' : 'Você'}
                     </span>
-                    <span className={`text-[10px] font-medium ${msg.autor_tipo === 'cliente' ? 'text-slate-500' : 'text-indigo-300/70'}`}>{msg.enviada_em}</span>
+                    <span className={`text-[10px] font-medium ${msg.autor_tipo === 'cliente' ? 'text-slate-500' : 'text-blue-600/70'}`}>{msg.enviada_em}</span>
                   </div>
                   <p className="text-[15px] leading-relaxed">{msg.conteudo}</p>
                 </div>
@@ -147,43 +147,43 @@ export default function Inbox() {
           />
 
           {/* Input */}
-          <div className="p-4 bg-[#101726] border-t border-slate-800/60 relative z-20">
+          <div className="p-4 bg-white border-t border-slate-200 relative z-20">
             {activeConversation.canal === 'whatsapp' && (
               <div className="max-w-5xl mx-auto flex gap-2 mb-3 overflow-x-auto pb-1" style={{scrollbarWidth: 'none'}}>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 py-1.5 flex items-center shrink-0">WABA Templates:</span>
-                <button className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                <button className="text-[11px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
                   Fatura Vencida (Boleto)
                 </button>
-                <button className="text-[11px] font-bold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                <button className="text-[11px] font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
                   Manutenção Agendada
                 </button>
-                <button className="text-[11px] font-bold text-slate-300 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                <button className="text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
                   Aviso de Retenção
                 </button>
               </div>
             )}
             <div className="flex gap-3 max-w-5xl mx-auto items-center">
-              <button className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-white bg-[#1a2333] border border-slate-700/50 rounded-xl transition-colors hover:border-slate-600 shrink-0">
+              <button className="w-12 h-12 flex items-center justify-center text-slate-600 hover:text-slate-600 bg-slate-50 border border-slate-200 rounded-xl transition-colors hover:border-slate-600 shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
               </button>
               <input 
                 id="chat-input"
                 type="text" 
                 placeholder="Digite sua mensagem (use '/' para comandos rápidos)..." 
-                className="flex-1 bg-[#1a2333] border border-slate-700/50 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 rounded-xl px-5 py-3 text-slate-200 placeholder:text-slate-500 transition-all shadow-inner"
+                className="flex-1 bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 rounded-xl px-5 py-3 text-slate-900 placeholder:text-slate-500 transition-all shadow-inner"
               />
-              <button className="w-12 h-12 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95 shrink-0">
+              <button className="w-12 h-12 bg-blue-700 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95 shrink-0">
                 <Send size={18} className="ml-1" />
               </button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#0b0f19] text-slate-500">
-          <div className="w-20 h-20 bg-[#101726] rounded-full flex items-center justify-center mb-4 border border-slate-800/60 shadow-inner">
+        <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 text-slate-500">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 border border-slate-200 shadow-inner">
             <MessageCircle size={32} className="text-slate-600" />
           </div>
-          <h3 className="font-outfit text-xl text-slate-300 font-bold mb-2">Inbox Vazio</h3>
+          <h3 className="font-outfit text-xl text-slate-600 font-bold mb-2">Inbox Vazio</h3>
           <p className="text-sm">Selecione uma conversa ao lado para iniciar o atendimento</p>
         </div>
       )}
@@ -219,23 +219,23 @@ function DynamicAISuggestion({ lastClientMessage, onUseSuggestion }: { lastClien
   if (!lastClientMessage) return null;
 
   return (
-    <div className="px-6 py-4 bg-gradient-to-t from-[#101726] to-transparent relative z-10">
-      <div className="bg-[#1a1c33] border border-indigo-500/30 rounded-xl p-4 flex items-start gap-4 shadow-xl shadow-indigo-900/10 backdrop-blur-sm">
-        <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0">
-          <Zap size={16} className={`text-indigo-400 ${loading ? 'animate-pulse' : ''}`} />
+    <div className="px-6 py-4 bg-gradient-to-t from-white to-transparent relative z-10">
+      <div className="bg-white border border-blue-200 rounded-xl p-4 flex items-start gap-4 shadow-md shadow-blue-100/10 backdrop-blur-sm">
+        <div className="w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center shrink-0">
+          <Zap size={16} className={`text-blue-600 ${loading ? 'animate-pulse' : ''}`} />
         </div>
         <div className="flex-1">
           <div className="flex justify-between items-start mb-2">
-            <p className="text-[11px] uppercase tracking-wider font-bold text-indigo-300">Sugestão da IA (9router)</p>
-            {loading && <span className="text-[10px] uppercase font-bold text-indigo-400 animate-pulse">Gerando...</span>}
+            <p className="text-[11px] uppercase tracking-wider font-bold text-blue-600">Sugestão da IA (9router)</p>
+            {loading && <span className="text-[10px] uppercase font-bold text-blue-600 animate-pulse">Gerando...</span>}
           </div>
-          <p className="text-sm text-indigo-100 min-h-5 leading-relaxed">
+          <p className="text-sm text-blue-800 min-h-5 leading-relaxed">
             {loading ? 'Analisando histórico e dados do SGP...' : suggestion || 'Não foi possível gerar sugestão.'}
           </p>
           {!loading && suggestion && (
             <button 
               onClick={() => onUseSuggestion(suggestion)}
-              className="mt-4 text-[11px] uppercase tracking-wider font-bold bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-600/20"
+              className="mt-4 text-[11px] uppercase tracking-wider font-bold bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-blue-700/20"
             >
               Inserir na Resposta
             </button>
