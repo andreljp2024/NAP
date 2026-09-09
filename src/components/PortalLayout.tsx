@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Wifi, CreditCard, HeadphonesIcon, Settings } from 'lucide-react';
+import WebchatWidget from './WebchatWidget';
 
 export default function PortalLayout() {
   return (
@@ -49,6 +50,9 @@ export default function PortalLayout() {
         <MobileNavItem to="/portal/suporte" icon={<HeadphonesIcon size={22} />} label="Suporte" />
         <MobileNavItem to="/portal/conta" icon={<Settings size={22} />} label="Conta" />
       </nav>
+
+      {/* Inject Webchat Widget */}
+      <WebchatWidget />
     </div>
   );
 }
