@@ -40,8 +40,31 @@ async function startServer() {
     ]);
   });
 
-  // Mock Contatos (CRM Sincronizado com SGP)
-  app.get("/api/contatos", (req, res) => {
+  // Obter Clientes (Real SGP ou Mock)
+  app.get("/api/contatos", async (req, res) => {
+    try {
+      if (SGP_URL && SGP_APP && SGP_TOKEN) {
+        // Chamada real à rota de clientes do SGP
+        const data = await fetchSGP("/api/clientes?limit=50");
+        
+        // Mapeia o retorno real do SGP para a nossa interface do CRM
+        if (data && Array.isArray(data)) {
+           const mapeados = data.map((c: any) => ({
+             id: c.id,
+             cpf_cnpj: c.cpf || c.cnpj || "N/A",
+             nome: c.nome,
+             telefone: c.celular || c.telefone || "N/A",
+             plano: c.contratos?.[0]?.plano || "Sem Plano",
+             status_cliente: c.status === 1 ? 'ativo' : 'bloqueado'
+           }));
+           return res.json(mapeados);
+        }
+      }
+    } catch (error) {
+      console.warn("Aviso: Falha ao obter clientes do SGP real, utilizando simulador.", error);
+    }
+    
+    // Mock Fallback original
     res.json([
       { id: 1001, cpf_cnpj: "111.222.333-44", nome: "João Silva", telefone: "+55 11 99999-9999", plano: "Fibra 500MB", status_cliente: "ativo" },
       { id: 1002, cpf_cnpj: "555.666.777-88", nome: "Maria Oliveira", telefone: "+55 11 88888-8888", plano: "Fibra 1GB", status_cliente: "bloqueado" },
@@ -127,7 +150,34 @@ async function startServer() {
     return await res.json();
   }
 
-  // Obter Faturas SGP (Real ou Mock)
+  // Consultar Cliente da URA (Pesquisa Específica via CPF/CNPJ ou Telefone)
+  app.get("/api/sgp/ura/cliente", async (req, res) => {
+    const { cpf_cnpj, telefone } = req.query;
+    try {
+      if (SGP_URL && SGP_APP && SGP_TOKEN) {
+        let endpoint = `/api/clientes/ura?`;
+        if (cpf_cnpj) endpoint += `cpf_cnpj=${cpf_cnpj}`;
+        if (telefone) endpoint += `&telefone=${telefone}`;
+        
+        const data = await fetchSGP(endpoint);
+        return res.json(data);
+      }
+    } catch (error) {
+      console.warn("Aviso: Falha na consulta de URA no SGP real.", error);
+    }
+    
+    // Mock Fallback
+    res.json({
+      encontrado: true,
+      cliente: {
+        id: 1001,
+        nome: "João Silva (Simulado URA)",
+        status: "ativo",
+        contrato_id: 5432,
+        bloqueado: false
+      }
+    });
+  });
   app.get("/api/sgp/faturas", async (req, res) => {
     try {
       if (SGP_URL && SGP_APP && SGP_TOKEN) {

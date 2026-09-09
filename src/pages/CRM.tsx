@@ -17,41 +17,41 @@ export default function CRM() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 overflow-hidden relative">
-      <div className="p-6 border-b border-slate-200 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] overflow-hidden relative">
+      <div className="p-6 border-b border-slate-800/60 bg-[#101726]/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-10">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Base de Clientes (CRM)</h1>
-          <p className="text-sm text-slate-500">Banco de dados unificado com sincronização ativa do SGP.</p>
+          <h1 className="text-2xl font-bold text-white font-outfit">Base de Clientes (CRM)</h1>
+          <p className="text-sm text-slate-400 mt-1">Banco de dados unificado com sincronização ativa do SGP.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          <button className="flex items-center gap-2 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 text-slate-300 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
             <RefreshCw size={16} /> Sync SGP
           </button>
-          <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95">
             <UserPlus size={16} /> Novo Contato
           </button>
         </div>
       </div>
 
-      <div className="p-6 flex-1 overflow-y-auto">
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-slate-200 bg-slate-50 flex gap-4 items-center">
+      <div className="p-8 flex-1 overflow-y-auto">
+        <div className="bg-[#101726] rounded-2xl border border-slate-800/60 shadow-xl shadow-black/20 overflow-hidden flex flex-col">
+          <div className="p-5 border-b border-slate-800/60 bg-[#0d1321] flex gap-4 items-center">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
+              <Search className="absolute left-4 top-3 text-slate-500" size={18} />
               <input 
                 type="text" 
                 placeholder="Buscar por nome, CPF/CNPJ ou telefone..." 
-                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-md text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-11 pr-4 py-2.5 bg-[#1a2333] border border-slate-700/50 rounded-lg text-sm text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 placeholder:text-slate-500 transition-all shadow-inner"
               />
             </div>
-            <button className="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+            <button className="flex items-center gap-2 bg-[#1a2333] border border-slate-700/50 text-slate-300 hover:bg-slate-800 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
               <Filter size={16} /> Filtros
             </button>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+            <table className="w-full text-left text-sm text-slate-400">
+              <thead className="bg-[#0d1321] text-slate-500 font-bold uppercase tracking-wider text-[11px] border-b border-slate-800/60">
                 <tr>
                   <th className="px-6 py-4">ID SGP</th>
                   <th className="px-6 py-4">Nome / Razão Social</th>
@@ -62,9 +62,9 @@ export default function CRM() {
                   <th className="px-6 py-4 text-center">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-800/60 bg-[#101726]">
                 {loading ? (
-                  <tr><td colSpan={7} className="text-center py-8">Carregando contatos...</td></tr>
+                  <tr><td colSpan={7} className="text-center py-8 text-slate-500">Carregando contatos...</td></tr>
                 ) : contatos.length === 0 ? (
                   <tr><td colSpan={7} className="text-center py-8 text-slate-500">Nenhum cliente encontrado.</td></tr>
                 ) : (
@@ -72,30 +72,30 @@ export default function CRM() {
                     <tr 
                       key={contato.id} 
                       onClick={() => setSelectedContato(contato)}
-                      className="hover:bg-slate-50 transition-colors cursor-pointer"
+                      className="hover:bg-slate-800/40 transition-colors cursor-pointer group"
                     >
-                      <td className="px-6 py-4 font-medium text-slate-900">#{contato.id}</td>
-                      <td className="px-6 py-4 font-medium text-slate-900">{contato.nome}</td>
-                      <td className="px-6 py-4 text-slate-500">{contato.cpf_cnpj}</td>
-                      <td className="px-6 py-4 text-slate-500">{contato.telefone}</td>
+                      <td className="px-6 py-4 font-bold text-slate-300">#{contato.id}</td>
+                      <td className="px-6 py-4 font-medium text-slate-200 group-hover:text-indigo-400 transition-colors">{contato.nome}</td>
+                      <td className="px-6 py-4 font-mono text-xs">{contato.cpf_cnpj}</td>
+                      <td className="px-6 py-4 font-mono text-xs">{contato.telefone}</td>
                       <td className="px-6 py-4">
-                        <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md text-xs font-medium">
+                        <span className="bg-slate-800 border border-slate-700/50 text-slate-300 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider font-bold">
                           {contato.plano || 'Sem Plano'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         {contato.status_cliente === 'ativo' ? (
-                          <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md text-xs font-bold w-max">
+                          <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider font-bold w-max">
                             <CheckCircle2 size={14} /> Ativo
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1.5 text-red-600 bg-red-50 px-2.5 py-1 rounded-md text-xs font-bold w-max">
+                          <div className="flex items-center gap-1.5 text-red-400 bg-red-500/10 border border-red-500/20 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider font-bold w-max">
                             <XCircle size={14} /> Bloqueado
                           </div>
                         )}
                       </td>
                       <td className="px-6 py-4 text-center text-slate-400">
-                        <button className="hover:text-blue-600 transition-colors px-3 py-1 bg-white border border-slate-200 rounded text-xs font-medium">Ver Ficha</button>
+                        <button className="hover:text-indigo-400 hover:border-indigo-500/50 transition-colors px-3 py-1 bg-[#1a2333] border border-slate-700/50 rounded text-xs font-bold uppercase tracking-wider">Ver Ficha</button>
                       </td>
                     </tr>
                   ))
@@ -104,11 +104,11 @@ export default function CRM() {
             </table>
           </div>
           
-          <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
+          <div className="p-4 border-t border-slate-800/60 bg-[#0d1321] flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>Mostrando {contatos.length} contatos sincronizados</span>
             <div className="flex gap-2">
-              <button className="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-50">Anterior</button>
-              <button className="px-3 py-1 bg-white border border-slate-300 rounded hover:bg-slate-50">Próxima</button>
+              <button className="px-4 py-1.5 bg-[#1a2333] border border-slate-700/50 rounded-lg hover:bg-slate-800 transition-colors text-slate-300">Anterior</button>
+              <button className="px-4 py-1.5 bg-[#1a2333] border border-slate-700/50 rounded-lg hover:bg-slate-800 transition-colors text-slate-300">Próxima</button>
             </div>
           </div>
         </div>
@@ -116,22 +116,25 @@ export default function CRM() {
 
       {/* Customer 360 Panel */}
       {selectedContato && (
-        <div className="absolute top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl border-l border-slate-200 animate-in slide-in-from-right flex flex-col z-50">
-          <div className="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-start">
+        <div className="absolute top-0 right-0 h-full w-full max-w-md bg-[#101726] shadow-2xl shadow-black border-l border-slate-800/80 animate-in slide-in-from-right flex flex-col z-50">
+          <div className="p-6 border-b border-slate-800/60 bg-[#0d1321] flex justify-between items-start">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold text-slate-900">{selectedContato.nome}</h2>
+              <div className="flex items-center gap-2 mb-1.5">
+                <h2 className="text-xl font-bold text-white font-outfit">{selectedContato.nome}</h2>
                 {selectedContato.status_cliente === 'ativo' ? (
-                  <CheckCircle2 size={16} className="text-emerald-500" />
+                  <CheckCircle2 size={18} className="text-emerald-400" />
                 ) : (
-                  <XCircle size={16} className="text-red-500" />
+                  <XCircle size={18} className="text-red-400" />
                 )}
               </div>
-              <p className="text-sm text-slate-500 font-mono">ID: #{selectedContato.id} • {selectedContato.cpf_cnpj}</p>
+              <p className="text-sm text-slate-400 font-mono flex items-center gap-2">
+                <span className="bg-slate-800 px-2 py-0.5 rounded border border-slate-700/50 text-slate-300">ID: #{selectedContato.id}</span>
+                {selectedContato.cpf_cnpj}
+              </p>
             </div>
             <button 
               onClick={() => setSelectedContato(null)}
-              className="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"
+              className="p-2 hover:bg-slate-800/80 rounded-full text-slate-400 hover:text-white transition-colors border border-transparent hover:border-slate-700/50"
             >
               <X size={20} />
             </button>
@@ -139,75 +142,78 @@ export default function CRM() {
 
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* AI Summary Block */}
-            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-indigo-700 font-bold mb-2 text-sm">
-                <Zap size={16} className="fill-indigo-700" />
+            <div className="bg-gradient-to-br from-indigo-900/40 to-purple-900/20 border border-indigo-500/30 rounded-xl p-5 shadow-lg shadow-indigo-900/10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Zap size={64} className="fill-indigo-500" />
+              </div>
+              <div className="flex items-center gap-2 text-indigo-300 font-bold uppercase tracking-wider mb-3 text-[11px] relative z-10">
+                <Zap size={14} className="fill-indigo-400" />
                 Resumo 9router (IA)
               </div>
-              <p className="text-sm text-indigo-900 leading-relaxed">
-                Cliente com boa retenção (2 anos), porém registrou 3 quedas de conexão nos últimos 15 dias. Sentimento atual da última conversa: <span className="font-bold text-amber-600">Frustrado</span>. Recomenda-se visita técnica proativa.
+              <p className="text-sm text-indigo-100 leading-relaxed relative z-10">
+                Cliente com boa retenção (2 anos), porém registrou 3 quedas de conexão nos últimos 15 dias. Sentimento atual da última conversa: <span className="font-bold text-amber-400 bg-amber-500/10 px-1 rounded">Frustrado</span>. Recomenda-se visita técnica proativa.
               </p>
             </div>
 
             <div>
-              <h3 className="font-bold text-slate-900 mb-3 text-sm flex items-center gap-2">
-                <Activity size={16} className="text-blue-500" /> Conexão e Plano
+              <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
+                <Activity size={16} className="text-indigo-400" /> Conexão e Plano
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                  <p className="text-xs text-slate-500 mb-1">Plano SGP</p>
-                  <p className="font-bold text-slate-900 text-sm">{selectedContato.plano}</p>
+                <div className="bg-[#1a2333] p-4 rounded-xl border border-slate-700/50 shadow-inner">
+                  <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500 mb-1">Plano SGP</p>
+                  <p className="font-bold text-slate-200 text-sm">{selectedContato.plano}</p>
                 </div>
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                  <p className="text-xs text-slate-500 mb-1">Telefone Principal</p>
-                  <p className="font-bold text-slate-900 text-sm">{selectedContato.telefone}</p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 mb-3 text-sm flex items-center gap-2">
-                <FileText size={16} className="text-blue-500" /> Financeiro (SGP)
-              </h3>
-              <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-100">
-                <div className="p-3 flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">Mensalidade (Setembro)</p>
-                    <p className="text-xs text-slate-500">Vence em 10/09/2026</p>
-                  </div>
-                  <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded">Pendente</span>
-                </div>
-                <div className="p-3 flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">Mensalidade (Agosto)</p>
-                    <p className="text-xs text-slate-500">Pago via PIX</p>
-                  </div>
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded">Pago</span>
+                <div className="bg-[#1a2333] p-4 rounded-xl border border-slate-700/50 shadow-inner">
+                  <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500 mb-1">Telefone Principal</p>
+                  <p className="font-bold text-slate-200 text-sm">{selectedContato.telefone}</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="font-bold text-slate-900 mb-3 text-sm flex items-center gap-2">
-                <Trello size={16} className="text-blue-500" /> Histórico de Chamados
+              <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
+                <FileText size={16} className="text-indigo-400" /> Financeiro (SGP)
               </h3>
-              <div className="bg-white border border-slate-200 rounded-lg p-3">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Suporte</span>
-                  <span className="text-xs font-bold text-slate-500">Há 2 dias</span>
+              <div className="bg-[#1a2333] border border-slate-700/50 rounded-xl divide-y divide-slate-700/50 shadow-inner">
+                <div className="p-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-bold text-slate-200">Mensalidade (Setembro)</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">Vence em 10/09/2026</p>
+                  </div>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md">Pendente</span>
                 </div>
-                <p className="text-sm font-medium text-slate-900 mb-1">Lentidão no Wi-Fi 5G</p>
-                <p className="text-xs text-slate-500">Resolvido via IA: Cliente instruído a reiniciar ONU (BookStack #204).</p>
+                <div className="p-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-bold text-slate-200">Mensalidade (Agosto)</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">Pago via PIX</p>
+                  </div>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md">Pago</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
+                <Trello size={16} className="text-indigo-400" /> Histórico de Chamados
+              </h3>
+              <div className="bg-[#1a2333] border border-slate-700/50 rounded-xl p-4 shadow-inner hover:border-slate-600 transition-colors">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">Suporte</span>
+                  <span className="text-xs font-medium text-slate-500">Há 2 dias</span>
+                </div>
+                <p className="text-sm font-bold text-slate-200 mb-1">Lentidão no Wi-Fi 5G</p>
+                <p className="text-xs text-slate-400 leading-relaxed">Resolvido via IA: Cliente instruído a reiniciar ONU (BookStack #204).</p>
               </div>
             </div>
           </div>
           
-          <div className="p-4 border-t border-slate-200 bg-white flex gap-3">
-            <button className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
-              Histórico Completo
+          <div className="p-5 border-t border-slate-800/60 bg-[#0d1321] flex gap-3 z-10">
+            <button className="flex-1 bg-[#1a2333] hover:bg-slate-800 border border-slate-700/50 text-slate-300 px-4 py-3 rounded-xl text-sm font-bold transition-colors">
+              Histórico
             </button>
-            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
-              Iniciar Atendimento
+            <button className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/20">
+              Atender
             </button>
           </div>
         </div>

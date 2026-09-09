@@ -10,6 +10,7 @@ import Inbox from './pages/Inbox';
 import Kanban from './pages/Kanban';
 import SuperAdmin from './pages/SuperAdmin';
 import CRM from './pages/CRM';
+import Analytics from './pages/Analytics';
 import PortalLayout from './components/PortalLayout';
 import PortalDashboard from './pages/PortalDashboard';
 import PortalFaturas from './pages/PortalFaturas';
@@ -23,6 +24,7 @@ export default function App() {
         {/* Operador / Admin Routes */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Inbox />} />
+          <Route path="dashboard" element={<Analytics />} />
           <Route path="suporte" element={<Kanban type="Suporte" />} />
           <Route path="vendas" element={<Kanban type="Vendas" />} />
           <Route path="crm" element={<CRM />} />

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings } from 'lucide-react';
+import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2 } from 'lucide-react';
 
 export default function PortalDashboard() {
   const [faturas, setFaturas] = useState<any[]>([]);
+  const [loadingPix, setLoadingPix] = useState(false);
+  const [loadingBoleto, setLoadingBoleto] = useState(false);
+  const [pixCode, setPixCode] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/sgp/faturas')
@@ -12,83 +15,147 @@ export default function PortalDashboard() {
 
   const faturaPendente = faturas.find(f => f.status === 'pendente');
 
+  const handleCopiarPix = async () => {
+    if (!faturaPendente) return;
+    setLoadingPix(true);
+    try {
+      const res = await fetch(`/api/sgp/pix/${faturaPendente.id}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.sucesso && data.codigo_pix) {
+        setPixCode(data.codigo_pix);
+        await navigator.clipboard.writeText(data.codigo_pix);
+        alert("Código PIX Copia e Cola copiado para a área de transferência!");
+      } else {
+        alert("Erro ao gerar PIX. Tente novamente mais tarde.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro de conexão ao gerar PIX.");
+    } finally {
+      setLoadingPix(false);
+    }
+  };
+
+  const handleVerBoleto = async () => {
+    if (!faturaPendente) return;
+    setLoadingBoleto(true);
+    try {
+      const res = await fetch(`/api/sgp/boleto/${faturaPendente.id}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.sucesso && data.url_pdf) {
+        window.open(data.url_pdf, '_blank');
+      } else {
+        alert("Erro ao gerar Boleto. Tente novamente mais tarde.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro de conexão ao gerar Boleto.");
+    } finally {
+      setLoadingBoleto(false);
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Olá, João!</h1>
-        <p className="text-slate-600 text-sm md:text-base">Acompanhe sua conexão e faturas.</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-white font-outfit mb-1">Olá, João!</h1>
+        <p className="text-slate-400 text-sm md:text-base">Acompanhe sua conexão e faturas.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
         {/* Status da Conexão */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                <Wifi size={24} />
+        <div className="bg-[#101726] p-6 rounded-3xl shadow-xl shadow-black/20 border border-slate-800/60 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+          
+          <div className="flex justify-between items-start mb-6 relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-inner rounded-2xl flex items-center justify-center">
+                <Wifi size={26} />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Status da Rede</p>
-                <h3 className="text-lg font-bold text-slate-900">Conectado</h3>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Status da Rede</p>
+                <h3 className="text-xl font-bold text-white font-outfit">Conectado</h3>
               </div>
             </div>
-            <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-bold uppercase">
+            <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
               <CheckCircle2 size={14} /> Online
             </div>
           </div>
-          <div className="space-y-3 border-t border-slate-100 pt-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Plano Atual</span>
-              <span className="font-semibold text-slate-900">Fibra 500MB</span>
+          <div className="space-y-4 border-t border-slate-800/60 pt-5 relative z-10">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-400 font-medium">Plano Atual</span>
+              <span className="font-bold text-slate-200">Fibra 500MB</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Uptime (SGP)</span>
-              <span className="font-semibold text-slate-900">12 dias, 4h</span>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-400 font-medium">Uptime (SGP)</span>
+              <span className="font-bold text-slate-200">12 dias, 4h</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-500">IP Público</span>
-              <span className="font-semibold text-slate-900">189.12.X.X</span>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-400 font-medium">IP Público</span>
+              <span className="font-bold text-slate-200 font-mono">189.12.X.X</span>
             </div>
           </div>
-          <button className="w-full mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+          <button className="w-full mt-8 bg-[#1a2333] hover:bg-slate-800 border border-slate-700/50 text-slate-300 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 relative z-10">
             <Activity size={18} /> Testar Velocidade
           </button>
         </div>
 
         {/* Resumo Financeiro */}
-        <div className="bg-blue-700 p-6 rounded-2xl shadow-sm text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-indigo-900/60 to-purple-900/30 p-6 rounded-3xl shadow-xl shadow-indigo-900/20 border border-indigo-500/30 relative overflow-hidden flex flex-col">
           {/* Decoração de fundo */}
           <div className="absolute top-0 right-0 p-8 opacity-10">
-            <QrCode size={120} />
+            <QrCode size={160} className="fill-indigo-500" />
           </div>
           
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle size={18} className="text-blue-200" />
-              <p className="text-sm font-medium text-blue-100">Próximo Vencimento</p>
+          <div className="relative z-10 flex-1 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <AlertCircle size={16} className="text-indigo-300" />
+                <p className="text-xs font-bold uppercase tracking-wider text-indigo-200">Próximo Vencimento</p>
+              </div>
+              {faturaPendente ? (
+                <>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-2 text-white font-outfit tracking-tight">
+                    <span className="text-xl md:text-2xl text-indigo-400">R$</span> {faturaPendente.valor.toFixed(2).replace('.', ',')}
+                  </h2>
+                  <p className="text-indigo-200 text-sm font-medium">
+                    Vence em {new Date(faturaPendente.vencimento).toLocaleDateString('pt-BR')}
+                  </p>
+                </>
+              ) : (
+                <div className="mt-4">
+                  <h2 className="text-3xl font-bold mb-2 text-white font-outfit">Tudo em dia!</h2>
+                  <p className="text-indigo-200 text-sm">Você não possui faturas pendentes.</p>
+                </div>
+              )}
             </div>
-            {faturaPendente ? (
-              <>
-                <h2 className="text-4xl font-bold mb-1">
-                  R$ {faturaPendente.valor.toFixed(2).replace('.', ',')}
-                </h2>
-                <p className="text-blue-200 text-sm mb-6">
-                  Vence em {new Date(faturaPendente.vencimento).toLocaleDateString('pt-BR')}
-                </p>
-                
+            
+            {faturaPendente && (
+              <div className="mt-8">
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button className="flex-1 bg-white text-blue-700 font-bold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 hover:bg-blue-50">
-                    <QrCode size={18} /> Copiar PIX
+                  <button 
+                    onClick={handleCopiarPix}
+                    disabled={loadingPix}
+                    className="flex-1 bg-white text-indigo-900 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-indigo-50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
+                  >
+                    {loadingPix ? <Loader2 size={18} className="animate-spin" /> : <QrCode size={18} />}
+                    {loadingPix ? 'Gerando...' : 'Copiar PIX'}
                   </button>
-                  <button className="flex-1 bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 hover:bg-blue-500 border border-blue-500">
-                    <Download size={18} /> Ver Boleto
+                  <button 
+                    onClick={handleVerBoleto}
+                    disabled={loadingBoleto}
+                    className="flex-1 bg-indigo-600/80 backdrop-blur-sm text-white font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-indigo-500 border border-indigo-400/50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg shadow-indigo-900/20"
+                  >
+                    {loadingBoleto ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+                    {loadingBoleto ? 'Gerando...' : 'Ver Boleto'}
                   </button>
                 </div>
-              </>
-            ) : (
-              <div className="mt-4">
-                <h2 className="text-2xl font-bold mb-2">Tudo em dia!</h2>
-                <p className="text-blue-200 text-sm">Você não possui faturas pendentes.</p>
+                {pixCode && (
+                   <div className="mt-4 p-3 bg-indigo-950/50 rounded-xl border border-indigo-500/30 backdrop-blur-sm animate-in fade-in zoom-in-95">
+                     <p className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 mb-1">Linha Digitável Copiada:</p>
+                     <p className="text-xs font-mono break-all text-indigo-100 leading-relaxed">{pixCode}</p>
+                   </div>
+                )}
               </div>
             )}
           </div>
@@ -96,10 +163,12 @@ export default function PortalDashboard() {
       </div>
 
       {/* Atalhos Rápidos */}
-      <h3 className="font-bold text-slate-900 mb-4 px-1">Atendimento Rápido</h3>
+      <h3 className="font-bold text-white font-outfit mb-5 px-1 flex items-center gap-2">
+        Atendimento Rápido
+      </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" />
-        <QuickAction icon={<CreditCard />} label="Histórico Financeiro" />
+        <QuickAction icon={<CreditCard />} label="Faturas SGP" />
         <QuickAction icon={<Copy />} label="Comprovantes" />
         <QuickAction icon={<Settings />} label="Alterar Senha" />
       </div>
@@ -109,11 +178,11 @@ export default function PortalDashboard() {
 
 function QuickAction({ icon, label }: { icon: React.ReactNode, label: string }) {
   return (
-    <button className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center gap-3 hover:border-blue-300 hover:shadow-md transition-all group">
-      <div className="w-10 h-10 rounded-full bg-slate-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-50 group-hover:scale-110 transition-all">
+    <button className="bg-[#101726] p-5 rounded-2xl border border-slate-800/60 shadow-lg shadow-black/10 flex flex-col items-center justify-center gap-4 hover:border-indigo-500/50 hover:bg-[#1a2333] hover:-translate-y-1 transition-all group">
+      <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-indigo-500/40 transition-all">
         {icon}
       </div>
-      <span className="text-xs md:text-sm font-semibold text-slate-700 text-center">{label}</span>
+      <span className="text-xs md:text-sm font-bold text-slate-300 text-center group-hover:text-white transition-colors">{label}</span>
     </button>
   );
 }
