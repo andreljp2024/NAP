@@ -11,6 +11,9 @@ import Kanban from './pages/Kanban';
 import SuperAdmin from './pages/SuperAdmin';
 import CRM from './pages/CRM';
 import Analytics from './pages/Analytics';
+import Operadores from './pages/Operadores';
+import Campanhas from './pages/Campanhas';
+
 import PortalLayout from './components/PortalLayout';
 import PortalDashboard from './pages/PortalDashboard';
 import PortalFaturas from './pages/PortalFaturas';
@@ -28,6 +31,8 @@ export default function App() {
           <Route path="suporte" element={<Kanban type="Suporte" />} />
           <Route path="vendas" element={<Kanban type="Vendas" />} />
           <Route path="crm" element={<CRM />} />
+          <Route path="campanhas" element={<Campanhas />} />
+          <Route path="operadores" element={<Operadores />} />
           <Route path="configuracoes" element={<SuperAdmin />} />
         </Route>
 

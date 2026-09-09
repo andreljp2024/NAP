@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart } from 'lucide-react';
+import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone } from 'lucide-react';
 import CTIReverso from './CTIReverso';
+import Webphone from './Webphone';
 
 export default function Layout() {
   return (
@@ -24,6 +25,7 @@ export default function Layout() {
             <NavItem to="/" icon={<MessageSquare size={18} />} label="Inbox Unificado" />
             <NavItem to="/suporte" icon={<Trello size={18} />} label="Kanban Suporte" />
             <NavItem to="/vendas" icon={<Trello size={18} />} label="Kanban Vendas" />
+            <NavItem to="/campanhas" icon={<Megaphone size={18} />} label="Ativo (Campanhas)" />
             <NavItem to="/crm" icon={<Users size={18} />} label="CRM Clientes" />
           </nav>
         </div>
@@ -31,6 +33,7 @@ export default function Layout() {
         <div className="px-4 mt-auto py-3">
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-2">Administração</p>
           <nav className="flex flex-col gap-1">
+            <NavItem to="/operadores" icon={<ShieldUser size={18} />} label="Operadores" />
             <NavItem to="/configuracoes" icon={<Settings size={18} />} label="Ajustes da IA" />
           </nav>
         </div>
@@ -51,6 +54,14 @@ export default function Layout() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden relative bg-[#0b0f19]">
+        
+        {/* Top Header / Webphone Injection */}
+        <header className="absolute top-0 right-0 w-full h-16 flex justify-end items-center px-6 pointer-events-none z-40">
+          <div className="pointer-events-auto">
+            <Webphone />
+          </div>
+        </header>
+
         <CTIReverso />
         <Outlet />
       </main>

@@ -195,6 +195,44 @@ export default function CRM() {
 
             <div>
               <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
+                <Phone size={16} className="text-indigo-400" /> Histórico PABX (FreePBX)
+              </h3>
+              <div className="bg-[#1a2333] border border-slate-700/50 rounded-xl divide-y divide-slate-700/50 shadow-inner">
+                <div className="p-4 flex justify-between items-center hover:bg-slate-800/40 transition-colors">
+                  <div className="flex gap-3 items-center">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                      <Phone size={12} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-200">Recebida (Suporte N1)</p>
+                      <p className="text-xs text-slate-500 font-medium mt-0.5">Atendida por: João Silva (Ramal 2001)</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">Hoje, 10:45</p>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">04m 12s</p>
+                  </div>
+                </div>
+                <div className="p-4 flex justify-between items-center hover:bg-slate-800/40 transition-colors">
+                  <div className="flex gap-3 items-center">
+                    <div className="w-8 h-8 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                      <Phone size={12} className="text-red-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-200">Não Atendida</p>
+                      <p className="text-xs text-slate-500 font-medium mt-0.5">Fila: Retenção (Abandono)</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">Ontem, 16:30</p>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">--</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
                 <Trello size={16} className="text-indigo-400" /> Histórico de Chamados
               </h3>
               <div className="bg-[#1a2333] border border-slate-700/50 rounded-xl p-4 shadow-inner hover:border-slate-600 transition-colors">

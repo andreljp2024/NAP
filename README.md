@@ -13,11 +13,13 @@ A aplicação foi construída utilizando uma arquitetura Full-Stack:
 
 ### 1. Painel do Operador (Admin/Backoffice)
 Acessível via rotas padrão (`/`, `/crm`, `/suporte`, `/configuracoes`).
-- **Inbox Unificado:** Centraliza mensagens de WhatsApp, Webchat e outras fontes.
+- **Inbox Unificado:** Centraliza mensagens de WhatsApp, Webchat e outras fontes. Integra-se diretamente com a IA, gerando sugestões de resposta automáticas com base no histórico do cliente.
 - **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar (drag and drop).
-- **CRM:** Tabela de clientes com busca inteligente, status de conexão (Radius/MikroTik simulado) e informações rápidas de contratos.
+- **CRM (Customer 360):** Tabela de clientes com busca inteligente, status de conexão (Radius/MikroTik simulado) e informações rápidas. Ao clicar em um cliente, uma ficha lateral (*Slide-over*) exibe um painel 360° gerado pela IA, listando o financeiro do SGP e um **histórico de ligações do PABX (FreePBX/Asterisk)**.
 - **CTI Reverso (FreePBX):** Um componente global que escuta eventos em tempo real via SSE (Server-Sent Events). Quando uma chamada entra no PABX, um alerta visual salta na tela do operador, permitindo abrir a ficha do cliente instantaneamente.
-- **Super Admin:** Painel de configuração global, monitoramento de integrações (SGP, 9router) e ajuste fino (tuning) dos prompts do LLM.
+- **Webphone SIP/WebRTC:** Localizado globalmente no canto superior direito do painel, permite a discagem, controle de mudo e integração direta do ramal do atendente (ex: Ramal 2001) através da interface web.
+- **Gestão de Operadores:** Módulo para administrar a equipe, exibindo as filas (skills), os ramais conectados e o monitoramento online/pausa.
+- **Super Admin:** Painel de configuração global, monitoramento de integrações (SGP, WhatsApp API) e ajuste fino (tuning) da temperatura e dos prompts do LLM.
 
 ### 2. Portal do Cliente (PWA)
 Acessível via rota `/portal`.
