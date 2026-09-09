@@ -148,14 +148,31 @@ export default function Inbox() {
 
           {/* Input */}
           <div className="p-4 bg-[#101726] border-t border-slate-800/60 relative z-20">
-            <div className="flex gap-3 max-w-5xl mx-auto">
+            {activeConversation.canal === 'whatsapp' && (
+              <div className="max-w-5xl mx-auto flex gap-2 mb-3 overflow-x-auto pb-1" style={{scrollbarWidth: 'none'}}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 py-1.5 flex items-center shrink-0">WABA Templates:</span>
+                <button className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                  Fatura Vencida (Boleto)
+                </button>
+                <button className="text-[11px] font-bold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                  Manutenção Agendada
+                </button>
+                <button className="text-[11px] font-bold text-slate-300 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors">
+                  Aviso de Retenção
+                </button>
+              </div>
+            )}
+            <div className="flex gap-3 max-w-5xl mx-auto items-center">
+              <button className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-white bg-[#1a2333] border border-slate-700/50 rounded-xl transition-colors hover:border-slate-600 shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              </button>
               <input 
                 id="chat-input"
                 type="text" 
                 placeholder="Digite sua mensagem (use '/' para comandos rápidos)..." 
                 className="flex-1 bg-[#1a2333] border border-slate-700/50 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 rounded-xl px-5 py-3 text-slate-200 placeholder:text-slate-500 transition-all shadow-inner"
               />
-              <button className="w-12 h-12 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95">
+              <button className="w-12 h-12 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95 shrink-0">
                 <Send size={18} className="ml-1" />
               </button>
             </div>
