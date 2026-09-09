@@ -1,194 +1,196 @@
 import React, { useState } from 'react';
-import { Workflow, Webhook, Bot, Database, MessageCircle, Phone, GitFork, Play, Settings, Save, Plus, MoreHorizontal } from 'lucide-react';
+import { Workflow, Play, Settings, Save, Plus, ExternalLink, Activity, Server, Code, Loader2, RefreshCw, X } from 'lucide-react';
 
 export default function Automacoes() {
-  const [activeFlow, setActiveFlow] = useState('Triagem Inteligente (WhatsApp)');
+  const [activeFlow, setActiveFlow] = useState<any | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'editor'>('list');
+  const [isTesting, setIsTesting] = useState(false);
+  const [testResult, setTestResult] = useState<any>(null);
 
   const flows = [
-    { id: 1, name: 'Triagem Inteligente (WhatsApp)', status: 'Ativo' },
-    { id: 2, name: 'Cobrança PIX Vencimento', status: 'Ativo' },
-    { id: 3, name: 'Pesquisa NPS (URA Reversa)', status: 'Pausado' },
+    { 
+      id: 1, 
+      name: 'Triagem Inteligente (WhatsApp)', 
+      status: 'Ativo', 
+      webhook_id: 'triagem-waba',
+      description: 'Recebe a mensagem do cliente, verifica o número no SGP e direciona para IA ou fila de suporte.',
+      iframe_url: 'https://demo.n8n.io/workflow/triagem' 
+    },
+    { 
+      id: 2, 
+      name: 'Cobrança PIX Automática', 
+      status: 'Ativo', 
+      webhook_id: 'cobranca-pix',
+      description: 'Dispara fatura via WhatsApp 3 dias antes do vencimento.',
+      iframe_url: 'https://demo.n8n.io/workflow/cobranca' 
+    },
+    { 
+      id: 3, 
+      name: 'Pesquisa NPS (Pós-Atendimento)', 
+      status: 'Pausado', 
+      webhook_id: 'nps-pesquisa',
+      description: 'Envia formulário de avaliação após encerramento do ticket no Kanban.',
+      iframe_url: 'https://demo.n8n.io/workflow/nps' 
+    },
   ];
 
-  return (
-    <div className="flex-1 flex h-full bg-slate-50 overflow-hidden">
+  const handleTestWebhook = async (flow: any) => {
+    setIsTesting(true);
+    setTestResult(null);
+    
+    try {
+      const payload = {
+        teste: true,
+        cliente_id: 12345,
+        mensagem: "Teste manual via painel NAP",
+        timestamp: new Date().toISOString()
+      };
+
+      const res = await fetch(`/api/n8n/webhook/${flow.webhook_id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
       
-      {/* Sidebar - Lista de Fluxos */}
-      <div className="w-72 bg-white border-r border-slate-200 flex flex-col z-20">
-        <div className="p-5 border-b border-slate-200 bg-white">
-          <h2 className="text-lg font-bold text-slate-900 font-outfit flex items-center gap-2">
-            <Workflow className="text-blue-600" size={20} />
-            Motor Visual (n8n)
-          </h2>
-          <p className="text-xs text-slate-600 mt-1">Automação de processos via nós.</p>
+      const data = await res.json();
+      setTestResult(data);
+    } catch (err) {
+      setTestResult({ error: 'Falha ao conectar com servidor Proxy.' });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  return (
+    <div className="flex-1 flex flex-col h-full bg-slate-50 relative overflow-hidden">
+      
+      {/* Header */}
+      <div className="p-6 border-b border-slate-200 bg-white flex justify-between items-center z-10 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 font-outfit flex items-center gap-2">
+            <Workflow className="text-blue-600" size={24} />
+            Motor de Automações (n8n)
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">Integração Híbrida: Disparo via API Proxy e edição visual embarcada.</p>
         </div>
-        
-        <div className="p-4 flex-1 overflow-y-auto space-y-2">
-          {flows.map(flow => (
-            <div 
-              key={flow.id}
-              onClick={() => setActiveFlow(flow.name)}
-              className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                activeFlow === flow.name 
-                  ? 'bg-slate-50 border-blue-600/50 shadow-inner' 
-                  : 'bg-transparent border-transparent hover:bg-slate-100/40 hover:border-slate-200'
-              }`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <p className={`font-bold text-sm ${activeFlow === flow.name ? 'text-blue-600' : 'text-slate-600'}`}>
-                  {flow.name}
-                </p>
-              </div>
-              <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
-                flow.status === 'Ativo' 
-                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200'
-                  : 'bg-slate-100 text-slate-600 border-slate-200'
-              }`}>
-                {flow.status}
-              </span>
-            </div>
-          ))}
-          
-          <button className="w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed border-slate-200 hover:border-blue-600 hover:bg-blue-600/5 text-slate-600 hover:text-blue-600 transition-colors text-sm font-bold">
-            <Plus size={16} /> Novo Workflow
+        {viewMode === 'editor' && (
+          <button 
+            onClick={() => { setViewMode('list'); setActiveFlow(null); setTestResult(null); }}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors text-sm border border-slate-200"
+          >
+            <X size={16} /> Fechar Editor Visual
           </button>
-        </div>
+        )}
       </div>
 
-      {/* Main Canvas (Mocking N8N interface) */}
-      <div className="flex-1 flex flex-col relative bg-slate-50">
-        
-        {/* Canvas Header */}
-        <div className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 z-20">
-          <div className="flex items-center gap-4">
-            <h1 className="font-bold text-slate-900 text-lg font-outfit">{activeFlow}</h1>
-            <span className="bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-mono px-2 py-1 rounded">ID: wkf_982jh3</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-lg transition-colors">
-              <Settings size={18} />
-            </button>
-            <button className="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-inner">
-              <Play size={16} className="text-emerald-600" /> Executar Teste
-            </button>
-            <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-blue-700/20">
-              <Save size={16} /> Salvar e Ativar
+      {viewMode === 'list' ? (
+        /* Lista de Fluxos */
+        <div className="p-8 flex-1 overflow-y-auto max-w-6xl mx-auto w-full">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-lg font-bold text-slate-900 font-outfit">Fluxos Integrados</h2>
+            <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95">
+              <Plus size={18} /> Novo Fluxo
             </button>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {flows.map((flow) => (
+              <div key={flow.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:border-slate-300 transition-colors">
+                <div className="p-6 flex-1">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                      <Workflow size={20} className="text-blue-600" />
+                    </div>
+                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                      flow.status === 'Ativo' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200'
+                    }`}>
+                      {flow.status}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-lg mb-2">{flow.name}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mb-4">{flow.description}</p>
+                  
+                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center gap-2">
+                    <Server size={14} className="text-slate-400" />
+                    <code className="text-xs font-mono text-slate-600 truncate">/api/n8n/webhook/{flow.webhook_id}</code>
+                  </div>
+                </div>
+                
+                <div className="p-4 border-t border-slate-200 bg-slate-50/50 flex gap-2">
+                  <button 
+                    onClick={() => { setActiveFlow(flow); setViewMode('editor'); }}
+                    className="flex-1 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition-colors shadow-sm text-xs flex items-center justify-center gap-2"
+                  >
+                    <Settings size={14} /> Editar no n8n
+                  </button>
+                  <button 
+                    onClick={() => { setActiveFlow(flow); handleTestWebhook(flow); }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-xl transition-colors shadow-sm text-xs flex items-center gap-2"
+                  >
+                    <Play size={14} /> Testar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Área de Log de Testes */}
+          {testResult && (
+            <div className="mt-8 bg-slate-900 rounded-2xl p-6 shadow-xl border border-slate-800 animate-in fade-in slide-in-from-bottom-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white font-bold font-outfit flex items-center gap-2">
+                  <Activity size={18} className="text-emerald-400" /> Resultado do Disparo (Webhook Proxy)
+                </h3>
+                <button onClick={() => setTestResult(null)} className="text-slate-400 hover:text-white transition-colors">
+                  <X size={18} />
+                </button>
+              </div>
+              <pre className="bg-slate-950 p-4 rounded-xl overflow-x-auto text-xs font-mono text-emerald-400 border border-slate-800 shadow-inner">
+                {JSON.stringify(testResult, null, 2)}
+              </pre>
+            </div>
+          )}
         </div>
-
-        {/* Node Graph Area */}
-        <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center">
+      ) : (
+        /* Editor Visual (Iframe Embarcado) */
+        <div className="flex-1 flex flex-col bg-slate-100 relative">
           
-          <div className="relative w-full max-w-5xl h-[500px] flex items-center justify-between z-10 px-10">
-            {/* SVG Lines connecting nodes */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-              {/* WABA to Agent (Horizontal center) */}
-              <path d="M 180 250 L 320 250" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
-              
-              {/* Agent to Switch (Horizontal center) */}
-              <path d="M 490 250 L 630 250" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
-              
-              {/* Switch to SGP (Diagonal Up) */}
-              <path d="M 800 240 C 850 240, 850 150, 880 150" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
-              
-              {/* Switch to FreePBX (Diagonal Down) */}
-              <path d="M 800 260 C 850 260, 850 350, 880 350" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
-            </svg>
-
-            {/* Column 1: Trigger */}
-            <div className="relative z-10">
-              <NodeCard 
-                icon={<Webhook className="text-emerald-600" size={20} />}
-                title="Webhook WABA"
-                subtitle="Gatilho WABA Oficial"
-                type="trigger"
-              />
+          {/* Barra de Ferramentas Superior do Iframe */}
+          <div className="h-12 bg-slate-900 border-b border-slate-800 flex justify-between items-center px-6">
+            <div className="flex items-center gap-3">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+              <span className="text-slate-300 font-medium text-xs">Conectado à instância externa do n8n</span>
             </div>
-
-            {/* Column 2: Agent */}
-            <div className="relative z-10">
-              <NodeCard 
-                icon={<Bot className="text-blue-600" size={20} />}
-                title="Agente IA (9router)"
-                subtitle="Análise de Intenção"
-                type="action"
-              />
-            </div>
-
-            {/* Column 3: Logic Router */}
-            <div className="relative z-10">
-              <NodeCard 
-                icon={<GitFork className="text-amber-600" size={20} />}
-                title="Roteador Lógico"
-                subtitle="Regras de Transbordo"
-                type="logic"
-              />
-            </div>
-
-            {/* Column 4: Endpoints */}
-            <div className="relative z-10 flex flex-col gap-20">
-              <NodeCard 
-                icon={<Database className="text-blue-400" size={20} />}
-                title="Consultar SGP"
-                subtitle="Busca Financeira (HTTP)"
-                type="action"
-              />
-              <NodeCard 
-                icon={<Phone className="text-red-400" size={20} />}
-                title="Originar Chamada"
-                subtitle="FreePBX AMI / AGI"
-                type="action"
-              />
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-bold">
+                <ExternalLink size={14} /> Abrir em Nova Aba
+              </a>
+              <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+                Ativar Fluxo
+              </button>
             </div>
           </div>
-          
-          {/* Zoom Controls */}
-          <div className="absolute bottom-6 left-6 flex bg-white border border-slate-200 rounded-lg shadow-md z-20">
-            <button className="px-3 py-1.5 text-slate-600 hover:text-slate-900 border-r border-slate-200 transition-colors font-mono font-bold">-</button>
-            <span className="px-4 py-1.5 text-slate-600 text-xs font-mono flex items-center">100%</span>
-            <button className="px-3 py-1.5 text-slate-600 hover:text-slate-900 border-l border-slate-200 transition-colors font-mono font-bold">+</button>
-          </div>
 
-          {/* Powered by N8N badge */}
-          <div className="absolute bottom-6 right-6 z-20">
-            <div className="bg-white/80 backdrop-blur-md border border-slate-200 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
-              <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Powered by</span>
-              <div className="flex items-center gap-1 font-bold text-slate-900 text-lg">
-                <span className="text-orange-500">n8</span>n
+          {/* Iframe Mock */}
+          <div className="flex-1 bg-white relative">
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-[url('https://cdn.pixabay.com/photo/2021/11/04/19/39/grid-6769225_1280.png')] bg-cover opacity-80">
+              <div className="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-slate-200 text-center max-w-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-orange-500/30 mb-6 border-2 border-white">
+                   <Workflow size={32} className="text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 font-outfit mb-2">n8n Embed Mode</h2>
+                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                  Neste ambiente de produção, o iFrame original do n8n carrega aqui via Single Sign-On (SSO). O operador constrói os nós visualmente sem sair do painel NAP.
+                </p>
+                <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left font-mono text-xs text-slate-700 shadow-inner">
+                  <p className="mb-2 text-slate-400 font-bold uppercase">URL do iFrame renderizado:</p>
+                  <p className="text-blue-600 break-all">{activeFlow?.iframe_url}?embed=true&token=JWT_SSO_TOKEN</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
-}
-
-function NodeCard({ icon, title, subtitle, type }: { icon: React.ReactNode, title: string, subtitle: string, type: 'trigger' | 'action' | 'logic' }) {
-  return (
-    <div className="w-[170px] bg-slate-50 border border-slate-200 rounded-xl shadow-md shadow-sm flex flex-col relative group hover:border-blue-600/50 transition-colors cursor-grab">
-      {/* Input Port (Left) */}
-      {type !== 'trigger' && (
-        <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-slate-100 border-2 border-slate-500 rounded-full group-hover:border-blue-600 transition-colors"></div>
-      )}
-      
-      {/* Output Port (Right) */}
-      <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-slate-100 border-2 border-slate-500 rounded-full group-hover:border-blue-600 transition-colors"></div>
-
-      <div className="p-3 flex items-start gap-3">
-        <div className="mt-1 bg-white p-1.5 rounded-lg border border-slate-200 shadow-inner">
-          {icon}
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <p className="text-[11px] font-bold text-slate-900 leading-tight truncate">{title}</p>
-          <p className="text-[9px] text-slate-600 mt-0.5 truncate">{subtitle}</p>
-        </div>
-      </div>
-      
-      <div className={`h-1 w-full rounded-b-xl ${
-        type === 'trigger' ? 'bg-emerald-500' : type === 'logic' ? 'bg-amber-500' : 'bg-blue-600'
-      }`}></div>
-    </div>
-  )
 }
