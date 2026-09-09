@@ -45,7 +45,7 @@ export default function Inbox() {
       {/* Lista de Conversas */}
       <div className="w-80 border-r border-slate-200 bg-white flex flex-col z-10">
         <div className="p-5 border-b border-slate-200">
-          <h1 className="font-bold text-xl text-slate-600 font-outfit mb-4">Inbox</h1>
+          <h1 className="font-bold text-xl text-slate-900 font-outfit mb-4">Inbox</h1>
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-slate-500" size={18} />
             <input 
@@ -89,7 +89,7 @@ export default function Inbox() {
                 <User size={20} />
               </div>
               <div>
-                <h2 className="font-bold text-slate-600 font-outfit text-lg">Cliente #{activeConversation.contato_id}</h2>
+                <h2 className="font-bold text-slate-900 font-outfit text-lg">Cliente #{activeConversation.contato_id}</h2>
                 <div className="flex items-center gap-2">
                   <span className="flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>

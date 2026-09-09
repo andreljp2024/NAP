@@ -5,7 +5,7 @@ export function usePushNotifications() {
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    if ('Notification' in window) {
+    if ('Notification' in window && 'serviceWorker' in navigator) {
       setIsSupported(true);
       setPermission(Notification.permission);
     }
@@ -17,8 +17,7 @@ export function usePushNotifications() {
       const result = await Notification.requestPermission();
       setPermission(result);
       if (result === 'granted') {
-        // Simulando que acabamos de receber uma notificação ao aceitar
-        new Notification('Portal NAP', {
+        showNotification('Portal NAP', {
           body: 'Notificações ativadas com sucesso! Você receberá avisos sobre faturas e suporte.',
           icon: '/pwa-192x192.png'
         });
@@ -28,12 +27,31 @@ export function usePushNotifications() {
     }
   };
 
+  const showNotification = async (title: string, options: NotificationOptions) => {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration && registration.showNotification) {
+        await registration.showNotification(title, options);
+      } else {
+        // Fallback para desktop se Service Worker não suportar showNotification
+        new Notification(title, options);
+      }
+    } catch (e) {
+      // Fallback genérico
+      new Notification(title, options);
+    }
+  };
+
   const simulatePush = (title: string, body: string) => {
     if (permission === 'granted' && isSupported) {
-      new Notification(title, {
+      showNotification(title, {
         body,
-        icon: '/pwa-192x192.png'
+        icon: '/pwa-192x192.png',
+        badge: '/pwa-maskable-512x512.png'
+        
       });
+    } else {
+      alert(`Simulação de Push (Permissão negada ou não suportada):\n\n${title}\n${body}`);
     }
   };
 

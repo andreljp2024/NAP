@@ -33,13 +33,13 @@ export default function CTIReverso() {
           <PhoneIncoming size={22} className="text-blue-600" />
         </div>
         <div>
-          <h3 className="font-bold text-lg text-white font-outfit">Chamada Entrante</h3>
+          <h3 className="font-bold text-lg text-slate-900 font-outfit">Chamada Entrante</h3>
           <p className="text-blue-600 text-sm font-medium tracking-wide uppercase text-[10px]">{call.fila}</p>
         </div>
       </div>
       <div className="p-6">
         <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500 mb-2">Contato Identificado</p>
-        <p className="font-bold text-2xl text-white font-outfit mb-1">{call.contato}</p>
+        <p className="font-bold text-2xl text-slate-900 font-outfit mb-1">{call.contato}</p>
         <p className="text-slate-600 font-mono text-sm mb-6 bg-slate-50 px-2 py-1 rounded inline-block">{call.telefone}</p>
         
         <div className="flex gap-3">

@@ -78,22 +78,22 @@ export default function Automacoes() {
         </div>
 
         {/* Node Graph Area */}
-        <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center">
+        <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center">
           
           <div className="relative w-full max-w-5xl h-[500px] flex items-center justify-between z-10 px-10">
             {/* SVG Lines connecting nodes */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
               {/* WABA to Agent (Horizontal center) */}
-              <path d="M 180 250 L 320 250" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M 180 250 L 320 250" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
               
               {/* Agent to Switch (Horizontal center) */}
-              <path d="M 490 250 L 630 250" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M 490 250 L 630 250" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
               
               {/* Switch to SGP (Diagonal Up) */}
-              <path d="M 800 240 C 850 240, 850 150, 880 150" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M 800 240 C 850 240, 850 150, 880 150" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
               
               {/* Switch to FreePBX (Diagonal Down) */}
-              <path d="M 800 260 C 850 260, 850 350, 880 350" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M 800 260 C 850 260, 850 350, 880 350" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" />
             </svg>
 
             {/* Column 1: Trigger */}

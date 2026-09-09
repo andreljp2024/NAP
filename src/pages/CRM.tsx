@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, UserPlus, RefreshCw, Filter, MoreHorizontal, CheckCircle2, XCircle, X, Activity, FileText, Trello, Zap } from 'lucide-react';
+import { Search, UserPlus, RefreshCw, Filter, MoreHorizontal, CheckCircle2, XCircle, X, Activity, FileText, Trello, Zap, Phone } from 'lucide-react';
 import type { Contato } from '../types';
 
 export default function CRM() {
@@ -175,7 +175,7 @@ export default function CRM() {
               <h3 className="font-bold text-slate-900 font-outfit mb-3 text-sm flex items-center gap-2">
                 <FileText size={16} className="text-blue-600" /> Financeiro (SGP)
               </h3>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl divide-y divide-slate-700/50 shadow-inner">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl divide-y divide-slate-200 shadow-inner">
                 <div className="p-4 flex justify-between items-center">
                   <div>
                     <p className="text-sm font-bold text-slate-900">Mensalidade (Setembro)</p>
@@ -197,7 +197,7 @@ export default function CRM() {
               <h3 className="font-bold text-slate-900 font-outfit mb-3 text-sm flex items-center gap-2">
                 <Phone size={16} className="text-blue-600" /> Histórico PABX (FreePBX)
               </h3>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl divide-y divide-slate-700/50 shadow-inner">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl divide-y divide-slate-200 shadow-inner">
                 <div className="p-4 flex justify-between items-center hover:bg-slate-100/40 transition-colors">
                   <div className="flex gap-3 items-center">
                     <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-200 flex items-center justify-center">

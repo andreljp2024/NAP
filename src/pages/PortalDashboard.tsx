@@ -1,3 +1,5 @@
+import { Bell } from 'lucide-react';
+import { usePushNotifications } from '../hooks/usePushNotifications';
 import React, { useState, useEffect } from 'react';
 import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2 } from 'lucide-react';
 
