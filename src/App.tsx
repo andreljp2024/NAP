@@ -20,6 +20,7 @@ import PortalDashboard from './pages/PortalDashboard';
 import PortalFaturas from './pages/PortalFaturas';
 import PortalSuporte from './pages/PortalSuporte';
 import PortalConta from './pages/PortalConta';
+import ConsultaSGP from './pages/ConsultaSGP';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="suporte" element={<Kanban type="Suporte" />} />
           <Route path="vendas" element={<Kanban type="Vendas" />} />
           <Route path="crm" element={<CRM />} />
+          <Route path="sgp" element={<ConsultaSGP />} />
           <Route path="campanhas" element={<Campanhas />} />
           <Route path="operadores" element={<Operadores />} />
           <Route path="automacoes" element={<Automacoes />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone, Workflow } from 'lucide-react';
+import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone, Workflow, Server } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
 
@@ -27,6 +27,7 @@ export default function Layout() {
             <NavItem to="/vendas" icon={<Trello size={18} />} label="Kanban Vendas" />
             <NavItem to="/campanhas" icon={<Megaphone size={18} />} label="Ativo (Campanhas)" />
             <NavItem to="/crm" icon={<Users size={18} />} label="CRM Clientes" />
+            <NavItem to="/sgp" icon={<Server size={18} />} label="Consulta SGP" />
           </nav>
         </div>
 
