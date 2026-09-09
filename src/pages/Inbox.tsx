@@ -114,12 +114,20 @@ export default function Inbox() {
             lastClientMessage={
               activeConversation.mensagens.filter(m => m.autor_tipo === 'cliente').pop()?.conteudo || ''
             } 
+            onUseSuggestion={(text) => {
+              const inputEl = document.getElementById('chat-input') as HTMLInputElement;
+              if (inputEl) {
+                inputEl.value = text;
+                inputEl.focus();
+              }
+            }}
           />
 
           {/* Input */}
           <div className="p-4 bg-white border-t border-slate-200">
             <div className="flex gap-2">
               <input 
+                id="chat-input"
                 type="text" 
                 placeholder="Digite sua mensagem (use '/' para comandos rápidos)..." 
                 className="flex-1 bg-slate-100 border-none outline-none focus:ring-2 focus:ring-blue-500 rounded-md px-4 py-2"
@@ -139,7 +147,7 @@ export default function Inbox() {
   );
 }
 
-function DynamicAISuggestion({ lastClientMessage }: { lastClientMessage: string }) {
+function DynamicAISuggestion({ lastClientMessage, onUseSuggestion }: { lastClientMessage: string, onUseSuggestion: (text: string) => void }) {
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -179,7 +187,10 @@ function DynamicAISuggestion({ lastClientMessage }: { lastClientMessage: string 
             {loading ? 'Analisando histórico e dados do SGP...' : suggestion || 'Não foi possível gerar sugestão.'}
           </p>
           {!loading && suggestion && (
-            <button className="mt-2 text-xs font-medium bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 transition-colors">
+            <button 
+              onClick={() => onUseSuggestion(suggestion)}
+              className="mt-2 text-xs font-medium bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 transition-colors"
+            >
               Usar Resposta
             </button>
           )}
