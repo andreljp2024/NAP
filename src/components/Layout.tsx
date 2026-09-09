@@ -35,7 +35,7 @@ export default function Layout() {
           <nav className="flex flex-col gap-1">
             <NavItem to="/automacoes" icon={<Workflow size={18} />} label="Fluxos (n8n)" />
             <NavItem to="/operadores" icon={<ShieldUser size={18} />} label="Operadores" />
-            <NavItem to="/configuracoes" icon={<Settings size={18} />} label="Ajustes da IA" />
+            <NavItem to="/configuracoes" icon={<Settings size={18} />} label="Painel Super Admin" />
           </nav>
         </div>
         
