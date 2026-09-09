@@ -19,11 +19,17 @@ export default function Login() {
     try {
       await login(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Credenciais inválidas. Tente novamente.');
+    } catch (err: any) {
+      setError(err?.message || 'Credenciais inválidas. Tente novamente.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleQuickFill = (quickEmail: string, quickPass: string) => {
+    setEmail(quickEmail);
+    setPassword(quickPass);
+    setError('');
   };
 
   return (
@@ -77,9 +83,41 @@ export default function Login() {
             <span className="font-bold text-xl text-slate-900 tracking-tight font-outfit">NAP <span className="text-blue-600 font-medium text-sm">Omni</span></span>
           </div>
 
-          <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-slate-900 font-outfit mb-3">Bem-vindo de volta</h2>
-            <p className="text-slate-500 font-medium">Insira suas credenciais para acessar o painel administrativo.</p>
+          <div className="mb-8 text-center lg:text-left">
+            <h2 className="text-3xl font-bold text-slate-900 font-outfit mb-2">Bem-vindo de volta</h2>
+            <p className="text-slate-500 font-medium text-sm">Insira suas credenciais para acessar o painel administrativo.</p>
+          </div>
+
+          {/* Card com Credenciais de Acesso Disponíveis */}
+          <div className="mb-6 p-3.5 bg-blue-50/70 border border-blue-200 rounded-2xl text-xs space-y-2">
+            <div className="flex items-center justify-between text-blue-900 font-bold">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck size={14} className="text-blue-600" />
+                Credenciais de Acesso (Firebase Auth):
+              </span>
+              <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-mono font-semibold">1-Clique</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => handleQuickFill('admin@provedor.com.br', 'admin123')}
+                className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
+              >
+                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Administrador Geral</span>
+                <span className="block font-mono text-[10px] text-slate-500 truncate">admin@provedor.com.br</span>
+                <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickFill('andreljp@gmail.com', 'admin123')}
+                className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
+              >
+                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Conta Master (Google)</span>
+                <span className="block font-mono text-[10px] text-slate-500 truncate">andreljp@gmail.com</span>
+                <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
+              </button>
+            </div>
           </div>
 
           {error && (
