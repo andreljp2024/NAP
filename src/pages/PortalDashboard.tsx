@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2 } from 'lucide-react';
 
 export default function PortalDashboard() {
+  const { simulatePush } = usePushNotifications();
   const [faturas, setFaturas] = useState<any[]>([]);
   const [loadingPix, setLoadingPix] = useState(false);
   const [loadingBoleto, setLoadingBoleto] = useState(false);
@@ -169,16 +170,20 @@ export default function PortalDashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" />
         <QuickAction icon={<CreditCard />} label="Faturas SGP" />
-        <QuickAction icon={<Copy />} label="Comprovantes" />
+        <QuickAction 
+          icon={<Bell />} 
+          label="Testar Push" 
+          onClick={() => simulatePush('Aviso NAP', 'A sua conexão está operando perfeitamente!')}
+        />
         <QuickAction icon={<Settings />} label="Alterar Senha" />
       </div>
     </div>
   );
 }
 
-function QuickAction({ icon, label }: { icon: React.ReactNode, label: string }) {
+function QuickAction({ icon, label, onClick }: { icon: React.ReactNode, label: string, onClick?: () => void }) {
   return (
-    <button className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg shadow-sm flex flex-col items-center justify-center gap-4 hover:border-blue-600/50 hover:bg-slate-50 hover:-translate-y-1 transition-all group">
+    <button onClick={onClick} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg shadow-sm flex flex-col items-center justify-center gap-4 hover:border-blue-600/50 hover:bg-slate-50 hover:-translate-y-1 transition-all group">
       <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 shadow-inner flex items-center justify-center group-hover:bg-blue-600 group-hover:text-slate-900 group-hover:shadow-blue-600/40 transition-all">
         {icon}
       </div>

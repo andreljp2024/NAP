@@ -2,8 +2,12 @@ import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Wifi, CreditCard, HeadphonesIcon, Settings } from 'lucide-react';
 import WebchatWidget from './WebchatWidget';
+import { PWAInstallButton } from './PWAInstallButton';
+import { usePushNotifications } from '../hooks/usePushNotifications';
+import { Bell, BellOff, BellRing } from 'lucide-react';
 
 export default function PortalLayout() {
+  const { isSupported, permission, requestPermission } = usePushNotifications();
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-50 text-slate-700 font-sans">
       {/* Mobile Header */}
@@ -14,8 +18,21 @@ export default function PortalLayout() {
           </div>
           <span className="font-bold text-lg text-slate-900 font-outfit">Provedor</span>
         </div>
-        <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-sm text-slate-600">
-          JS
+        <div className="flex items-center gap-3">
+          {isSupported && permission !== 'granted' && (
+            <button onClick={requestPermission} className="p-2 text-slate-500 hover:text-blue-600 transition-colors" title="Ativar Notificações">
+              <Bell size={20} />
+            </button>
+          )}
+          {permission === 'granted' && (
+            <div className="p-2 text-blue-600" title="Notificações Ativas">
+              <BellRing size={20} />
+            </div>
+          )}
+          <PWAInstallButton />
+          <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-sm text-slate-600">
+            JS
+          </div>
         </div>
       </div>
 
@@ -34,6 +51,18 @@ export default function PortalLayout() {
         </div>
         
         <nav className="flex-1 py-6 flex flex-col gap-1.5 px-4">
+          <div className="mb-4 px-2 flex flex-col gap-2">
+            <PWAInstallButton />
+            {isSupported && permission !== 'granted' && (
+              <button 
+                onClick={requestPermission} 
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all active:scale-95"
+              >
+                <Bell size={18} />
+                Ativar Notificações
+              </button>
+            )}
+          </div>
           <NavItem to="/portal" icon={<Wifi size={20} />} label="Minha Conexão" exact />
           <NavItem to="/portal/faturas" icon={<CreditCard size={20} />} label="Faturas" />
           <NavItem to="/portal/suporte" icon={<HeadphonesIcon size={20} />} label="Suporte Técnico" />
