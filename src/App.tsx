@@ -13,6 +13,7 @@ import CRM from './pages/CRM';
 import Analytics from './pages/Analytics';
 import Operadores from './pages/Operadores';
 import Campanhas from './pages/Campanhas';
+import Automacoes from './pages/Automacoes';
 
 import PortalLayout from './components/PortalLayout';
 import PortalDashboard from './pages/PortalDashboard';
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="crm" element={<CRM />} />
           <Route path="campanhas" element={<Campanhas />} />
           <Route path="operadores" element={<Operadores />} />
+          <Route path="automacoes" element={<Automacoes />} />
           <Route path="configuracoes" element={<SuperAdmin />} />
         </Route>
 

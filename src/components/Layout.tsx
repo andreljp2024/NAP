@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone } from 'lucide-react';
+import { MessageSquare, LayoutDashboard, Settings, Users, Trello, PieChart, ShieldUser, Megaphone, Workflow } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
 
@@ -33,6 +33,7 @@ export default function Layout() {
         <div className="px-4 mt-auto py-3">
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-2">Administração</p>
           <nav className="flex flex-col gap-1">
+            <NavItem to="/automacoes" icon={<Workflow size={18} />} label="Fluxos (n8n)" />
             <NavItem to="/operadores" icon={<ShieldUser size={18} />} label="Operadores" />
             <NavItem to="/configuracoes" icon={<Settings size={18} />} label="Ajustes da IA" />
           </nav>
