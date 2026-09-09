@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Database, MessageCircle, Server, Shield, Activity, Bot, Save, Loader2, Key, SlidersHorizontal } from 'lucide-react';
+import { Database, MessageCircle, Server, Shield, Activity, Bot, Save, Loader2, Key, SlidersHorizontal, Building2, Palette } from 'lucide-react';
 
 export default function SuperAdmin() {
   const [syncing, setSyncing] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Formulário de Configuração do Provedor (White-label)
+  const [providerConfig, setProviderConfig] = useState({
+    nomeFantasia: "Provedor Exemplo Telecom",
+    cnpj: "00.000.000/0001-00",
+    corPrincipal: "#4f46e5",
+    logoUrl: "https://via.placeholder.com/150",
+  });
 
   // Formulário de Configuração de IA
   const [iaConfig, setIaConfig] = useState({
@@ -36,6 +44,84 @@ export default function SuperAdmin() {
           <StatCard title="Uso de IA (Tokens)" value="452.1K" subtitle="Este mês, via 9router" icon={<Activity className="text-indigo-400" />} />
           <StatCard title="Clientes Sincronizados" value="12,450" subtitle="Último sync: há 10 min" icon={<Database className="text-emerald-400" />} />
           <StatCard title="Saúde do Sistema" value="100%" subtitle="Todos os serviços operantes" icon={<Server className="text-indigo-400" />} />
+        </div>
+
+        {/* White-label / Provider Settings */}
+        <div className="bg-[#101726] rounded-3xl shadow-xl shadow-black/20 border border-slate-800/60 overflow-hidden flex flex-col relative mb-8">
+          <div className="border-b border-slate-800/60 p-6 flex items-center justify-between bg-[#0d1321] relative z-10">
+            <div className="flex items-center gap-3">
+              <Building2 className="text-emerald-400" size={20} />
+              <h2 className="text-lg font-bold text-white font-outfit">Identidade Visual e Dados do Provedor (White-label)</h2>
+            </div>
+            <span className="bg-[#1a2333] border border-slate-700/50 text-slate-400 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
+              Isolamento de Tenant
+            </span>
+          </div>
+          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+            {/* Infos Cadastrais */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2 mb-4">
+                <Database size={16} className="text-emerald-400" />
+                Informações Cadastrais
+              </h3>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nome Fantasia (Exibido aos clientes)</label>
+                <input 
+                  type="text" 
+                  value={providerConfig.nomeFantasia} 
+                  onChange={(e) => setProviderConfig({...providerConfig, nomeFantasia: e.target.value})}
+                  className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner" 
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">CNPJ</label>
+                <input 
+                  type="text" 
+                  value={providerConfig.cnpj} 
+                  onChange={(e) => setProviderConfig({...providerConfig, cnpj: e.target.value})}
+                  className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner" 
+                />
+              </div>
+            </div>
+            {/* Visual */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2 mb-4">
+                <Palette size={16} className="text-indigo-400" />
+                Identidade Visual (Portal e Relatórios)
+              </h3>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Cor Principal (HEX)</label>
+                <div className="flex gap-3 items-center">
+                  <div className="w-10 h-10 rounded-lg border border-slate-700 shadow-inner" style={{ backgroundColor: providerConfig.corPrincipal }}></div>
+                  <input 
+                    type="text" 
+                    value={providerConfig.corPrincipal} 
+                    onChange={(e) => setProviderConfig({...providerConfig, corPrincipal: e.target.value})}
+                    className="flex-1 p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm font-mono text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner" 
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Logo URL (PNG/SVG)</label>
+                <input 
+                  type="text" 
+                  value={providerConfig.logoUrl} 
+                  onChange={(e) => setProviderConfig({...providerConfig, logoUrl: e.target.value})}
+                  className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner" 
+                />
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#0d1321] p-4 border-t border-slate-800/60 flex justify-end">
+            <button 
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/20 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
+            >
+              {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              {saving ? 'Aplicando...' : 'Aplicar Branding'}
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
