@@ -13,31 +13,29 @@ A aplicação foi construída utilizando uma arquitetura Full-Stack:
 
 ### 1. Painel do Operador (Admin/Backoffice)
 Acessível via rotas padrão (`/`, `/crm`, `/suporte`, `/configuracoes`).
-- **Inbox Unificado:** Centraliza mensagens de WhatsApp, Webchat e outras fontes. Integra-se diretamente com a IA, gerando sugestões de resposta automáticas com base no histórico do cliente.
-- **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar (drag and drop).
-- **CRM (Customer 360):** Tabela de clientes com busca inteligente, status de conexão (Radius/MikroTik simulado) e informações rápidas. Ao clicar em um cliente, uma ficha lateral (*Slide-over*) exibe um painel 360° gerado pela IA, listando o financeiro do SGP e um **histórico de ligações do PABX (FreePBX/Asterisk)**.
-- **CTI Reverso (FreePBX):** Um componente global que escuta eventos em tempo real via SSE (Server-Sent Events). Quando uma chamada entra no PABX, um alerta visual salta na tela do operador, permitindo abrir a ficha do cliente instantaneamente.
-- **Webphone SIP/WebRTC:** Localizado globalmente no canto superior direito do painel, permite a discagem, controle de mudo e integração direta do ramal do atendente (ex: Ramal 2001) através da interface web.
-- **Gestão de Operadores:** Módulo para administrar a equipe, exibindo as filas (skills), os ramais conectados e o monitoramento online/pausa.
-- **Super Admin:** Painel de configuração global, monitoramento de integrações (SGP, WhatsApp API) e ajuste fino (tuning) da temperatura e dos prompts do LLM.
+
+- **Inbox Unificado:** Centraliza mensagens de WhatsApp (WABA), Webchat e outras fontes. Integra-se diretamente com a IA, gerando sugestões de resposta automáticas com base no histórico do cliente. Inclui suporte nativo para atalhos de disparo (Templates HSM) e anexos da API do WhatsApp.
+- **CRM (Customer 360):** Tabela de clientes com busca inteligente. Ao clicar em um cliente, uma ficha lateral (*Slide-over*) exibe um painel 360° com histórico financeiro (SGP) e um histórico de ligações do PABX (FreePBX/Asterisk).
+- **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar.
+- **Ativo (Campanhas):** Módulo para disparo preditivo de Voz (Discador Asterisk) e réguas de WhatsApp baseadas em inteligência da fatura.
+- **Motor Visual de Fluxos (n8n):** Interface na rota `/automacoes` que simula um canvas *node-based* do n8n para desenhar e espelhar o roteamento de webhooks e transbordo (WABA -> Agente IA -> SGP -> FreePBX).
+- **Gestão de Operadores:** Módulo completo (rota `/operadores`) para criação de atendentes, com mapeamento de ramal SIP, nível de acesso, e controle Omnichannel de filas/skills.
+- **CTI Reverso & Webphone:** Integração SIP (WebRTC) e painel flutuante que salta na tela via Server-Sent Events (SSE) do `server.ts` quando ocorre um *ring* no Asterisk.
+- **Super Admin (White-Label):** Tela global de configurações. Habilita o "Isolamento de Tenant" permitindo a configuração do Nome do Provedor, Logotipo e Cores (White-label), bem como a configuração das Credenciais Oficiais do WhatsApp, tokens do SGP, e *Tuning* detalhado do Gateway 9router/Gemini.
 
 ### 2. Portal do Cliente (PWA)
 Acessível via rota `/portal`.
-- Interface otimizada para dispositivos móveis (Mobile-First) com menu de navegação inferior estilo aplicativo móvel nativo.
-- Funcionalidades: Visualização de plano ativo, faturas (com fluxos de visualização de PIX copia-e-cola e boletos), suporte técnico (chamados).
-- **Webchat Widget (IA):** Um chat flutuante persistente integrado nativamente com Inteligência Artificial para o autoatendimento e triagem primária (nível 1).
+- Interface otimizada para dispositivos móveis (Mobile-First) com navegação nativa inferior.
+- Permite a visualização e resgate de Faturas, boletos, e códigos PIX Cópia-e-Cola.
+- **Webchat Widget (IA):** Chat flutuante integrado nativamente com Inteligência Artificial para autoatendimento técnico.
 
-## Integrações de API e Mocks (server.ts)
+## Integrações (server.ts)
+O backend (`server.ts`) atua como proxy vital para manter credenciais seguras:
+- `/api/ia/chat`: Rota do **9router**, utilizando SDK Gemini (`@google/genai`) para RAG simulado.
+- `/api/sgp/*`: Rotas que integram nativamente via HTTP Headers o Sistema de Gestão de Provedores (SGP).
+- `/api/webhooks/*`: Recebe os eventos de ligações (FreePBX) e mensagens de WhatsApp (Meta Graph API / n8n), distribuindo para o frontend via `SSE`.
 
-O servidor backend contém rotas preparadas arquiteturalmente para integrações reais (com suporte à chaves em `.env`), mas atualmente opera com *Mocks* e *Fallbacks* inteligentes para permitir testes do produto sem depender de infraestrutura externa imediata:
-
-- `POST /api/ia/chat`: Simula o gateway **9router**, utilizando o SDK oficial do Gemini (`@google/genai`) para responder aos clientes simulando a consulta em uma base de conhecimento (BookStack).
-- `GET /api/sgp/*`: Simula os endpoints vitais do ERP **SGP** para busca de faturas, geração de linha digitável/QR Code PIX e dados de identificação do cliente na URA.
-- `GET /api/events/calls`: Endpoint SSE (Server-Sent Events) que mantém uma conexão unidirecional aberta com o frontend para injetar chamadas ativas em tempo real.
-- `POST /api/webhooks/freepbx/incoming`: Simula o recebimento do webhook do FreePBX/Asterisk. Ao acionado, dispara o evento SSE para a interface de tela do operador instantaneamente.
-
-## Como Testar as Funcionalidades de Demonstração
-
-1. **Simular Chamada Recebida (CTI):** No menu lateral, navegue até a tela "Ajustes da IA" (Super Admin) e clique no botão verde "Simular Chamada FreePBX". Observe o card de atendimento flutuante surgir na tela instantaneamente, não importa em qual página você esteja.
-2. **Autoatendimento com IA:** Navegue até o Portal do Cliente (`/portal`), abra o ícone flutuante de chat azul no canto inferior direito e envie uma mensagem simulando uma queixa (ex: "Minha internet está caindo muito").
-3. **Fluxos de Tarefas:** Navegue até "Kanban Suporte" ou "Kanban Vendas" e mova os cards (tickets/negociações) de um lado para o outro para ver o comportamento de estado das colunas.
+## Como Testar
+1. **CTI:** Em "Painel Super Admin", clique em "Simular Chamada FreePBX".
+2. **Autoatendimento:** Acesse `/portal` e interaja com o chatbot flutuante azul.
+3. **White-label:** No "Painel Super Admin", modifique os dados em "Identidade Visual e Dados do Provedor" para validar os formulários que sustentam a regra multi-tenant física.

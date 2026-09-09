@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, User, Phone, Shield, MoreHorizontal, Settings, MessageCircle } from 'lucide-react';
+import { Search, Plus, User, Phone, Shield, Settings, MessageCircle, X, Save } from 'lucide-react';
 
 type Operator = {
   id: number;
@@ -19,15 +19,36 @@ export default function Operadores() {
     { id: 4, nome: "Fernanda Lima", email: "fernanda@provedor.com.br", ramal: "2004", permissao: "Operador", status: "offline", filas: ["Suporte N1"] },
   ]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingOp, setEditingOp] = useState<Operator | null>(null);
+
+  const openNewModal = () => {
+    setEditingOp(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (op: Operator) => {
+    setEditingOp(op);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingOp(null);
+  };
+
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19]">
+    <div className="flex flex-col h-full bg-[#0b0f19] relative">
       {/* Header */}
       <header className="h-16 border-b border-slate-800/60 flex items-center justify-between px-6 bg-[#0d1321] shrink-0">
         <div>
           <h1 className="text-xl font-bold text-white font-outfit">Gestão de Operadores</h1>
           <p className="text-xs text-slate-400 mt-0.5">Administre acessos, ramais (FreePBX) e roteamento omnichannel.</p>
         </div>
-        <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20">
+        <button 
+          onClick={openNewModal}
+          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20"
+        >
           <Plus size={16} />
           Novo Operador
         </button>
@@ -134,11 +155,13 @@ export default function Operadores() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <button className="p-2 text-slate-500 hover:text-white hover:bg-[#1a2333] rounded-lg transition-colors">
+                      <button 
+                        onClick={() => openEditModal(op)}
+                        className="p-2 text-slate-500 hover:text-white hover:bg-[#1a2333] rounded-lg transition-colors"
+                      >
                         <Settings size={18} />
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -147,6 +170,85 @@ export default function Operadores() {
 
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-slate-800 rounded-3xl shadow-2xl shadow-black w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-slate-800/60 bg-[#0d1321] flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white font-outfit">
+                {editingOp ? 'Editar Operador' : 'Novo Operador'}
+              </h2>
+              <button onClick={closeModal} className="text-slate-500 hover:text-white transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nome Completo</label>
+                  <input 
+                    type="text" 
+                    defaultValue={editingOp?.nome}
+                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">E-mail</label>
+                  <input 
+                    type="email" 
+                    defaultValue={editingOp?.email}
+                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ramal SIP (FreePBX)</label>
+                  <input 
+                    type="text" 
+                    defaultValue={editingOp?.ramal}
+                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm font-mono text-emerald-400 outline-none focus:border-indigo-500/50 shadow-inner"
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nível de Acesso</label>
+                  <select 
+                    defaultValue={editingOp?.permissao || 'Operador'}
+                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner appearance-none"
+                  >
+                    <option value="Operador">Operador (Padrão)</option>
+                    <option value="Admin">Administrador</option>
+                  </select>
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Filas (Separar por vírgula)</label>
+                  <input 
+                    type="text" 
+                    defaultValue={editingOp?.filas.join(', ')}
+                    placeholder="Ex: Suporte N1, Vendas"
+                    className="w-full bg-[#1a2333] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-indigo-500/50 shadow-inner"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-800/60 bg-[#0d1321] flex justify-end gap-3">
+              <button 
+                onClick={closeModal}
+                className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={closeModal}
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/20"
+              >
+                <Save size={16} /> Salvar Operador
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

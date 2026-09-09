@@ -78,25 +78,26 @@ export default function Automacoes() {
         </div>
 
         {/* Node Graph Area */}
-        <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]">
+        <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] flex items-center justify-center">
           
-          {/* SVG Lines connecting nodes */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-            {/* WABA to Agent */}
-            <path d="M 220 200 C 270 200, 300 200, 350 200" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
-            {/* Agent to Switch */}
-            <path d="M 550 200 C 600 200, 630 200, 680 200" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
-            {/* Switch to SGP (Top) */}
-            <path d="M 880 180 C 930 180, 930 100, 980 100" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
-            {/* Switch to FreePBX (Bottom) */}
-            <path d="M 880 220 C 930 220, 930 300, 980 300" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
-          </svg>
+          <div className="relative w-full max-w-5xl h-[500px] flex items-center justify-between z-10 px-10">
+            {/* SVG Lines connecting nodes */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+              {/* WABA to Agent (Horizontal center) */}
+              <path d="M 180 250 L 320 250" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              
+              {/* Agent to Switch (Horizontal center) */}
+              <path d="M 490 250 L 630 250" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              
+              {/* Switch to SGP (Diagonal Up) */}
+              <path d="M 800 240 C 850 240, 850 150, 880 150" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+              
+              {/* Switch to FreePBX (Diagonal Down) */}
+              <path d="M 800 260 C 850 260, 850 350, 880 350" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+            </svg>
 
-          {/* Nodes Container */}
-          <div className="absolute inset-0 p-8 z-10 overflow-auto">
-            
-            {/* Node 1: Webhook */}
-            <div className="absolute top-[160px] left-[50px]">
+            {/* Column 1: Trigger */}
+            <div className="relative z-10">
               <NodeCard 
                 icon={<Webhook className="text-emerald-400" size={20} />}
                 title="Webhook WABA"
@@ -105,8 +106,8 @@ export default function Automacoes() {
               />
             </div>
 
-            {/* Node 2: IA Agent */}
-            <div className="absolute top-[160px] left-[350px]">
+            {/* Column 2: Agent */}
+            <div className="relative z-10">
               <NodeCard 
                 icon={<Bot className="text-indigo-400" size={20} />}
                 title="Agente IA (9router)"
@@ -115,8 +116,8 @@ export default function Automacoes() {
               />
             </div>
 
-            {/* Node 3: Switch/Router */}
-            <div className="absolute top-[160px] left-[680px]">
+            {/* Column 3: Logic Router */}
+            <div className="relative z-10">
               <NodeCard 
                 icon={<GitFork className="text-amber-400" size={20} />}
                 title="Roteador Lógico"
@@ -125,18 +126,14 @@ export default function Automacoes() {
               />
             </div>
 
-            {/* Node 4: SGP Integration */}
-            <div className="absolute top-[60px] left-[980px]">
+            {/* Column 4: Endpoints */}
+            <div className="relative z-10 flex flex-col gap-20">
               <NodeCard 
                 icon={<Database className="text-blue-400" size={20} />}
                 title="Consultar SGP"
                 subtitle="Busca Financeira (HTTP)"
                 type="action"
               />
-            </div>
-
-            {/* Node 5: FreePBX Call */}
-            <div className="absolute top-[260px] left-[980px]">
               <NodeCard 
                 icon={<Phone className="text-red-400" size={20} />}
                 title="Originar Chamada"
@@ -144,7 +141,6 @@ export default function Automacoes() {
                 type="action"
               />
             </div>
-
           </div>
           
           {/* Zoom Controls */}
