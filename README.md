@@ -1,71 +1,41 @@
-# 📘 NAP (Núcleo de Atendimento ao Provedor) - WACRM
+# NAP - Núcleo de Atendimento ao Provedor
 
-**Versão:** 2.0 (Em Desenvolvimento - AI Studio)
-**Stack:** React 19, Vite, Tailwind CSS v4, Node.js (Express), TypeScript
+Uma plataforma Omnichannel Premium voltada para Provedores de Internet (ISPs), integrando atendimento, inteligência artificial e gestão em uma única interface escura (SaaS Dark Theme).
 
-O **NAP** é uma plataforma omnichannel de atendimento com IA híbrida, projetada especificamente para **provedores de internet (ISPs)**. Atua como uma camada inteligente de atendimento que se integra ao sistema core de gestão (SGP) do provedor.
+## Arquitetura do Sistema
 
-## 🚀 Status Atual da Implementação
+A aplicação foi construída utilizando uma arquitetura Full-Stack:
+- **Frontend:** React 18 com Vite, roteamento via `react-router-dom` e estilização estrutural utilizando Tailwind CSS.
+- **Backend (API):** Servidor Node.js com Express (`server.ts`) embutido no processo de build, responsável por expor as rotas de API, gerenciar integrações simuladas/reais e servir os artefatos do frontend.
+- **Design System:** Baseado no estilo "Premium SaaS Dark Theme", com cores focadas em tons profundos de azul/ardósia (`#0b0f19`) e destaques luminosos em Índigo e Esmeralda.
 
-As seguintes fases do PRD foram implementadas estruturalmente no ambiente atual:
+## Módulos Principais
 
-- ✅ **Fase 1: Base Full-Stack** 
-  - Servidor Express em Node.js (`server.ts`) servindo APIs e middleware do Vite.
-  - Banco de Dados modelado (`src/db/schema.sql`) com políticas de soberania de dados do provedor.
-- ✅ **Fase 2: Módulos Operador + Admin**
-  - **Inbox Unificado:** Interface de chat para os operadores, preparada para receber mensagens via Webchat/WhatsApp.
-  - **CRM:** Tabela de clientes mockada e preparada para sincronização via SGP.
-  - **Kanban (Suporte e Vendas):** Pipelines visuais e interativos (Drag & Drop em potencial) para tickets e leads.
-  - **Super Admin:** Dashboard para gerir integrações (SGP, FreePBX, Meta) e tunar prompts da IA (9router).
-- ✅ **Fase 3: Portal do Cliente (PWA)**
-  - Interface separada (Mobile-first) focada no cliente final (Autoatendimento).
-  - Módulos: Dashboard (Status da Conexão), Faturas (Emissão de PIX/Boleto), Suporte (Meus Chamados), Conta (Dados).
-- ✅ **Fase 4: Integração de IA Híbrida (9router)**
-  - Abstração Server-Side configurada no Express (`/api/ia/chat`) usando o SDK `@google/genai` (Gemini API) como motor backend de RAG para sugerir respostas baseadas na vertical (Suporte, Cobrança, Vendas).
+### 1. Painel do Operador (Admin/Backoffice)
+Acessível via rotas padrão (`/`, `/crm`, `/suporte`, `/configuracoes`).
+- **Inbox Unificado:** Centraliza mensagens de WhatsApp, Webchat e outras fontes.
+- **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar (drag and drop).
+- **CRM:** Tabela de clientes com busca inteligente, status de conexão (Radius/MikroTik simulado) e informações rápidas de contratos.
+- **CTI Reverso (FreePBX):** Um componente global que escuta eventos em tempo real via SSE (Server-Sent Events). Quando uma chamada entra no PABX, um alerta visual salta na tela do operador, permitindo abrir a ficha do cliente instantaneamente.
+- **Super Admin:** Painel de configuração global, monitoramento de integrações (SGP, 9router) e ajuste fino (tuning) dos prompts do LLM.
 
-## 🗺️ Estrutura de Rotas (URLs)
+### 2. Portal do Cliente (PWA)
+Acessível via rota `/portal`.
+- Interface otimizada para dispositivos móveis (Mobile-First) com menu de navegação inferior estilo aplicativo móvel nativo.
+- Funcionalidades: Visualização de plano ativo, faturas (com fluxos de visualização de PIX copia-e-cola e boletos), suporte técnico (chamados).
+- **Webchat Widget (IA):** Um chat flutuante persistente integrado nativamente com Inteligência Artificial para o autoatendimento e triagem primária (nível 1).
 
-O sistema possui dois ambientes (roteamentos) principais:
+## Integrações de API e Mocks (server.ts)
 
-### 1. Painel Administrativo / Operador (Root `/`)
-- `/` - Inbox Unificado (Atendimento)
-- `/suporte` - Kanban de Suporte Técnico
-- `/vendas` - Kanban de Vendas
-- `/crm` - Base de Clientes (Sincronizada com SGP)
-- `/configuracoes` - Painel Super Admin (Tuning de IA, Integrações)
+O servidor backend contém rotas preparadas arquiteturalmente para integrações reais (com suporte à chaves em `.env`), mas atualmente opera com *Mocks* e *Fallbacks* inteligentes para permitir testes do produto sem depender de infraestrutura externa imediata:
 
-### 2. Portal do Cliente PWA (`/portal`)
-- `/portal` - Dashboard do Cliente (Status da conexão, faturas pendentes)
-- `/portal/faturas` - Histórico financeiro e 2ª via (PIX/Boleto)
-- `/portal/suporte` - Histórico de chamados abertos
-- `/portal/conta` - Gestão de dados pessoais e de acesso
+- `POST /api/ia/chat`: Simula o gateway **9router**, utilizando o SDK oficial do Gemini (`@google/genai`) para responder aos clientes simulando a consulta em uma base de conhecimento (BookStack).
+- `GET /api/sgp/*`: Simula os endpoints vitais do ERP **SGP** para busca de faturas, geração de linha digitável/QR Code PIX e dados de identificação do cliente na URA.
+- `GET /api/events/calls`: Endpoint SSE (Server-Sent Events) que mantém uma conexão unidirecional aberta com o frontend para injetar chamadas ativas em tempo real.
+- `POST /api/webhooks/freepbx/incoming`: Simula o recebimento do webhook do FreePBX/Asterisk. Ao acionado, dispara o evento SSE para a interface de tela do operador instantaneamente.
 
-## 🏗️ Estrutura de Diretórios Principal
+## Como Testar as Funcionalidades de Demonstração
 
-```
-/
-├── server.ts                 # Ponto de entrada do Servidor Node.js/Express (Full-stack)
-├── package.json              # Configuração de scripts e dependências (inclui Vite + esbuild)
-├── /src
-│   ├── App.tsx               # Roteador Principal (React Router)
-│   ├── main.tsx              # Ponto de entrada do React
-│   ├── types.ts              # Tipagens globais de TypeScript (Interfaces de Domínio)
-│   ├── /components           # Componentes reutilizáveis (ex: Layout do Admin, PortalLayout)
-│   ├── /pages                # Views da aplicação (Inbox, CRM, Kanban, Portal)
-│   └── /db
-│       └── schema.sql        # Esquema do Banco de Dados Relacional (PostgreSQL)
-```
-
-## 📜 Comandos Disponíveis (Scripts)
-
-- `npm run dev` - Roda o servidor Node.js com o middleware do Vite para HMR (Hot-Module-Replacement).
-- `npm run build` - Faz o build de produção do frontend (Vite) e faz o bundle do backend via `esbuild` gerando `dist/server.cjs`.
-- `npm start` - Inicializa o projeto empacotado para produção rodando o arquivo gerado em `dist/`.
-
-## 🔒 Variáveis de Ambiente Necessárias (`.env`)
-
-- `GEMINI_API_KEY`: Necessária para rodar as sugestões de IA integradas via abstração do 9router.
-- `APP_URL`: URL onde o applet é hospedado.
-
----
-*Documentação atualizada pelo Dev Sênior AI (Gemini) com base no PRD v2.0.*
+1. **Simular Chamada Recebida (CTI):** No menu lateral, navegue até a tela "Ajustes da IA" (Super Admin) e clique no botão verde "Simular Chamada FreePBX". Observe o card de atendimento flutuante surgir na tela instantaneamente, não importa em qual página você esteja.
+2. **Autoatendimento com IA:** Navegue até o Portal do Cliente (`/portal`), abra o ícone flutuante de chat azul no canto inferior direito e envie uma mensagem simulando uma queixa (ex: "Minha internet está caindo muito").
+3. **Fluxos de Tarefas:** Navegue até "Kanban Suporte" ou "Kanban Vendas" e mova os cards (tickets/negociações) de um lado para o outro para ver o comportamento de estado das colunas.

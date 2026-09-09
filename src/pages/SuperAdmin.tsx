@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Database, MessageCircle, Server, Shield, Activity, Bot, Save, Loader2 } from 'lucide-react';
+import { Database, MessageCircle, Server, Shield, Activity, Bot, Save, Loader2, Key, SlidersHorizontal } from 'lucide-react';
 
 export default function SuperAdmin() {
   const [syncing, setSyncing] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Formulário de Configuração de IA
+  const [iaConfig, setIaConfig] = useState({
+    promptSuporte: "Você é um assistente técnico do {nome_provedor}. Tom: Empático, técnico mas acessível. Objetivo: Resolver o problema do cliente com base na base de conhecimento (BookStack). Regras: 1. Identifique o cliente. 2. Consulte o status da conexão. 3. Transborde se for problema físico.",
+    promptVendas: "Você é um consultor de vendas do {nome_provedor}. Tom: Persuasivo, energético e focado em benefícios. Objetivo: Qualificar o lead e ofertar planos de fibra óptica. Regras: 1. Sempre ofereça o dobro de velocidade se o cliente hesitar no preço.",
+    modeloPrimario: "gemini-3.8-flash",
+    temperatura: 0.7,
+    gatilhoTransbordo: "agressivo"
+  });
 
   const handleSync = () => {
     setSyncing(true);
@@ -17,7 +26,7 @@ export default function SuperAdmin() {
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#0b0f19] p-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white font-outfit mb-2">Painel Super Admin</h1>
           <p className="text-slate-400">Configurações globais do NAP (Núcleo de Atendimento ao Provedor).</p>
@@ -38,6 +47,7 @@ export default function SuperAdmin() {
                  Integrações Ativas
                </h2>
             </div>
+            
             <div className="p-6 flex-1 grid gap-4 relative z-10">
               <IntegrationRow 
                 title="SGP (Sistema de Gestão)" 
@@ -48,7 +58,7 @@ export default function SuperAdmin() {
               <IntegrationRow 
                 title="9router (Gateway IA)" 
                 status="Conectado"
-                description="Modelos configurados: gpt-4o-mini (Suporte), claude-3-5-sonnet (Backup)."
+                description="Modelos configurados: gemini-3.8-flash (Suporte)."
                 icon={<Activity size={18} />}
               />
               <IntegrationRow 
@@ -64,6 +74,7 @@ export default function SuperAdmin() {
                 icon={<Server size={18} />}
               />
             </div>
+            
             <div className="bg-[#0d1321] p-5 border-t border-slate-800/60 flex gap-3 justify-end relative z-10">
               <button 
                 onClick={handleSync}
@@ -88,29 +99,53 @@ export default function SuperAdmin() {
               <Bot className="text-indigo-400" size={20} />
               <h2 className="text-lg font-bold text-white font-outfit">Tuning de IA (9router)</h2>
             </div>
+            
             <div className="p-6 flex-1 flex flex-col gap-6 relative z-10">
+              
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Prompt: Vertical de Suporte</label>
                 <textarea 
-                  className="w-full p-4 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 h-32 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none resize-none shadow-inner leading-relaxed transition-all"
-                  defaultValue="Você é um assistente técnico do {nome_provedor}. Tom: Empático, técnico mas acessível. Objetivo: Resolver o problema do cliente com base na base de conhecimento (BookStack). Regras: 1. Identifique o cliente. 2. Consulte o status da conexão. 3. Transborde se for problema físico."
+                  value={iaConfig.promptSuporte}
+                  onChange={(e) => setIaConfig({...iaConfig, promptSuporte: e.target.value})}
+                  className="w-full p-4 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 h-28 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none resize-none shadow-inner leading-relaxed transition-all"
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Prompt: Vertical de Vendas</label>
+                <textarea 
+                  value={iaConfig.promptVendas}
+                  onChange={(e) => setIaConfig({...iaConfig, promptVendas: e.target.value})}
+                  className="w-full p-4 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 h-24 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none resize-none shadow-inner leading-relaxed transition-all"
                 ></textarea>
               </div>
               
-              <div className="grid grid-cols-2 gap-5 border-t border-slate-800/60 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-slate-800/60 pt-6">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Modelo Primário</label>
-                  <select className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 outline-none shadow-inner focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
-                    <option>gpt-4o-mini</option>
-                    <option>gemini-3.8-flash</option>
+                  <select 
+                    value={iaConfig.modeloPrimario}
+                    onChange={(e) => setIaConfig({...iaConfig, modeloPrimario: e.target.value})}
+                    className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 outline-none shadow-inner focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
+                  >
+                    <option value="gemini-3.8-flash">gemini-3.8-flash (Recomendado)</option>
+                    <option value="gemini-3.5-pro">gemini-3.5-pro (Avançado)</option>
+                    <option value="gpt-4o-mini">gpt-4o-mini (Backup)</option>
                   </select>
                 </div>
+                
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Gatilho de Transbordo (Sentimento)</label>
-                  <select className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-300 outline-none shadow-inner focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
-                    <option>Agressivo / Insatisfeito</option>
-                    <option>Apenas palavras-chave</option>
-                  </select>
+                  <label className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                    <span>Criatividade (Temperatura)</span>
+                    <span className="text-indigo-400">{iaConfig.temperatura}</span>
+                  </label>
+                  <input 
+                    type="range" 
+                    min="0" max="1" step="0.1" 
+                    value={iaConfig.temperatura}
+                    onChange={(e) => setIaConfig({...iaConfig, temperatura: parseFloat(e.target.value)})}
+                    className="w-full accent-indigo-500 mt-2" 
+                  />
                 </div>
               </div>
 
@@ -127,6 +162,56 @@ export default function SuperAdmin() {
             </div>
           </div>
         </div>
+
+        {/* API Credentials Section */}
+        <div className="bg-[#101726] rounded-3xl shadow-xl shadow-black/20 border border-slate-800/60 overflow-hidden flex flex-col relative mb-8">
+            <div className="border-b border-slate-800/60 p-6 flex items-center justify-between bg-[#0d1321] relative z-10">
+              <div className="flex items-center gap-3">
+                <Key className="text-amber-400" size={20} />
+                <h2 className="text-lg font-bold text-white font-outfit">Credenciais de API e Webhooks</h2>
+              </div>
+              <span className="bg-[#1a2333] border border-slate-700/50 text-slate-400 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
+                Ambiente de Produção
+              </span>
+            </div>
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+              {/* SGP App e Token */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2 mb-4">
+                  <Database size={16} className="text-emerald-400" />
+                  ERP SGP
+                </h3>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">SGP Base URL</label>
+                  <input type="text" defaultValue="https://api.sgp.provedor.com.br" disabled className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-400 outline-none shadow-inner opacity-80 cursor-not-allowed" />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">App / Token</label>
+                  <div className="flex gap-2">
+                    <input type="text" defaultValue="NAP_APP_991" disabled className="w-1/3 p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-400 outline-none shadow-inner opacity-80 cursor-not-allowed" />
+                    <input type="password" defaultValue="************************" disabled className="flex-1 p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-400 outline-none shadow-inner opacity-80 cursor-not-allowed" />
+                  </div>
+                </div>
+              </div>
+
+              {/* WhatsApp e 9router */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2 mb-4">
+                  <MessageCircle size={16} className="text-indigo-400" />
+                  Mensageria (WABA) e IA
+                </h3>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">WhatsApp Business API Token</label>
+                  <input type="password" defaultValue="EAAGm0P..." disabled className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-400 outline-none shadow-inner opacity-80 cursor-not-allowed" />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Webhook Receptor (N8N / Typebot)</label>
+                  <input type="text" defaultValue="https://n8n.provedor.com.br/webhook/nap" disabled className="w-full p-3 bg-[#1a2333] border border-slate-700/50 rounded-xl text-sm text-slate-400 outline-none shadow-inner opacity-80 cursor-not-allowed" />
+                </div>
+              </div>
+            </div>
+        </div>
+
       </div>
     </div>
   );
