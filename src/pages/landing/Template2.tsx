@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Gamepad2, Wifi, Zap, ArrowRight, ShieldAlert, MonitorPlay } from 'lucide-react';
+import { Gamepad2, Wifi, Zap, ArrowRight, ShieldAlert, MonitorPlay, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Template2() {
@@ -22,12 +22,16 @@ export default function Template2() {
             <a href="#cobertura" className="hover:text-purple-300 transition-colors">Cobertura</a>
           </nav>
 
-          <div className="flex items-center gap-4">
-            <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-purple-200 hover:text-white transition-colors">
-              Central do Assinante
+          <div className="flex items-center gap-3">
+            <Link 
+              to="/portal" 
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-purple-100 hover:text-white px-3 sm:px-4 py-2 rounded-full bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 transition-all"
+            >
+              <Smartphone size={15} className="text-pink-400" />
+              <span>Portal do Cliente</span>
             </Link>
-            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full text-sm font-bold hover:[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-2 uppercase tracking-wide">
-              Contratar
+            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-1.5 uppercase tracking-wide">
+              <span>Admin</span>
             </Link>
           </div>
         </div>
@@ -94,8 +98,8 @@ export default function Template2() {
                 <button className="bg-white text-black px-8 py-4 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide">
                   Quero Fibra Agora
                 </button>
-                <Link to="/portal" className="bg-purple-900/40 border border-purple-500/30 hover:bg-purple-800/40 text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
-                  <Gamepad2 size={20} /> Já sou Cliente
+                <Link to="/portal" className="bg-purple-900/50 border border-purple-500/40 hover:bg-purple-800/60 text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
+                  <Smartphone size={20} className="text-pink-400" /> Acessar Portal do Cliente
                 </Link>
               </motion.div>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Check, ChevronRight, Menu, Home, Wifi, Tv } from 'lucide-react';
+import { Check, ChevronRight, Menu, Home, Wifi, Tv, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Template3() {
@@ -22,12 +22,16 @@ export default function Template3() {
             <a href="#atendimento" className="hover:text-emerald-600 transition-colors">Atendimento</a>
           </nav>
 
-          <div className="flex items-center gap-4">
-            <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors">
-              Portal do Cliente
+          <div className="flex items-center gap-3">
+            <Link 
+              to="/portal" 
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-emerald-800 hover:text-emerald-950 px-3 sm:px-4 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all"
+            >
+              <Smartphone size={15} className="text-emerald-600" />
+              <span>Portal do Cliente</span>
             </Link>
-            <Link to="/login" className="bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-emerald-700 transition-all flex items-center gap-2  -600/20">
-              Assine Já
+            <Link to="/login" className="bg-emerald-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-emerald-700 transition-all flex items-center gap-1.5">
+              <span>Admin</span> <ChevronRight size={14} />
             </Link>
           </div>
         </div>
@@ -71,9 +75,9 @@ export default function Template3() {
             <button className="bg-emerald-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-700 transition-all  -600/20 active:scale-95">
               Ver planos residenciais
             </button>
-            <button className="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-              Falar com Consultor
-            </button>
+            <Link to="/portal" className="bg-white text-slate-700 border border-slate-200 hover:border-emerald-300 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+              <Smartphone size={20} className="text-emerald-600" /> Acessar Portal do Cliente
+            </Link>
           </motion.div>
         </div>
 

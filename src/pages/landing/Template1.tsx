@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Wifi, Zap, Shield, ChevronRight, Globe, Phone } from 'lucide-react';
+import { Wifi, Zap, Shield, ChevronRight, Globe, Phone, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Template1() {
@@ -24,12 +24,16 @@ export default function Template1() {
             <a href="#cobertura" className="hover:text-white transition-colors">Cobertura</a>
           </nav>
 
-          <div className="flex items-center gap-4">
-            <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white transition-colors">
-              Área do Assinante
+          <div className="flex items-center gap-3">
+            <Link 
+              to="/portal" 
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white px-3 sm:px-4 py-2 rounded-full bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 transition-all"
+            >
+              <Smartphone size={15} className="text-blue-400" />
+              <span>Portal do Cliente</span>
             </Link>
-            <Link to="/login" className="bg-white text-slate-900 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-slate-100 transition-all flex items-center gap-2">
-              Contratar Agora <ChevronRight size={16} />
+            <Link to="/login" className="bg-white text-slate-900 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-slate-100 transition-all flex items-center gap-1.5">
+              <span>Login Admin</span> <ChevronRight size={14} />
             </Link>
           </div>
         </div>
@@ -88,8 +92,9 @@ export default function Template1() {
             <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all [0_0_40px_rgba(37,99,235,0.4)] hover:[0_0_60px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               Ver Planos Disponíveis
             </button>
-            <Link to="/portal" className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold text-lg transition-all border border-white/10 hover:border-white/20 flex items-center justify-center">
-              Já sou cliente
+            <Link to="/portal" className="w-full sm:w-auto bg-white/10 hover:bg-white/15 text-white px-8 py-4 rounded-full font-bold text-lg transition-all border border-white/20 hover:border-white/30 flex items-center justify-center gap-2">
+              <Smartphone size={20} className="text-blue-400" />
+              Acessar Portal do Cliente
             </Link>
           </motion.div>
         </div>
