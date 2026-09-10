@@ -16,6 +16,7 @@ The core stack includes Debian 12, FreePBX 17, GenieACS (TR-069), WABA (WhatsApp
 - **Auth:** Firebase Authentication with a built-in Mock Session fallback inside `AuthContext.tsx` if Firebase API fails locally.
 
 ## 3. Core Principles
+- **Idioma do Assistente:** Todas as explicações, resumos, mensagens e comunicações com o usuário devem ser estritamente em **Português Brasileiro (pt-BR)**.
 - **No AI Slop:** Keep the UI strictly professional. No gratuitous gradients, glowing shadows, or nested boxes. Use mathematical padding, structural borders, and refined typography.
 - **Full-stack by default:** All external integrations MUST be routed through `/api/*` endpoints in `server.ts` to protect credentials. Never expose Gemini or ERP API Keys on the client side.
 - **Tenant Isolation:** Although the code supports multi-tenancy, the deployment model assumes one ISP per VM for strict data privacy and telephony isolation.

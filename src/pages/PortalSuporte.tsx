@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   HeadphonesIcon, Plus, MessageSquare, Clock, CheckCircle2, PhoneCall, 
   Bot, Activity, Wifi, ShieldAlert, RefreshCw, Star, Send, Sparkles, 
-  HeartHandshake, Smile, Frown, Meh 
+  HeartHandshake, Smile, Frown, Meh, X, AlertCircle, Calendar, ChevronRight, UserCheck, Check
 } from 'lucide-react';
 import type { Deal } from '../types';
 import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
@@ -14,6 +14,17 @@ export default function PortalSuporte() {
   const [callDuration, setCallDuration] = useState(0);
   const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
 
+  // Modal Novo Chamado
+  const [modalNovoChamado, setModalNovoChamado] = useState(false);
+  const [novoCategoria, setNovoCategoria] = useState('Lentidão na Conexão');
+  const [novoDescricao, setNovoDescricao] = useState('');
+  const [novoPreferencia, setNovoPreferencia] = useState<'WhatsApp' | 'Telefone' | 'Portal'>('WhatsApp');
+  const [criandoChamado, setCriandoChamado] = useState(false);
+  const [protocoloSucesso, setProtocoloSucesso] = useState<string | null>(null);
+
+  // Modal Detalhes do Chamado
+  const [chamadoSelecionado, setChamadoSelecionado] = useState<Deal | null>(null);
+
   // NPS State
   const [npsNota, setNpsNota] = useState<number | null>(null);
   const [npsComentario, setNpsComentario] = useState('');
@@ -21,7 +32,7 @@ export default function PortalSuporte() {
   const [npsEnviado, setNpsEnviado] = useState(false);
 
   useEffect(() => {
-    // Busca apenas chamados de suporte (mock)
+    // Busca chamados de suporte
     fetch('/api/deals')
       .then(res => res.json())
       .then((data: Deal[]) => {
@@ -31,6 +42,62 @@ export default function PortalSuporte() {
         setLoading(false);
       });
   }, []);
+
+  const handleCriarChamado = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCriandoChamado(true);
+    setProtocoloSucesso(null);
+
+    try {
+      const res = await fetch('/api/deals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          titulo: novoCategoria,
+          pipeline: 'Suporte',
+          contato: 'João Silva',
+          telefone: '(11) 98765-4321',
+          endereco: 'Rua das Flores, 123 - Centro Histórico',
+          plano: 'Fibra 500MB',
+          prioridade: novoCategoria.includes('Sem Acesso') ? 1 : 2,
+          contexto_ia: `${novoDescricao} | Preferência de retorno: ${novoPreferencia}.`
+        })
+      });
+
+      const data = await res.json();
+      if (data.deal) {
+        setChamados(prev => [data.deal, ...prev]);
+        setProtocoloSucesso(`PROT-${data.deal.id}`);
+        setNovoDescricao('');
+        setTimeout(() => {
+          setModalNovoChamado(false);
+        }, 2000);
+      }
+    } catch {
+      // Fallback local caso o backend esteja indisponível
+      const fakeId = Math.floor(1000 + Math.random() * 9000);
+      const novoDeal: Deal = {
+        id: fakeId,
+        titulo: novoCategoria,
+        estagio: 'Novo Chamado',
+        pipeline: 'Suporte',
+        contato: 'João Silva',
+        telefone: '(11) 98765-4321',
+        endereco: 'Rua das Flores, 123 - Centro Histórico',
+        plano: 'Fibra 500MB',
+        prioridade: 2,
+        criado_em: 'Agora',
+        contexto_ia: `${novoDescricao} | Preferência: ${novoPreferencia}`
+      };
+      setChamados(prev => [novoDeal, ...prev]);
+      setProtocoloSucesso(`PROT-${fakeId}`);
+      setTimeout(() => {
+        setModalNovoChamado(false);
+      }, 2000);
+    } finally {
+      setCriandoChamado(false);
+    }
+  };
 
   useEffect(() => {
     let interval: any;
@@ -181,48 +248,79 @@ export default function PortalSuporte() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-slate-900 font-outfit">Histórico de Chamados</h2>
-        <button className="flex items-center gap-2 text-blue-600 font-bold text-sm hover:text-blue-700 transition-colors">
-          <Plus size={16} /> Novo Chamado
+        <button 
+          onClick={() => {
+            setProtocoloSucesso(null);
+            setModalNovoChamado(true);
+          }}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm active:scale-95"
+        >
+          <Plus size={16} /> Abrir Novo Chamado
         </button>
       </div>
+
+      {protocoloSucesso && (
+        <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-center justify-between animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
+            <div>
+              <p className="text-xs font-bold">Chamado registrado com sucesso!</p>
+              <p className="text-[11px] text-emerald-700 font-mono">Protocolo de atendimento: {protocoloSucesso}</p>
+            </div>
+          </div>
+          <button onClick={() => setProtocoloSucesso(null)} className="text-emerald-700 hover:text-emerald-900 text-xs font-bold">
+            OK
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center p-8 text-slate-500">Carregando chamados...</div>
       ) : (
         <div className="grid gap-4">
           {chamados.map(chamado => (
-            <div key={chamado.id} className="bg-white p-5 rounded-3xl  border border-slate-200 hover:border-blue-600/50 transition-all group">
-              <div className="flex justify-between items-start mb-4">
+            <div 
+              key={chamado.id} 
+              onClick={() => setChamadoSelecionado(chamado)}
+              className="bg-white p-5 rounded-3xl border border-slate-200 hover:border-blue-500/50 hover:shadow-md transition-all group cursor-pointer"
+            >
+              <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 border border-slate-200">
+                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 border border-slate-200 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
                     <HeadphonesIcon size={18} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 font-outfit">{chamado.titulo}</h3>
-                    <p className="text-xs text-slate-500 font-mono mt-0.5">#{chamado.id}</p>
+                    <h3 className="font-bold text-slate-900 font-outfit group-hover:text-blue-600 transition-colors">{chamado.titulo}</h3>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">Protocolo #{chamado.id} • {chamado.criado_em || 'Recente'}</p>
                   </div>
                 </div>
-                {chamado.estagio === 'Resolvido' ? (
-                  <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-                    <CheckCircle2 size={12} /> Resolvido
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
-                    <Clock size={12} /> {chamado.estagio}
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {chamado.estagio === 'Resolvido' ? (
+                    <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      <CheckCircle2 size={12} /> Resolvido
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                      <Clock size={12} /> {chamado.estagio}
+                    </span>
+                  )}
+                  <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
+                </div>
               </div>
+              {chamado.contexto_ia && (
+                <p className="text-xs text-slate-500 line-clamp-1 pl-14">{chamado.contexto_ia}</p>
+              )}
             </div>
           ))}
 
           {chamados.length === 0 && (
             <div className="bg-slate-50 p-8 rounded-3xl border border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 mb-3 ">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 mb-3">
                 <CheckCircle2 size={24} />
               </div>
               <h3 className="text-base font-bold text-slate-900 font-outfit mb-1">Nenhum chamado aberto</h3>
               <p className="text-slate-500 text-xs max-w-[200px]">
-                Sua conexão está estável.
+                Sua conexão está 100% estável e operando normalmente.
               </p>
             </div>
           )}
@@ -316,6 +414,198 @@ export default function PortalSuporte() {
         onClose={() => setIsDiagnosticoOpen(false)}
         clienteBairro="Centro Histórico"
       />
+
+      {/* MODAL NOVO CHAMADO */}
+      {modalNovoChamado && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
+                  <HeadphonesIcon size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 font-outfit text-lg">Novo Chamado Técnico</h3>
+                  <p className="text-xs text-slate-500">Nossa equipe responderá com prioridade.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setModalNovoChamado(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCriarChamado} className="space-y-4 pt-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                  Qual é o motivo do chamado?
+                </label>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {[
+                    'Lentidão na Conexão',
+                    'Sem Acesso (Sem Sinal)',
+                    'Problema no Wi-Fi',
+                    'Dúvida de Fatura',
+                    'Mudança de Endereço',
+                    'Outro Suporte'
+                  ].map(cat => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setNovoCategoria(cat)}
+                      className={`p-2.5 rounded-xl border text-left font-medium transition-all ${
+                        novoCategoria === cat
+                          ? 'bg-blue-50 border-blue-600 text-blue-700 font-bold shadow-xs'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  Descreva o que está acontecendo
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={novoDescricao}
+                  onChange={(e) => setNovoDescricao(e.target.value)}
+                  placeholder="Ex: A luz PON da ONU está piscando em vermelho desde as 14h após chuva forte..."
+                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 resize-none font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  Como prefere receber o retorno?
+                </label>
+                <div className="grid grid-cols-3 gap-2 text-xs font-medium">
+                  {(['WhatsApp', 'Telefone', 'Portal'] as const).map(pref => (
+                    <button
+                      key={pref}
+                      type="button"
+                      onClick={() => setNovoPreferencia(pref)}
+                      className={`py-2 px-3 rounded-xl border text-center transition-all ${
+                        novoPreferencia === pref
+                          ? 'bg-emerald-50 border-emerald-600 text-emerald-800 font-bold'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {pref}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-[11px] text-blue-800 flex items-start gap-2">
+                <Sparkles size={16} className="text-blue-600 shrink-0 mt-0.5" />
+                <span>Nossa IA de Triagem analisará os parâmetros da sua fibra para acelerar o diagnóstico antes do contato humano.</span>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setModalNovoChamado(false)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={criandoChamado}
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {criandoChamado ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}
+                  Registrar Chamado
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DETALHES DO CHAMADO */}
+      {chamadoSelecionado && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                    Protocolo #{chamadoSelecionado.id}
+                  </span>
+                  <span className={`text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full ${
+                    chamadoSelecionado.estagio === 'Resolvido' 
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                      : 'bg-blue-50 text-blue-700 border border-blue-200'
+                  }`}>
+                    {chamadoSelecionado.estagio}
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 font-outfit text-lg mt-1">{chamadoSelecionado.titulo}</h3>
+              </div>
+              <button 
+                onClick={() => setChamadoSelecionado(null)}
+                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-1">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Histórico / Descrição Registrada</span>
+                <p className="text-slate-700 leading-relaxed font-medium">
+                  {chamadoSelecionado.contexto_ia || "Solicitação de suporte técnico recebida e em análise pelo NOC e equipe N1."}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Abertura</span>
+                  <p className="font-bold text-slate-800 mt-0.5">{chamadoSelecionado.criado_em || 'Hoje'}</p>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Previsão SLA</span>
+                  <p className="font-bold text-emerald-600 mt-0.5">Até 4 horas úteis</p>
+                </div>
+              </div>
+
+              <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-emerald-900 flex items-center gap-2.5">
+                <UserCheck size={18} className="text-emerald-600 shrink-0" />
+                <span className="text-[11px] font-medium">
+                  Um técnico responsável foi notificado e entrará em contato caso seja necessária intervenção presencial.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <button
+                onClick={() => {
+                  setChamadoSelecionado(null);
+                  const widget = document.querySelector('.webchat-widget-toggle') as HTMLButtonElement;
+                  if (widget) widget.click();
+                }}
+                className="text-xs text-blue-600 hover:text-blue-700 font-bold flex items-center gap-1.5"
+              >
+                <MessageSquare size={14} /> Falar no Chat com o Técnico
+              </button>
+              <button
+                onClick={() => setChamadoSelecionado(null)}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
