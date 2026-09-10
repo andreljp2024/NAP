@@ -1,0 +1,159 @@
+import React from 'react';
+import { motion } from 'motion/react';
+import { Gamepad2, Wifi, Zap, ArrowRight, ShieldAlert, MonitorPlay } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export default function Template2() {
+  return (
+    <div className="min-h-screen bg-[#090014] text-white font-outfit overflow-x-hidden selection:bg-purple-500/30">
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 bg-[#090014]/60 backdrop-blur-xl border-b border-purple-500/10">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+              <Zap size={20} className="text-white fill-white" />
+            </div>
+            <span className="font-bold text-2xl tracking-tight">DJD <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-black italic">Telecom</span></span>
+          </div>
+          
+          <nav className="hidden md:flex gap-8 text-sm font-bold text-purple-200/60 uppercase tracking-wider">
+            <a href="#planos" className="hover:text-purple-300 transition-colors">Planos</a>
+            <a href="#gamer" className="hover:text-purple-300 transition-colors">Modo Gamer</a>
+            <a href="#cobertura" className="hover:text-purple-300 transition-colors">Cobertura</a>
+          </nav>
+
+          <div className="flex items-center gap-4">
+            <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-purple-200 hover:text-white transition-colors">
+              Central do Assinante
+            </Link>
+            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full text-sm font-bold hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-2 uppercase tracking-wide">
+              Contratar
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-56 lg:pb-40 px-6">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-600/30 blur-[150px] rounded-full mix-blend-screen"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/20 blur-[120px] rounded-full mix-blend-screen"></div>
+          
+          {/* Animated grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [transform:perspective(500px)_rotateX(60deg)] [transform-origin:center_top] opacity-20"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm font-bold mb-6 uppercase tracking-widest"
+              >
+                <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span> Ultra Velocidade
+              </motion.div>
+              
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-6xl lg:text-8xl font-black italic tracking-tighter mb-6 leading-[0.9]"
+              >
+                JOGUE SEM <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-red-400">
+                  LAG.
+                </span>
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl text-purple-200/70 mb-10 max-w-lg leading-relaxed"
+              >
+                A internet fibra óptica desenvolvida para entregar o menor ping e a maior taxa de download da região.
+              </motion.p>
+              
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <button className="bg-white text-black px-8 py-4 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide">
+                  Quero Fibra Agora
+                </button>
+                <Link to="/portal" className="bg-purple-900/40 border border-purple-500/30 hover:bg-purple-800/40 text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
+                  <Gamepad2 size={20} /> Já sou Cliente
+                </Link>
+              </motion.div>
+            </div>
+            
+            <div className="relative hidden lg:block">
+              {/* Abstact 3D shape replacement */}
+              <motion.div 
+                animate={{ 
+                  y: [0, -20, 0],
+                  rotateZ: [0, 5, 0]
+                }}
+                transition={{ 
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="relative z-10 w-[500px] h-[500px] bg-gradient-to-tr from-purple-600 via-pink-500 to-orange-400 rounded-full blur-[80px] opacity-50"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="py-24 px-6 relative z-10" id="planos">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16">
+            <h2 className="text-4xl font-black italic tracking-tight mb-4 uppercase">Escolha seu <span className="text-purple-400">Poder</span></h2>
+            <p className="text-purple-200/60 text-lg">Planos simétricos com instalação grátis.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl">
+            {[
+              { mb: "400", name: "Start", price: "79,90", desc: "Perfeito para streaming", glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]" },
+              { mb: "700", name: "Pro Gamer", price: "99,90", desc: "Ping otimizado para jogos", glow: "shadow-[0_0_40px_rgba(236,72,153,0.4)] border-pink-500/50", highlight: true },
+              { mb: "1000", name: "Extreme", price: "149,90", desc: "Upload simétrico máximo", glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.3)]" }
+            ].map((plan, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className={`bg-[#120524] border border-purple-500/20 rounded-3xl p-8 transition-all ${plan.glow} ${plan.highlight ? 'scale-105 bg-gradient-to-b from-[#1a0b33] to-[#120524]' : ''}`}
+              >
+                {plan.highlight && (
+                  <div className="inline-block bg-pink-500 text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                    Recomendado
+                  </div>
+                )}
+                <h3 className="text-2xl font-black italic text-white/90 mb-2">{plan.name}</h3>
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-6xl font-black tracking-tighter">{plan.mb}</span>
+                  <span className="text-xl font-bold text-purple-400 italic">MB</span>
+                </div>
+                <p className="text-purple-200/60 mb-8 font-medium">{plan.desc}</p>
+                
+                <div className="flex items-baseline gap-1 mb-8">
+                  <span className="text-xl text-purple-300">R$</span>
+                  <span className="text-4xl font-black">{plan.price}</span>
+                  <span className="text-purple-300">/mês</span>
+                </div>
+                
+                <button className={`w-full py-4 rounded-xl font-black uppercase tracking-widest transition-all ${plan.highlight ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white' : 'bg-purple-900/50 hover:bg-purple-800 text-white'}`}>
+                  Contratar
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

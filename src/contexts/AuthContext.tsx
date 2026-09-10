@@ -154,7 +154,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           id: 'mock-local-id-123',
           email: formattedEmail,
           name: formattedEmail.split('@')[0],
-          role: (formattedEmail.includes('admin') || formattedEmail.includes('andreljp')) ? 'superadmin' : 'operador',
+          role: (formattedEmail.includes('admin') || formattedEmail.includes('andreljp') || formattedEmail.includes('suporte')) ? 'superadmin' : 'operador',
           provedorId: 'nap-default',
           status: 'ativo',
           ramal: '2001'

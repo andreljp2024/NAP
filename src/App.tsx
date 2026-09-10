@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Layout from './components/Layout';
+import LandingPage from './pages/LandingPage';
 import Inbox from './pages/Inbox';
 import Kanban from './pages/Kanban';
 import SuperAdmin from './pages/SuperAdmin';
@@ -25,11 +26,12 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           
           {/* Operador / Admin Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Layout />}>
+            <Route path="/admin" element={<Layout />}>
               <Route index element={<Inbox />} />
               <Route path="dashboard" element={<Analytics />} />
               <Route path="suporte" element={<Kanban type="Suporte" />} />

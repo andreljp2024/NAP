@@ -18,7 +18,7 @@ export default function Login() {
     
     try {
       await login(username, password);
-      navigate('/');
+      navigate('/admin');
     } catch (err: any) {
       setError(err?.message || 'Credenciais inválidas. Tente novamente.');
     } finally {

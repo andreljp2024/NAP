@@ -56,18 +56,18 @@ export default function Layout() {
 
   // Mapeamento dinâmico de títulos para o Topbar
   const getPageInfo = (path: string) => {
-    if (path === '/' || path === '') return { title: 'Inbox Unificado', category: 'Atendimento Omnichannel', icon: <MessageSquare size={18} className="text-blue-600" /> };
-    if (path.startsWith('/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-600" /> };
-    if (path.startsWith('/cobranca')) return { title: 'Régua de Cobrança', category: 'Inadimplência, PIX & Desbloqueio 48h', icon: <CreditCard size={18} className="text-amber-600" /> };
-    if (path.startsWith('/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-600" /> };
-    if (path.startsWith('/vendas')) return { title: 'Kanban de Vendas', category: 'Novos Assinantes & Upgrades', icon: <ShoppingCart size={18} className="text-emerald-600" /> };
-    if (path.startsWith('/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
-    if (path.startsWith('/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-600" /> };
-    if (path.startsWith('/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-600" /> };
-    if (path.startsWith('/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-600" /> };
-    if (path.startsWith('/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
-    if (path.startsWith('/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-600" /> };
-    if (path.startsWith('/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-600" /> };
+    if (path === '/admin' || path === '/admin/') return { title: 'Inbox Unificado', category: 'Atendimento Omnichannel', icon: <MessageSquare size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/cobranca')) return { title: 'Régua de Cobrança', category: 'Inadimplência, PIX & Desbloqueio 48h', icon: <CreditCard size={18} className="text-amber-600" /> };
+    if (path.startsWith('/admin/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/vendas')) return { title: 'Kanban de Vendas', category: 'Novos Assinantes & Upgrades', icon: <ShoppingCart size={18} className="text-emerald-600" /> };
+    if (path.startsWith('/admin/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
+    if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
+    if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-600" /> };
     return { title: 'NAP Omni', category: 'Telecom Suite', icon: <Activity size={18} className="text-blue-600" /> };
   };
 
@@ -143,15 +143,15 @@ export default function Layout() {
             )}
             
             <nav className="flex flex-col gap-1">
-              <NavItem to="/dashboard" icon={<PieChart size={19} />} label="Analytics" isCollapsed={isCollapsed} />
-              <NavItem to="/" icon={<MessageSquare size={19} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />
-              <NavItem to="/cobranca" icon={<CreditCard size={19} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />
-              <NavItem to="/suporte" icon={<Headphones size={19} />} label="Suporte N1/N2" isCollapsed={isCollapsed} />
-              <NavItem to="/vendas" icon={<ShoppingCart size={19} />} label="Vendas & Leads" isCollapsed={isCollapsed} />
-              <NavItem to="/campanhas" icon={<Megaphone size={19} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />
-              <NavItem to="/crm" icon={<Users size={19} />} label="CRM Clientes" isCollapsed={isCollapsed} />
-              <NavItem to="/sgp" icon={<Server size={19} />} label="Consulta SGP" isCollapsed={isCollapsed} />
-              <NavItem to="/genieacs" icon={<Router size={19} />} label="GenieACS" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/dashboard" icon={<PieChart size={19} />} label="Analytics" isCollapsed={isCollapsed} />
+              <NavItem to="/admin" icon={<MessageSquare size={19} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/cobranca" icon={<CreditCard size={19} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/suporte" icon={<Headphones size={19} />} label="Suporte N1/N2" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/vendas" icon={<ShoppingCart size={19} />} label="Vendas & Leads" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/campanhas" icon={<Megaphone size={19} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/crm" icon={<Users size={19} />} label="CRM Clientes" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/sgp" icon={<Server size={19} />} label="Consulta SGP" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/genieacs" icon={<Router size={19} />} label="GenieACS" isCollapsed={isCollapsed} />
             </nav>
           </div>
 
@@ -167,7 +167,7 @@ export default function Layout() {
             )}
 
             <nav className="flex flex-col gap-1">
-              <NavItem to="/automacoes" icon={<Sparkles size={19} />} label="Agente Gemini" badge="Free" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/automacoes" icon={<Sparkles size={19} />} label="Agente Gemini" badge="Free" isCollapsed={isCollapsed} />
             </nav>
           </div>
 
@@ -182,8 +182,8 @@ export default function Layout() {
             )}
 
             <nav className="flex flex-col gap-1">
-              <NavItem to="/operadores" icon={<ShieldUser size={19} />} label="Operadores" isCollapsed={isCollapsed} />
-              <NavItem to="/configuracoes" icon={<Settings size={19} />} label="Super Admin" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/operadores" icon={<ShieldUser size={19} />} label="Operadores" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/configuracoes" icon={<Settings size={19} />} label="Super Admin" isCollapsed={isCollapsed} />
             </nav>
           </div>
         </div>
