@@ -82,3 +82,24 @@ O fluxo de login do cliente final foi implementado garantindo facilidade de uso 
 O fluxo de login do cliente final foi implementado garantindo facilidade de uso em dispositivos móveis.
 - **Login por CPF**: O cliente insere apenas seu CPF. O sistema valida a máscara e cria a sessão `JWT`/`localStorage`.
 - **Roteamento Protegido**: As rotas do PWA (`/portal/*`) agora são guardadas por um validador de sessão. Se não houver autenticação, o usuário cai diretamente em `/portal/login`.
+
+### Infraestrutura e Deploy (Docker)
+O planejamento de implantação em produção utiliza **PostgreSQL puro** orquestrado em containers juntamente com o **GenieACS** (MongoDB + Redis), mantendo a stack extremamente leve para cenários isolados por provedor (Single-Tenant).
+
+Para detalhes da arquitetura, análise técnica e passo a passo, veja o [Guia de Deploy (DEPLOY.md)](./DEPLOY.md).
+
+### Banco de Dados: Integração e Modelagem Base (Drizzle ORM)
+O backend Node.js (`server.ts`) agora está pronto para conversar com o banco PostgreSQL. 
+- Foi adicionado e configurado o **Drizzle ORM** (`drizzle-orm` e `drizzle-kit`).
+- Os schemas primários (Usuários, Clientes, Atendimentos) foram mapeados em `/src/db/schema.ts` para espelhar as regras de negócio de telecom.
+- Os comandos de migração (`npm run db:generate` e `npm run db:push`) estão disponíveis para atualizar as tabelas do PostgreSQL automaticamente após alterações de schema.
+
+### Login e RBAC Baseados no Banco (Drizzle)
+- Foi implementado o endpoint `/api/login` no backend, validando credenciais criptografadas e permissões diretamente na tabela `users` do PostgreSQL.
+- O Frontend (`AuthContext.tsx`) foi atualizado para sempre tentar o login no banco de dados primeiro.
+- **Modo Sandbox / Fallback**: Se o banco de dados Postgres estiver offline (como ocorre no ambiente de Web IDE da plataforma de desenvolvimento, onde o Docker não roda nativamente), o frontend intercepta a falha de conexão e ativa o fallback de "Mock" transparente. Isso permite que você continue testando a interface do CRM aqui, enquanto o código já está perfeitamente seguro e pronto para apontar para o Postgres quando a VM iniciar.
+
+### Login e RBAC Baseados no Banco (Drizzle)
+- Foi implementado o endpoint `/api/login` no backend, validando credenciais criptografadas e permissões diretamente na tabela `users` do PostgreSQL.
+- O Frontend (`AuthContext.tsx`) foi atualizado para sempre tentar o login no banco de dados primeiro.
+- **Modo Sandbox / Fallback**: Se o banco de dados Postgres estiver offline (como ocorre no ambiente de Web IDE da plataforma de desenvolvimento, onde o Docker não roda nativamente), o frontend intercepta a falha de conexão e ativa o fallback de "Mock" transparente. Isso permite que você continue testando a interface do CRM aqui, enquanto o código já está perfeitamente seguro e pronto para apontar para o Postgres quando a VM iniciar.

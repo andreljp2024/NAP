@@ -1,30 +1,30 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { ConfigProvider } from './contexts/ConfigContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import Layout from './components/Layout';
-import LandingPage from './pages/LandingPage';
-import Inbox from './pages/Inbox';
-import Kanban from './pages/Kanban';
-import SuperAdmin from './pages/SuperAdmin';
-import Helpers from './pages/Helpers';
-import CRM from './pages/CRM';
-import Analytics from './pages/Analytics';
-import Operadores from './pages/Operadores';
-import Campanhas from './pages/Campanhas';
-import Automacoes from './pages/Automacoes';
-import GenieACSDashboard from './pages/GenieACSDashboard';
-import PortalLayout from './components/PortalLayout';
-import PortalDashboard from './pages/PortalDashboard';
-import PortalFaturas from './pages/PortalFaturas';
-import PortalSuporte from './pages/PortalSuporte';
-import PortalConta from './pages/PortalConta';
-import PortalLogin from './pages/PortalLogin';
-import ConsultaSGP from './pages/ConsultaSGP';
-import UsuariosHierarquia from './pages/UsuariosHierarquia';
-import TecnicoCampo from './pages/TecnicoCampo';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ConfigProvider } from "./contexts/ConfigContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
+import Layout from "./components/Layout";
+import LandingPage from "./pages/LandingPage";
+import Inbox from "./pages/Inbox";
+import Kanban from "./pages/Kanban";
+import SuperAdmin from "./pages/SuperAdmin";
+import Helpers from "./pages/Helpers";
+import CRM from "./pages/CRM";
+import Analytics from "./pages/Analytics";
+import Operadores from "./pages/Operadores";
+import Campanhas from "./pages/Campanhas";
+import Automacoes from "./pages/Automacoes";
+import GenieACSDashboard from "./pages/GenieACSDashboard";
+import PortalLayout from "./components/PortalLayout";
+import PortalDashboard from "./pages/PortalDashboard";
+import PortalFaturas from "./pages/PortalFaturas";
+import PortalSuporte from "./pages/PortalSuporte";
+import PortalConta from "./pages/PortalConta";
+import PortalLogin from "./pages/PortalLogin";
+import ConsultaSGP from "./pages/ConsultaSGP";
+import UsuariosHierarquia from "./pages/UsuariosHierarquia";
+import TecnicoCampo from "./pages/TecnicoCampo";
 
 export default function App() {
   return (
@@ -34,63 +34,132 @@ export default function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
-            
+
             {/* Operador / Admin Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<Layout />}>
-                <Route index element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />} >
+                <Route
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={[
+                        "operador",
+                        "tecnico_noc",
+                        "tecnico_campo",
+                      ]}
+                    />
+                  }
+                >
                   <Route index element={<Inbox />} />
                 </Route>
-                
-                <Route path="dashboard" element={<ProtectedRoute allowedRoles={['tecnico_noc']} />}>
+
+                <Route
+                  path="dashboard"
+                  element={<ProtectedRoute allowedRoles={["tecnico_noc"]} />}
+                >
                   <Route index element={<Analytics />} />
                 </Route>
 
-                <Route path="suporte" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />}>
+                <Route
+                  path="suporte"
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={[
+                        "operador",
+                        "tecnico_noc",
+                        "tecnico_campo",
+                      ]}
+                    />
+                  }
+                >
                   <Route index element={<Kanban type="Suporte" />} />
                 </Route>
 
-                <Route path="cobranca" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                <Route
+                  path="cobranca"
+                  element={<ProtectedRoute allowedRoles={["operador"]} />}
+                >
                   <Route index element={<Kanban type="Cobranca" />} />
                 </Route>
 
-                <Route path="vendas" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                <Route
+                  path="vendas"
+                  element={<ProtectedRoute allowedRoles={["operador"]} />}
+                >
                   <Route index element={<Kanban type="Vendas" />} />
                 </Route>
 
-                <Route path="crm" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc']} />}>
+                <Route
+                  path="crm"
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={["operador", "tecnico_noc"]}
+                    />
+                  }
+                >
                   <Route index element={<CRM />} />
                 </Route>
 
-                <Route path="sgp" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />}>
+                <Route
+                  path="sgp"
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={[
+                        "operador",
+                        "tecnico_noc",
+                        "tecnico_campo",
+                      ]}
+                    />
+                  }
+                >
                   <Route index element={<ConsultaSGP />} />
                 </Route>
 
-                <Route path="genieacs" element={<ProtectedRoute allowedRoles={['tecnico_noc']} />}>
+                <Route
+                  path="genieacs"
+                  element={<ProtectedRoute allowedRoles={["tecnico_noc"]} />}
+                >
                   <Route index element={<GenieACSDashboard />} />
                 </Route>
 
-                <Route path="campanhas" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                <Route
+                  path="campanhas"
+                  element={<ProtectedRoute allowedRoles={["operador"]} />}
+                >
                   <Route index element={<Campanhas />} />
                 </Route>
 
-                <Route path="operadores" element={<ProtectedRoute allowedRoles={[]} />}>
+                <Route
+                  path="operadores"
+                  element={<ProtectedRoute allowedRoles={[]} />}
+                >
                   <Route index element={<Operadores />} />
                 </Route>
 
-                <Route path="usuarios" element={<ProtectedRoute allowedRoles={[]} />}>
+                <Route
+                  path="usuarios"
+                  element={<ProtectedRoute allowedRoles={[]} />}
+                >
                   <Route index element={<UsuariosHierarquia />} />
                 </Route>
 
-                <Route path="campo" element={<ProtectedRoute allowedRoles={['tecnico_campo']} />}>
+                <Route
+                  path="campo"
+                  element={<ProtectedRoute allowedRoles={["tecnico_campo"]} />}
+                >
                   <Route index element={<TecnicoCampo />} />
                 </Route>
 
-                <Route path="automacoes" element={<ProtectedRoute allowedRoles={[]} />}>
+                <Route
+                  path="automacoes"
+                  element={<ProtectedRoute allowedRoles={[]} />}
+                >
                   <Route index element={<Automacoes />} />
                 </Route>
 
-                <Route path="configuracoes" element={<ProtectedRoute allowedRoles={[]} />}>
+                <Route
+                  path="configuracoes"
+                  element={<ProtectedRoute allowedRoles={[]} />}
+                >
                   <Route index element={<SuperAdmin />} />
                 </Route>
 
@@ -106,7 +175,7 @@ export default function App() {
               <Route path="suporte" element={<PortalSuporte />} />
               <Route path="conta" element={<PortalConta />} />
             </Route>
-            
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
