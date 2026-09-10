@@ -331,13 +331,13 @@ if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
       // Simulated Vector DB (BookStack) Retrieval based on Vertical
       if (vertical === "suporte") {
         bookstackContext = "[RAG BookStack]: Artigo ID #401 - Resolução de ONU com LOS Vermelho: Instruir cliente a verificar se o cabo óptico está dobrado ou rompido. Artigo ID #204: Lentidão - verificar uptime da ONU e dispositivos conectados via Wi-Fi vs Cabo.";
-        systemInstruction = "Você é um assistente técnico do NAP. Use o seguinte contexto da base de conhecimento BookStack para responder: " + bookstackContext + " Responda de forma curta e empática.";
+        systemInstruction = (systemConfig.ia?.promptSuporte || "Você é um assistente técnico do NAP.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       } else if (vertical === "vendas") {
         bookstackContext = "[RAG BookStack]: Planos atuais: 500MB por R$99,90, 700MB por R$119,90. Promoção vigente: Instalação grátis para fidelidade de 12 meses.";
-        systemInstruction = "Você é um consultor de vendas do NAP. Use este contexto do BookStack: " + bookstackContext + " Seja persuasivo, simpático e conciso.";
+        systemInstruction = (systemConfig.ia?.promptVendas || "Você é um consultor comercial.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       } else {
         bookstackContext = "[RAG BookStack]: Regras: Faturas atrasadas em 15 dias reduzem banda. PIX baixa na hora, boleto em 1 dia útil.";
-        systemInstruction = "Você é um agente de cobrança do NAP. Use este contexto do BookStack: " + bookstackContext + " Seja educado e focado na solução.";
+        systemInstruction = (systemConfig.ia?.promptCobranca || "Você atua no setor financeiro.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       }
 
       const response = await ai.models.generateContent({
@@ -1121,15 +1121,8 @@ if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
         httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
       });
 
-      const systemInstruction = `Você é o Agente Autônomo Oficial de um Provedor de Internet (ISP) com fibra óptica.
-Seu objetivo é resolver a solicitação do assinante com respostas claras, empáticas e objetivas.
-Você possui acesso às seguintes ferramentas de sistema:
-1. 'consultar_sgp': busca faturas, plano e status do cliente.
-2. 'verificar_sinal_onu': mede o sinal óptico (-18 a -24 dBm é normal; abaixo de -27 dBm é atenuado).
-3. 'gerar_pix_fatura': gera o código PIX Copia e Cola para pagamento imediato.
-4. 'desbloqueio_48h': ativa o desbloqueio temporário em confiança.
-Contexto do cliente atual: ${JSON.stringify(clientContext || { plano: "Fibra 500MB", status: "ativo" })}.
-Responda diretamente em português do Brasil sem enrolação.`;
+      const basePrompt = systemConfig.ia?.promptSuporte || 'Você é o Agente Autônomo Oficial de um Provedor de Internet (ISP) com fibra óptica.';
+      const systemInstruction = `${basePrompt}\n\nSeu objetivo é resolver a solicitação do assinante com respostas claras, empáticas e objetivas.\nVocê possui acesso às seguintes ferramentas de sistema:\n1. \'consultar_sgp\': busca faturas, plano e status do cliente.\n2. \'verificar_sinal_onu\': mede o sinal óptico (-18 a -24 dBm é normal; abaixo de -27 dBm é atenuado).\n3. \'gerar_pix_fatura\': gera o código PIX Copia e Cola para pagamento imediato.\n4. \'desbloqueio_48h\': ativa o desbloqueio temporário em confiança.\n\nContexto do cliente atual: ${JSON.stringify(clientContext || { plano: 'Fibra 500MB', status: 'ativo' })}.`;
 
       const startTime = Date.now();
       const response = await ai.models.generateContent({
