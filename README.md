@@ -60,3 +60,12 @@ O sistema suporta login via **Firebase Authentication**.
 1. Sem interfaces clichês ("AI Slop"): Nada de bordas brilhantes excessivas ou textos ilegíveis.
 2. Contraste Máximo: Textos sobre fundos escuros (`#0b0f19`) utilizam tons opacos refinados e padding calculado. O PWA de clientes usa um tema claro acessível.
 3. Segurança Full-Stack: Todas as integrações externas (Gemini, ERP, VoIP, etc.) são roteadas obrigatoriamente pelo `server.ts`, mantendo as chaves privadas totalmente ocultas do navegador (Client-Side).
+
+### Hierarquia de Acesso e Perfis
+O NAP conta com uma arquitetura de perfis baseada em RBAC (Role-Based Access Control). Foram definidos papéis estruturados para isolamento de funcionalidades, garantindo que cada usuário visualize apenas as ferramentas necessárias para seu dia-a-dia.
+
+**Papéis Implementados:**
+- **Administrador (`admin` / `superadmin`):** Acesso irrestrito a todos os módulos, incluindo configurações, automações e dashboards gerenciais.
+- **Operador (`operador`):** Acesso central ao Inbox Unificado, CRMs, Consulta de Faturas (SGP), e Kanbans (Suporte, Vendas, Cobrança).
+- **Técnico de NOC (`tecnico_noc`):** Focado em monitoramento, possui acesso ao GenieACS, Suporte Avançado, e Gestão de Operadores.
+- **Técnico de Campo (`tecnico_campo`):** Direcionado para operações móveis, acessa seu portal PWA (Geolocalização, Ordens de Serviço), Caixa de Entrada (Comunicação interna) e Consulta SGP básica.

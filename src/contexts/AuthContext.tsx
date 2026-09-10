@@ -13,7 +13,7 @@ export interface UserData {
   id: string;
   email: string;
   name: string;
-  role: 'superadmin' | 'admin' | 'operador' | 'tecnico' | 'suporte' | 'financeiro';
+  role: 'superadmin' | 'admin' | 'operador' | 'tecnico_campo' | 'tecnico_noc' | 'suporte' | 'financeiro';
   provedorId: string;
   ramal?: string;
   veiculo?: string;
@@ -152,25 +152,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       const getMockUserProfile = (emailStr: string): UserData => {
         const lower = emailStr.toLowerCase();
-        if (lower.includes('tecnico1') || lower.includes('carlos')) {
+        if (lower.includes('tecnico1') || lower.includes('carlos') || lower.includes('campo')) {
           return {
             id: 'mock-tecnico-1',
-            email: 'tecnico1@provedor.com.br',
-            name: 'Carlos Mendes',
-            role: 'tecnico',
+            email: 'tecnico_campo@provedor.com.br',
+            name: 'Carlos Mendes (Campo)',
+            role: 'tecnico_campo',
             provedorId: 'nap-default',
             veiculo: 'Fiorino Tech 01 (ABC-4D21)',
             status: 'ativo'
           };
         }
-        if (lower.includes('tecnico2') || lower.includes('lucas')) {
+        if (lower.includes('tecnico2') || lower.includes('lucas') || lower.includes('noc')) {
           return {
             id: 'mock-tecnico-2',
-            email: 'tecnico2@provedor.com.br',
-            name: 'Lucas Ferreira',
-            role: 'tecnico',
+            email: 'tecnico_noc@provedor.com.br',
+            name: 'Lucas Ferreira (NOC)',
+            role: 'tecnico_noc',
             provedorId: 'nap-default',
-            veiculo: 'Mobi Tech 02 (BRA-9F88)',
             status: 'ativo'
           };
         }
@@ -309,9 +308,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (target === 'tecnico1') {
       targetUser = {
         id: 'mock-tecnico-1',
-        email: 'tecnico1@provedor.com.br',
-        name: 'Carlos Mendes',
-        role: 'tecnico',
+        email: 'tecnico_campo@provedor.com.br',
+        name: 'Carlos Mendes (Campo)',
+        role: 'tecnico_campo',
         provedorId: 'nap-default',
         veiculo: 'Fiorino Tech 01 (ABC-4D21)',
         status: 'ativo'
@@ -319,11 +318,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } else if (target === 'tecnico2') {
       targetUser = {
         id: 'mock-tecnico-2',
-        email: 'tecnico2@provedor.com.br',
-        name: 'Lucas Ferreira',
-        role: 'tecnico',
+        email: 'tecnico_noc@provedor.com.br',
+        name: 'Lucas Ferreira (NOC)',
+        role: 'tecnico_noc',
         provedorId: 'nap-default',
-        veiculo: 'Mobi Tech 02 (BRA-9F88)',
         status: 'ativo'
       };
     } else if (target === 'operador') {

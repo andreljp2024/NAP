@@ -12,7 +12,7 @@ type UsuarioItem = {
   nome: string;
   email: string;
   username: string;
-  cargo: 'admin' | 'operador' | 'tecnico';
+  cargo: 'admin' | 'operador' | 'tecnico_campo' | 'tecnico_noc';
   nivel_hierarquia: number;
   cargo_label: string;
   ramal?: string;
@@ -122,7 +122,7 @@ export default function UsuariosHierarquia() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tipo: usuario.cargo === 'tecnico' ? 'suporte' : 'whatsapp',
+          tipo: (usuario.cargo === 'tecnico_campo' || usuario.cargo === 'tecnico_noc') ? 'suporte' : 'whatsapp',
           operador_nome: usuario.nome,
           ramal: usuario.ramal || 'Campo'
         })
@@ -181,18 +181,18 @@ export default function UsuariosHierarquia() {
           <button
             onClick={() => switchMockUser('tecnico1')}
             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
-              user?.name === 'Carlos Mendes' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
+              user?.role === 'tecnico_campo' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Técnico 1
+            Técnico Campo
           </button>
           <button
             onClick={() => switchMockUser('tecnico2')}
             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
-              user?.name === 'Lucas Ferreira' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
+              user?.role === 'tecnico_noc' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Técnico 2
+            Técnico NOC
           </button>
         </div>
       </div>
@@ -337,7 +337,7 @@ export default function UsuariosHierarquia() {
                 <span className="text-xs text-emerald-400 font-bold">2 Usuários (GPS Ativo)</span>
               </div>
 
-              {usuarios.filter(u => u.cargo === 'tecnico').map(tec => (
+              {usuarios.filter(u => u.cargo === 'tecnico_campo' || u.cargo === 'tecnico_noc').map(tec => (
                 <div key={tec.id} className="bg-[#0b0f19] border border-white/5 rounded-xl p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>

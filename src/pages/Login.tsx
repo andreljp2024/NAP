@@ -131,24 +131,24 @@ export default function Login() {
                 className="text-left p-2.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-emerald-700">3. Técnico 1</span>
-                  <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">Campo N2</span>
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-emerald-700">3. Técnico de Campo</span>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">Rua N2</span>
                 </div>
                 <span className="block text-[10px] text-slate-500 truncate">Carlos (Fiorino 01)</span>
-                <span className="block font-mono text-[9px] text-emerald-600 font-semibold">GPS + PWA Campo</span>
+                <span className="block font-mono text-[9px] text-emerald-600 font-semibold">GPS + OS Mobile</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickFill('tecnico2', 'admin123')}
-                className="text-left p-2.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl transition-all group"
+                className="text-left p-2.5 bg-white hover:bg-amber-50 border border-amber-200 rounded-xl transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-emerald-700">4. Técnico 2</span>
-                  <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">FTTH N1</span>
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-amber-700">4. Técnico de NOC</span>
+                  <span className="text-[9px] bg-amber-100 text-amber-700 px-1 rounded font-bold">Nível 3</span>
                 </div>
-                <span className="block text-[10px] text-slate-500 truncate">Lucas (Mobi 02)</span>
-                <span className="block font-mono text-[9px] text-emerald-600 font-semibold">GPS + PWA Campo</span>
+                <span className="block text-[10px] text-slate-500 truncate">Lucas (NOC Base)</span>
+                <span className="block font-mono text-[9px] text-amber-600 font-semibold">GenieACS + CRM</span>
               </button>
             </div>
           </div>

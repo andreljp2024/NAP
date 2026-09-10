@@ -1058,7 +1058,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     };
     operador_id: number;
     operador_nome: string;
-    cargo: 'admin' | 'operador' | 'tecnico';
+    cargo: 'admin' | 'operador' | 'tecnico_campo' | 'tecnico_noc';
     ramal?: string;
     veiculo?: string;
     filas: string[];
@@ -1075,7 +1075,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     nome: string;
     email: string;
     username: string;
-    cargo: 'admin' | 'operador' | 'tecnico';
+    cargo: 'admin' | 'operador' | 'tecnico_campo' | 'tecnico_noc';
     nivel_hierarquia: number; // 1: Admin, 2: Operador, 3: Técnico
     cargo_label: string;
     ramal?: string;
@@ -1161,10 +1161,10 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     },
     {
       id: 3,
-      nome: "Carlos Mendes",
-      email: "tecnico1@provedor.com.br",
-      username: "tecnico1",
-      cargo: "tecnico",
+      nome: "Carlos Mendes (Campo)",
+      email: "tecnico_campo@provedor.com.br",
+      username: "tecnico_campo",
+      cargo: "tecnico_campo",
       nivel_hierarquia: 3,
       cargo_label: "Técnico de Campo N2 (Reparo & Fusão)",
       veiculo: "Fiorino Telecom 01 (Placa ABC-4D21)",
@@ -1191,32 +1191,32 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     },
     {
       id: 4,
-      nome: "Lucas Ferreira",
-      email: "tecnico2@provedor.com.br",
-      username: "tecnico2",
-      cargo: "tecnico",
+      nome: "Lucas Ferreira (NOC)",
+      email: "tecnico_noc@provedor.com.br",
+      username: "tecnico_noc",
+      cargo: "tecnico_noc",
       nivel_hierarquia: 3,
-      cargo_label: "Técnico de Campo N1 (Instalação FTTH)",
-      veiculo: "Mobi Telecom 02 (Placa BRA-9F88)",
-      status: "no_cliente",
-      status_label: "Instalando ONU no Cliente (OS #1044)",
-      filas: ["Instalação FTTH", "Ativação Residencial"],
+      cargo_label: "Técnico de NOC N3 (GenieACS)",
+      veiculo: "Sede Central",
+      status: "online",
+      status_label: "Monitorando",
+      filas: ["NOC N3"],
       telefone: "(11) 98444-0004",
       geolocalizacao: {
-        ativo: true,
-        lat: -23.5712,
-        lng: -46.6432,
-        precisao_metros: 6,
-        endereco_estimado: "Rua Vergueiro, 2100 - Vila Mariana, São Paulo - SP",
+        ativo: false,
+        lat: -23.5489,
+        lng: -46.6388,
+        precisao_metros: 10,
+        endereco_estimado: "Sede Central do Provedor - Centro, São Paulo - SP",
         velocidade_kmh: 0,
-        bateria_percentual: 72,
-        atualizado_em: "Tempo real (No Cliente)"
+        bateria_percentual: 100,
+        atualizado_em: "Tempo real"
       },
       pwa: {
         instalado: true,
-        dispositivo: "PWA Mobile (Android 13 / Samsung Internet)",
+        dispositivo: "Desktop Linux (Firefox)",
         push_ativo: true,
-        ultimo_acesso: "GPS Contínuo"
+        ultimo_acesso: "Online agora"
       }
     }
   ];
@@ -1340,7 +1340,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       endpoint: "https://fcm.googleapis.com/fcm/send/op_carlos_mendes_pwa",
       operador_id: 3,
       operador_nome: "Carlos Mendes",
-      cargo: "tecnico",
+      cargo: "tecnico_campo",
       veiculo: "Fiorino Tech 01",
       filas: ["Campo N2", "Fusão de Fibra"],
       dispositivo: "PWA Mobile / Android",
@@ -1353,12 +1353,11 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       id: "op_sub_4",
       endpoint: "https://fcm.googleapis.com/fcm/send/op_lucas_ferreira_pwa",
       operador_id: 4,
-      operador_nome: "Lucas Ferreira",
-      cargo: "tecnico",
-      veiculo: "Mobi Tech 02",
-      filas: ["Instalação FTTH"],
-      dispositivo: "PWA Mobile / Android",
-      categorias: ["suporte", "ordem_servico"],
+      operador_nome: "Lucas Ferreira (NOC)",
+      cargo: "tecnico_noc",
+      filas: ["NOC N3"],
+      dispositivo: "Desktop Linux / Firefox",
+      categorias: ["noc", "suporte"],
       ativo: true,
       inscrito_em: new Date().toISOString(),
       ultimo_push: "Há 18 min"

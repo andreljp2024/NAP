@@ -79,6 +79,12 @@ export default function Layout() {
 
   const pageInfo = getPageInfo(location.pathname);
 
+  const role = user?.role || 'operador';
+  const hasAccess = (allowedRoles: string[]) => {
+    if (role === 'admin' || role === 'superadmin') return true;
+    return allowedRoles.includes(role);
+  };
+
   return (
     <div className="flex h-screen bg-[#0b0f19] text-slate-300 font-sans overflow-hidden">
       {/* Backdrop para Mobile */}
@@ -147,32 +153,34 @@ export default function Layout() {
             )}
             
             <nav className="flex flex-col gap-0.5 px-3">
-              <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />
-              <NavItem to="/admin" icon={<MessageSquare size={18} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/campo" icon={<Wrench size={18} />} label="Técnico de Campo" badge="GPS" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/cobranca" icon={<CreditCard size={18} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/suporte" icon={<Headphones size={18} />} label="Suporte N1/N2" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/vendas" icon={<ShoppingCart size={18} />} label="Vendas & Leads" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/campanhas" icon={<Megaphone size={18} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/crm" icon={<Users size={18} />} label="CRM Clientes" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Consulta SGP" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/genieacs" icon={<Router size={18} />} label="GenieACS" isCollapsed={isCollapsed} />
+              {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin" icon={<MessageSquare size={18} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_campo']) && <NavItem to="/admin/campo" icon={<Wrench size={18} />} label="Técnico de Campo" badge="GPS" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador']) && <NavItem to="/admin/cobranca" icon={<CreditCard size={18} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/suporte" icon={<Headphones size={18} />} label="Suporte N1/N2" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador']) && <NavItem to="/admin/vendas" icon={<ShoppingCart size={18} />} label="Vendas & Leads" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador']) && <NavItem to="/admin/campanhas" icon={<Megaphone size={18} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/crm" icon={<Users size={18} />} label="CRM Clientes" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Consulta SGP" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/genieacs" icon={<Router size={18} />} label="GenieACS" isCollapsed={isCollapsed} />}
             </nav>
           </div>
 
           {/* Seção: Automação & IA */}
-          <div>
-            {!isCollapsed && (
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-5 flex items-center justify-between">
-                <span>Automação & IA</span>
-                <Sparkles size={11} className="text-indigo-500" />
-              </p>
-            )}
+          {hasAccess([]) && (
+            <div>
+              {!isCollapsed && (
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-5 flex items-center justify-between">
+                  <span>Automação & IA</span>
+                  <Sparkles size={11} className="text-indigo-500" />
+                </p>
+              )}
 
-            <nav className="flex flex-col gap-0.5 px-3">
-              <NavItem to="/admin/automacoes" icon={<Sparkles size={18} />} label="Agente Gemini" badge="Free" isCollapsed={isCollapsed} />
-            </nav>
-          </div>
+              <nav className="flex flex-col gap-0.5 px-3">
+                <NavItem to="/admin/automacoes" icon={<Sparkles size={18} />} label="Agente Gemini" badge="Free" isCollapsed={isCollapsed} />
+              </nav>
+            </div>
+          )}
 
           {/* Seção: Administração */}
           <div>
@@ -183,9 +191,9 @@ export default function Layout() {
             )}
 
             <nav className="flex flex-col gap-0.5 px-3">
-              <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />
-              <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />
+              {hasAccess([]) && <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />}
+              {hasAccess([]) && <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />}
               <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
             </nav>
           </div>
