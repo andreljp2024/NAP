@@ -72,7 +72,7 @@ type MapaData = {
 
 export default function UsuariosHierarquia() {
   const { user, switchMockUser } = useAuth();
-  const { isSubscribed, permissionState, requestPushPermission, showNotification } = useOperatorPushNotifications();
+  const { isSubscribed, permission, requestPermission, showNotification } = useOperatorPushNotifications();
 
   const [usuarios, setUsuarios] = useState<UsuarioItem[]>([]);
   const [mapa, setMapa] = useState<MapaData | null>(null);
@@ -521,14 +521,14 @@ export default function UsuariosHierarquia() {
               <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-xl space-y-3 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Permissão do Navegador:</span>
-                  <span className="font-bold text-emerald-400 uppercase">{permissionState}</span>
+                  <span className="font-bold text-emerald-400 uppercase">{permission}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Inscrição VAPID:</span>
                   <span className="font-mono text-[11px] text-blue-400">Ativa no Service Worker</span>
                 </div>
                 <button
-                  onClick={requestPushPermission}
+                  onClick={requestPermission}
                   className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors"
                 >
                   Garantir Permissão de Notificação Push
