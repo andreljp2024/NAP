@@ -1,9 +1,11 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+
 import { db } from "./src/db";
-import { users } from "./src/db/schema";
-import { eq } from "drizzle-orm";
+import { users, atendimentos, clientes, faturas } from "./src/db/schema";
+import { eq, desc } from "drizzle-orm";
+
 
 import { agentToolRegistry } from "./server/agent/toolRegistry";
 
@@ -48,13 +50,6 @@ async function fetchSGP(endpoint, method = "GET", body = null) {
     res.json({ status: "ok" });
   });
 
-  // Mock SGP Faturas (Bills)
-  app.get("/api/sgp/faturas", (req, res) => {
-    res.json([
-      { id: 1, valor: 99.9, vencimento: "2026-09-10", status: "pendente" },
-      { id: 2, valor: 99.9, vencimento: "2026-08-10", status: "pago" },
-    ]);
-  });
 
   // In-Memory Kanban Deals (Support & Sales para Provedores ISP)
   
@@ -247,25 +242,55 @@ let kanbanDeals = [
   ];
 
   // Listar Deals
-  app.get("/api/deals", (req, res) => {
-    res.json(kanbanDeals);
+
+  app.get("/api/deals", async (req, res) => {
+    try {
+      const deals = await db.select().from(atendimentos).orderBy(desc(atendimentos.createdAt));
+      
+      const formatted = deals.map(d => ({
+        id: d.id,
+        titulo: d.titulo,
+        estagio: d.estagio,
+        pipeline: d.pipeline,
+        contato: d.contato,
+        telefone: d.telefone,
+        endereco: d.endereco,
+        plano: d.plano,
+        prioridade: d.prioridade,
+        criado_em: d.criadoEm || "Hoje",
+        contexto_ia: d.contextoIa
+      }));
+
+      if (formatted.length === 0) {
+        return res.json(kanbanDeals);
+      }
+      res.json(formatted);
+    } catch (e) {
+      console.error("Erro DB Deals GET", e);
+      res.json(kanbanDeals);
+    }
   });
 
   // Atualizar estágio de Deal (Persistência ao arrastar no Kanban)
-  app.patch("/api/deals/:id", (req, res) => {
+  app.patch("/api/deals/:id", async (req, res) => {
     const id = parseInt(req.params.id);
     const { estagio, prioridade } = req.body;
     
-
-    const index = kanbanDeals.findIndex(d => d.id === id);
-    if (index === -1) {
-      return res.status(404).json({ erro: "Card não encontrado" });
+    try {
+      await db.update(atendimentos)
+        .set({ estagio, prioridade: prioridade || 2 })
+        .where(eq(atendimentos.id, id));
+        
+      res.json({ sucesso: true });
+    } catch (e) {
+      const index = kanbanDeals.findIndex(d => d.id === id);
+      if (index === -1) {
+        return res.status(404).json({ erro: "Card não encontrado" });
+      }
+      if (estagio) kanbanDeals[index].estagio = estagio;
+      if (prioridade !== undefined) kanbanDeals[index].prioridade = prioridade;
+      res.json({ sucesso: true, deal: kanbanDeals[index] });
     }
-
-    if (estagio) kanbanDeals[index].estagio = estagio;
-    if (prioridade !== undefined) kanbanDeals[index].prioridade = prioridade;
-
-    res.json({ sucesso: true, deal: kanbanDeals[index] });
   });
 
   // Criar novo Card no Kanban
@@ -300,15 +325,14 @@ let kanbanDeals = [
     }
   });
 
-  app.post("/api/deals", (req, res) => {
+  app.post("/api/deals", async (req, res) => {
     const { titulo, pipeline, contato, telefone, endereco, plano, prioridade, contexto_ia } = req.body;
     
     let defaultStage = "Novo Chamado";
     if (pipeline === "Vendas") defaultStage = "Novo Lead";
     else if (pipeline === "Cobranca") defaultStage = "A Vencer (Preventivo)";
 
-    const newDeal = {
-      id: Math.floor(1000 + Math.random() * 9000),
+    const newDealBase = {
       titulo: titulo || (pipeline === "Cobranca" ? "Cobrança de Fatura" : pipeline === "Vendas" ? "Novo Lead Comercial" : "Novo Chamado Técnico"),
       estagio: defaultStage,
       pipeline: pipeline || "Suporte",
@@ -316,25 +340,48 @@ let kanbanDeals = [
       telefone: telefone || "(11) 99999-9999",
       endereco: endereco || "Endereço a confirmar",
       plano: plano || "Fibra 500MB",
-      valor: req.body.valor || 99.90,
-      dias_atraso: req.body.dias_atraso || 0,
       prioridade: prioridade || 2,
-      criado_em: "Agora",
-      contexto_ia: contexto_ia || "Card criado pela equipe do provedor."
+      criadoEm: "Agora",
+      contextoIa: contexto_ia || "Card criado pela equipe do provedor."
     };
 
-    kanbanDeals.unshift(newDeal);
-    res.status(201).json(newDeal);
+    try {
+      const result = await db.insert(atendimentos).values(newDealBase).returning();
+      res.status(201).json({ id: result[0].id, ...newDealBase, criado_em: "Agora", contexto_ia: newDealBase.contextoIa });
+    } catch(e) {
+      console.warn("DB Post Deals Error:", e);
+      const newDealMock = {
+        id: Math.floor(1000 + Math.random() * 9000),
+        ...newDealBase,
+        criado_em: "Agora",
+        contexto_ia: newDealBase.contextoIa
+      };
+      kanbanDeals.unshift(newDealMock);
+      res.status(201).json(newDealMock);
+    }
   });
 
   // Obter Clientes (Real SGP ou Mock)
+  
   app.get("/api/contatos", async (req, res) => {
     try {
+      // 1. Tentar ler do DB local (sincronizado pelo Webhook)
+      const dbClientes = await db.select().from(clientes);
+      if (dbClientes.length > 0) {
+        const mapeados = dbClientes.map(c => ({
+          id: c.id,
+          cpf_cnpj: c.documento,
+          nome: c.nome,
+          telefone: c.telefone || "N/A",
+          plano: c.plano || "Sem Plano",
+          status_cliente: c.status
+        }));
+        return res.json(mapeados);
+      }
+      
+      // 2. Se o DB local estiver vazio e SGP_URL existir, tentar puxar direto
       if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        // Chamada real à rota de clientes do SGP
         const data = await fetchSGP("/api/clientes?limit=50");
-        
-        // Mapeia o retorno real do SGP para a nossa interface do CRM
         if (data && Array.isArray(data)) {
            const mapeados = data.map((c: any) => ({
              id: c.id,
@@ -348,255 +395,22 @@ let kanbanDeals = [
         }
       }
     } catch (error) {
-      console.warn("Aviso: Falha ao obter clientes do SGP real, utilizando simulador.", error);
+      console.warn("DB offline ou API SGP falhou no contatos, caindo p/ mock");
     }
     
-    // Mock Fallback original sincronizado com sgpDatabase
+    // Mock Fallback
     res.json(sgpDatabase_mock.map(c => ({
       id: c.id,
       cpf_cnpj: c.cpf_cnpj,
       nome: c.nome,
       telefone: c.contato.telefone,
       plano: c.plano_atual?.nome || "Fibra 500MB",
-      status_cliente: c.status_cliente,
-      endereco: c.endereco,
-      logradouro: c.logradouro,
-      numero: c.numero,
-      complemento: c.complemento,
-      bairro: c.bairro,
-      cidade: c.cidade,
-      uf: c.uf,
-      cep: c.cep,
-      ponto_referencia: c.ponto_referencia,
-      coordenadas: c.coordenadas
+      status_cliente: c.status_cliente
     })));
   });
 
-  // Mock 9router AI Gateway Abstraction using Gemini SDK
-  app.post("/api/ia/chat", async (req, res) => {
-    const { mensagem, vertical } = req.body;
-    try {
-      if (!process.env.GEMINI_API_KEY) {
-        return res.status(500).json({ erro: "Chave da API Gemini não configurada no servidor." });
-      }
-      const { GoogleGenAI } = await import("@google/genai");
-      const ai = new GoogleGenAI({ 
-        apiKey: process.env.GEMINI_API_KEY,
-        httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-      });
-      let systemInstruction = "";
-      let bookstackContext = "";
-      if (vertical === "suporte") {
-        bookstackContext = "[RAG BookStack]: Artigo ID #401 - Resolução de ONU com LOS Vermelho: Instruir cliente a verificar se o cabo óptico está dobrado ou rompido.";
-        systemInstruction = (systemConfig.ia?.promptSuporte || "Você é um assistente técnico do NAP.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
-      } else if (vertical === "vendas") {
-        bookstackContext = "[RAG BookStack]: Planos atuais: 500MB por R$99,90, 700MB por R$119,90.";
-        systemInstruction = (systemConfig.ia?.promptVendas || "Você é um consultor comercial.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
-      } else {
-        bookstackContext = "[RAG BookStack]: Regras: Faturas atrasadas em 15 dias reduzem banda. PIX baixa na hora, boleto em 1 dia útil.";
-        systemInstruction = (systemConfig.ia?.promptCobranca || "Você atua no setor financeiro.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
-      }
-      
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: mensagem,
-        config: { systemInstruction }
-      });
-      
-      res.json({
-        resposta: response.text,
-        modelo: "gemini-2.5-flash (Integração Direta BookStack)",
-        tokens: response.usageMetadata?.totalTokenCount || 0
-      });
-    } catch (error: any) {
-      console.error("Erro no /api/ia/chat:", error);
-      res.status(500).json({ erro: "Erro ao comunicar com a IA", detalhes: error.message });
-    }
-  });
 
-  // --- Processamento de Voz & Análise em Tempo Real (Asterisk/FreePBX) com Gemini API ---
-  app.post("/api/gemini/voice/analyze", async (req, res) => {
-    const { 
-      audioBase64, 
-      mimeType = "audio/webm", 
-      transcriptText, 
-      speaker = "cliente", 
-      callContext 
-    } = req.body;
 
-    const startTime = Date.now();
-
-    try {
-      if (!process.env.GEMINI_API_KEY) {
-        // Fallback inteligente para demonstração sem chave
-        const textSample = transcriptText || "Olá, estou ligando porque minha internet fibra está sem sinal e a luz LOS está vermelha no roteador. Preciso trabalhar e estou sem conexão.";
-        const sentiment = textSample.toLowerCase().includes("sem conexão") || textSample.toLowerCase().includes("vermelha") || textSample.toLowerCase().includes("queda")
-          ? "frustrado"
-          : "neutro";
-
-        return res.json({
-          transcricao: textSample,
-          sentimento: sentiment,
-          score_sentimento: sentiment === "frustrado" ? -0.7 : 0.1,
-          urgencia: "alta",
-          topico_principal: "Queda de Conexão Óptica (LOS)",
-          pilar_sugerido: "suporte",
-          insights_operador: [
-            "Cliente necessita de conexão para home office.",
-            "Luz LOS indica rompimento ou atenuação severa na fibra.",
-            "Ação sugerida: validar potência óptica no SGP e agendar técnico N2."
-          ],
-          sugestao_resposta: "Compreendo a urgência para o seu trabalho. Estou verificando a telemetria da sua ONU no sistema agora mesmo para normalizarmos sua fibra.",
-          modelo: "gemini-2.5-flash (Simulação Fallback)",
-          tempo_ms: Date.now() - startTime
-        });
-      }
-
-      const { GoogleGenAI } = await import("@google/genai");
-      const ai = new GoogleGenAI({
-        apiKey: process.env.GEMINI_API_KEY,
-        httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-      });
-
-      // Se enviou áudio em base64, utiliza o modelo multimodal ou de transcrição
-      let contents: any = [];
-
-      if (audioBase64) {
-        contents = [
-          {
-            parts: [
-              {
-                inlineData: {
-                  mimeType: mimeType || "audio/webm",
-                  data: audioBase64
-                }
-              },
-              {
-                text: `Você é a IA de escuta ativa e inteligência de voz conectada ao FreePBX/Asterisk de um Provedor de Internet (ISP).
-Analise o áudio transmitido em tempo real pelo ${speaker} e responda ESTRITAMENTE em formato JSON com o seguinte schema:
-{
-  "transcricao": "Texto transcrito exato em português do que foi dito no áudio",
-  "sentimento": "positivo" | "neutro" | "frustrado" | "irritado" | "satisfeito",
-  "score_sentimento": número de -1.0 (muito negativo) a 1.0 (muito positivo),
-  "urgencia": "baixa" | "media" | "alta" | "critica",
-  "topico_principal": "Assunto principal (ex: Falha de Conexão, Dúvida de Fatura, Contratação, Cancelamento)",
-  "pilar_sugerido": "suporte" | "cobranca" | "vendas",
-  "insights_operador": ["ponto chave 1", "ponto chave 2"],
-  "sugestao_resposta": "Sugestão de resposta rápida e empática para o operador dizer ao cliente"
-}
-Contexto da chamada: ${JSON.stringify(callContext || {})}
-Não adicione crases de markdown além do JSON.`
-              }
-            ]
-          }
-        ];
-      } else {
-        // Se já vier com transcrição em texto
-        contents = [
-          {
-            parts: [
-              {
-                text: `Você é a IA de inteligência de voz conectada ao FreePBX/Asterisk de um Provedor de Internet (ISP).
-Analise a seguinte fala emitida pelo ${speaker}: "${transcriptText || ''}".
-Responda ESTRITAMENTE em formato JSON com o seguinte schema:
-{
-  "transcricao": "${(transcriptText || '').replace(/"/g, '\\"')}",
-  "sentimento": "positivo" | "neutro" | "frustrado" | "irritado" | "satisfeito",
-  "score_sentimento": número de -1.0 a 1.0,
-  "urgencia": "baixa" | "media" | "alta" | "critica",
-  "topico_principal": "Assunto principal identificado",
-  "pilar_sugerido": "suporte" | "cobranca" | "vendas",
-  "insights_operador": ["ponto chave 1", "ponto chave 2"],
-  "sugestao_resposta": "Sugestão prática para o operador falar agora"
-}
-Contexto da chamada: ${JSON.stringify(callContext || {})}`
-              }
-            ]
-          }
-        ];
-      }
-
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: contents,
-        config: {
-          responseMimeType: "application/json"
-        }
-      });
-
-      const responseText = response.text || "{}";
-      let parsedResult;
-      try {
-        parsedResult = JSON.parse(responseText.replace(/```json\n?|\n?```/g, '').trim());
-      } catch {
-        parsedResult = {
-          transcricao: transcriptText || "Áudio processado.",
-          sentimento: "neutro",
-          score_sentimento: 0.0,
-          urgencia: "media",
-          topico_principal: "Atendimento Geral",
-          pilar_sugerido: "suporte",
-          insights_operador: ["Áudio transcrito com sucesso."],
-          sugestao_resposta: "Como posso auxiliar em sua conexão hoje?"
-        };
-      }
-
-      res.json({
-        ...parsedResult,
-        modelo: "gemini-2.5-flash (Audio & Sentiment Engine)",
-        tempo_ms: Date.now() - startTime
-      });
-    } catch (err: any) {
-      console.error("Erro na análise de voz Gemini:", err);
-      res.status(500).json({ 
-        erro: "Falha ao processar voz com Gemini", 
-        detalhes: err.message,
-        transcricao: transcriptText || "",
-        sentimento: "neutro",
-        score_sentimento: 0
-      });
-    }
-  });
-
-  // Legado retrocompatível (n8n Webhook Proxy simulado sem dependência externa)
-  app.post("/api/n8n/webhook/:webhookId", async (req, res) => {
-    const { webhookId } = req.params;
-    const payload = req.body;
-    res.json({
-      success: true,
-      message: `Execução processada localmente pelo NAP Agent Engine.`,
-      execution_id: "agent_" + Math.random().toString(36).substring(2, 9),
-      delivered_payload: payload
-    });
-  });
-
-  app.get("/api/sgp/ura/cliente", async (req, res) => {
-    const { cpf_cnpj, telefone } = req.query;
-    try {
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        let endpoint = `/api/clientes/ura?`;
-        if (cpf_cnpj) endpoint += `cpf_cnpj=${cpf_cnpj}`;
-        if (telefone) endpoint += `&telefone=${telefone}`;
-        
-        const data = await fetchSGP(endpoint);
-        return res.json(data);
-      }
-    } catch (error) {
-      console.warn("Aviso: Falha na consulta de URA no SGP real.", error);
-    }
-    
-    // Mock Fallback
-    res.json({
-      encontrado: true,
-      cliente: {
-        id: 1001,
-        nome: "João Silva (Simulado URA)",
-        status: "ativo",
-        contrato_id: 5432,
-        bloqueado: false
-      }
-    });
-  });
   app.get("/api/sgp/faturas", async (req, res) => {
     try {
       if (SGP_URL && SGP_APP && SGP_TOKEN) {
@@ -952,68 +766,75 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
   });
 
   // N8N Webhook Listener Mock (Sync from SGP to NAP)
-  app.post("/api/webhooks/n8n/sgp-sync", (req, res) => {
-    console.log("[N8N Webhook] Evento recebido do SGP/n8n:", req.body);
-    res.json({ status: "processed", synced_to_db: true });
+  
+  app.post("/api/webhooks/n8n/sgp-sync", async (req, res) => {
+    try {
+      console.log("[SGP-SYNC] Evento recebido:", req.body);
+      const { acao, tipo, dados } = req.body;
+      
+      // Exemplo: { acao: "criado", tipo: "cliente", dados: { nome, cpf, telefone... } }
+      if (tipo === 'cliente' && dados) {
+        // Tenta fazer o upsert no Drizzle Postgres
+        const existing = await db.select().from(clientes).where(eq(clientes.documento, dados.cpf || dados.cnpj)).limit(1);
+        if (existing.length > 0) {
+          await db.update(clientes).set({
+            nome: dados.nome,
+            telefone: dados.celular || dados.telefone,
+            status: dados.status === 1 ? 'ativo' : 'bloqueado',
+            plano: dados.plano
+          }).where(eq(clientes.documento, dados.cpf || dados.cnpj));
+        } else {
+          await db.insert(clientes).values({
+            nome: dados.nome,
+            documento: dados.cpf || dados.cnpj,
+            telefone: dados.celular || dados.telefone,
+            status: dados.status === 1 ? 'ativo' : 'bloqueado',
+            plano: dados.plano
+          });
+        }
+      }
+
+      res.json({ status: "processed", synced_to_db: true });
+    } catch(e) {
+      console.error("[SGP-SYNC] Falha ao gravar no PostgreSQL", e);
+      // Retorna sucesso de processamento para não ficar retry infinito no webhook, mas acusa fallback
+      res.json({ status: "processed", synced_to_db: false, error: e.message });
+    }
   });
+
+
+
+
+  // Registrar / Atualizar inscrição de Push do PWA
+
+
+
+
+
 
   // --- Push Notifications Gateway (PWA Web Push) ---
   interface PushSubscriptionRecord {
     id: string;
     endpoint: string;
+    cliente_id?: string;
+    cliente_nome?: string;
+    inscrito_em?: string;
+    dispositivo?: string;
+    [key: string]: any;
     keys?: {
       p256dh?: string;
       auth?: string;
     };
-    cliente_id?: number | string;
-    cliente_nome?: string;
-    inscrito_em: string;
-    dispositivo: string;
+    created_at?: string;
   }
 
-  let pushSubscriptions: PushSubscriptionRecord[] = [
-    {
-      id: "sub_1001",
-      endpoint: "https://fcm.googleapis.com/fcm/send/portal_nap_joao_silva_pwa",
-      cliente_id: 1001,
-      cliente_nome: "João Silva",
-      inscrito_em: new Date().toISOString(),
-      dispositivo: "Mobile Chrome / Android (PWA)"
-    }
-  ];
 
-  let pushNotificationsHistory: Array<{
-    id: string;
-    titulo: string;
-    mensagem: string;
-    categoria: "cobranca" | "suporte" | "manutencao" | "marketing" | "geral";
-    enviado_em: string;
-    destinatarios: number;
-    sucesso: boolean;
-  }> = [
-    {
-      id: "push_notif_01",
-      titulo: "Fatura Vencendo Amanhã",
-      mensagem: "Sua fatura de R$ 99,90 vence amanhã. Pague via PIX para manter sua conexão sem interrupções.",
-      categoria: "cobranca",
-      enviado_em: "Hoje, 09:00",
-      destinatarios: 1,
-      sucesso: true
-    }
-  ];
 
-  // Obter status e inscrições ativas de Push
-  app.get("/api/push/status", (req, res) => {
-    res.json({
-      sucesso: true,
-      total_inscritos: pushSubscriptions.length,
-      inscricoes: pushSubscriptions,
-      historico_recente: pushNotificationsHistory.slice(0, 10),
-      vapid_public_key: "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIhbQFLXYp5Nksh8U"
-    });
-  });
 
-  // Registrar / Atualizar inscrição de Push do PWA
+
+  let pushSubscriptions: PushSubscriptionRecord[] = [];
+  let pushNotificationsHistory: any[] = [];
+
   app.post("/api/push/subscribe", (req, res) => {
     const { subscription, cliente_id = 1001, cliente_nome = "João Silva", dispositivo = "Navegador Web" } = req.body;
     

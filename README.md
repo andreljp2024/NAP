@@ -103,3 +103,18 @@ O backend Node.js (`server.ts`) agora está pronto para conversar com o banco Po
 - Foi implementado o endpoint `/api/login` no backend, validando credenciais criptografadas e permissões diretamente na tabela `users` do PostgreSQL.
 - O Frontend (`AuthContext.tsx`) foi atualizado para sempre tentar o login no banco de dados primeiro.
 - **Modo Sandbox / Fallback**: Se o banco de dados Postgres estiver offline (como ocorre no ambiente de Web IDE da plataforma de desenvolvimento, onde o Docker não roda nativamente), o frontend intercepta a falha de conexão e ativa o fallback de "Mock" transparente. Isso permite que você continue testando a interface do CRM aqui, enquanto o código já está perfeitamente seguro e pronto para apontar para o Postgres quando a VM iniciar.
+
+### Kanban e Atendimentos (Drizzle)
+- O módulo de Kanban (Painéis de Suporte, Vendas e Cobrança) foi migrado para ler e gravar diretamente no banco de dados.
+- O endpoint `/api/deals` (GET, POST, PATCH) agora gerencia o ciclo de vida dos cards (`atendimentos`) usando PostgreSQL.
+- O fallback permanece seguro: se a API do banco não estiver acessível localmente no preview, ele mantém o uso da memória, garantindo navegação contínua na interface.
+
+### Sincronização SGP (ERP) -> PostgreSQL
+- Modelagem de `clientes` e `faturas` adicionada ao Drizzle ORM (`/src/db/schema.ts`).
+- **Endpoint de Webhook:** Foi configurado o endpoint `/api/webhooks/n8n/sgp-sync` para receber os eventos (criação, edição, bloqueio de clientes) do SGP, via *n8n* ou *diretamente*, e executar o UPSERT desses clientes dentro da nossa base real do PostgreSQL.
+- **Leitura Híbrida (Contatos):** A rota `/api/contatos` agora puxa clientes prioritariamente do PostgreSQL. Se o banco não possuir cadastros e a API do SGP estiver configurada no `.env`, ele faz um fetch dinâmico. Em caso de falha de ambas as fontes de dados reais, ele cai graciosamente para a base de testes/memória.
+
+### Sincronização Automática com o SGP (Webhook)
+A fim de preencher as tabelas locais do PostgreSQL (e permitir a identificação de clientes no WhatsApp no futuro), foi construído o webhook de sincronização ERP.
+- Sempre que houver edição/criação de um cliente no ERP (recebido via `n8n` ou SGP direto), o painel ouvirá em `/api/webhooks/n8n/sgp-sync` e executará um `UPSERT` (Drizzle) direto na tabela `clientes` (incluindo status, CPF e telefones).
+- As faturas de clientes também já estão espelhadas no schema do Postgres, possibilitando consultas velozes sem onerar a API do SGP em cada carregamento.
