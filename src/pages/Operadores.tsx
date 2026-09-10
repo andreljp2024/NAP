@@ -89,14 +89,14 @@ export default function Operadores() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50 relative">
+    <div className="flex-1 overflow-y-auto bg-[#0b0f19] relative">
       <div className="p-8 max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 font-outfit mb-2">Gestão de Operadores</h1>
-            <p className="text-slate-600">Controle de acessos, ramais e filas de atendimento do provedor.</p>
+            <h1 className="text-3xl font-bold text-white font-outfit mb-2">Gestão de Operadores</h1>
+            <p className="text-slate-400">Controle de acessos, ramais e filas de atendimento do provedor.</p>
           </div>
           <button 
             onClick={openNewModal}
@@ -108,37 +108,37 @@ export default function Operadores() {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
-              <Users size={24} className="text-blue-600" />
+          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-100">
+              <Users size={24} className="text-blue-400" />
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Total de Contas</p>
-              <h3 className="text-2xl font-bold text-slate-900 font-outfit">{kpis.total}</h3>
+              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.total}</h3>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100">
               <Activity size={24} className="text-emerald-600" />
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Operadores Online</p>
-              <h3 className="text-2xl font-bold text-slate-900 font-outfit">{kpis.online}</h3>
+              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.online}</h3>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center border border-amber-100">
               <PauseCircle size={24} className="text-amber-600" />
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Em Pausa (NR-17)</p>
-              <h3 className="text-2xl font-bold text-slate-900 font-outfit">{kpis.pausa}</h3>
+              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.pausa}</h3>
             </div>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
@@ -146,17 +146,17 @@ export default function Operadores() {
               placeholder="Buscar por nome, e-mail ou ramal..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner"
+              className="w-full pl-11 pr-4 py-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm text-white outline-none focus:border-blue-600/50 shadow-inner"
             />
           </div>
         </div>
 
         {/* Table */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-[#101726] border border-white/5 rounded-2xl shadow-none overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/50 border-b border-slate-200">
+                <tr className="bg-[#0b0f19]/50 border-b border-white/5">
                   <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Operador</th>
                   <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Comunicações</th>
                   <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Permissões & Filas</th>
@@ -164,7 +164,7 @@ export default function Operadores() {
                   <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {filteredOperadores.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-8 text-center text-slate-500 text-sm">
@@ -173,25 +173,25 @@ export default function Operadores() {
                   </tr>
                 ) : (
                   filteredOperadores.map((op) => (
-                    <tr key={op.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <tr key={op.id} className="hover:bg-[#0b0f19]/50 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200 text-slate-500 font-bold font-outfit">
+                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 text-slate-500 font-bold font-outfit">
                             {op.nome.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-bold text-slate-900 text-sm">{op.nome}</p>
+                            <p className="font-bold text-white text-sm">{op.nome}</p>
                             <p className="text-xs text-slate-500">{op.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-400">
                             <Phone size={12} className="text-emerald-600" />
-                            <span className="font-mono bg-slate-50 px-1.5 py-0.5 rounded text-emerald-600 border border-emerald-200">SIP/{op.ramal}</span>
+                            <span className="font-mono bg-[#0b0f19] px-1.5 py-0.5 rounded text-emerald-600 border border-emerald-200">SIP/{op.ramal}</span>
                           </div>
-                          <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-400">
                             <MessageCircle size={12} className="text-blue-400" />
                             <span>WhatsApp API</span>
                           </div>
@@ -201,18 +201,18 @@ export default function Operadores() {
                         <div className="flex flex-col items-start gap-2">
                           <div className="flex items-center gap-1.5">
                             {op.permissao === 'Admin' ? (
-                              <span className="bg-blue-600/10 text-blue-600 border border-blue-200 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                              <span className="bg-blue-600/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                                 <Shield size={10} /> {op.permissao}
                               </span>
                             ) : (
-                              <span className="bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                              <span className="bg-white/5 text-slate-400 border border-white/5 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                                 <User size={10} /> {op.permissao}
                               </span>
                             )}
                           </div>
                           <div className="flex gap-1 flex-wrap">
                             {op.filas.map((fila, idx) => (
-                              <span key={idx} className="bg-slate-50 border border-slate-200 text-slate-600 px-2 py-0.5 rounded text-[10px] font-medium">
+                              <span key={idx} className="bg-[#0b0f19] border border-white/5 text-slate-400 px-2 py-0.5 rounded text-[10px] font-medium">
                                 {fila}
                               </span>
                             ))}
@@ -223,11 +223,11 @@ export default function Operadores() {
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold ${
                           op.status === 'online' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                           op.status === 'pausa' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-slate-100 text-slate-600 border border-slate-200'
+                          'bg-white/5 text-slate-400 border border-white/5'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
                             op.status === 'online' ? 'bg-emerald-400 animate-pulse' :
-                            op.status === 'pausa' ? 'bg-amber-400' : 'bg-slate-500'
+                            op.status === 'pausa' ? 'bg-amber-400' : 'bg-[#0b0f19]0'
                           }`}></span>
                           {op.status === 'online' ? 'Livre' : op.status === 'pausa' ? 'Em Pausa' : 'Deslogado'}
                         </span>
@@ -235,7 +235,7 @@ export default function Operadores() {
                       <td className="px-6 py-4 text-center">
                         <button 
                           onClick={() => openEditModal(op)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
                         >
                           <Settings size={18} />
                         </button>
@@ -251,13 +251,13 @@ export default function Operadores() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
-              <h2 className="text-xl font-bold text-slate-900 font-outfit">
+        <div className="absolute inset-0 bg-[#0b0f19]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-white/5 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#0b0f19]/50">
+              <h2 className="text-xl font-bold text-white font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
               </h2>
-              <button onClick={closeModal} className="text-slate-400 hover:text-slate-900 transition-colors">
+              <button onClick={closeModal} className="text-slate-400 hover:text-white transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -271,7 +271,7 @@ export default function Operadores() {
                     value={formData.nome || ''}
                     onChange={(e) => setFormData({...formData, nome: e.target.value})}
                     placeholder="Ex: João Silva"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-sm"
+                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -281,7 +281,7 @@ export default function Operadores() {
                     value={formData.email || ''}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="joao@provedor.com.br"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-sm"
+                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -291,7 +291,7 @@ export default function Operadores() {
                     value={formData.ramal || ''}
                     onChange={(e) => setFormData({...formData, ramal: e.target.value})}
                     placeholder="Ex: 2001"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-emerald-600 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-sm"
+                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm font-mono text-emerald-600 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -299,7 +299,7 @@ export default function Operadores() {
                   <select 
                     value={formData.permissao || 'Operador'}
                     onChange={(e) => setFormData({...formData, permissao: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-sm"
+                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
                   >
                     <option value="Operador">Operador (Padrão)</option>
                     <option value="Admin">Administrador</option>
@@ -312,12 +312,12 @@ export default function Operadores() {
                     value={Array.isArray(formData.filas) ? formData.filas.join(', ') : formData.filas || ''}
                     onChange={(e) => setFormData({...formData, filas: e.target.value.split(',').map(s => s.trim()).filter(Boolean)})}
                     placeholder="Ex: Suporte N1, Vendas"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-sm"
+                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
                   />
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-slate-200 flex justify-between items-center bg-slate-50/50">
+            <div className="p-6 border-t border-white/5 flex justify-between items-center bg-[#0b0f19]/50">
               {editingOp ? (
                 <button 
                   onClick={() => handleDelete(editingOp.id)}
@@ -330,7 +330,7 @@ export default function Operadores() {
               <div className="flex gap-3">
                 <button 
                   onClick={closeModal}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   Cancelar
                 </button>

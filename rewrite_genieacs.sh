@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'INNER_EOF' > src/pages/GenieACSDashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { Activity, Wifi, Router, Search, AlertCircle, CheckCircle2, XCircle, Signal, RefreshCw, Smartphone, Wrench, BarChart3, Radio } from 'lucide-react';
 
@@ -317,3 +319,4 @@ export default function GenieACSDashboard() {
     </div>
   );
 }
+INNER_EOF

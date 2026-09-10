@@ -496,8 +496,8 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
       case 'suporte':
       default:
         return (
-          <span className="flex items-center gap-1 text-[9px] font-bold text-blue-800 bg-blue-50 border border-blue-300 px-1.5 py-0.5 rounded">
-            <Wifi size={10} className="text-blue-600" />
+          <span className="flex items-center gap-1 text-[9px] font-bold text-blue-800 bg-blue-500/10 border border-blue-300 px-1.5 py-0.5 rounded">
+            <Wifi size={10} className="text-blue-400" />
             <span>SUPORTE</span>
           </span>
         );
@@ -515,15 +515,15 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         );
       case 'webchat':
         return (
-          <span className="flex items-center gap-1 text-[10px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-            <MonitorSmartphone size={11} className="text-blue-600" />
+          <span className="flex items-center gap-1 text-[10px] font-bold text-blue-800 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
+            <MonitorSmartphone size={11} className="text-blue-400" />
             <span>Portal PWA</span>
           </span>
         );
       default:
         return (
-          <span className="flex items-center gap-1 text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
-            <Phone size={11} className="text-slate-600" />
+          <span className="flex items-center gap-1 text-[10px] font-bold text-slate-200 bg-white/[0.02] border border-white/10 px-2 py-0.5 rounded-full">
+            <Phone size={11} className="text-slate-400" />
             <span>Voz / Asterisk</span>
           </span>
         );
@@ -531,29 +531,29 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
   };
 
   return (
-    <div className="flex-1 flex h-full bg-slate-50 overflow-hidden relative font-sans">
+    <div className="flex-1 flex h-full bg-[#0b0f19] overflow-hidden relative font-sans">
       
       {/* Toast Notifier */}
       {toastMessage && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#101726] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
           <CheckCircle size={14} className="text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* COLUNA 1: Fila & Lista de Conversas Omnichannel */}
-      <aside className={`w-full md:w-80 lg:w-96 border-r border-slate-200 bg-white flex flex-col z-10 shrink-0 ${
+      <aside className={`w-full md:w-80 lg:w-96 border-r border-white/10 bg-[#101726] flex flex-col z-10 shrink-0 ${
         activeChatId ? 'hidden md:flex' : 'flex'
       }`}>
         
         {/* Header de Filas com Filtros */}
-        <div className="p-4 border-b border-slate-200 bg-white">
+        <div className="p-4 border-b border-white/10 bg-[#101726]">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="font-extrabold text-lg text-slate-900 font-outfit tracking-tight">
+              <h1 className="font-extrabold text-lg text-white font-outfit tracking-tight">
                 Inbox Omnichannel
               </h1>
-              <p className="text-[11px] text-slate-600">Filas WhatsApp WABA & WebChat</p>
+              <p className="text-[11px] text-slate-400">Filas WhatsApp WABA & WebChat</p>
             </div>
             <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2 py-1 rounded-lg text-xs font-bold font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -562,20 +562,20 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           </div>
 
           {/* Abas de Fila */}
-          <div className="flex rounded-xl bg-slate-100 p-1 mb-3 text-xs font-semibold text-slate-600">
+          <div className="flex rounded-xl bg-white/[0.02] p-1 mb-3 text-xs font-semibold text-slate-400">
             <button
               onClick={() => setFilterQueue('meus')}
               className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'meus' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'hover:text-slate-900'
+                filterQueue === 'meus' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
               }`}
             >
               <span>Meus</span>
-              <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.2 rounded-full font-bold">2</span>
+              <span className="text-[10px] bg-blue-100 text-blue-400 px-1.5 py-0.2 rounded-full font-bold">2</span>
             </button>
             <button
               onClick={() => setFilterQueue('fila_geral')}
               className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'fila_geral' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'hover:text-slate-900'
+                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
               }`}
             >
               <span>Espera</span>
@@ -584,7 +584,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('finalizados')}
               className={`flex-1 py-1.5 rounded-lg transition-all ${
-                filterQueue === 'finalizados' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'hover:text-slate-900'
+                filterQueue === 'finalizados' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
               }`}
             >
               <span>Histórico</span>
@@ -599,13 +599,13 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por cliente, CPF ou protocolo..." 
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600 transition-all placeholder:text-slate-500"
+              className="w-full pl-9 pr-4 py-2 bg-[#0b0f19] border border-white/10 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600 transition-all placeholder:text-slate-500"
             />
           </div>
         </div>
 
         {/* Lista de Atendimentos */}
-        <div className="flex-1 overflow-y-auto divide-y divide-slate-100" style={{ scrollbarWidth: 'thin' }}>
+        <div className="flex-1 overflow-y-auto divide-y divide-white/5" style={{ scrollbarWidth: 'thin' }}>
           {filteredChats.length === 0 ? (
             <div className="p-8 text-center text-slate-500">
               <InboxIcon size={32} className="mx-auto mb-2 text-slate-300" />
@@ -622,29 +622,29 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   onClick={() => setActiveChatId(chat.id)}
                   className={`p-3.5 cursor-pointer transition-all border-l-4 ${
                     isSelected 
-                      ? 'bg-blue-50/70 border-l-blue-600 shadow-2xs' 
-                      : 'hover:bg-slate-50 border-l-transparent'
+                      ? 'bg-blue-500/10/70 border-l-blue-600 shadow-2xs' 
+                      : 'hover:bg-[#0b0f19] border-l-transparent'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-bold text-xs text-slate-900 truncate max-w-[130px]">
+                      <span className="font-bold text-xs text-white truncate max-w-[130px]">
                         {chat.nome_cliente}
                       </span>
                       {getPilarBadge(chat.pilar_negocio)}
                       {getChannelBadge(chat.canal)}
                     </div>
-                    <span className="text-[11px] font-mono text-slate-600 shrink-0">
+                    <span className="text-[11px] font-mono text-slate-400 shrink-0">
                       {lastMsg?.enviada_em || '--:--'}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-600 line-clamp-1 mb-2">
+                  <p className="text-xs text-slate-400 line-clamp-1 mb-2">
                     {lastMsg?.tipo === 'nota_interna' ? `🔒 [Nota] ${lastMsg.conteudo}` : lastMsg?.conteudo}
                   </p>
 
                   <div className="flex items-center justify-between text-[10px]">
-                    <div className="flex items-center gap-1.5 text-slate-600">
+                    <div className="flex items-center gap-1.5 text-slate-400">
                       <span className="font-mono">{chat.plano.split(' ')[0]} {chat.plano.split(' ')[1]}</span>
                       <span>•</span>
                       <span className="flex items-center gap-0.5 text-amber-700 font-semibold">
@@ -663,7 +663,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                         Puxar Chamado
                       </button>
                     ) : (
-                      <span className="text-slate-600 font-mono text-[10px]">
+                      <span className="text-slate-400 font-mono text-[10px]">
                         #{chat.protocolo.slice(-4)}
                       </span>
                     )}
@@ -677,14 +677,14 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
       {/* COLUNA 2: Janela Central de Conversa e Composer */}
       {activeChat ? (
-        <div className={`flex-1 flex-col bg-slate-50 relative ${activeChatId ? 'flex' : 'hidden md:flex'} overflow-hidden`}>
+        <div className={`flex-1 flex-col bg-[#0b0f19] relative ${activeChatId ? 'flex' : 'hidden md:flex'} overflow-hidden`}>
           
           {/* Header Superior do Atendimento */}
-          <header className="h-16 border-b border-slate-200 bg-white px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 shadow-2xs">
+          <header className="h-16 border-b border-white/10 bg-[#101726] px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 shadow-2xs">
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setActiveChatId(null)}
-                className="md:hidden p-1.5 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                className="md:hidden p-1.5 -ml-1 text-slate-400 hover:text-white hover:bg-white/[0.02] rounded-lg transition-colors"
                 title="Voltar à lista"
               >
                 <ArrowLeft size={18} />
@@ -696,15 +696,15 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="font-bold text-slate-900 font-outfit text-sm sm:text-base leading-tight">
+                  <h2 className="font-bold text-white font-outfit text-sm sm:text-base leading-tight">
                     {activeChat.nome_cliente}
                   </h2>
                   {getPilarBadge(activeChat.pilar_negocio)}
                   {getChannelBadge(activeChat.canal)}
                 </div>
                 
-                <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-600">
-                  <span className="font-mono text-slate-600">{activeChat.protocolo}</span>
+                <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400">
+                  <span className="font-mono text-slate-400">{activeChat.protocolo}</span>
                   <span>•</span>
                   <span>{activeChat.plano}</span>
                   <span>•</span>
@@ -719,10 +719,10 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <div className="flex items-center gap-2">
               <a 
                 href={`tel:${activeChat.telefone}`}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition-all"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-300 bg-white/[0.02] hover:bg-white/10 border border-white/10 rounded-xl transition-all"
                 title="Ligar via Ramal SIP"
               >
-                <Phone size={13} className="text-slate-600" />
+                <Phone size={13} className="text-slate-400" />
                 <span>{activeChat.telefone}</span>
               </a>
 
@@ -731,8 +731,8 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 onClick={() => setIsSgpDrawerOpen(!isSgpDrawerOpen)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all ${
                   isSgpDrawerOpen 
-                    ? 'bg-blue-50 border-blue-300 text-blue-700' 
-                    : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700'
+                    ? 'bg-blue-500/10 border-blue-300 text-blue-400' 
+                    : 'bg-[#101726] hover:bg-white/[0.02] border-white/10 text-slate-300'
                 }`}
                 title="Painel 360 do Assinante no ERP SGP"
               >
@@ -759,7 +759,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               
               {/* Alerta de Início do Chamado & Protocolo */}
               <div className="flex justify-center my-2">
-                <div className="bg-slate-100 border border-slate-200 rounded-full px-3 py-1 text-[11px] text-slate-600 flex items-center gap-1.5 font-mono">
+                <div className="bg-white/[0.02] border border-white/10 rounded-full px-3 py-1 text-[11px] text-slate-400 flex items-center gap-1.5 font-mono">
                   <Clock size={11} />
                   <span>Atendimento iniciado às {activeChat.mensagens[0]?.enviada_em} • Protocolo {activeChat.protocolo}</span>
                 </div>
@@ -782,9 +782,9 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                         isNote 
                           ? 'bg-amber-50 border border-amber-200 text-amber-950 w-full max-w-[90%]' 
                           : isClient
-                            ? 'bg-white border border-slate-200 text-slate-900 rounded-tl-xs'
+                            ? 'bg-[#101726] border border-white/10 text-white rounded-tl-xs'
                             : isAi
-                              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-blue-950 rounded-tr-xs'
+                              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-500/20 text-blue-950 rounded-tr-xs'
                               : 'bg-blue-600 text-white rounded-tr-xs shadow-md shadow-blue-600/10'
                       }`}
                     >
@@ -794,9 +794,9 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                           isNote 
                             ? 'text-amber-800' 
                             : isClient 
-                              ? 'text-slate-600' 
+                              ? 'text-slate-400' 
                               : isAi 
-                                ? 'text-blue-700' 
+                                ? 'text-blue-400' 
                                 : 'text-blue-100'
                         }`}>
                           {isNote && <Lock size={10} />}
@@ -824,19 +824,19 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
             {/* COLUNA 3: Contexto 360 do Assinante & Ações SGP (Drawer Direito) */}
             {isSgpDrawerOpen && (
-              <aside className="w-80 lg:w-96 border-l border-slate-200 bg-white overflow-y-auto p-4 space-y-4 shrink-0 shadow-sm animate-in slide-in-from-right-3 duration-200">
+              <aside className="w-80 lg:w-96 border-l border-white/10 bg-[#101726] overflow-y-auto p-4 space-y-4 shrink-0 shadow-none animate-in slide-in-from-right-3 duration-200">
                 
                 {/* Header do Drawer */}
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div className="flex items-center justify-between pb-2 border-b border-white/10">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                    <h3 className="font-bold text-xs text-slate-900 uppercase tracking-wider font-outfit">
+                    <h3 className="font-bold text-xs text-white uppercase tracking-wider font-outfit">
                       Raio-X do Assinante (SGP)
                     </h3>
                   </div>
                   <button 
                     onClick={() => setIsSgpDrawerOpen(false)}
-                    className="p-1 text-slate-600 hover:text-slate-700 rounded-md"
+                    className="p-1 text-slate-400 hover:text-slate-300 rounded-md"
                     title="Ocultar Painel"
                   >
                     <X size={16} />
@@ -844,10 +844,10 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 1: Conexão & ONU ao Vivo */}
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+                <div className="p-3.5 rounded-2xl bg-[#0b0f19] border border-white/10 space-y-2.5">
                   <div className="flex justify-between items-center">
-                    <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1">
-                      <Wifi size={13} className="text-blue-600" /> Rede & Sinal Óptico
+                    <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1">
+                      <Wifi size={13} className="text-blue-400" /> Rede & Sinal Óptico
                     </span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                       PPPoE Online
@@ -855,30 +855,30 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="p-2 bg-white rounded-xl border border-slate-200/80">
-                      <span className="text-[10px] text-slate-600 block">Sinal ONU</span>
+                    <div className="p-2 bg-[#101726] rounded-xl border border-white/10">
+                      <span className="text-[10px] text-slate-400 block">Sinal ONU</span>
                       <span className="font-bold text-emerald-800 font-mono text-xs">{activeChat.status_conexao.sinal_onu}</span>
                     </div>
-                    <div className="p-2 bg-white rounded-xl border border-slate-200/80">
-                      <span className="text-[10px] text-slate-600 block">Uptime</span>
-                      <span className="font-bold text-slate-800 font-mono text-xs">{activeChat.status_conexao.uptime}</span>
+                    <div className="p-2 bg-[#101726] rounded-xl border border-white/10">
+                      <span className="text-[10px] text-slate-400 block">Uptime</span>
+                      <span className="font-bold text-slate-200 font-mono text-xs">{activeChat.status_conexao.uptime}</span>
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-slate-600 font-mono space-y-1 pt-1 border-t border-slate-200/60">
+                  <div className="text-[11px] text-slate-400 font-mono space-y-1 pt-1 border-t border-white/10/60">
                     <div className="flex justify-between">
                       <span>IP Público:</span>
-                      <span className="text-slate-900 font-bold">{activeChat.status_conexao.ip}</span>
+                      <span className="text-white font-bold">{activeChat.status_conexao.ip}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Concentrador:</span>
-                      <span className="text-slate-900 font-bold">{activeChat.status_conexao.concentrador}</span>
+                      <span className="text-white font-bold">{activeChat.status_conexao.concentrador}</span>
                     </div>
                   </div>
 
                   <button 
                     onClick={handleKickRadius}
-                    className="w-full py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                    className="w-full py-1.5 bg-[#101726] hover:bg-white/[0.02] border border-white/10 text-slate-300 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
                   >
                     <RefreshCw size={12} className="text-slate-500" />
                     <span>Reautenticar Sessão (Kick)</span>
@@ -886,9 +886,9 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 2: Financeiro & PIX Instantâneo */}
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+                <div className="p-3.5 rounded-2xl bg-[#0b0f19] border border-white/10 space-y-2.5">
                   <div className="flex justify-between items-center">
-                    <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1">
+                    <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1">
                       <CreditCard size={13} className="text-indigo-600" /> Financeiro / Mensalidade
                     </span>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -898,10 +898,10 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-white rounded-xl border border-slate-200 flex justify-between items-center">
+                  <div className="p-2.5 bg-[#101726] rounded-xl border border-white/10 flex justify-between items-center">
                     <div>
-                      <span className="text-[10px] text-slate-600 block">Vencimento {activeChat.financeiro.vencimento}</span>
-                      <span className="text-base font-extrabold text-slate-900 font-mono">
+                      <span className="text-[10px] text-slate-400 block">Vencimento {activeChat.financeiro.vencimento}</span>
+                      <span className="text-base font-extrabold text-white font-mono">
                         R$ {activeChat.financeiro.valor.toFixed(2)}
                       </span>
                     </div>
@@ -926,39 +926,39 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 3: Dados Cadastrais */}
-                <div className="p-3 bg-white rounded-2xl border border-slate-200 text-xs space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase text-slate-600 tracking-wide block mb-1">
+                <div className="p-3 bg-[#101726] rounded-2xl border border-white/10 text-xs space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wide block mb-1">
                     Dados do Contrato
                   </span>
-                  <div className="flex justify-between text-slate-600">
+                  <div className="flex justify-between text-slate-400">
                     <span>CPF:</span>
-                    <span className="font-mono text-slate-900 font-semibold">{activeChat.cpf}</span>
+                    <span className="font-mono text-white font-semibold">{activeChat.cpf}</span>
                   </div>
-                  <div className="flex justify-between text-slate-600">
+                  <div className="flex justify-between text-slate-400">
                     <span>Telefone WABA:</span>
-                    <span className="font-mono text-slate-900 font-semibold">{activeChat.telefone}</span>
+                    <span className="font-mono text-white font-semibold">{activeChat.telefone}</span>
                   </div>
-                  <div className="flex justify-between text-slate-600">
+                  <div className="flex justify-between text-slate-400">
                     <span>Protocolo Atual:</span>
-                    <span className="font-mono text-blue-600 font-bold">{activeChat.protocolo}</span>
+                    <span className="font-mono text-blue-400 font-bold">{activeChat.protocolo}</span>
                   </div>
                 </div>
 
                 {/* Bloco 4: Endereço de Instalação & Rota Técnica */}
-                <div className="p-3 bg-white rounded-2xl border border-slate-200 text-xs space-y-2.5">
+                <div className="p-3 bg-[#101726] rounded-2xl border border-white/10 text-xs space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase text-slate-600 tracking-wide flex items-center gap-1">
-                      <MapPin size={12} className="text-blue-600" /> Endereço & Rota
+                    <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wide flex items-center gap-1">
+                      <MapPin size={12} className="text-blue-400" /> Endereço & Rota
                     </span>
                     {activeChat.cep && (
-                      <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-mono text-slate-500 bg-white/[0.02] px-1.5 py-0.5 rounded">
                         {activeChat.cep}
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <p className="font-semibold text-slate-800 text-[11px] leading-snug">
+                    <p className="font-semibold text-slate-200 text-[11px] leading-snug">
                       {activeChat.endereco || 'Endereço a confirmar no cadastro'}
                     </p>
                     {activeChat.ponto_referencia && (
@@ -972,7 +972,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     <button
                       type="button"
                       onClick={() => setMapModalOpen(true)}
-                      className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+                      className="py-1.5 px-2 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
                       title="Ver mapa, consultar CEP ou abrir rotas no GPS"
                     >
                       <MapPin size={11} />
@@ -995,17 +995,17 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           </div>
 
           {/* COMPOSER OMNICHANNEL MODERNO */}
-          <footer className="border-t border-slate-200 bg-white p-3 sm:p-4 z-20 space-y-2">
+          <footer className="border-t border-white/10 bg-[#101726] p-3 sm:p-4 z-20 space-y-2">
             
             {/* Barra de Modos & Macros Rápidas */}
             <div className="flex flex-wrap items-center justify-between gap-2">
               
               {/* Alternar Mensagem Pública vs Nota Interna */}
-              <div className="flex rounded-xl bg-slate-100 p-0.5 text-xs font-semibold">
+              <div className="flex rounded-xl bg-white/[0.02] p-0.5 text-xs font-semibold">
                 <button
                   onClick={() => setIsInternalNote(false)}
                   className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
-                    !isInternalNote ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
+                    !isInternalNote ? 'bg-[#101726] text-blue-400 shadow-2xs font-bold' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <MessageCircle size={12} />
@@ -1014,7 +1014,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <button
                   onClick={() => setIsInternalNote(true)}
                   className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
-                    isInternalNote ? 'bg-amber-100 text-amber-900 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
+                    isInternalNote ? 'bg-amber-100 text-amber-900 shadow-2xs font-bold' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <Lock size={12} className="text-amber-700" />
@@ -1045,7 +1045,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   <button 
                     key={macro.id || macro.atalho}
                     onClick={() => applyMacro(macro)}
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 rounded-lg font-mono font-bold text-[11px] whitespace-nowrap transition-colors"
+                    className="px-2.5 py-1 bg-white/[0.02] hover:bg-blue-500/10 hover:text-blue-400 text-slate-300 rounded-lg font-mono font-bold text-[11px] whitespace-nowrap transition-colors"
                     title={macro.titulo || macro.atalho}
                   >
                     {macro.atalho}
@@ -1058,7 +1058,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <div className={`flex items-end gap-2 p-1.5 rounded-2xl border transition-all ${
               isInternalNote 
                 ? 'bg-amber-50/60 border-amber-300 focus-within:ring-2 focus-within:ring-amber-500/20' 
-                : 'bg-slate-50 border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500'
+                : 'bg-[#0b0f19] border-white/10 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500'
             }`}>
               
               <textarea
@@ -1072,7 +1072,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 }}
                 rows={1}
                 placeholder={isInternalNote ? 'Escreva uma anotação interna visível apenas para os operadores...' : 'Digite sua mensagem (use Enter para enviar)...'}
-                className="flex-1 bg-transparent border-0 outline-none text-xs sm:text-sm text-slate-900 placeholder:text-slate-500 resize-none max-h-32 px-2 py-1.5 leading-relaxed"
+                className="flex-1 bg-transparent border-0 outline-none text-xs sm:text-sm text-white placeholder:text-slate-500 resize-none max-h-32 px-2 py-1.5 leading-relaxed"
               />
 
               <button
@@ -1093,11 +1093,11 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         </div>
       ) : (
         /* Estado Vazio */
-        <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 text-slate-500 p-8 text-center">
-          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 border border-slate-200 shadow-sm">
+        <div className="flex-1 flex flex-col items-center justify-center bg-[#0b0f19] text-slate-500 p-8 text-center">
+          <div className="w-16 h-16 bg-[#101726] rounded-2xl flex items-center justify-center mb-4 border border-white/10 shadow-none">
             <MessageCircle size={28} className="text-slate-400" />
           </div>
-          <h3 className="font-outfit text-lg text-slate-800 font-bold mb-1">
+          <h3 className="font-outfit text-lg text-slate-200 font-bold mb-1">
             Nenhum Atendimento Selecionado
           </h3>
           <p className="text-xs text-slate-500 max-w-sm">
@@ -1111,20 +1111,20 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         <>
           <div 
             onClick={() => setIsTabulating(false)} 
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-2xs z-50 animate-in fade-in-50"
+            className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 animate-in fade-in-50"
             aria-hidden="true"
           />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 z-50 animate-in zoom-in-95 duration-150">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#101726] rounded-3xl p-6 shadow-2xl border border-white/10 z-50 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div>
-                <h3 className="font-bold text-base text-slate-900 font-outfit">
+                <h3 className="font-bold text-base text-white font-outfit">
                   Tabulação de Atendimento
                 </h3>
                 <p className="text-xs text-slate-500">Protocolo {activeChat.protocolo}</p>
               </div>
               <button 
                 onClick={() => setIsTabulating(false)}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-md"
+                className="text-slate-400 hover:text-slate-300 p-1 rounded-md"
               >
                 <X size={18} />
               </button>
@@ -1162,11 +1162,11 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Fila / Categoria</label>
+                <label className="block font-bold text-slate-300 mb-1">Fila / Categoria</label>
                 <select 
                   value={tabulationData.categoria}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, categoria: e.target.value }))}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
                 >
                   <option value="Suporte Técnico">Suporte Técnico N1</option>
                   <option value="Suporte Avançado N2">Suporte Avançado N2 (Fibra/NOC)</option>
@@ -1177,38 +1177,38 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Motivo do Contato</label>
+                <label className="block font-bold text-slate-300 mb-1">Motivo do Contato</label>
                 <input 
                   type="text"
                   value={tabulationData.motivo}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, motivo: e.target.value }))}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Resumo da Resolução</label>
+                <label className="block font-bold text-slate-300 mb-1">Resumo da Resolução</label>
                 <textarea 
                   rows={3}
                   value={tabulationData.resolucao}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, resolucao: e.target.value }))}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
                 />
               </div>
 
-              <div className="p-3 bg-blue-50 rounded-2xl border border-blue-200 flex items-center justify-between">
+              <div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles size={16} className="text-blue-600" />
+                  <Sparkles size={16} className="text-blue-400" />
                   <div>
                     <span className="font-bold text-blue-900 block">Pesquisa CSAT / NPS</span>
-                    <span className="text-[10px] text-blue-700">Disparar avaliação automática via WhatsApp</span>
+                    <span className="text-[10px] text-blue-400">Disparar avaliação automática via WhatsApp</span>
                   </div>
                 </div>
                 <input 
                   type="checkbox"
                   checked={tabulationData.enviarPesquisaNps}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, enviarPesquisaNps: e.target.checked }))}
-                  className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                  className="w-4 h-4 rounded text-blue-400 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -1216,7 +1216,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <div className="mt-6 flex gap-3">
               <button 
                 onClick={() => setIsTabulating(false)}
-                className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors"
+                className="flex-1 py-2.5 bg-white/[0.02] hover:bg-white/10 text-slate-300 font-bold rounded-xl transition-colors"
               >
                 Voltar ao Chat
               </button>

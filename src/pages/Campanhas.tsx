@@ -62,15 +62,15 @@ export default function Campanhas() {
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50">
+    <div className="flex-1 flex flex-col h-full bg-[#0b0f19]">
       {/* Header */}
-      <header className="p-6 border-b border-slate-200 bg-white/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 z-10">
+      <header className="p-6 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 z-10">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-outfit flex items-center gap-2">
-            <Megaphone className="text-blue-600" size={24} />
+          <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
+            <Megaphone className="text-blue-400" size={24} />
             Operação Ativa (Campanhas)
           </h1>
-          <p className="text-sm text-slate-600 mt-1">Disparo em massa, discador automático (FreePBX) e réguas de relacionamento.</p>
+          <p className="text-sm text-slate-400 mt-1">Disparo em massa, discador automático (FreePBX) e réguas de relacionamento.</p>
         </div>
         <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95">
           <Plus size={18} /> Nova Campanha
@@ -78,22 +78,22 @@ export default function Campanhas() {
       </header>
 
       {/* Tabs */}
-      <div className="px-4 sm:px-6 pt-6 flex gap-4 border-b border-slate-200 shrink-0 overflow-x-auto whitespace-nowrap" style={{ scrollbarWidth: 'none' }}>
+      <div className="px-4 sm:px-6 pt-6 flex gap-4 border-b border-white/5 shrink-0 overflow-x-auto whitespace-nowrap" style={{ scrollbarWidth: 'none' }}>
         <button 
           onClick={() => setActiveTab('whatsapp')}
-          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'whatsapp' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-600'}`}
+          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'whatsapp' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
         >
           <MessageCircle size={18} /> Disparo de WhatsApp
         </button>
         <button 
           onClick={() => setActiveTab('voz')}
-          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'voz' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-600'}`}
+          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'voz' ? 'border-blue-600 text-blue-400' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
         >
           <PhoneOutgoing size={18} /> Discador Automático (Voz)
         </button>
         <button 
           onClick={() => setActiveTab('push')}
-          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'push' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-600'}`}
+          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'push' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
         >
           <Bell size={18} /> Notificações Push (PWA)
         </button>
@@ -105,20 +105,20 @@ export default function Campanhas() {
 
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-md shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-600/10 border border-blue-200 rounded-xl flex items-center justify-center text-blue-600">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
                 <Users size={24} />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   {activeTab === 'push' ? 'Dispositivos Inscritos (Push)' : 'Leads Ativos'}
                 </p>
-                <p className="text-2xl font-bold text-slate-900 font-outfit">
+                <p className="text-2xl font-bold text-white font-outfit">
                   {activeTab === 'push' ? (pushStatus?.total_inscritos || 1) : '5,300'}
                 </p>
               </div>
             </div>
-            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-md shadow-sm flex items-center gap-4">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-200 rounded-xl flex items-center justify-center text-emerald-600">
                 <CheckCircle2 size={24} />
               </div>
@@ -126,12 +126,12 @@ export default function Campanhas() {
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   {activeTab === 'push' ? 'Taxa de Entrega Push' : 'Taxa de Conversão'}
                 </p>
-                <p className="text-2xl font-bold text-slate-900 font-outfit">
+                <p className="text-2xl font-bold text-white font-outfit">
                   {activeTab === 'push' ? '98.5%' : '18.4%'}
                 </p>
               </div>
             </div>
-            <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-md shadow-sm flex items-center gap-4">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-500/10 border border-amber-200 rounded-xl flex items-center justify-center text-amber-600">
                 <BarChart2 size={24} />
               </div>
@@ -139,7 +139,7 @@ export default function Campanhas() {
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   {activeTab === 'push' ? 'Disparos Push Efetuados' : 'Campanhas Rodando'}
                 </p>
-                <p className="text-2xl font-bold text-slate-900 font-outfit">
+                <p className="text-2xl font-bold text-white font-outfit">
                   {activeTab === 'push' ? (pushStatus?.historico_recente?.length || 1) : '2'}
                 </p>
               </div>
@@ -150,14 +150,14 @@ export default function Campanhas() {
             /* Push Notifications Management */
             <div className="space-y-6">
               {/* Form de Disparo Push */}
-              <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-md shadow-sm">
+              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center">
                       <Bell size={20} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 font-outfit">Transmitir Alerta Web Push (PWA)</h3>
+                      <h3 className="font-bold text-white font-outfit">Transmitir Alerta Web Push (PWA)</h3>
                       <p className="text-xs text-slate-500">Envia notificação instantânea para a tela dos clientes com PWA instalado.</p>
                     </div>
                   </div>
@@ -168,8 +168,8 @@ export default function Campanhas() {
                 </div>
 
                 {feedbackPush && (
-                  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl text-xs font-bold flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-blue-600 shrink-0" />
+                  <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 text-blue-800 rounded-xl text-xs font-bold flex items-center gap-2">
+                    <CheckCircle2 size={16} className="text-blue-400 shrink-0" />
                     {feedbackPush}
                   </div>
                 )}
@@ -183,7 +183,7 @@ export default function Campanhas() {
                         value={novoPushTitulo} 
                         onChange={(e) => setNovoPushTitulo(e.target.value)}
                         placeholder="Ex: Fatura Pronta para Pagamento ou Aviso de Manutenção" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-600 shadow-inner"
+                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600 shadow-inner"
                         required
                       />
                     </div>
@@ -192,7 +192,7 @@ export default function Campanhas() {
                       <select 
                         value={novoPushCategoria} 
                         onChange={(e: any) => setNovoPushCategoria(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-600"
+                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600"
                       >
                         <option value="cobranca">Cobrança (SGP)</option>
                         <option value="suporte">Suporte Técnico</option>
@@ -210,7 +210,7 @@ export default function Campanhas() {
                       onChange={(e) => setNovoPushMensagem(e.target.value)}
                       rows={2} 
                       placeholder="Ex: Olá! Sua fatura do plano Fibra 500MB vence amanhã. Clique para pagar via PIX sem juros." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-900 outline-none focus:border-indigo-600 shadow-inner"
+                      className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-3 text-sm text-white outline-none focus:border-indigo-600 shadow-inner"
                       required
                     />
                   </div>
@@ -234,15 +234,15 @@ export default function Campanhas() {
 
               {/* Histórico e Dispositivos */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-md shadow-sm">
-                  <h4 className="font-bold text-slate-900 font-outfit mb-4 flex items-center gap-2">
+                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
+                  <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Smartphone size={18} className="text-slate-500" /> Dispositivos Inscritos
                   </h4>
                   <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                     {(pushStatus?.inscricoes || []).map((sub: any, idx: number) => (
-                      <div key={idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+                      <div key={idx} className="p-3 bg-[#0b0f19] rounded-2xl border border-white/5 flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-bold text-slate-900">{sub.cliente_nome}</p>
+                          <p className="text-sm font-bold text-white">{sub.cliente_nome}</p>
                           <p className="text-xs text-slate-500">{sub.dispositivo} • ID: {sub.cliente_id}</p>
                         </div>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -253,18 +253,18 @@ export default function Campanhas() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-md shadow-sm">
-                  <h4 className="font-bold text-slate-900 font-outfit mb-4 flex items-center gap-2">
+                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
+                  <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Bell size={18} className="text-slate-500" /> Histórico de Envios
                   </h4>
                   <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                     {(pushStatus?.historico_recente || []).map((item: any, idx: number) => (
-                      <div key={idx} className="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                      <div key={idx} className="p-3 bg-[#0b0f19] rounded-2xl border border-white/5">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-bold text-slate-900">{item.titulo}</span>
+                          <span className="text-xs font-bold text-white">{item.titulo}</span>
                           <span className="text-[10px] text-slate-500">{item.enviado_em}</span>
                         </div>
-                        <p className="text-xs text-slate-600 line-clamp-2">{item.mensagem}</p>
+                        <p className="text-xs text-slate-400 line-clamp-2">{item.mensagem}</p>
                       </div>
                     ))}
                   </div>
@@ -273,21 +273,21 @@ export default function Campanhas() {
             </div>
           ) : (
             /* List */
-            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md shadow-sm">
-              <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-white">
+            <div className="bg-[#101726] rounded-3xl border border-white/5 overflow-hidden shadow-md shadow-none">
+              <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#101726]">
                 <div className="relative w-72">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                   <input 
                     type="text" 
                     placeholder="Buscar campanha..." 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-900 outline-none focus:border-blue-600/50 shadow-inner"
+                    className="w-full bg-[#0b0f19] border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white outline-none focus:border-blue-600/50 shadow-inner"
                   />
                 </div>
               </div>
               
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white border-b border-slate-200">
+                  <tr className="bg-[#101726] border-b border-white/5">
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Campanha</th>
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Progresso</th>
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Métricas</th>
@@ -299,17 +299,17 @@ export default function Campanhas() {
                   {(activeTab === 'whatsapp' ? campanhasWhatsapp : campanhasVoz).map((camp, i) => {
                     const percent = (camp.processados / camp.leads) * 100;
                     return (
-                      <tr key={i} className="hover:bg-slate-50/50 transition-colors group">
+                      <tr key={i} className="hover:bg-[#0b0f19]/50 transition-colors group">
                         <td className="px-6 py-4">
-                          <p className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">{camp.nome}</p>
+                          <p className="font-bold text-white text-sm group-hover:text-blue-400 transition-colors">{camp.nome}</p>
                           <p className="text-xs text-slate-500 font-mono mt-0.5">ID: CMP-{(1000 + camp.id).toString()}</p>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex justify-between text-xs mb-1">
-                            <span className="text-slate-600">{camp.processados} / {camp.leads}</span>
-                            <span className="font-bold text-slate-600">{Math.round(percent)}%</span>
+                            <span className="text-slate-400">{camp.processados} / {camp.leads}</span>
+                            <span className="font-bold text-slate-400">{Math.round(percent)}%</span>
                           </div>
-                          <div className="w-full bg-slate-50 border border-slate-200 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-[#0b0f19] border border-white/5 rounded-full h-1.5 overflow-hidden">
                             <div 
                               className={`h-full rounded-full ${camp.status === 'Concluída' ? 'bg-emerald-500' : 'bg-blue-600'}`} 
                               style={{ width: `${percent}%` }}
@@ -326,9 +326,9 @@ export default function Campanhas() {
                         </td>
                         <td className="px-6 py-4">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold ${
-                            camp.status === 'Rodando' ? 'bg-blue-600/10 text-blue-600 border border-blue-200' :
+                            camp.status === 'Rodando' ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' :
                             camp.status === 'Concluída' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                            'bg-slate-100 text-slate-600 border border-slate-200'
+                            'bg-white/5 text-slate-400 border border-white/5'
                           }`}>
                             {camp.status === 'Rodando' && <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>}
                             {camp.status}
@@ -344,7 +344,7 @@ export default function Campanhas() {
                               <Play size={14} className="ml-0.5" />
                             </button>
                           ) : (
-                            <button className="w-8 h-8 bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900 rounded-lg flex items-center justify-center transition-all mx-auto">
+                            <button className="w-8 h-8 bg-white/5 border border-white/5 text-slate-400 hover:bg-white/10 hover:text-white rounded-lg flex items-center justify-center transition-all mx-auto">
                               <BarChart2 size={14} />
                             </button>
                           )}

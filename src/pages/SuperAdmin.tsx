@@ -404,27 +404,27 @@ export default function SuperAdmin() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-slate-50">
+      <div className="flex-1 flex items-center justify-center bg-[#0b0f19]">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 size={32} className="animate-spin text-blue-600" />
-          <p className="text-sm font-bold text-slate-600">Carregando parâmetros do sistema...</p>
+          <Loader2 size={32} className="animate-spin text-blue-400" />
+          <p className="text-sm font-bold text-slate-400">Carregando parâmetros do sistema...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50 p-6 lg:p-8">
+    <div className="flex-1 overflow-y-auto bg-[#0b0f19] p-6 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-xs">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="p-2 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
+              <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-100">
                 <Sliders size={22} />
               </span>
-              <h1 className="text-2xl font-bold text-slate-900 font-outfit">Configurações do Sistema</h1>
+              <h1 className="text-2xl font-bold text-white font-outfit">Configurações do Sistema</h1>
               <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
                 <ShieldCheck size={12} /> Multi-tenant Ativo
               </span>
@@ -438,14 +438,14 @@ export default function SuperAdmin() {
             <button
               onClick={handleExportBackup}
               type="button"
-              className="px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
+              className="px-3.5 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
               title="Exportar arquivo JSON com todas as configurações"
             >
               <Download size={14} />
               <span className="hidden sm:inline">Exportar Backup</span>
             </button>
 
-            <label className="cursor-pointer px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs">
+            <label className="cursor-pointer px-3.5 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs">
               <Upload size={14} />
               <span className="hidden sm:inline">Restaurar</span>
               <input type="file" accept=".json" onChange={handleImportBackup} className="hidden" />
@@ -455,7 +455,7 @@ export default function SuperAdmin() {
               onClick={handleSave}
               disabled={saving}
               type="button"
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-none disabled:opacity-50"
             >
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               <span>{saving ? 'Gravando...' : 'Salvar Alterações'}</span>
@@ -465,7 +465,7 @@ export default function SuperAdmin() {
 
         {/* Toast Notifier */}
         {toastMessage && (
-          <div className={`p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-sm transition-all ${
+          <div className={`p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-none transition-all ${
             toastMessage.type === 'success' 
               ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
               : 'bg-rose-50 text-rose-800 border border-rose-200'
@@ -491,7 +491,7 @@ export default function SuperAdmin() {
             title="Asterisk FreePBX" 
             sub="AMI 5038 / WSS" 
             status="online" 
-            icon={<Server size={16} className="text-blue-600" />} 
+            icon={<Server size={16} className="text-blue-400" />} 
             latency={testResults.freepbx?.latenciaMs || 29}
           />
           <IntegrationStatusBadge 
@@ -511,8 +511,8 @@ export default function SuperAdmin() {
         </div>
 
         {/* Abas de Navegação Principal */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="flex border-b border-slate-200 overflow-x-auto bg-slate-50/50">
+        <div className="bg-[#101726] rounded-2xl border border-white/5 shadow-xs overflow-hidden">
+          <div className="flex border-b border-white/5 overflow-x-auto bg-[#0b0f19]/50">
             <TabButton 
               active={activeTab === 'identidade'} 
               onClick={() => setActiveTab('identidade')} 
@@ -568,8 +568,8 @@ export default function SuperAdmin() {
             {activeTab === 'identidade' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
-                    <Building2 className="text-blue-600" size={18} />
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
+                    <Building2 className="text-blue-400" size={18} />
                     Dados Cadastrais do Provedor
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -579,88 +579,88 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Nome Fantasia (Marca do Provedor)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nome Fantasia (Marca do Provedor)</label>
                     <input 
                       type="text" 
                       value={config.provedor.nomeFantasia} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, nomeFantasia: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Razão Social</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Razão Social</label>
                     <input 
                       type="text" 
                       value={config.provedor.razaoSocial} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, razaoSocial: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">CNPJ</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">CNPJ</label>
                     <input 
                       type="text" 
                       value={config.provedor.cnpj} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, cnpj: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Inscrição Estadual (IE)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Inscrição Estadual (IE)</label>
                     <input 
                       type="text" 
                       value={config.provedor.inscricaoEstadual} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, inscricaoEstadual: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Telefone de Suporte / 0800</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Telefone de Suporte / 0800</label>
                     <input 
                       type="text" 
                       value={config.provedor.telefoneSuporte} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, telefoneSuporte: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">WhatsApp Principal do Provedor</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">WhatsApp Principal do Provedor</label>
                     <input 
                       type="text" 
                       value={config.provedor.telefoneWhatsapp} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, telefoneWhatsapp: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">E-mail de Atendimento / SAC</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">E-mail de Atendimento / SAC</label>
                     <input 
                       type="email" 
                       value={config.provedor.emailAtendimento} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, emailAtendimento: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Cidade e UF de Operação</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cidade e UF de Operação</label>
                     <input 
                       type="text" 
                       value={config.provedor.cidadeUf} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, cidadeUf: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-200">
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                <div className="pt-6 border-t border-white/5">
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <Palette className="text-emerald-600" size={18} />
                     Identidade Visual (White-label & Portal PWA)
                   </h3>
@@ -670,19 +670,19 @@ export default function SuperAdmin() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Cor Principal (HEX)</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cor Principal (HEX)</label>
                       <div className="flex items-center gap-3">
                         <input 
                           type="color" 
                           value={config.provedor.corPrincipal} 
                           onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: e.target.value } })}
-                          className="w-11 h-11 p-1 rounded-xl border border-slate-200 cursor-pointer bg-white"
+                          className="w-11 h-11 p-1 rounded-xl border border-white/5 cursor-pointer bg-[#101726]"
                         />
                         <input 
                           type="text" 
                           value={config.provedor.corPrincipal} 
                           onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: e.target.value } })}
-                          className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 uppercase"
+                          className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 uppercase"
                         />
                       </div>
                       <div className="flex gap-2 mt-2">
@@ -692,7 +692,7 @@ export default function SuperAdmin() {
                             type="button"
                             onClick={() => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: hex } })}
                             style={{ backgroundColor: hex }}
-                            className="w-6 h-6 rounded-md border border-slate-200 hover:scale-110 transition-transform shadow-2xs"
+                            className="w-6 h-6 rounded-md border border-white/5 hover:scale-110 transition-transform shadow-2xs"
                             title={hex}
                           />
                         ))}
@@ -700,15 +700,15 @@ export default function SuperAdmin() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">URL do Logotipo (PNG / SVG)</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">URL do Logotipo (PNG / SVG)</label>
                       <div className="flex gap-3">
                         <input 
                           type="text" 
                           value={config.provedor.logoUrl} 
                           onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, logoUrl: e.target.value } })}
-                          className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                          className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                         />
-                        <div className="w-12 h-11 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <div className="w-12 h-11 bg-white/5 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden shrink-0">
                           {config.provedor.logoUrl ? (
                             <img src={config.provedor.logoUrl} alt="Logo Preview" className="max-h-8 max-w-10 object-contain" />
                           ) : (
@@ -719,22 +719,22 @@ export default function SuperAdmin() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Domínio do Portal do Assinante</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Domínio do Portal do Assinante</label>
                       <input 
                         type="text" 
                         value={config.provedor.portalUrl} 
                         onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, portalUrl: e.target.value } })}
-                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                         placeholder="https://central.meuprovedor.com.br"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Tema de Interface Padrão</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Tema de Interface Padrão</label>
                       <select
                         value={config.provedor.themeMode}
                         onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, themeMode: e.target.value as any } })}
-                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       >
                         <option value="dark">Tema Escuro Premium (Padrão NOC / Suporte)</option>
                         <option value="light">Tema Claro Corporativo</option>
@@ -749,7 +749,7 @@ export default function SuperAdmin() {
             {activeTab === 'sgp' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <Database className="text-emerald-600" size={18} />
                     Conexão com Sistema de Gestão SGP
                   </h3>
@@ -760,38 +760,38 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">URL Base da API do SGP</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">URL Base da API do SGP</label>
                     <input 
                       type="text" 
                       value={config.sgp.urlBase} 
                       onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, urlBase: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">SGP App ID</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">SGP App ID</label>
                     <input 
                       type="text" 
                       value={config.sgp.appId} 
                       onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, appId: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Token Secreto de API</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Token Secreto de API</label>
                     <div className="relative">
                       <input 
                         type={showSgpToken ? 'text' : 'password'} 
                         value={config.sgp.token} 
                         onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, token: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                       />
                       <button 
                         type="button" 
                         onClick={() => setShowSgpToken(!showSgpToken)} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-400"
                       >
                         {showSgpToken ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
@@ -799,11 +799,11 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Intervalo de Sincronização Automática</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Intervalo de Sincronização Automática</label>
                     <select
                       value={config.sgp.syncIntervalMinutes}
                       onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, syncIntervalMinutes: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
                     >
                       <option value={5}>A cada 5 minutos (Alta rotatividade)</option>
                       <option value={15}>A cada 15 minutos (Recomendado)</option>
@@ -813,8 +813,8 @@ export default function SuperAdmin() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block">Regras de Negócio & Cobrança Automática</span>
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Regras de Negócio & Cobrança Automática</span>
                   
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
@@ -824,7 +824,7 @@ export default function SuperAdmin() {
                       className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Habilitar Desbloqueio 48h em Confiança Automático</span>
+                      <span className="text-xs font-bold text-white block">Habilitar Desbloqueio 48h em Confiança Automático</span>
                       <span className="text-[11px] text-slate-500">Permite que assinantes inadimplentes reativem o sinal provisoriamente via Portal ou WhatsApp sem intervenção humana.</span>
                     </div>
                   </label>
@@ -837,7 +837,7 @@ export default function SuperAdmin() {
                       className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Alerta Visual e Sonoro de Fatura em Atraso para Operadores</span>
+                      <span className="text-xs font-bold text-white block">Alerta Visual e Sonoro de Fatura em Atraso para Operadores</span>
                       <span className="text-[11px] text-slate-500">Destaca em vermelho no atendimento quando o cliente que está chamando possui fatura vencida há mais de 5 dias.</span>
                     </div>
                   </label>
@@ -850,7 +850,7 @@ export default function SuperAdmin() {
                       className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Consulta Instantânea de Sessão RADIUS (PPPoE / IP)</span>
+                      <span className="text-xs font-bold text-white block">Consulta Instantânea de Sessão RADIUS (PPPoE / IP)</span>
                       <span className="text-[11px] text-slate-500">Lê o IP atribuído, MAC Address da ONU e tempo de conexão diretamente do servidor de acesso MikroTik/Huawei.</span>
                     </div>
                   </label>
@@ -888,8 +888,8 @@ export default function SuperAdmin() {
             {activeTab === 'telefonia' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
-                    <Server className="text-blue-600" size={18} />
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
+                    <Server className="text-blue-400" size={18} />
                     Telefonia Asterisk & FreePBX 17
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -899,48 +899,48 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Host Asterisk AMI (IP ou Domínio)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Host Asterisk AMI (IP ou Domínio)</label>
                     <input 
                       type="text" 
                       value={config.telefonia.amiHost} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiHost: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Porta AMI (Padrão 5038)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Porta AMI (Padrão 5038)</label>
                     <input 
                       type="number" 
                       value={config.telefonia.amiPort} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiPort: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Usuário AMI (Asterisk Manager)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Usuário AMI (Asterisk Manager)</label>
                     <input 
                       type="text" 
                       value={config.telefonia.amiUser} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiUser: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Senha Secreta AMI</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Senha Secreta AMI</label>
                     <div className="relative">
                       <input 
                         type={showAmiSecret ? 'text' : 'password'} 
                         value={config.telefonia.amiSecret} 
                         onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiSecret: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       />
                       <button 
                         type="button" 
                         onClick={() => setShowAmiSecret(!showAmiSecret)} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-400"
                       >
                         {showAmiSecret ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
@@ -948,39 +948,39 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Ramal SIP WebRTC Padrão</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Ramal SIP WebRTC Padrão</label>
                     <input 
                       type="text" 
                       value={config.telefonia.ramalWebRTC} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ramalWebRTC: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">WebSocket WSS do FreePBX (WebRTC)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">WebSocket WSS do FreePBX (WebRTC)</label>
                     <input 
                       type="text" 
                       value={config.telefonia.websocketUrl} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, websocketUrl: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="wss://pbx.provedor.com.br:8089/ws"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block">Gravação e Inteligência de Voz</span>
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Gravação e Inteligência de Voz</span>
                   
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
                       type="checkbox" 
                       checked={config.telefonia.gravarChamadas} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, gravarChamadas: e.target.checked } })}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 rounded text-blue-400 focus:ring-blue-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Gravação Contínua de Todas as Ligações de Atendimento</span>
+                      <span className="text-xs font-bold text-white block">Gravação Contínua de Todas as Ligações de Atendimento</span>
                       <span className="text-[11px] text-slate-500">Armazena áudio em formato WAV/MP3 com vinculação ao protocolo de atendimento no CRM.</span>
                     </div>
                   </label>
@@ -990,22 +990,22 @@ export default function SuperAdmin() {
                       type="checkbox" 
                       checked={config.telefonia.transcricaoAutomatica} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, transcricaoAutomatica: e.target.checked } })}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 rounded text-blue-400 focus:ring-blue-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Transcrição de Áudio em Tempo Real via Gemini Voice Intelligence</span>
+                      <span className="text-xs font-bold text-white block">Transcrição de Áudio em Tempo Real via Gemini Voice Intelligence</span>
                       <span className="text-[11px] text-slate-500">Transcreve a conversa operador-cliente, detectando sentimento e alerta de churn ou cliente irritado.</span>
                     </div>
                   </label>
                 </div>
 
                 {/* Card de Teste FreePBX */}
-                <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-blue-500/10/50 rounded-2xl border border-blue-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 flex items-center gap-1.5 mb-1">
-                      <Server size={14} className="text-blue-700" /> Diagnóstico de Conexão Asterisk / FreePBX
+                      <Server size={14} className="text-blue-400" /> Diagnóstico de Conexão Asterisk / FreePBX
                     </h4>
-                    <p className="text-xs text-blue-700">
+                    <p className="text-xs text-blue-400">
                       Valida credenciais do socket AMI, canais simultâneos e registro de WebRTC.
                     </p>
                     {testResults.freepbx && (
@@ -1040,7 +1040,7 @@ export default function SuperAdmin() {
             {activeTab === 'whatsapp' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <MessageCircle className="text-emerald-600" size={18} />
                     WhatsApp Business API (WABA Oficial Meta)
                   </h3>
@@ -1051,38 +1051,38 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Phone Number ID</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Phone Number ID</label>
                     <input 
                       type="text" 
                       value={config.whatsapp.phoneNumberId} 
                       onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, phoneNumberId: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">WhatsApp Business Account ID (WABA ID)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">WhatsApp Business Account ID (WABA ID)</label>
                     <input 
                       type="text" 
                       value={config.whatsapp.businessAccountId} 
                       onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, businessAccountId: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Token Permanente de Acesso (Meta Graph API)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Token Permanente de Acesso (Meta Graph API)</label>
                     <div className="relative">
                       <input 
                         type={showWabaToken ? 'text' : 'password'} 
                         value={config.whatsapp.tokenAcesso} 
                         onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, tokenAcesso: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                       />
                       <button 
                         type="button" 
                         onClick={() => setShowWabaToken(!showWabaToken)} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-400"
                       >
                         {showWabaToken ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
@@ -1090,18 +1090,18 @@ export default function SuperAdmin() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Webhook URL do Servidor NAP (Cole no painel Meta Developers)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Webhook URL do Servidor NAP (Cole no painel Meta Developers)</label>
                     <div className="flex gap-2">
                       <input 
                         type="text" 
                         value={config.whatsapp.webhookUrl} 
                         readOnly
-                        className="flex-1 p-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-mono text-slate-700 select-all"
+                        className="flex-1 p-2.5 bg-white/5 border border-white/5 rounded-xl text-xs font-mono text-slate-300 select-all"
                       />
                       <button
                         type="button"
                         onClick={() => copyToClipboard(config.whatsapp.webhookUrl, 'webhookUrl')}
-                        className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1"
+                        className="px-3 py-2 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1"
                       >
                         {copiedKey === 'webhookUrl' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                         <span>{copiedKey === 'webhookUrl' ? 'Copiado!' : 'Copiar'}</span>
@@ -1110,18 +1110,18 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Verify Token (Chave de Validação do Webhook)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Verify Token (Chave de Validação do Webhook)</label>
                     <div className="flex gap-2">
                       <input 
                         type="text" 
                         value={config.whatsapp.verifyToken} 
                         onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, verifyToken: e.target.value } })}
-                        className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                        className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                       />
                       <button
                         type="button"
                         onClick={() => copyToClipboard(config.whatsapp.verifyToken, 'verifyToken')}
-                        className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1"
+                        className="px-3 py-2 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1"
                       >
                         {copiedKey === 'verifyToken' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                         <span>{copiedKey === 'verifyToken' ? 'Copiado!' : 'Copiar'}</span>
@@ -1130,15 +1130,15 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Regra de Envio Financeiro Automático</label>
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Regra de Envio Financeiro Automático</label>
+                    <label className="flex items-center gap-3 p-3 bg-[#0b0f19] border border-white/5 rounded-xl cursor-pointer">
                       <input 
                         type="checkbox" 
                         checked={config.whatsapp.envioAutomaticoPix} 
                         onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, envioAutomaticoPix: e.target.checked } })}
                         className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
                       />
-                      <span className="text-xs font-bold text-slate-800">Enviar Chave PIX e PDF ao receber "2ª via" ou "boleto"</span>
+                      <span className="text-xs font-bold text-slate-200">Enviar Chave PIX e PDF ao receber "2ª via" ou "boleto"</span>
                     </label>
                   </div>
                 </div>
@@ -1175,7 +1175,7 @@ export default function SuperAdmin() {
             {activeTab === 'ia' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <Bot className="text-indigo-600" size={18} />
                     Inteligência Artificial (Google Gemini via 9router)
                   </h3>
@@ -1186,11 +1186,11 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Modelo Primário de IA</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Modelo Primário de IA</label>
                     <select
                       value={config.ia.modeloPrimario}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, modeloPrimario: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                     >
                       <option value="gemini-3.8-flash">gemini-3.8-flash (Recomendado - Ultra Rápido & Menor Custo)</option>
                       <option value="gemini-3.5-pro">gemini-3.5-pro (Raciocínio Técnico Profundo)</option>
@@ -1199,11 +1199,11 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Gateway de Roteamento</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Gateway de Roteamento</label>
                     <select
                       value={config.ia.provedorGateway}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, provedorGateway: e.target.value } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                     >
                       <option value="9router">9router (Failover Automático & Rate-Limit)</option>
                       <option value="direct">Google AI Studio Direto (Server-Side)</option>
@@ -1211,7 +1211,7 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    <label className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                       <span>Temperatura (Criatividade)</span>
                       <span className="text-indigo-600 font-mono font-bold">{config.ia.temperatura}</span>
                     </label>
@@ -1234,52 +1234,52 @@ export default function SuperAdmin() {
                 <div className="space-y-4 pt-2">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Prompt do Sistema: Suporte Técnico & Fibra N1</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prompt do Sistema: Suporte Técnico & Fibra N1</label>
                       <span className="text-[11px] text-slate-400">Variáveis: {'{nome_provedor}'}, {'{sinal_optico}'}, {'{cidade}'}</span>
                     </div>
                     <textarea
                       rows={3}
                       value={config.ia.promptSuporte}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptSuporte: e.target.value } })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Prompt do Sistema: Vendas & Aquisição de Clientes</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prompt do Sistema: Vendas & Aquisição de Clientes</label>
                       <span className="text-[11px] text-slate-400">Variáveis: {'{nome_provedor}'}, {'{planos_disponiveis}'}</span>
                     </div>
                     <textarea
                       rows={3}
                       value={config.ia.promptVendas}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptVendas: e.target.value } })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Prompt do Sistema: Cobrança Humanizada & PIX</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prompt do Sistema: Cobrança Humanizada & PIX</label>
                       <span className="text-[11px] text-slate-400">Variáveis: {'{nome_provedor}'}, {'{dias_atraso}'}, {'{valor}'}</span>
                     </div>
                     <textarea
                       rows={3}
                       value={config.ia.promptCobranca}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptCobranca: e.target.value } })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block">Gatilhos de Transbordo Humano</span>
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Gatilhos de Transbordo Humano</span>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'solicitacao_cliente' 
                         ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-white border-slate-200 text-slate-700'
+                        : 'bg-[#101726] border-white/5 text-slate-300'
                     }`}>
                       <input 
                         type="radio" 
@@ -1296,7 +1296,7 @@ export default function SuperAdmin() {
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'apos_3_falhas' 
                         ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-white border-slate-200 text-slate-700'
+                        : 'bg-[#101726] border-white/5 text-slate-300'
                     }`}>
                       <input 
                         type="radio" 
@@ -1313,7 +1313,7 @@ export default function SuperAdmin() {
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'imediato' 
                         ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-white border-slate-200 text-slate-700'
+                        : 'bg-[#101726] border-white/5 text-slate-300'
                     }`}>
                       <input 
                         type="radio" 
@@ -1361,7 +1361,7 @@ export default function SuperAdmin() {
             {activeTab === 'seguranca' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <Shield className="text-rose-600" size={18} />
                     Segurança, Sessões & Logs de Auditoria
                   </h3>
@@ -1372,32 +1372,32 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Timeout de Inatividade da Sessão (Minutos)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Timeout de Inatividade da Sessão (Minutos)</label>
                     <input 
                       type="number" 
                       value={config.seguranca.sessaoTimeoutMinutos} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, sessaoTimeoutMinutos: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Limite de Tentativas de Login Inválidas</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Limite de Tentativas de Login Inválidas</label>
                     <input 
                       type="number" 
                       value={config.seguranca.limiteTentativasLogin} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, limiteTentativasLogin: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Retenção de Logs no Servidor (Dias)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Retenção de Logs no Servidor (Dias)</label>
                     <input 
                       type="number" 
                       value={config.seguranca.armazenamentoLogsDias} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, armazenamentoLogsDias: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
@@ -1409,7 +1409,7 @@ export default function SuperAdmin() {
                         onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, exigir2FAOperadores: e.target.checked } })}
                         className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500"
                       />
-                      <span className="text-xs font-bold text-slate-800">Exigir Autenticação em 2 Fatores (2FA) para Administradores</span>
+                      <span className="text-xs font-bold text-slate-200">Exigir Autenticação em 2 Fatores (2FA) para Administradores</span>
                     </label>
 
                     <label className="flex items-center gap-3 cursor-pointer">
@@ -1419,23 +1419,23 @@ export default function SuperAdmin() {
                         onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, permitirAcessoExterno: e.target.checked } })}
                         className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500"
                       />
-                      <span className="text-xs font-bold text-slate-800">Permitir Acesso Fora da Rede Local do Provedor (VPN/WAN)</span>
+                      <span className="text-xs font-bold text-slate-200">Permitir Acesso Fora da Rede Local do Provedor (VPN/WAN)</span>
                     </label>
                   </div>
                 </div>
 
                 {/* Log de Auditoria */}
-                <div className="pt-4 border-t border-slate-200">
+                <div className="pt-4 border-t border-white/5">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                       <Clock size={14} className="text-slate-500" /> Registro de Auditoria Administrativa Recente
                     </h4>
                     <span className="text-[11px] text-slate-400">Imutável • Protegido contra exclusão</span>
                   </div>
 
-                  <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                  <div className="border border-white/5 rounded-xl overflow-hidden bg-[#101726]">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                      <thead className="bg-[#0b0f19] border-b border-white/5 text-slate-400 font-bold">
                         <tr>
                           <th className="py-2.5 px-4">Usuário</th>
                           <th className="py-2.5 px-4">Módulo</th>
@@ -1444,14 +1444,14 @@ export default function SuperAdmin() {
                           <th className="py-2.5 px-4">Horário</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                      <tbody className="divide-y divide-white/5 font-medium text-slate-300">
                         {auditLogs.map((log) => (
-                          <tr key={log.id} className="hover:bg-slate-50/70">
-                            <td className="py-2.5 px-4 font-bold text-slate-900">{log.usuario}</td>
+                          <tr key={log.id} className="hover:bg-[#0b0f19]/70">
+                            <td className="py-2.5 px-4 font-bold text-white">{log.usuario}</td>
                             <td className="py-2.5 px-4">
-                              <span className="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold text-slate-600">{log.modulo}</span>
+                              <span className="px-2 py-0.5 bg-white/5 rounded text-[10px] font-bold text-slate-400">{log.modulo}</span>
                             </td>
-                            <td className="py-2.5 px-4 text-slate-600">{log.detalhes}</td>
+                            <td className="py-2.5 px-4 text-slate-400">{log.detalhes}</td>
                             <td className="py-2.5 px-4 font-mono text-slate-500">{log.ip}</td>
                             <td className="py-2.5 px-4 text-slate-500 whitespace-nowrap">{log.data}</td>
                           </tr>
@@ -1467,8 +1467,8 @@ export default function SuperAdmin() {
             {activeTab === 'atendimento' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
-                    <Clock className="text-blue-600" size={18} />
+                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
+                    <Clock className="text-blue-400" size={18} />
                     Horários de Atendimento, Turnos & SLA
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -1478,7 +1478,7 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Segunda a Sexta-Feira</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Segunda a Sexta-Feira</label>
                     <input 
                       type="text" 
                       value={config.atendimento?.horarioSemana || "08:00 - 20:00"} 
@@ -1486,13 +1486,13 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioSemana: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="08:00 - 20:00"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Sábados</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Sábados</label>
                     <input 
                       type="text" 
                       value={config.atendimento?.horarioSabado || "08:00 - 14:00"} 
@@ -1500,13 +1500,13 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioSabado: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="08:00 - 14:00"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Domingos & Feriados</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Domingos & Feriados</label>
                     <input 
                       type="text" 
                       value={config.atendimento?.horarioDomingoFeriado || "Plantão NOC Emergencial"} 
@@ -1514,7 +1514,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioDomingoFeriado: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="Plantão NOC Emergencial"
                     />
                   </div>
@@ -1522,7 +1522,7 @@ export default function SuperAdmin() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                       SLA Máximo de Primeira Resposta (Minutos)
                     </label>
                     <input 
@@ -1534,13 +1534,13 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), slaRespostaMinutos: Number(e.target.value) } 
                       })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                     <span className="text-[11px] text-slate-400 mt-1 block">Tempo limite para o primeiro atendente responder no Inbox.</span>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                       SLA de Resolução de Ticket / OS (Horas)
                     </label>
                     <input 
@@ -1552,7 +1552,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), slaResolucaoHoras: Number(e.target.value) } 
                       })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                     <span className="text-[11px] text-slate-400 mt-1 block">Meta para tabulação ou fechamento de chamado técnico no CRM.</span>
                   </div>
@@ -1561,7 +1561,7 @@ export default function SuperAdmin() {
                 <div className="space-y-4 pt-2">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Mensagem de Boas-Vindas (Saudação Automática)</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Mensagem de Boas-Vindas (Saudação Automática)</label>
                       <span className="text-[11px] text-slate-400">Variável: {'{nome_provedor}'}</span>
                     </div>
                     <textarea
@@ -1571,13 +1571,13 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), mensagemBoasVindas: e.target.value } 
                       })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Mensagem Fora do Expediente Comercial</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Mensagem Fora do Expediente Comercial</label>
                       <span className="text-[11px] text-slate-400">Enviada automaticamente quando o cliente inicia conversa fora do horário</span>
                     </div>
                     <textarea
@@ -1587,12 +1587,12 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), mensagemForaHorario: e.target.value } 
                       })}
-                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
                       type="checkbox" 
@@ -1601,10 +1601,10 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), permitirTransbordoNocForaHorario: e.target.checked } 
                       })}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 rounded text-blue-400 focus:ring-blue-500"
                     />
                     <div>
-                      <span className="text-xs font-bold text-slate-900 block">Permitir Transbordo para Celular do Plantão NOC Fora do Horário</span>
+                      <span className="text-xs font-bold text-white block">Permitir Transbordo para Celular do Plantão NOC Fora do Horário</span>
                       <span className="text-[11px] text-slate-500">Se um cliente relatar rompimento de cabo ou queda em massa fora do expediente, encaminha alerta prioritário para a equipe de plantão.</span>
                     </div>
                   </label>
@@ -1617,12 +1617,12 @@ export default function SuperAdmin() {
               <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 font-outfit flex items-center gap-2 mb-1">
+                    <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                       <Zap className="text-amber-500" size={18} />
                       Central de Macros & Respostas Rápidas (HSM)
                     </h3>
                     <p className="text-xs text-slate-500">
-                      Cadastre atalhos com barra (ex: <code className="text-blue-600 font-bold">/pix</code>, <code className="text-blue-600 font-bold">/reset_onu</code>) para os operadores responderem em 1-clique no Inbox.
+                      Cadastre atalhos com barra (ex: <code className="text-blue-400 font-bold">/pix</code>, <code className="text-blue-400 font-bold">/reset_onu</code>) para os operadores responderem em 1-clique no Inbox.
                     </p>
                   </div>
 
@@ -1646,7 +1646,7 @@ export default function SuperAdmin() {
                       className={`px-3 py-1.5 rounded-xl font-bold transition-colors whitespace-nowrap capitalize ${
                         macroFilterCategory === cat 
                           ? 'bg-blue-600 text-white shadow-2xs' 
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          : 'bg-white/5 text-slate-400 hover:bg-white/10'
                       }`}
                     >
                       {cat}
@@ -1662,25 +1662,25 @@ export default function SuperAdmin() {
                   {(config.respostasRapidas || [])
                     .filter(m => macroFilterCategory === 'todos' || m.categoria === macroFilterCategory)
                     .map((macro) => (
-                      <div key={macro.id} className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-blue-200 transition-all shadow-2xs flex flex-col justify-between group">
+                      <div key={macro.id} className="p-4 bg-[#101726] rounded-2xl border border-white/5 hover:border-blue-500/20 transition-all shadow-2xs flex flex-col justify-between group">
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-xs font-mono font-extrabold">
+                              <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-lg text-xs font-mono font-extrabold">
                                 {macro.atalho}
                               </span>
-                              <h4 className="text-xs font-bold text-slate-900 truncate max-w-[180px] sm:max-w-xs">{macro.titulo}</h4>
+                              <h4 className="text-xs font-bold text-white truncate max-w-[180px] sm:max-w-xs">{macro.titulo}</h4>
                             </div>
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                               macro.categoria === 'Financeiro' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                               macro.categoria === 'Suporte' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                               macro.categoria === 'Vendas' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                              'bg-slate-100 text-slate-700 border border-slate-200'
+                              'bg-white/5 text-slate-300 border border-white/5'
                             }`}>
                               {macro.categoria}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed bg-slate-50/70 p-2.5 rounded-xl border border-slate-100 font-sans">
+                          <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed bg-[#0b0f19]/70 p-2.5 rounded-xl border border-slate-100 font-sans">
                             {macro.conteudo}
                           </p>
                         </div>
@@ -1691,7 +1691,7 @@ export default function SuperAdmin() {
                             <button
                               type="button"
                               onClick={() => handleEditMacro(macro)}
-                              className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
                               title="Editar Macro"
                             >
                               <Edit3 size={14} />
@@ -1711,14 +1711,14 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Variáveis Dinâmicas de Ajuda */}
-                <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-200 text-xs space-y-1.5">
+                <div className="p-4 bg-blue-500/10/50 rounded-2xl border border-blue-500/20 text-xs space-y-1.5">
                   <span className="font-bold text-blue-900 block">Variáveis dinâmicas aceitas nas mensagens:</span>
                   <div className="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
-                    <span className="px-2 py-0.5 bg-white border border-blue-200 text-blue-800 rounded">{'{nome_cliente}'}</span>
-                    <span className="px-2 py-0.5 bg-white border border-blue-200 text-blue-800 rounded">{'{chave_pix}'}</span>
-                    <span className="px-2 py-0.5 bg-white border border-blue-200 text-blue-800 rounded">{'{protocolo}'}</span>
-                    <span className="px-2 py-0.5 bg-white border border-blue-200 text-blue-800 rounded">{'{nome_provedor}'}</span>
-                    <span className="px-2 py-0.5 bg-white border border-blue-200 text-blue-800 rounded">{'{sinal_optico}'}</span>
+                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{nome_cliente}'}</span>
+                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{chave_pix}'}</span>
+                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{protocolo}'}</span>
+                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{nome_provedor}'}</span>
+                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{sinal_optico}'}</span>
                   </div>
                 </div>
               </div>
@@ -1728,15 +1728,15 @@ export default function SuperAdmin() {
 
         {/* MODAL DE ADICIONAR / EDITAR MACRO */}
         {macroModalOpen && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl border border-slate-200 animate-in zoom-in-95">
+          <div className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
+            <div className="bg-[#101726] rounded-3xl p-6 w-full max-w-lg shadow-2xl border border-white/5 animate-in zoom-in-95">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="p-2 bg-amber-50 text-amber-600 rounded-xl">
                     <Zap size={18} />
                   </span>
                   <div>
-                    <h3 className="font-bold text-slate-900 font-outfit text-sm">
+                    <h3 className="font-bold text-white font-outfit text-sm">
                       {editingMacro ? 'Editar Resposta Rápida' : 'Nova Resposta Rápida'}
                     </h3>
                     <p className="text-[11px] text-slate-500">Configuração de atalho e conteúdo pré-formatado</p>
@@ -1745,7 +1745,7 @@ export default function SuperAdmin() {
                 <button
                   type="button"
                   onClick={() => setMacroModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition-colors"
+                  className="text-slate-400 hover:text-slate-300 p-1.5 rounded-xl hover:bg-white/5 transition-colors"
                 >
                   <X size={16} />
                 </button>
@@ -1754,21 +1754,21 @@ export default function SuperAdmin() {
               <form onSubmit={handleSaveMacro} className="space-y-4 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-bold uppercase tracking-wider text-slate-600 mb-1">Atalho de Teclado</label>
+                    <label className="block font-bold uppercase tracking-wider text-slate-400 mb-1">Atalho de Teclado</label>
                     <input 
                       type="text" 
                       value={formMacro.atalho} 
                       onChange={(e) => setFormMacro({ ...formMacro, atalho: e.target.value })}
                       placeholder="/pix"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-blue-700 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-mono font-bold text-blue-400 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                   </div>
                   <div>
-                    <label className="block font-bold uppercase tracking-wider text-slate-600 mb-1">Categoria</label>
+                    <label className="block font-bold uppercase tracking-wider text-slate-400 mb-1">Categoria</label>
                     <select
                       value={formMacro.categoria}
                       onChange={(e) => setFormMacro({ ...formMacro, categoria: e.target.value as any })}
-                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     >
                       <option value="Geral">Geral</option>
                       <option value="Financeiro">Financeiro</option>
@@ -1779,19 +1779,19 @@ export default function SuperAdmin() {
                 </div>
 
                 <div>
-                  <label className="block font-bold uppercase tracking-wider text-slate-600 mb-1">Título da Macro</label>
+                  <label className="block font-bold uppercase tracking-wider text-slate-400 mb-1">Título da Macro</label>
                   <input 
                     type="text" 
                     value={formMacro.titulo} 
                     onChange={(e) => setFormMacro({ ...formMacro, titulo: e.target.value })}
                     placeholder="Ex: Instruções de Pagamento PIX"
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                    className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="font-bold uppercase tracking-wider text-slate-600">Conteúdo da Mensagem</label>
+                    <label className="font-bold uppercase tracking-wider text-slate-400">Conteúdo da Mensagem</label>
                     <span className="text-[10px] text-slate-400">Clique para inserir:</span>
                   </div>
                   <div className="flex gap-1.5 mb-2 font-mono text-[10px]">
@@ -1800,7 +1800,7 @@ export default function SuperAdmin() {
                         key={variable}
                         type="button"
                         onClick={() => setFormMacro({ ...formMacro, conteudo: formMacro.conteudo + ' ' + variable })}
-                        className="px-2 py-0.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded border border-slate-200 transition-colors"
+                        className="px-2 py-0.5 bg-white/5 hover:bg-blue-500/10 hover:text-blue-400 rounded border border-white/5 transition-colors"
                       >
                         +{variable}
                       </button>
@@ -1811,7 +1811,7 @@ export default function SuperAdmin() {
                     value={formMacro.conteudo}
                     onChange={(e) => setFormMacro({ ...formMacro, conteudo: e.target.value })}
                     placeholder="Escreva a resposta pré-definida..."
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                    className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                   />
                 </div>
 
@@ -1819,7 +1819,7 @@ export default function SuperAdmin() {
                   <button
                     type="button"
                     onClick={() => setMacroModalOpen(false)}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-xs font-bold transition-colors"
                   >
                     Cancelar
                   </button>
@@ -1848,8 +1848,8 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
       type="button"
       className={`px-5 py-3.5 text-xs font-bold flex items-center gap-2 transition-colors border-b-2 whitespace-nowrap ${
         active 
-          ? 'border-blue-600 text-blue-600 bg-white' 
-          : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100/50'
+          ? 'border-blue-600 text-blue-400 bg-[#101726]' 
+          : 'border-transparent text-slate-500 hover:text-slate-200 hover:bg-white/5/50'
       }`}
     >
       {icon}
@@ -1860,13 +1860,13 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
 
 function IntegrationStatusBadge({ title, sub, status, icon, latency }: { title: string; sub: string; status: 'online' | 'alerta'; icon: React.ReactNode; latency: number }) {
   return (
-    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+    <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-2xs flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+        <div className="p-2.5 bg-[#0b0f19] rounded-lg border border-slate-100">
           {icon}
         </div>
         <div>
-          <h4 className="text-xs font-bold text-slate-900 leading-tight">{title}</h4>
+          <h4 className="text-xs font-bold text-white leading-tight">{title}</h4>
           <span className="text-[10px] text-slate-400 block">{sub}</span>
         </div>
       </div>

@@ -56,30 +56,30 @@ export default function Layout() {
 
   // Mapeamento dinâmico de títulos para o Topbar
   const getPageInfo = (path: string) => {
-    if (path === '/admin' || path === '/admin/') return { title: 'Inbox Unificado', category: 'Atendimento Omnichannel', icon: <MessageSquare size={18} className="text-blue-600" /> };
-    if (path.startsWith('/admin/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-600" /> };
+    if (path === '/admin' || path === '/admin/') return { title: 'Inbox Unificado', category: 'Atendimento Omnichannel', icon: <MessageSquare size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/cobranca')) return { title: 'Régua de Cobrança', category: 'Inadimplência, PIX & Desbloqueio 48h', icon: <CreditCard size={18} className="text-amber-600" /> };
-    if (path.startsWith('/admin/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/vendas')) return { title: 'Kanban de Vendas', category: 'Novos Assinantes & Upgrades', icon: <ShoppingCart size={18} className="text-emerald-600" /> };
     if (path.startsWith('/admin/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
-    if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-600" /> };
-    if (path.startsWith('/admin/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-600" /> };
-    if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
-    if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-600" /> };
-    if (path.startsWith('/admin/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-600" /> };
-    return { title: 'NAP Omni', category: 'Telecom Suite', icon: <Activity size={18} className="text-blue-600" /> };
+    if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-400" /> };
+    return { title: 'NAP Omni', category: 'Telecom Suite', icon: <Activity size={18} className="text-blue-400" /> };
   };
 
   const pageInfo = getPageInfo(location.pathname);
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-700 font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#0b0f19] text-slate-300 font-sans overflow-hidden">
       {/* Backdrop para Mobile */}
       {isMobileOpen && (
         <div 
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 md:hidden transition-opacity"
+          className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-xs z-40 md:hidden transition-opacity"
           aria-hidden="true"
         />
       )}
@@ -87,14 +87,14 @@ export default function Layout() {
       {/* Sidebar Modernizada (Desktop Collapsible + Mobile Drawer) */}
       <aside 
         className={`
-          fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-50 bg-[#101726] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out
           md:static md:translate-x-0
           ${isMobileOpen ? 'translate-x-0 shadow-2xl w-72' : '-translate-x-full md:translate-x-0'}
           ${isCollapsed ? 'md:w-20' : 'md:w-64'}
         `}
       >
         {/* Header da Sidebar com Logo e Botão de Recolhimento */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 shrink-0">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
               <span className="text-white font-extrabold text-base tracking-tight font-outfit">N</span>
@@ -102,17 +102,17 @@ export default function Layout() {
             
             {/* Texto do logo esconde ao recolher */}
             <div className={`transition-opacity duration-200 ${isCollapsed ? 'md:opacity-0 md:w-0 md:hidden' : 'opacity-100'}`}>
-              <span className="font-extrabold text-lg text-slate-900 tracking-tight font-outfit block leading-none">
-                NAP <span className="text-blue-600 font-medium text-xs bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded ml-1">Omni</span>
+              <span className="font-extrabold text-lg text-white tracking-tight font-outfit block leading-none">
+                NAP <span className="text-blue-400 font-medium text-xs bg-blue-600/10 border border-blue-500/20 px-1.5 py-0.5 rounded ml-1">Omni</span>
               </span>
-              <span className="text-[10px] text-slate-600 font-medium tracking-wide">Plataforma ISP</span>
+              <span className="text-[10px] text-slate-400 font-medium tracking-wide">Plataforma ISP</span>
             </div>
           </div>
 
           {/* Botão de Fechar no Mobile */}
           <button 
             onClick={() => setIsMobileOpen(false)}
-            className="md:hidden p-1.5 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+            className="md:hidden p-1.5 text-slate-400 hover:text-slate-200 hover:bg-[#101726]/5 rounded-lg transition-colors"
             title="Fechar menu"
           >
             <X size={20} />
@@ -121,7 +121,7 @@ export default function Layout() {
           {/* Botão de Recolher no Desktop */}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className={`hidden md:flex items-center justify-center w-7 h-7 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors ${isCollapsed ? 'mx-auto' : ''}`}
+            className={`hidden md:flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-[#101726]/5 border border-white/5 transition-colors ${isCollapsed ? 'mx-auto' : ''}`}
             title={isCollapsed ? "Expandir menu (Ctrl+B)" : "Recolher menu (Ctrl+B)"}
           >
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -134,12 +134,12 @@ export default function Layout() {
           {/* Seção: Operação */}
           <div>
             {!isCollapsed ? (
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-2 px-3 flex items-center justify-between">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3 flex items-center justify-between">
                 <span>Operação</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Serviços Ativos"></span>
               </p>
             ) : (
-              <div className="h-px bg-slate-200 my-2 mx-2" title="Operação" />
+              <div className="h-px bg-white/10 my-2 mx-2" title="Operação" />
             )}
             
             <nav className="flex flex-col gap-1">
@@ -158,12 +158,12 @@ export default function Layout() {
           {/* Seção: Automação & IA */}
           <div>
             {!isCollapsed ? (
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-2 px-3 flex items-center justify-between">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3 flex items-center justify-between">
                 <span>Automação & IA</span>
                 <Sparkles size={11} className="text-purple-600" />
               </p>
             ) : (
-              <div className="h-px bg-slate-200 my-2 mx-2" title="Automação & IA" />
+              <div className="h-px bg-white/10 my-2 mx-2" title="Automação & IA" />
             )}
 
             <nav className="flex flex-col gap-1">
@@ -174,11 +174,11 @@ export default function Layout() {
           {/* Seção: Administração */}
           <div>
             {!isCollapsed ? (
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-2 px-3">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-3">
                 Administração
               </p>
             ) : (
-              <div className="h-px bg-slate-200 my-2 mx-2" title="Administração" />
+              <div className="h-px bg-white/10 my-2 mx-2" title="Administração" />
             )}
 
             <nav className="flex flex-col gap-1">
@@ -195,7 +195,7 @@ export default function Layout() {
               href="/portal" 
               target="_blank" 
               rel="noreferrer"
-              className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 hover:border-blue-300 text-blue-700 text-xs font-semibold transition-all group shadow-2xs"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-500/20/80 hover:border-blue-300 text-blue-400 text-xs font-semibold transition-all group shadow-2xs"
             >
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-[10px]">
@@ -213,7 +213,7 @@ export default function Layout() {
               target="_blank" 
               rel="noreferrer"
               title="Abrir Portal do Assinante (PWA)"
-              className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center hover:bg-blue-100 transition-colors"
+              className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center hover:bg-blue-100 transition-colors"
             >
               <ExternalLink size={16} />
             </a>
@@ -221,10 +221,10 @@ export default function Layout() {
         )}
         
         {/* Perfil do Usuário e Ramal Conectado */}
-        <div className={`p-3 border-t border-slate-200 bg-slate-50/80 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
+        <div className={`p-3 border-t border-white/5 bg-[#0b0f19]/80 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
           <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="relative shrink-0">
-              <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-slate-700 font-bold border border-slate-200 shadow-2xs text-sm">
+              <div className="w-9 h-9 rounded-xl bg-[#101726] flex items-center justify-center text-slate-300 font-bold border border-white/5 shadow-2xs text-sm">
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : 'JD'}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" title="Disponível no Asterisk"></div>
@@ -232,9 +232,9 @@ export default function Layout() {
 
             {!isCollapsed && (
               <div className="overflow-hidden">
-                <p className="text-slate-900 font-semibold text-xs truncate">{user?.name || 'João Silva'}</p>
+                <p className="text-white font-semibold text-xs truncate">{user?.name || 'João Silva'}</p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[10px] text-slate-600 font-mono">Ramal 2001</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Ramal 2001</span>
                 </div>
               </div>
             )}
@@ -243,7 +243,7 @@ export default function Layout() {
           {!isCollapsed && (
             <button
               onClick={logout}
-              className="p-1.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               title="Encerrar Sessão"
             >
               <LogOut size={16} />
@@ -256,14 +256,14 @@ export default function Layout() {
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         
         {/* Topbar Moderno e Responsivo */}
-        <header className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30 shadow-2xs">
+        <header className="h-16 border-b border-white/5 bg-[#101726]/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30 shadow-2xs">
           
           {/* Esquerda: Botão Mobile + Título da Página / Breadcrumb */}
           <div className="flex items-center gap-3">
             {/* Botão Hamburger (Mobile) */}
             <button 
               onClick={() => setIsMobileOpen(true)}
-              className="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors"
+              className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#101726]/5 border border-white/5 transition-colors"
               title="Abrir Menu"
             >
               <Menu size={20} />
@@ -272,7 +272,7 @@ export default function Layout() {
             {/* Alternar Recolher no Desktop */}
             <button 
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden md:flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors"
+              className="hidden md:flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-white hover:bg-[#101726]/5 border border-transparent hover:border-white/5 transition-colors"
               title={isCollapsed ? "Expandir menu lateral" : "Recolher menu lateral"}
             >
               {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
@@ -280,14 +280,14 @@ export default function Layout() {
 
             {/* Título dinâmico da página atual */}
             <div className="flex items-center gap-2.5">
-              <div className="hidden sm:flex w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 items-center justify-center">
+              <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[#101726]/5 border border-white/5 items-center justify-center">
                 {pageInfo.icon}
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 font-outfit tracking-tight leading-tight">
+                <h2 className="text-sm sm:text-base font-bold text-white font-outfit tracking-tight leading-tight">
                   {pageInfo.title}
                 </h2>
-                <p className="text-[11px] text-slate-600 font-medium hidden sm:block">
+                <p className="text-[11px] text-slate-400 font-medium hidden sm:block">
                   {pageInfo.category}
                 </p>
               </div>
@@ -300,7 +300,7 @@ export default function Layout() {
             <OperatorStatusControl />
 
             {/* Status Telecom & SGP */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-medium text-slate-600">
+            <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#101726]/5 border border-white/5 text-[11px] font-medium text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>FreePBX & SGP Online</span>
             </div>
@@ -316,7 +316,7 @@ export default function Layout() {
         <CTIReverso />
 
         {/* Conteúdo Dinâmico das Rotas */}
-        <main className="flex-1 overflow-hidden relative flex flex-col bg-slate-50">
+        <main className="flex-1 overflow-hidden relative flex flex-col bg-[#0b0f19]">
           <Outlet />
         </main>
       </div>
@@ -342,8 +342,8 @@ function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
           isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'
         } ${
           isActive 
-            ? 'bg-blue-50 text-blue-700 shadow-2xs font-semibold' 
-            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            ? 'bg-blue-600/10 text-blue-400 shadow-2xs font-semibold' 
+            : 'text-slate-400 hover:bg-[#101726]/5 hover:text-white'
         }`
       }
     >
@@ -355,7 +355,7 @@ function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
           )}
 
           {/* Ícone */}
-          <div className={`${isActive ? 'text-blue-600' : 'text-slate-600 group-hover:text-slate-900'} transition-colors shrink-0`}>
+          <div className={`${isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-white'} transition-colors shrink-0`}>
             {icon}
           </div>
 
@@ -373,10 +373,10 @@ function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
 
           {/* Tooltip Flutuante elegante quando recolhido (Modo Desktop) */}
           {isCollapsed && (
-            <div className="absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap shadow-xl z-50 pointer-events-none flex items-center gap-2">
+            <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#101726] text-white text-xs font-semibold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap shadow-xl z-50 pointer-events-none flex items-center gap-2">
               <span>{label}</span>
               {badge && (
-                <span className="bg-blue-500 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">
+                <span className="bg-blue-600/100 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">
                   {badge}
                 </span>
               )}

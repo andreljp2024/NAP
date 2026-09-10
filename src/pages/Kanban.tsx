@@ -163,23 +163,23 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 bg-slate-50 text-slate-500 font-medium">
+      <div className="flex-1 flex items-center justify-center p-8 bg-[#0b0f19] text-slate-500 font-medium">
         Carregando Kanban de {type}...
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] overflow-hidden">
       
       {/* Top Header */}
-      <div className="p-5 border-b border-slate-200 bg-white/90 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 sticky top-0 z-10">
+      <div className="p-5 border-b border-white/10 bg-[#101726]/90 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 sticky top-0 z-10">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-slate-900 font-outfit">
+            <h1 className="text-xl font-bold text-white font-outfit">
               Kanban de {type}
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
               Sincronizado SGP
             </span>
           </div>
@@ -197,7 +197,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar cliente, título ou #ID..."
-              className="pl-8 pr-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 focus:bg-white transition-all w-52"
+              className="pl-8 pr-3 py-1.5 text-xs bg-white/[0.02] hover:bg-[#0b0f19] border border-white/10 rounded-lg focus:outline-none focus:border-blue-600 focus:bg-[#101726] transition-all w-52"
             />
           </div>
 
@@ -206,7 +206,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
             className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
               filterPriority === 'high'
                 ? 'bg-red-50 text-red-700 border-red-200'
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                : 'bg-[#101726] text-slate-400 border-white/10 hover:bg-[#0b0f19]'
             }`}
           >
             {filterPriority === 'high' ? '🚨 Alta Prioridade' : 'Todas Pri.'}
@@ -214,7 +214,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
           <button 
             onClick={() => setIsModalOpen(true)}
-            className={`flex items-center gap-1.5 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95 ${
+            className={`flex items-center gap-1.5 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-none active:scale-95 ${
               type === 'Cobranca' ? 'bg-amber-600 hover:bg-amber-700' : type === 'Vendas' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
@@ -236,16 +236,16 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                   <div className="flex justify-between items-center mb-3 px-2">
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${
-                        stage.includes('Novo') ? 'bg-blue-500' :
+                        stage.includes('Novo') ? 'bg-blue-500/100' :
                         stage.includes('Análise') || stage.includes('Qualificado') ? 'bg-amber-500' :
                         stage.includes('Rota') || stage.includes('Negociação') ? 'bg-indigo-500' :
                         'bg-emerald-500'
                       }`} />
-                      <h3 className="font-bold text-slate-700 tracking-wide text-xs uppercase font-outfit">
+                      <h3 className="font-bold text-slate-300 tracking-wide text-xs uppercase font-outfit">
                         {stage}
                       </h3>
                     </div>
-                    <span className="text-[11px] font-bold bg-white text-slate-600 px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
+                    <span className="text-[11px] font-bold bg-[#101726] text-slate-400 px-2 py-0.5 rounded-md border border-white/10 shadow-2xs">
                       {stageDeals.length}
                     </span>
                   </div>
@@ -257,7 +257,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         className={`flex-1 overflow-y-auto space-y-3 pb-4 rounded-xl transition-all duration-200 min-h-[160px] p-2 ${
-                          snapshot.isDraggingOver ? 'bg-blue-50/80 border-2 border-dashed border-blue-400' : 'bg-slate-100/60 border border-slate-200/60'
+                          snapshot.isDraggingOver ? 'bg-blue-500/10/80 border-2 border-dashed border-blue-400' : 'bg-white/[0.02]/60 border border-white/10/60'
                         }`}
                       >
                         {stageDeals.map((deal, index) => {
@@ -270,14 +270,14 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs cursor-grab select-none ${
+                                  className={`bg-[#101726] p-4 rounded-xl border border-white/10/90 shadow-2xs cursor-grab select-none ${
                                     snapshot.isDragging 
                                       ? 'shadow-xl ring-2 ring-blue-500 rotate-1 scale-105 z-50' 
-                                      : 'hover:border-slate-300 hover:shadow-xs'
+                                      : 'hover:border-white/10 hover:shadow-xs'
                                   } transition-all`}
                                 >
                                   <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                                    <span className="text-[10px] font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded">
                                       #{deal.id}
                                     </span>
                                     {deal.prioridade === 1 && (
@@ -287,7 +287,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                                     )}
                                   </div>
 
-                                  <h4 className="font-bold text-slate-900 text-xs leading-snug mb-1">
+                                  <h4 className="font-bold text-white text-xs leading-snug mb-1">
                                     {deal.titulo}
                                   </h4>
 
@@ -327,7 +327,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                         {provided.placeholder}
                         
                         {stageDeals.length === 0 && !snapshot.isDraggingOver && (
-                          <div className="border border-dashed border-slate-300/80 rounded-xl h-24 flex items-center justify-center text-[11px] text-slate-400 bg-white/40">
+                          <div className="border border-dashed border-white/10 rounded-xl h-24 flex items-center justify-center text-[11px] text-slate-400 bg-[#101726]/40">
                             Nenhum card nesta etapa
                           </div>
                         )}
@@ -346,19 +346,19 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
         <>
           <div 
             onClick={() => setSelectedDeal(null)} 
-            className="fixed inset-0 bg-slate-900/30 backdrop-blur-2xs z-40"
+            className="fixed inset-0 bg-[#0b0f19]/40 backdrop-blur-2xs z-40"
             aria-hidden="true"
           />
-          <div className="fixed top-0 right-0 h-full w-full sm:max-w-md bg-white shadow-2xl border-l border-slate-200 animate-in slide-in-from-right flex flex-col z-50 font-sans">
+          <div className="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#101726] shadow-2xl border-l border-white/10 animate-in slide-in-from-right flex flex-col z-50 font-sans">
             
             {/* Header */}
-            <div className="p-5 border-b border-slate-200 bg-white flex justify-between items-start">
+            <div className="p-5 border-b border-white/10 bg-[#101726] flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded">
                     #{selectedDeal.id}
                   </span>
-                  <span className="text-[10px] uppercase font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 bg-white/[0.02] border border-white/10 px-2 py-0.5 rounded">
                     {selectedDeal.estagio}
                   </span>
                   {selectedDeal.prioridade === 1 && (
@@ -367,40 +367,40 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                     </span>
                   )}
                 </div>
-                <h2 className="text-base font-bold text-slate-900 font-outfit">
+                <h2 className="text-base font-bold text-white font-outfit">
                   {selectedDeal.titulo}
                 </h2>
               </div>
               <button 
                 onClick={() => setSelectedDeal(null)}
-                className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-700 transition-colors"
+                className="p-1.5 hover:bg-white/[0.02] rounded-lg text-slate-400 hover:text-slate-300 transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
             
             {/* Body Details */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-slate-50">
+            <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#0b0f19]">
               
               {/* Cliente SGP */}
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-3 text-xs">
-                <h3 className="font-bold text-slate-900 font-outfit pb-2 border-b border-slate-100 flex items-center gap-2">
-                  <User size={14} className="text-blue-600" /> Detalhes do Assinante
+              <div className="bg-[#101726] p-4 rounded-xl border border-white/10 shadow-2xs space-y-3 text-xs">
+                <h3 className="font-bold text-white font-outfit pb-2 border-b border-slate-100 flex items-center gap-2">
+                  <User size={14} className="text-blue-400" /> Detalhes do Assinante
                 </h3>
                 
                 <div>
                   <p className="text-[10px] uppercase font-bold text-slate-400">Nome</p>
-                  <p className="font-semibold text-slate-800 text-sm">{selectedDeal.contato}</p>
+                  <p className="font-semibold text-slate-200 text-sm">{selectedDeal.contato}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <div>
                     <p className="text-[10px] uppercase font-bold text-slate-400">Telefone / WhatsApp</p>
-                    <p className="font-medium text-slate-700">{selectedDeal.telefone || '(11) 98765-4321'}</p>
+                    <p className="font-medium text-slate-300">{selectedDeal.telefone || '(11) 98765-4321'}</p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase font-bold text-slate-400">Plano Contratado</p>
-                    <p className="font-medium text-blue-700">{selectedDeal.plano || 'Fibra 500MB'}</p>
+                    <p className="font-medium text-blue-400">{selectedDeal.plano || 'Fibra 500MB'}</p>
                   </div>
                 </div>
 
@@ -424,16 +424,16 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                     <button
                       type="button"
                       onClick={() => setMapTargetDeal(selectedDeal)}
-                      className="text-[11px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                      className="text-[11px] font-bold text-blue-400 hover:text-blue-400 flex items-center gap-1"
                     >
                       <MapPin size={11} />
                       <span>Ver no Mapa / CEP</span>
                     </button>
                   </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                  <div className="bg-[#0b0f19] border border-white/10 rounded-xl p-2.5 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <MapPin size={14} className="text-blue-600 shrink-0" />
-                      <span className="font-medium text-slate-700 text-xs truncate">
+                      <MapPin size={14} className="text-blue-400 shrink-0" />
+                      <span className="font-medium text-slate-300 text-xs truncate">
                         {selectedDeal.endereco || 'Rua das Acácias, 412 - Jd. Primavera'}
                       </span>
                     </div>
@@ -456,7 +456,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                   <Activity size={12} />
                   Contexto IA & Telemetria
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   {selectedDeal.contexto_ia || 
                     (type === 'Suporte' 
                       ? 'Telemetria indica atenuação normal na ONU (-19.2 dBm). Sessão PPPoE ativa. Recomendado suporte nível 1.'
@@ -465,20 +465,20 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               </div>
 
               {/* Histórico */}
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-                <h3 className="font-bold text-slate-900 font-outfit mb-3 text-xs flex items-center gap-1.5">
-                  <Clock size={14} className="text-blue-600" /> Linha do Tempo
+              <div className="bg-[#101726] p-4 rounded-xl border border-white/10 shadow-2xs">
+                <h3 className="font-bold text-white font-outfit mb-3 text-xs flex items-center gap-1.5">
+                  <Clock size={14} className="text-blue-400" /> Linha do Tempo
                 </h3>
-                <div className="space-y-3 pl-2 border-l-2 border-slate-200 ml-1.5 text-xs">
+                <div className="space-y-3 pl-2 border-l-2 border-white/10 ml-1.5 text-xs">
                   <div className="relative pl-3">
                     <div className="absolute -left-[17px] top-1 w-2.5 h-2.5 bg-blue-600 rounded-full border-2 border-white" />
                     <p className="text-[10px] text-slate-400">{selectedDeal.criado_em || 'Hoje'}</p>
-                    <p className="font-semibold text-slate-800">Card no estágio: {selectedDeal.estagio}</p>
+                    <p className="font-semibold text-slate-200">Card no estágio: {selectedDeal.estagio}</p>
                   </div>
                   <div className="relative pl-3">
                     <div className="absolute -left-[17px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white" />
                     <p className="text-[10px] text-slate-400">Abertura</p>
-                    <p className="text-slate-600">Ticket criado pelo sistema</p>
+                    <p className="text-slate-400">Ticket criado pelo sistema</p>
                   </div>
                 </div>
               </div>
@@ -486,12 +486,12 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
             </div>
             
             {/* Actions Footer */}
-            <div className="p-4 border-t border-slate-200 bg-white flex gap-2.5">
+            <div className="p-4 border-t border-white/10 bg-[#101726] flex gap-2.5">
               <a
                 href={`https://wa.me/55${(selectedDeal.telefone || '').replace(/\D/g, '')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+                className="flex-1 bg-[#101726] hover:bg-[#0b0f19] border border-white/10 text-slate-300 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs"
               >
                 <MessageSquare size={14} className="text-emerald-600" />
                 <span>WhatsApp</span>
@@ -517,15 +517,15 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
       {/* Modal de Criação de Novo Card */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95">
+        <div className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#101726] rounded-2xl max-w-md w-full p-6 shadow-2xl border border-white/10 animate-in zoom-in-95">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
-              <h3 className="font-bold text-slate-900 font-outfit text-base">
+              <h3 className="font-bold text-white font-outfit text-base">
                 Criar Novo {type === 'Suporte' ? 'Chamado de Suporte' : 'Lead Comercial'}
               </h3>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"
+                className="text-slate-400 hover:text-slate-300 p-1 rounded-lg"
               >
                 <X size={18} />
               </button>
@@ -533,21 +533,21 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
             <form onSubmit={handleCreateDeal} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Título do Card / Motivo</label>
+                <label className="block font-bold text-slate-300 mb-1">Título do Card / Motivo</label>
                 <input
                   type="text"
                   required
                   placeholder={type === 'Suporte' ? "Ex: Queda de Fibra na CTO-08" : type === 'Vendas' ? "Ex: Contratação Residencial 700MB" : "Ex: Mensalidade Vencida 05/09"}
                   value={newDealData.titulo}
                   onChange={(e) => setNewDealData({ ...newDealData, titulo: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                 />
               </div>
 
               {type === 'Cobranca' && (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Valor da Fatura (R$)</label>
+                    <label className="block font-bold text-slate-300 mb-1">Valor da Fatura (R$)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -555,17 +555,17 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                       placeholder="99.90"
                       value={newDealData.valor}
                       onChange={(e) => setNewDealData({ ...newDealData, valor: parseFloat(e.target.value) || 0 })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-amber-600 focus:bg-white"
+                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-600 focus:bg-[#101726]"
                     />
                   </div>
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Dias de Atraso</label>
+                    <label className="block font-bold text-slate-300 mb-1">Dias de Atraso</label>
                     <input
                       type="number"
                       placeholder="0"
                       value={newDealData.dias_atraso}
                       onChange={(e) => setNewDealData({ ...newDealData, dias_atraso: parseInt(e.target.value) || 0 })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-amber-600 focus:bg-white"
+                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-600 focus:bg-[#101726]"
                     />
                   </div>
                 </div>
@@ -573,35 +573,35 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Nome do Cliente</label>
+                  <label className="block font-bold text-slate-300 mb-1">Nome do Cliente</label>
                   <input
                     type="text"
                     required
                     placeholder="Ex: Ana Clara Lima"
                     value={newDealData.contato}
                     onChange={(e) => setNewDealData({ ...newDealData, contato: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Telefone / WhatsApp</label>
+                  <label className="block font-bold text-slate-300 mb-1">Telefone / WhatsApp</label>
                   <input
                     type="text"
                     placeholder="(11) 99999-9999"
                     value={newDealData.telefone}
                     onChange={(e) => setNewDealData({ ...newDealData, telefone: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Plano</label>
+                  <label className="block font-bold text-slate-300 mb-1">Plano</label>
                   <select
                     value={newDealData.plano}
                     onChange={(e) => setNewDealData({ ...newDealData, plano: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                   >
                     <option value="Fibra 300MB">Fibra 300MB</option>
                     <option value="Fibra 500MB">Fibra 500MB</option>
@@ -610,11 +610,11 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                   </select>
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Prioridade</label>
+                  <label className="block font-bold text-slate-300 mb-1">Prioridade</label>
                   <select
                     value={newDealData.prioridade}
                     onChange={(e) => setNewDealData({ ...newDealData, prioridade: Number(e.target.value) })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                   >
                     <option value={2}>Normal (Padrão)</option>
                     <option value={1}>Alta Prioridade</option>
@@ -624,13 +624,13 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Endereço de Atendimento</label>
+                <label className="block font-bold text-slate-300 mb-1">Endereço de Atendimento</label>
                 <input
                   type="text"
                   placeholder="Rua, número e bairro"
                   value={newDealData.endereco}
                   onChange={(e) => setNewDealData({ ...newDealData, endereco: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-[#101726]"
                 />
               </div>
 
@@ -638,7 +638,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50"
+                  className="px-4 py-2 border border-white/10 text-slate-400 rounded-xl font-bold hover:bg-[#0b0f19]"
                 >
                   Cancelar
                 </button>

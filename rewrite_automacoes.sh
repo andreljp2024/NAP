@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'INNER_EOF' > src/pages/Automacoes.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, 
@@ -545,3 +547,4 @@ export default function Automacoes() {
     </div>
   );
 }
+INNER_EOF
