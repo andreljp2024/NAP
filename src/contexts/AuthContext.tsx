@@ -13,9 +13,10 @@ export interface UserData {
   id: string;
   email: string;
   name: string;
-  role: 'superadmin' | 'admin' | 'operador' | 'suporte' | 'financeiro';
+  role: 'superadmin' | 'admin' | 'operador' | 'tecnico' | 'suporte' | 'financeiro';
   provedorId: string;
   ramal?: string;
+  veiculo?: string;
   status: 'ativo' | 'inativo';
 }
 
@@ -27,6 +28,7 @@ interface AuthContextType {
   login: (email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
   createOperatorAccount: (email: string, pass: string, name: string, role?: string, ramal?: string) => Promise<void>;
+  switchMockUser: (target: 'admin' | 'operador' | 'tecnico1' | 'tecnico2') => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -148,17 +150,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Formata o username como um e-mail interno (spoofing) caso o usuário não tenha digitado o domínio
       const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
       
-      const activateMockSession = () => {
-        console.warn('Firebase Email/Password auth is disabled. Falling back to local mock session for development.');
-        const mockUser: UserData = {
-          id: 'mock-local-id-123',
-          email: formattedEmail,
-          name: formattedEmail.split('@')[0],
-          role: (formattedEmail.includes('admin') || formattedEmail.includes('andreljp') || formattedEmail.includes('suporte')) ? 'superadmin' : 'operador',
+      const getMockUserProfile = (emailStr: string): UserData => {
+        const lower = emailStr.toLowerCase();
+        if (lower.includes('tecnico1') || lower.includes('carlos')) {
+          return {
+            id: 'mock-tecnico-1',
+            email: 'tecnico1@provedor.com.br',
+            name: 'Carlos Mendes',
+            role: 'tecnico',
+            provedorId: 'nap-default',
+            veiculo: 'Fiorino Tech 01 (ABC-4D21)',
+            status: 'ativo'
+          };
+        }
+        if (lower.includes('tecnico2') || lower.includes('lucas')) {
+          return {
+            id: 'mock-tecnico-2',
+            email: 'tecnico2@provedor.com.br',
+            name: 'Lucas Ferreira',
+            role: 'tecnico',
+            provedorId: 'nap-default',
+            veiculo: 'Mobi Tech 02 (BRA-9F88)',
+            status: 'ativo'
+          };
+        }
+        if (lower.includes('operador') || lower.includes('suporte') || lower.includes('mariana')) {
+          return {
+            id: 'mock-operador-1',
+            email: 'operador@provedor.com.br',
+            name: 'Mariana Costa',
+            role: 'operador',
+            provedorId: 'nap-default',
+            ramal: '2001',
+            status: 'ativo'
+          };
+        }
+        // Admin padrão
+        return {
+          id: 'mock-admin-1',
+          email: 'admin@provedor.com.br',
+          name: 'Roberto Oliveira',
+          role: 'admin',
           provedorId: 'nap-default',
-          status: 'ativo',
-          ramal: '2001'
+          ramal: '2000',
+          status: 'ativo'
         };
+      };
+
+      const activateMockSession = () => {
+        console.warn('Fallback para sessão local de desenvolvimento (NAP Multi-Papel).');
+        const mockUser = getMockUserProfile(formattedEmail);
         setUser(mockUser);
         setIsAuthenticated(true);
         localStorage.setItem('nap_auth', JSON.stringify(mockUser));
@@ -263,6 +304,55 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const switchMockUser = (target: 'admin' | 'operador' | 'tecnico1' | 'tecnico2') => {
+    let targetUser: UserData;
+    if (target === 'tecnico1') {
+      targetUser = {
+        id: 'mock-tecnico-1',
+        email: 'tecnico1@provedor.com.br',
+        name: 'Carlos Mendes',
+        role: 'tecnico',
+        provedorId: 'nap-default',
+        veiculo: 'Fiorino Tech 01 (ABC-4D21)',
+        status: 'ativo'
+      };
+    } else if (target === 'tecnico2') {
+      targetUser = {
+        id: 'mock-tecnico-2',
+        email: 'tecnico2@provedor.com.br',
+        name: 'Lucas Ferreira',
+        role: 'tecnico',
+        provedorId: 'nap-default',
+        veiculo: 'Mobi Tech 02 (BRA-9F88)',
+        status: 'ativo'
+      };
+    } else if (target === 'operador') {
+      targetUser = {
+        id: 'mock-operador-1',
+        email: 'operador@provedor.com.br',
+        name: 'Mariana Costa',
+        role: 'operador',
+        provedorId: 'nap-default',
+        ramal: '2001',
+        status: 'ativo'
+      };
+    } else {
+      targetUser = {
+        id: 'mock-admin-1',
+        email: 'admin@provedor.com.br',
+        name: 'Roberto Oliveira',
+        role: 'admin',
+        provedorId: 'nap-default',
+        ramal: '2000',
+        status: 'ativo'
+      };
+    }
+
+    setUser(targetUser);
+    setIsAuthenticated(true);
+    localStorage.setItem('nap_auth', JSON.stringify(targetUser));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -275,7 +365,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, firebaseUser, loading, login, logout, createOperatorAccount }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, firebaseUser, loading, login, logout, createOperatorAccount, switchMockUser }}>
       {children}
     </AuthContext.Provider>
   );

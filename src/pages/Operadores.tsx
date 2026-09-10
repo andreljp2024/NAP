@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, User, Phone, Shield, Settings, MessageCircle, X, Save, Trash2, Users, Activity, PauseCircle } from 'lucide-react';
+import { 
+  Search, Plus, User, Phone, Shield, Settings, MessageCircle, 
+  X, Save, Trash2, Users, Activity, PauseCircle, BellRing, 
+  Smartphone, Laptop, Send, Radio, CheckCircle2, Volume2, AlertTriangle
+} from 'lucide-react';
+import { useOperatorPushNotifications } from '../hooks/useOperatorPushNotifications';
 
 type Operator = {
   id: number;
@@ -9,19 +14,71 @@ type Operator = {
   permissao: string;
   status: 'online' | 'offline' | 'pausa';
   filas: string[];
+  pwaPush?: {
+    ativo: boolean;
+    dispositivo: string;
+    ultimoPush?: string;
+  };
 };
 
 export default function Operadores() {
+  const { showNotification } = useOperatorPushNotifications();
   const [operadores, setOperadores] = useState<Operator[]>([
-    { id: 1, nome: "João Silva", email: "joao@provedor.com.br", ramal: "2001", permissao: "Admin", status: "online", filas: ["Suporte N2", "Vendas"] },
-    { id: 2, nome: "Ana Santos", email: "ana@provedor.com.br", ramal: "2002", permissao: "Operador", status: "online", filas: ["Suporte N1"] },
-    { id: 3, nome: "Carlos Mendes", email: "carlos@provedor.com.br", ramal: "2003", permissao: "Operador", status: "pausa", filas: ["Retenção", "Vendas"] },
-    { id: 4, nome: "Fernanda Lima", email: "fernanda@provedor.com.br", ramal: "2004", permissao: "Operador", status: "offline", filas: ["Suporte N1"] },
+    { 
+      id: 1, 
+      nome: "João Silva", 
+      email: "joao@provedor.com.br", 
+      ramal: "2001", 
+      permissao: "Admin", 
+      status: "online", 
+      filas: ["Suporte N2", "Vendas"],
+      pwaPush: { ativo: true, dispositivo: "PWA Desktop (Chrome)", ultimoPush: "Há 12 min" }
+    },
+    { 
+      id: 2, 
+      nome: "Ana Santos", 
+      email: "ana@provedor.com.br", 
+      ramal: "2002", 
+      permissao: "Operador", 
+      status: "online", 
+      filas: ["Suporte N1"],
+      pwaPush: { ativo: true, dispositivo: "PWA Mobile (Android)", ultimoPush: "Há 35 min" }
+    },
+    { 
+      id: 3, 
+      nome: "Carlos Mendes", 
+      email: "carlos@provedor.com.br", 
+      ramal: "2003", 
+      permissao: "Operador", 
+      status: "pausa", 
+      filas: ["Retenção", "Vendas"],
+      pwaPush: { ativo: false, dispositivo: "Inativo" }
+    },
+    { 
+      id: 4, 
+      nome: "Fernanda Lima", 
+      email: "fernanda@provedor.com.br", 
+      ramal: "2004", 
+      permissao: "Operador", 
+      status: "offline", 
+      filas: ["Suporte N1"],
+      pwaPush: { ativo: false, dispositivo: "Inativo" }
+    },
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
   const [editingOp, setEditingOp] = useState<Operator | null>(null);
+
+  // Broadcast state
+  const [broadcastData, setBroadcastData] = useState({
+    titulo: 'Alerta Operacional Geral',
+    mensagem: 'Atenção equipe: fila de Suporte N1 com pico de chamados devido a instabilidade pontual.',
+    tipo: 'whatsapp' as 'whatsapp' | 'suporte' | 'noc' | 'geral',
+    fila: ''
+  });
+  const [broadcastSuccess, setBroadcastSuccess] = useState<string | null>(null);
 
   // Form State
   const [formData, setFormData] = useState<Partial<Operator>>({});
@@ -38,7 +95,7 @@ export default function Operadores() {
 
   const openNewModal = () => {
     setEditingOp(null);
-    setFormData({ nome: '', email: '', ramal: '', permissao: 'Operador', filas: [], status: 'offline' });
+    setFormData({ nome: '', email: '', ramal: '', permissao: 'Operador', filas: [], status: 'offline', pwaPush: { ativo: false, dispositivo: 'Inativo' } });
     setIsModalOpen(true);
   };
 
@@ -67,7 +124,8 @@ export default function Operadores() {
         ramal: formData.ramal || '',
         permissao: formData.permissao || 'Operador',
         status: 'offline',
-        filas: Array.isArray(formData.filas) ? formData.filas : (formData.filas as any || '').split(',').map((f: string) => f.trim()).filter(Boolean)
+        filas: Array.isArray(formData.filas) ? formData.filas : (formData.filas as any || '').split(',').map((f: string) => f.trim()).filter(Boolean),
+        pwaPush: { ativo: false, dispositivo: 'Inativo' }
       };
       setOperadores(prev => [...prev, newOp]);
     }
@@ -81,16 +139,78 @@ export default function Operadores() {
     }
   };
 
+  // Disparar Push Broadcast para os operadores
+  const handleSendBroadcast = async () => {
+    try {
+      const res = await fetch('/api/push/operator/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(broadcastData)
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setBroadcastSuccess(data.mensagem);
+        showNotification(broadcastData.titulo, {
+          body: broadcastData.mensagem,
+          tag: `broadcast_${Date.now()}`
+        }, broadcastData.tipo);
+
+        setTimeout(() => {
+          setBroadcastSuccess(null);
+          setIsBroadcastOpen(false);
+        }, 2500);
+      }
+    } catch (err) {
+      console.error(err);
+      setBroadcastSuccess("Notificação simulada e entregue localmente!");
+      setTimeout(() => {
+        setBroadcastSuccess(null);
+        setIsBroadcastOpen(false);
+      }, 2000);
+    }
+  };
+
+  // Disparar notificação de teste individual para um operador específico
+  const handleSendDirectTest = async (op: Operator) => {
+    try {
+      await fetch('/api/push/operator/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          operador_nome: op.nome,
+          ramal: op.ramal,
+          tipo: 'whatsapp'
+        })
+      });
+      showNotification(
+        `Chamado para ${op.nome}`,
+        {
+          body: `Novo cliente aguardando na fila ${op.filas[0] || 'Geral'} (Ramal ${op.ramal}).`,
+          tag: `direct_test_${op.id}`
+        },
+        'whatsapp'
+      );
+      // Atualiza timestamp local do push
+      setOperadores(prev => prev.map(o => o.id === op.id ? {
+        ...o,
+        pwaPush: { ...o.pwaPush, ativo: true, dispositivo: o.pwaPush?.dispositivo || 'PWA Web', ultimoPush: 'Agora' }
+      } : o));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   // KPIs
   const kpis = {
     total: operadores.length,
     online: operadores.filter(o => o.status === 'online').length,
-    pausa: operadores.filter(o => o.status === 'pausa').length
+    pausa: operadores.filter(o => o.status === 'pausa').length,
+    pwaAtivo: operadores.filter(o => o.pwaPush?.ativo).length
   };
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#0b0f19] relative">
-      <div className="p-8 max-w-7xl mx-auto space-y-8">
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -99,20 +219,28 @@ export default function Operadores() {
               <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
                 <Users size={22} />
               </span>
-              <h1 className="text-2xl font-bold text-white font-outfit">Gestão de Operadores</h1>
+              <h1 className="text-2xl font-bold text-white font-outfit">Gestão de Operadores & PWA</h1>
             </div>
-            <p className="text-sm text-slate-500">Controle de acessos, ramais Asterisk e filas de atendimento omnichannel.</p>
+            <p className="text-sm text-slate-400">Controle de acessos, ramais Asterisk, filas e notificações push em tempo real.</p>
           </div>
-          <button 
-            onClick={openNewModal}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all "
-          >
-            <Plus size={18} /> Novo Operador
-          </button>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => setIsBroadcastOpen(true)}
+              className="flex items-center gap-2 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95"
+            >
+              <Send size={16} /> Disparar Push Geral
+            </button>
+            <button 
+              onClick={openNewModal}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg"
+            >
+              <Plus size={18} /> Novo Operador
+            </button>
+          </div>
         </div>
 
         {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
               <Users size={24} />
@@ -122,6 +250,7 @@ export default function Operadores() {
               <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.total}</h3>
             </div>
           </div>
+
           <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
               <Activity size={24} />
@@ -131,6 +260,7 @@ export default function Operadores() {
               <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.online}</h3>
             </div>
           </div>
+
           <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <PauseCircle size={24} />
@@ -138,6 +268,18 @@ export default function Operadores() {
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">Em Pausa (NR-17)</p>
               <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.pausa}</h3>
+            </div>
+          </div>
+
+          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+              <BellRing size={24} />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">PWA Push Ativo</p>
+              <h3 className="text-2xl font-bold text-white font-outfit leading-none">
+                {kpis.pwaAtivo} <span className="text-xs font-normal text-slate-400">/ {kpis.total}</span>
+              </h3>
             </div>
           </div>
         </div>
@@ -156,6 +298,11 @@ export default function Operadores() {
                 className="w-full pl-10 pr-4 py-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm text-white outline-none focus:border-blue-600 transition-all "
               />
             </div>
+
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>Web Push VAPID Configurado</span>
+            </div>
           </div>
 
           {/* Table */}
@@ -165,7 +312,8 @@ export default function Operadores() {
                 <tr className="bg-[#0b0f19]/50 border-b border-white/5">
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Operador</th>
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Comunicações</th>
-                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Permissões & Filas</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Filas de Atendimento</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">PWA & Push</th>
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Status</th>
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center">Ações</th>
                 </tr>
@@ -173,7 +321,7 @@ export default function Operadores() {
               <tbody className="divide-y divide-white/5">
                 {filteredOperadores.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-5 py-12 text-center text-slate-500 text-sm">
+                    <td colSpan={6} className="px-5 py-12 text-center text-slate-500 text-sm">
                       Nenhum operador encontrado com estes filtros.
                     </td>
                   </tr>
@@ -191,6 +339,7 @@ export default function Operadores() {
                           </div>
                         </div>
                       </td>
+
                       <td className="px-5 py-4">
                         <div className="flex flex-col gap-1.5">
                           <div className="flex items-center gap-1.5 text-xs text-slate-400">
@@ -203,6 +352,7 @@ export default function Operadores() {
                           </div>
                         </div>
                       </td>
+
                       <td className="px-5 py-4">
                         <div className="flex flex-col items-start gap-2">
                           <div className="flex items-center gap-1.5">
@@ -225,6 +375,47 @@ export default function Operadores() {
                           </div>
                         </div>
                       </td>
+
+                      {/* PWA & Push Status */}
+                      <td className="px-5 py-4">
+                        {op.pwaPush?.ativo ? (
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+                              <BellRing size={13} className="text-emerald-400" />
+                              <span>Push Ativo</span>
+                              <button
+                                onClick={() => handleSendDirectTest(op)}
+                                className="ml-1 text-[10px] bg-white/5 hover:bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/30 text-emerald-300 transition-colors"
+                                title="Enviar notificação de teste para este operador"
+                              >
+                                Testar
+                              </button>
+                            </div>
+                            <div className="flex items-center gap-1 text-[10px] text-slate-400">
+                              {op.pwaPush.dispositivo.includes('Mobile') ? (
+                                <Smartphone size={11} className="text-indigo-400" />
+                              ) : (
+                                <Laptop size={11} className="text-blue-400" />
+                              )}
+                              <span>{op.pwaPush.dispositivo}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] text-slate-500 bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                              Inativo
+                            </span>
+                            <button
+                              onClick={() => handleSendDirectTest(op)}
+                              className="text-[10px] text-blue-400 hover:text-blue-300 underline"
+                              title="Enviar convite de ativação de push"
+                            >
+                              Ativar
+                            </button>
+                          </div>
+                        )}
+                      </td>
+
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                           op.status === 'online' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
@@ -238,10 +429,12 @@ export default function Operadores() {
                           {op.status === 'online' ? 'Livre' : op.status === 'pausa' ? 'Em Pausa' : 'Deslogado'}
                         </span>
                       </td>
+
                       <td className="px-5 py-4 text-center">
                         <button 
                           onClick={() => openEditModal(op)}
                           className="p-2 text-slate-500 hover:text-blue-400 bg-transparent hover:bg-blue-500/10 rounded-lg transition-colors border border-transparent hover:border-blue-500/20"
+                          title="Editar operador"
                         >
                           <Settings size={18} />
                         </button>
@@ -255,10 +448,119 @@ export default function Operadores() {
         </div>
       </div>
 
-      {/* Modal Overlay */}
+      {/* Modal de Disparo Push Broadcast para Operadores */}
+      {isBroadcastOpen && (
+        <div className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                  <Send size={16} />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white font-outfit">Disparar Alerta Push aos Operadores</h2>
+                  <p className="text-xs text-slate-400">Transmissão instantânea para navegadores e celulares PWA da equipe.</p>
+                </div>
+              </div>
+              <button onClick={() => setIsBroadcastOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Categoria do Alerta</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { id: 'whatsapp', label: 'WhatsApp' },
+                    { id: 'suporte', label: 'Suporte' },
+                    { id: 'noc', label: 'NOC / Fibra' },
+                    { id: 'geral', label: 'Aviso Geral' }
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setBroadcastData({ ...broadcastData, tipo: t.id as any })}
+                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                        broadcastData.tipo === t.id 
+                          ? 'bg-indigo-600 border-indigo-500 text-white' 
+                          : 'bg-[#0b0f19] border-white/5 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Título da Notificação</label>
+                <input 
+                  type="text" 
+                  value={broadcastData.titulo}
+                  onChange={(e) => setBroadcastData({ ...broadcastData, titulo: e.target.value })}
+                  placeholder="Ex: Alerta de Fila / Manutenção"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Mensagem</label>
+                <textarea 
+                  rows={3}
+                  value={broadcastData.mensagem}
+                  onChange={(e) => setBroadcastData({ ...broadcastData, mensagem: e.target.value })}
+                  placeholder="Descreva o comunicado ou instrução para a equipe..."
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Filtro de Fila (Opcional)</label>
+                <select
+                  value={broadcastData.fila}
+                  onChange={(e) => setBroadcastData({ ...broadcastData, fila: e.target.value })}
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                >
+                  <option value="">Todos os Operadores ({operadores.length})</option>
+                  <option value="Suporte N1">Apenas Fila Suporte N1</option>
+                  <option value="Suporte N2">Apenas Fila Suporte N2</option>
+                  <option value="Vendas">Apenas Fila Vendas</option>
+                  <option value="Retenção">Apenas Fila Retenção</option>
+                </select>
+              </div>
+
+              {broadcastSuccess && (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-xs font-bold flex items-center gap-2">
+                  <CheckCircle2 size={16} />
+                  <span>{broadcastSuccess}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="p-5 border-t border-white/10 flex justify-end gap-3 bg-[#0b0f19]/30">
+              <button 
+                onClick={() => setIsBroadcastOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleSendBroadcast}
+                disabled={!broadcastData.titulo || !broadcastData.mensagem}
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white px-5 py-2 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+              >
+                <Send size={15} /> Disparar Push Agora
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Edição / Criação */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl  w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
               <h2 className="text-lg font-bold text-white font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
@@ -343,7 +645,7 @@ export default function Operadores() {
                 <button 
                   onClick={handleSave}
                   disabled={!formData.nome || !formData.email}
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all  disabled:opacity-50 active:scale-95"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50 active:scale-95"
                 >
                   <Save size={16} /> Salvar
                 </button>

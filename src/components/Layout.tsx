@@ -7,15 +7,18 @@ import {
   ShieldUser, Megaphone, Workflow, Server, LogOut, 
   ChevronLeft, ChevronRight, Menu, X, ExternalLink,
   PhoneCall, Activity, Sparkles, PanelLeftClose, PanelLeftOpen,
-  CreditCard, Headphones, ShoppingCart, Router
+  CreditCard, Headphones, ShoppingCart, Router, Wrench, MapPin, Navigation, Compass
 } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
 import OperatorStatusControl from './OperatorStatusControl';
+import OperatorPwaControls from './OperatorPwaControls';
+import { useGeolocationTracker } from '../hooks/useGeolocationTracker';
 
 export default function Layout() {
   const { logout, user } = useAuth();
   const location = useLocation();
+  const { geoData } = useGeolocationTracker();
 
   // Estado de recolhimento no Desktop com persistência local
   const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
@@ -61,6 +64,8 @@ export default function Layout() {
     if (path.startsWith('/admin/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/cobranca')) return { title: 'Régua de Cobrança', category: 'Inadimplência, PIX & Desbloqueio 48h', icon: <CreditCard size={18} className="text-amber-600" /> };
     if (path.startsWith('/admin/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/campo')) return { title: 'Técnico de Campo (PWA)', category: 'Ordens de Serviço & GPS', icon: <Wrench size={18} className="text-emerald-400" /> };
+    if (path.startsWith('/admin/usuarios')) return { title: 'Usuários & Hierarquia', category: 'Gestão, Equipe & Campo', icon: <Users size={18} className="text-purple-400" /> };
     if (path.startsWith('/admin/vendas')) return { title: 'Kanban de Vendas', category: 'Novos Assinantes & Upgrades', icon: <ShoppingCart size={18} className="text-emerald-600" /> };
     if (path.startsWith('/admin/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
     if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-400" /> };
@@ -144,6 +149,7 @@ export default function Layout() {
             <nav className="flex flex-col gap-0.5 px-3">
               <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />
               <NavItem to="/admin" icon={<MessageSquare size={18} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/campo" icon={<Wrench size={18} />} label="Técnico de Campo" badge="GPS" isCollapsed={isCollapsed} />
               <NavItem to="/admin/cobranca" icon={<CreditCard size={18} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />
               <NavItem to="/admin/suporte" icon={<Headphones size={18} />} label="Suporte N1/N2" isCollapsed={isCollapsed} />
               <NavItem to="/admin/vendas" icon={<ShoppingCart size={18} />} label="Vendas & Leads" isCollapsed={isCollapsed} />
@@ -177,6 +183,7 @@ export default function Layout() {
             )}
 
             <nav className="flex flex-col gap-0.5 px-3">
+              <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />
               <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />
               <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />
               <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
@@ -290,10 +297,32 @@ export default function Layout() {
             </div>
           </div>
 
-          {/* Direita: Status da Conexão, Controle de Pausas NR-17, Webphone e Ações */}
+          {/* Direita: Status da Conexão, Controle de Pausas NR-17, Webphone, PWA e Ações */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Indicador de Geolocalização em Tempo Real (Técnicos & Operadores por Padrão) */}
+            <div 
+              className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-medium text-emerald-300"
+              title={`GPS ${geoData.statusRastreamento.toUpperCase()} • Precisão: ${geoData.precisao}m • ${geoData.endereco}`}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider">
+                {user?.role === 'tecnico' ? 'GPS Campo' : 'GPS Ativo'}
+              </span>
+              {geoData.velocidade > 0 && (
+                <span className="text-[10px] font-mono bg-emerald-500/20 px-1 rounded">
+                  {geoData.velocidade}km/h
+                </span>
+              )}
+            </div>
+
             {/* Controle de Pausas & Presença NR-17 */}
             <OperatorStatusControl />
+
+            {/* Notificações Push & PWA do Operador */}
+            <OperatorPwaControls />
 
             {/* Status Telecom & SGP */}
             <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#101726]/5 border border-white/5 text-[11px] font-medium text-slate-400">

@@ -22,6 +22,8 @@ import PortalFaturas from './pages/PortalFaturas';
 import PortalSuporte from './pages/PortalSuporte';
 import PortalConta from './pages/PortalConta';
 import ConsultaSGP from './pages/ConsultaSGP';
+import UsuariosHierarquia from './pages/UsuariosHierarquia';
+import TecnicoCampo from './pages/TecnicoCampo';
 
 export default function App() {
   return (
@@ -45,6 +47,8 @@ export default function App() {
                 <Route path="genieacs" element={<GenieACSDashboard />} />
                 <Route path="campanhas" element={<Campanhas />} />
                 <Route path="operadores" element={<Operadores />} />
+                <Route path="usuarios" element={<UsuariosHierarquia />} />
+                <Route path="campo" element={<TecnicoCampo />} />
                 <Route path="automacoes" element={<Automacoes />} />
                 <Route path="configuracoes" element={<SuperAdmin />} />
                 <Route path="ajuda" element={<Helpers />} />

@@ -89,34 +89,66 @@ export default function Login() {
             <p className="text-slate-500 font-medium text-sm">Insira suas credenciais para acessar o painel administrativo.</p>
           </div>
 
-          {/* Card com Credenciais de Acesso Disponíveis */}
-          <div className="mb-6 p-3.5 bg-blue-50/70 border border-blue-200 rounded-2xl text-xs space-y-2">
+          {/* Card com Credenciais de Acesso Disponíveis - Hierarquia do Provedor */}
+          <div className="mb-6 p-3.5 bg-blue-50/70 border border-blue-200 rounded-2xl text-xs space-y-2.5">
             <div className="flex items-center justify-between text-blue-900 font-bold">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck size={14} className="text-blue-600" />
-                Credenciais de Acesso (Firebase Auth):
+                Hierarquia de Acesso do Provedor (1-Clique):
               </span>
-              <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-mono font-semibold">1-Clique</span>
+              <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-mono font-semibold">4 Perfis Padrão</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <div className="grid grid-cols-2 gap-2 pt-0.5">
               <button
                 type="button"
                 onClick={() => handleQuickFill('admin', 'admin123')}
-                className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
+                className="text-left p-2.5 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
               >
-                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Administrador Geral</span>
-                <span className="block font-mono text-[10px] text-slate-500 truncate">admin</span>
-                <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-blue-700">1. Admin Geral</span>
+                  <span className="text-[9px] bg-purple-100 text-purple-700 px-1 rounded font-bold">Nível 1</span>
+                </div>
+                <span className="block text-[10px] text-slate-500 truncate">Roberto (admin)</span>
+                <span className="block font-mono text-[9px] text-blue-600 font-semibold">senha: admin123</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickFill('suporte', 'admin123')}
-                className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
+                onClick={() => handleQuickFill('operador', 'admin123')}
+                className="text-left p-2.5 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
               >
-                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Operador Suporte</span>
-                <span className="block font-mono text-[10px] text-slate-500 truncate">suporte</span>
-                <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-blue-700">2. Operador</span>
+                  <span className="text-[9px] bg-blue-100 text-blue-700 px-1 rounded font-bold">Nível 2</span>
+                </div>
+                <span className="block text-[10px] text-slate-500 truncate">Mariana (Ramal 2001)</span>
+                <span className="block font-mono text-[9px] text-blue-600 font-semibold">senha: admin123</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickFill('tecnico1', 'admin123')}
+                className="text-left p-2.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-emerald-700">3. Técnico 1</span>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">Campo N2</span>
+                </div>
+                <span className="block text-[10px] text-slate-500 truncate">Carlos (Fiorino 01)</span>
+                <span className="block font-mono text-[9px] text-emerald-600 font-semibold">GPS + PWA Campo</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickFill('tecnico2', 'admin123')}
+                className="text-left p-2.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-[11px] group-hover:text-emerald-700">4. Técnico 2</span>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">FTTH N1</span>
+                </div>
+                <span className="block text-[10px] text-slate-500 truncate">Lucas (Mobi 02)</span>
+                <span className="block font-mono text-[9px] text-emerald-600 font-semibold">GPS + PWA Campo</span>
               </button>
             </div>
           </div>

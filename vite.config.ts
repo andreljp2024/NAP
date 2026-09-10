@@ -75,15 +75,31 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.svg', 'icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png', 'pwa-maskable-512x512.png'],
         manifest: {
-          id: '/portal',
-          name: 'Portal do Cliente - NAP',
-          short_name: 'Portal NAP',
-          description: 'Autoatendimento, faturas e suporte para clientes.',
-          theme_color: '#1d4ed8', // blue-700
-          background_color: '#f8fafc', // slate-50
+          id: '/',
+          name: 'NAP - Núcleo de Atendimento ao Provedor',
+          short_name: 'NAP Telecom',
+          description: 'Console do Operador Omnichannel, CRM, FreePBX e Portal do Cliente.',
+          theme_color: '#0b0f19',
+          background_color: '#0b0f19',
           display: 'standalone',
-          start_url: '/portal',
+          start_url: '/admin',
           scope: '/',
+          shortcuts: [
+            {
+              name: 'Console do Operador',
+              short_name: 'Operador',
+              description: 'Atendimento Omnichannel, CRM e Webphone',
+              url: '/admin',
+              icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
+            },
+            {
+              name: 'Portal do Assinante',
+              short_name: 'Portal',
+              description: 'Faturas, Suporte e Diagnóstico Wi-Fi',
+              url: '/portal',
+              icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
+            }
+          ],
           icons: [
             {
               src: '/pwa-192x192.png',

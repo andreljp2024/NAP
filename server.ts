@@ -1048,6 +1048,714 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     });
   });
 
+  // --- Operador & Equipe PWA Push Notifications & Hierarquia ---
+  interface OperatorPushSubscriptionRecord {
+    id: string;
+    endpoint: string;
+    keys?: {
+      p256dh?: string;
+      auth?: string;
+    };
+    operador_id: number;
+    operador_nome: string;
+    cargo: 'admin' | 'operador' | 'tecnico';
+    ramal?: string;
+    veiculo?: string;
+    filas: string[];
+    dispositivo: string;
+    categorias: Array<'whatsapp' | 'suporte' | 'noc' | 'ramal' | 'ordem_servico'>;
+    ativo: boolean;
+    inscrito_em: string;
+    ultimo_push?: string;
+  }
+
+  // Hierarquia completa de usuários do provedor (Admin, Operador, 2 Técnicos)
+  interface UsuarioProvedor {
+    id: number;
+    nome: string;
+    email: string;
+    username: string;
+    cargo: 'admin' | 'operador' | 'tecnico';
+    nivel_hierarquia: number; // 1: Admin, 2: Operador, 3: Técnico
+    cargo_label: string;
+    ramal?: string;
+    veiculo?: string;
+    status: 'online' | 'pausa' | 'em_rota' | 'no_cliente' | 'offline';
+    status_label: string;
+    filas: string[];
+    telefone: string;
+    geolocalizacao: {
+      ativo: boolean;
+      lat: number;
+      lng: number;
+      precisao_metros: number;
+      endereco_estimado: string;
+      velocidade_kmh?: number;
+      bateria_percentual?: number;
+      atualizado_em: string;
+    };
+    pwa: {
+      instalado: boolean;
+      dispositivo: string;
+      push_ativo: boolean;
+      ultimo_acesso: string;
+    };
+  }
+
+  let usuariosProvedor: UsuarioProvedor[] = [
+    {
+      id: 1,
+      nome: "Roberto Oliveira",
+      email: "admin@provedor.com.br",
+      username: "admin",
+      cargo: "admin",
+      nivel_hierarquia: 1,
+      cargo_label: "Administrador Geral (Diretoria)",
+      ramal: "2000",
+      status: "online",
+      status_label: "Disponível na Sede",
+      filas: ["Gestão", "NOC", "Escalation N3"],
+      telefone: "(11) 98111-0001",
+      geolocalizacao: {
+        ativo: true,
+        lat: -23.5489,
+        lng: -46.6388,
+        precisao_metros: 10,
+        endereco_estimado: "Sede Central do Provedor - Centro, São Paulo - SP",
+        atualizado_em: "Agora"
+      },
+      pwa: {
+        instalado: true,
+        dispositivo: "PWA Desktop (Chrome 128 / macOS)",
+        push_ativo: true,
+        ultimo_acesso: "Online agora"
+      }
+    },
+    {
+      id: 2,
+      nome: "Mariana Costa",
+      email: "operador@provedor.com.br",
+      username: "operador",
+      cargo: "operador",
+      nivel_hierarquia: 2,
+      cargo_label: "Operadora de Atendimento & Suporte",
+      ramal: "2001",
+      status: "online",
+      status_label: "Em Atendimento WhatsApp",
+      filas: ["Suporte N1", "Suporte N2", "Vendas"],
+      telefone: "(11) 98222-0002",
+      geolocalizacao: {
+        ativo: true,
+        lat: -23.5492,
+        lng: -46.6392,
+        precisao_metros: 8,
+        endereco_estimado: "Central de Operações / Teleatendimento NR-17",
+        atualizado_em: "Há 2 min"
+      },
+      pwa: {
+        instalado: true,
+        dispositivo: "PWA Web (Windows 11 / Edge)",
+        push_ativo: true,
+        ultimo_acesso: "Online agora"
+      }
+    },
+    {
+      id: 3,
+      nome: "Carlos Mendes",
+      email: "tecnico1@provedor.com.br",
+      username: "tecnico1",
+      cargo: "tecnico",
+      nivel_hierarquia: 3,
+      cargo_label: "Técnico de Campo N2 (Reparo & Fusão)",
+      veiculo: "Fiorino Telecom 01 (Placa ABC-4D21)",
+      status: "em_rota",
+      status_label: "Em Rota para OS #1043",
+      filas: ["Campo N2", "Fusão de Fibra", "NOC Emergencial"],
+      telefone: "(11) 98333-0003",
+      geolocalizacao: {
+        ativo: true,
+        lat: -23.5621,
+        lng: -46.6554,
+        precisao_metros: 12,
+        endereco_estimado: "Av. Paulista, 1374 - Bela Vista, São Paulo - SP",
+        velocidade_kmh: 38,
+        bateria_percentual: 86,
+        atualizado_em: "Tempo real (GPS Ativo)"
+      },
+      pwa: {
+        instalado: true,
+        dispositivo: "PWA Mobile (Android 14 / Chrome Mobile)",
+        push_ativo: true,
+        ultimo_acesso: "GPS Contínuo"
+      }
+    },
+    {
+      id: 4,
+      nome: "Lucas Ferreira",
+      email: "tecnico2@provedor.com.br",
+      username: "tecnico2",
+      cargo: "tecnico",
+      nivel_hierarquia: 3,
+      cargo_label: "Técnico de Campo N1 (Instalação FTTH)",
+      veiculo: "Mobi Telecom 02 (Placa BRA-9F88)",
+      status: "no_cliente",
+      status_label: "Instalando ONU no Cliente (OS #1044)",
+      filas: ["Instalação FTTH", "Ativação Residencial"],
+      telefone: "(11) 98444-0004",
+      geolocalizacao: {
+        ativo: true,
+        lat: -23.5712,
+        lng: -46.6432,
+        precisao_metros: 6,
+        endereco_estimado: "Rua Vergueiro, 2100 - Vila Mariana, São Paulo - SP",
+        velocidade_kmh: 0,
+        bateria_percentual: 72,
+        atualizado_em: "Tempo real (No Cliente)"
+      },
+      pwa: {
+        instalado: true,
+        dispositivo: "PWA Mobile (Android 13 / Samsung Internet)",
+        push_ativo: true,
+        ultimo_acesso: "GPS Contínuo"
+      }
+    }
+  ];
+
+  // Ordens de Serviço (OS de Campo) para Técnicos com Geo
+  let ordensServicoCampo: Array<{
+    id: string;
+    numero: string;
+    tipo: 'Instalacao' | 'Reparo' | 'Migracao' | 'Retirada';
+    cliente_nome: string;
+    cliente_cpf: string;
+    endereco: string;
+    bairro: string;
+    cidade: string;
+    lat: number;
+    lng: number;
+    tecnico_id: number;
+    tecnico_nome: string;
+    status: 'pendente' | 'em_deslocamento' | 'no_local' | 'executando' | 'concluida';
+    prioridade: 'normal' | 'alta' | 'urgente';
+    sinal_optico_dbm?: number;
+    onu_mac?: string;
+    onu_serial?: string;
+    horario_agendado: string;
+    observacoes: string;
+  }> = [
+    {
+      id: "os_1043",
+      numero: "OS-2026-1043",
+      tipo: "Reparo",
+      cliente_nome: "Maria Aparecida Silva",
+      cliente_cpf: "123.456.789-00",
+      endereco: "Av. Paulista, 1500 - Apto 82",
+      bairro: "Bela Vista",
+      cidade: "São Paulo - SP",
+      lat: -23.5618,
+      lng: -46.6560,
+      tecnico_id: 3,
+      tecnico_nome: "Carlos Mendes",
+      status: "em_deslocamento",
+      prioridade: "urgente",
+      sinal_optico_dbm: -28.4, // sinal degradado
+      onu_mac: "E0:67:B3:91:AA:12",
+      onu_serial: "ZTEG12345678",
+      horario_agendado: "09:30 - 11:00",
+      observacoes: "Cliente relata quedas intermitentes. Provável atenuação na CTO 04 porta 06."
+    },
+    {
+      id: "os_1044",
+      numero: "OS-2026-1044",
+      tipo: "Instalacao",
+      cliente_nome: "João Pedro Albuquerque",
+      cliente_cpf: "987.654.321-11",
+      endereco: "Rua Vergueiro, 2188 - Bloco B",
+      bairro: "Vila Mariana",
+      cidade: "São Paulo - SP",
+      lat: -23.5718,
+      lng: -46.6436,
+      tecnico_id: 4,
+      tecnico_nome: "Lucas Ferreira",
+      status: "no_local",
+      prioridade: "normal",
+      sinal_optico_dbm: -19.2, // sinal excelente
+      onu_mac: "00:1B:C0:A8:32:01",
+      onu_serial: "HWTC99887766",
+      horario_agendado: "10:00 - 12:00",
+      observacoes: "Instalação nova Plano 600 Mega Gamer. Passagem de cabo óptico interno e Wi-Fi 6."
+    },
+    {
+      id: "os_1045",
+      numero: "OS-2026-1045",
+      tipo: "Reparo",
+      cliente_nome: "Condomínio Edifício Solar",
+      cliente_cpf: "04.555.888/0001-90",
+      endereco: "Rua Augusta, 900",
+      bairro: "Consolação",
+      cidade: "São Paulo - SP",
+      lat: -23.5532,
+      lng: -46.6521,
+      tecnico_id: 3,
+      tecnico_nome: "Carlos Mendes",
+      status: "pendente",
+      prioridade: "alta",
+      sinal_optico_dbm: -32.1,
+      horario_agendado: "13:30 - 15:00",
+      observacoes: "Troca de conector óptico e verificação de fusão na caixa de emenda do subsolo."
+    }
+  ];
+
+  let operatorPushSubscriptions: OperatorPushSubscriptionRecord[] = [
+    {
+      id: "op_sub_1",
+      endpoint: "https://fcm.googleapis.com/fcm/send/op_admin_roberto_pwa",
+      operador_id: 1,
+      operador_nome: "Roberto Oliveira",
+      cargo: "admin",
+      ramal: "2000",
+      filas: ["Gestão", "NOC"],
+      dispositivo: "PWA Desktop / Chrome",
+      categorias: ["whatsapp", "suporte", "noc", "ramal", "ordem_servico"],
+      ativo: true,
+      inscrito_em: new Date().toISOString(),
+      ultimo_push: "Há 5 min"
+    },
+    {
+      id: "op_sub_2",
+      endpoint: "https://fcm.googleapis.com/fcm/send/op_mariana_costa_pwa",
+      operador_id: 2,
+      operador_nome: "Mariana Costa",
+      cargo: "operador",
+      ramal: "2001",
+      filas: ["Suporte N1", "Suporte N2", "Vendas"],
+      dispositivo: "PWA Web / Windows",
+      categorias: ["whatsapp", "suporte", "noc", "ramal"],
+      ativo: true,
+      inscrito_em: new Date().toISOString(),
+      ultimo_push: "Há 12 min"
+    },
+    {
+      id: "op_sub_3",
+      endpoint: "https://fcm.googleapis.com/fcm/send/op_carlos_mendes_pwa",
+      operador_id: 3,
+      operador_nome: "Carlos Mendes",
+      cargo: "tecnico",
+      veiculo: "Fiorino Tech 01",
+      filas: ["Campo N2", "Fusão de Fibra"],
+      dispositivo: "PWA Mobile / Android",
+      categorias: ["suporte", "noc", "ordem_servico"],
+      ativo: true,
+      inscrito_em: new Date().toISOString(),
+      ultimo_push: "Há 1 min (Nova OS)"
+    },
+    {
+      id: "op_sub_4",
+      endpoint: "https://fcm.googleapis.com/fcm/send/op_lucas_ferreira_pwa",
+      operador_id: 4,
+      operador_nome: "Lucas Ferreira",
+      cargo: "tecnico",
+      veiculo: "Mobi Tech 02",
+      filas: ["Instalação FTTH"],
+      dispositivo: "PWA Mobile / Android",
+      categorias: ["suporte", "ordem_servico"],
+      ativo: true,
+      inscrito_em: new Date().toISOString(),
+      ultimo_push: "Há 18 min"
+    }
+  ];
+
+  let operatorPushHistory: Array<{
+    id: string;
+    titulo: string;
+    mensagem: string;
+    tipo: 'whatsapp' | 'suporte' | 'noc' | 'ramal' | 'geral';
+    operador_alvo?: string;
+    fila_alvo?: string;
+    enviado_em: string;
+    destinatarios: number;
+    sucesso: boolean;
+  }> = [
+    {
+      id: "op_push_01",
+      titulo: "Novo Atendimento WhatsApp",
+      mensagem: "Cliente Maria Oliveira aguardando na fila Suporte N1 (Protocolo NAP-2026-0909-481).",
+      tipo: "whatsapp",
+      operador_alvo: "Todos da Fila",
+      fila_alvo: "Suporte N1",
+      enviado_em: "10:15",
+      destinatarios: 2,
+      sucesso: true
+    }
+  ];
+
+  // Listar status e inscrições de push dos operadores
+  app.get("/api/push/operator/status", (req, res) => {
+    res.json({
+      sucesso: true,
+      total_operadores_inscritos: operatorPushSubscriptions.filter(s => s.ativo).length,
+      inscricoes: operatorPushSubscriptions,
+      historico_recente: operatorPushHistory.slice(0, 10),
+      vapid_public_key: "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIhbQFLXYp5Nksh8U"
+    });
+  });
+
+  // Registrar ou atualizar subscrição PWA de um operador
+  app.post("/api/push/operator/subscribe", (req, res) => {
+    const { 
+      subscription, 
+      operador_id = 1, 
+      operador_nome = "João Silva", 
+      ramal = "2001", 
+      filas = ["Suporte N2", "Vendas"],
+      dispositivo = "PWA Web",
+      categorias = ["whatsapp", "suporte", "noc", "ramal"]
+    } = req.body;
+
+    if (!subscription || !subscription.endpoint) {
+      return res.status(400).json({ sucesso: false, erro: "Subscription endpoint inválido." });
+    }
+
+    const index = operatorPushSubscriptions.findIndex(s => s.operador_id === operador_id || s.endpoint === subscription.endpoint);
+    const novoRegistro: OperatorPushSubscriptionRecord = {
+      id: `op_sub_${operador_id}_${Date.now()}`,
+      endpoint: subscription.endpoint,
+      keys: subscription.keys,
+      operador_id,
+      operador_nome,
+      ramal,
+      filas,
+      dispositivo,
+      categorias,
+      ativo: true,
+      inscrito_em: new Date().toISOString(),
+      ultimo_push: "Ativo agora"
+    };
+
+    if (index >= 0) {
+      operatorPushSubscriptions[index] = novoRegistro;
+    } else {
+      operatorPushSubscriptions.unshift(novoRegistro);
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: `Operador ${operador_nome} (Ramal ${ramal}) registrado no PWA Push com sucesso!`,
+      operador: novoRegistro
+    });
+  });
+
+  // Desativar push do operador
+  app.post("/api/push/operator/unsubscribe", (req, res) => {
+    const { operador_id, endpoint } = req.body;
+    operatorPushSubscriptions = operatorPushSubscriptions.filter(
+      s => s.operador_id !== operador_id && s.endpoint !== endpoint
+    );
+    res.json({ sucesso: true, mensagem: "Subscrição PWA do operador removida." });
+  });
+
+  // Disparar notificação Push para Operador(es)
+  app.post("/api/push/operator/send", (req, res) => {
+    const { 
+      titulo, 
+      mensagem, 
+      tipo = "whatsapp", 
+      operador_id, 
+      ramal,
+      fila,
+      url = "/admin"
+    } = req.body;
+
+    if (!titulo || !mensagem) {
+      return res.status(400).json({ sucesso: false, erro: "Título e mensagem são obrigatórios." });
+    }
+
+    let alvos = operatorPushSubscriptions.filter(s => s.ativo);
+    if (operador_id) {
+      alvos = alvos.filter(s => s.operador_id === operador_id);
+    } else if (ramal) {
+      alvos = alvos.filter(s => s.ramal === ramal);
+    } else if (fila) {
+      alvos = alvos.filter(s => s.filas.includes(fila));
+    }
+
+    const destinatariosCount = Math.max(alvos.length, 1);
+
+    const registro = {
+      id: `op_push_${Date.now()}`,
+      titulo,
+      mensagem,
+      tipo: tipo as any,
+      operador_alvo: operador_id ? `Operador #${operador_id}` : (fila ? `Fila ${fila}` : "Todos os Operadores"),
+      fila_alvo: fila,
+      enviado_em: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      destinatarios: destinatariosCount,
+      sucesso: true
+    };
+
+    operatorPushHistory.unshift(registro);
+
+    res.json({
+      sucesso: true,
+      mensagem: `Push transmitido para ${destinatariosCount} dispositivo(s) de operador(es)!`,
+      notificacao: registro
+    });
+  });
+
+  // Disparar teste imediato para o operador logado
+  app.post("/api/push/operator/test", (req, res) => {
+    const { tipo = "whatsapp", operador_nome = "João Silva", ramal = "2001" } = req.body;
+    
+    let titulo = "Novo Atendimento WhatsApp";
+    let mensagem = `Cliente Marcos Vinicius solicitou suporte técnico na fila N1. (Ramal ${ramal})`;
+
+    if (tipo === "suporte") {
+      titulo = "Novo Chamado no Portal (SLA 2h)";
+      mensagem = "Chamado #1042 aberto: Lentidão de Conexão no Bairro Jardim Paulista.";
+    } else if (tipo === "noc") {
+      titulo = "Alerta Crítico NOC / OLT";
+      mensagem = "Rompimento de Fibra detectado no Anel 02 (OLT Central / PON 03).";
+    } else if (tipo === "ramal") {
+      titulo = `Chamada Entrante: (11) 98765-4321`;
+      mensagem = `Cliente Carlos Mendes chamando no ramal ${ramal} (Fila Suporte).`;
+    }
+
+    const registro = {
+      id: `op_test_${Date.now()}`,
+      titulo,
+      mensagem,
+      tipo: tipo as any,
+      operador_alvo: `${operador_nome} (Ramal ${ramal})`,
+      enviado_em: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      destinatarios: 1,
+      sucesso: true
+    };
+
+    operatorPushHistory.unshift(registro);
+
+    res.json({
+      sucesso: true,
+      titulo,
+      mensagem,
+      tipo,
+      notificacao: registro
+    });
+  });
+
+  // ==========================================
+  // --- MÓDULO DE USUÁRIOS, HIERARQUIA & CAMPO ---
+  // ==========================================
+
+  // Listar usuários do provedor com hierarquia completa
+  app.get("/api/usuarios", (req, res) => {
+    res.json({
+      sucesso: true,
+      total: usuariosProvedor.length,
+      resumo_hierarquia: {
+        admin: usuariosProvedor.filter(u => u.cargo === 'admin').length,
+        operador: usuariosProvedor.filter(u => u.cargo === 'operador').length,
+        tecnico: usuariosProvedor.filter(u => u.cargo === 'tecnico').length,
+        com_geolocalizacao: usuariosProvedor.filter(u => u.geolocalizacao?.ativo).length,
+        pwa_ativo: usuariosProvedor.filter(u => u.pwa?.push_ativo).length
+      },
+      usuarios: usuariosProvedor
+    });
+  });
+
+  // Salvar ou atualizar usuário
+  app.post("/api/usuarios", (req, res) => {
+    const { id, nome, email, username, cargo, ramal, veiculo, filas, telefone } = req.body;
+    if (!nome || !email || !cargo) {
+      return res.status(400).json({ sucesso: false, erro: "Nome, e-mail e cargo são obrigatórios." });
+    }
+
+    const nivel = cargo === 'admin' ? 1 : cargo === 'operador' ? 2 : 3;
+    const cargo_label = cargo === 'admin' ? 'Administrador Geral' : cargo === 'operador' ? 'Operador de Atendimento' : 'Técnico de Campo';
+
+    if (id) {
+      const idx = usuariosProvedor.findIndex(u => u.id === Number(id));
+      if (idx >= 0) {
+        usuariosProvedor[idx] = {
+          ...usuariosProvedor[idx],
+          nome,
+          email,
+          username: username || usuariosProvedor[idx].username,
+          cargo,
+          nivel_hierarquia: nivel,
+          cargo_label,
+          ramal,
+          veiculo,
+          filas: Array.isArray(filas) ? filas : [],
+          telefone: telefone || usuariosProvedor[idx].telefone
+        };
+        return res.json({ sucesso: true, usuario: usuariosProvedor[idx] });
+      }
+    }
+
+    const novoId = Math.max(...usuariosProvedor.map(u => u.id), 0) + 1;
+    const novoUsuario: UsuarioProvedor = {
+      id: novoId,
+      nome,
+      email,
+      username: username || email.split('@')[0],
+      cargo,
+      nivel_hierarquia: nivel,
+      cargo_label,
+      ramal,
+      veiculo,
+      status: 'online',
+      status_label: 'Disponível',
+      filas: Array.isArray(filas) ? filas : [],
+      telefone: telefone || '',
+      geolocalizacao: {
+        ativo: cargo === 'tecnico' || cargo === 'operador', // Habilitado por padrão
+        lat: -23.5505,
+        lng: -46.6333,
+        precisao_metros: 15,
+        endereco_estimado: "São Paulo - SP",
+        atualizado_em: "Recém cadastrado"
+      },
+      pwa: {
+        instalado: true,
+        dispositivo: "PWA Web",
+        push_ativo: true,
+        ultimo_acesso: "Nunca"
+      }
+    };
+
+    usuariosProvedor.push(novoUsuario);
+    res.json({ sucesso: true, usuario: novoUsuario });
+  });
+
+  // Atualizar status de operador/técnico
+  app.put("/api/usuarios/:id/status", (req, res) => {
+    const { id } = req.params;
+    const { status, status_label } = req.body;
+    const user = usuariosProvedor.find(u => u.id === Number(id));
+    if (!user) return res.status(404).json({ sucesso: false, erro: "Usuário não encontrado." });
+
+    user.status = status;
+    if (status_label) user.status_label = status_label;
+    res.json({ sucesso: true, usuario: user });
+  });
+
+  // Atualizar coordenadas GPS do Técnico ou Operador (Enviado pelo PWA em background)
+  app.post("/api/usuarios/localizacao", (req, res) => {
+    const { 
+      usuario_id, 
+      lat, 
+      lng, 
+      precisao_metros = 10, 
+      endereco_estimado, 
+      velocidade_kmh = 0, 
+      bateria_percentual = 100 
+    } = req.body;
+
+    const user = usuariosProvedor.find(u => u.id === Number(usuario_id));
+    if (!user) return res.status(404).json({ sucesso: false, erro: "Usuário não encontrado." });
+
+    user.geolocalizacao = {
+      ativo: true,
+      lat: Number(lat),
+      lng: Number(lng),
+      precisao_metros: Number(precisao_metros),
+      endereco_estimado: endereco_estimado || user.geolocalizacao?.endereco_estimado || "Coordenadas GPS Atualizadas",
+      velocidade_kmh: Number(velocidade_kmh),
+      bateria_percentual: Number(bateria_percentual),
+      atualizado_em: "Agora"
+    };
+
+    res.json({
+      sucesso: true,
+      mensagem: `Localização de ${user.nome} sincronizada com sucesso.`,
+      geolocalizacao: user.geolocalizacao
+    });
+  });
+
+  // Mapa de campo ao vivo: Técnicos em rota + Ordens de Serviço
+  app.get("/api/tecnicos/mapa", (req, res) => {
+    const tecnicos = usuariosProvedor.filter(u => u.cargo === 'tecnico');
+    const operadores = usuariosProvedor.filter(u => u.cargo === 'operador');
+
+    res.json({
+      sucesso: true,
+      total_tecnicos_campo: tecnicos.length,
+      tecnicos_em_deslocamento: tecnicos.filter(t => t.status === 'em_rota').length,
+      tecnicos_em_atendimento: tecnicos.filter(t => t.status === 'no_cliente').length,
+      tecnicos: tecnicos.map(t => ({
+        id: t.id,
+        nome: t.nome,
+        veiculo: t.veiculo,
+        status: t.status,
+        status_label: t.status_label,
+        telefone: t.telefone,
+        lat: t.geolocalizacao.lat,
+        lng: t.geolocalizacao.lng,
+        precisao_metros: t.geolocalizacao.precisao_metros,
+        endereco: t.geolocalizacao.endereco_estimado,
+        velocidade_kmh: t.geolocalizacao.velocidade_kmh || 0,
+        bateria: t.geolocalizacao.bateria_percentual || 80,
+        atualizado_em: t.geolocalizacao.atualizado_em
+      })),
+      operadores: operadores.map(o => ({
+        id: o.id,
+        nome: o.nome,
+        ramal: o.ramal,
+        status: o.status,
+        endereco: o.geolocalizacao.endereco_estimado
+      })),
+      ordens_servico: ordensServicoCampo
+    });
+  });
+
+  // Listar Ordens de Serviço (com filtro opcional por técnico)
+  app.get("/api/tecnicos/os", (req, res) => {
+    const { tecnico_id } = req.query;
+    let list = ordensServicoCampo;
+    if (tecnico_id) {
+      list = list.filter(os => os.tecnico_id === Number(tecnico_id));
+    }
+    res.json({
+      sucesso: true,
+      total: list.length,
+      ordens: list
+    });
+  });
+
+  // Atualizar status de uma OS de Campo (Pelo PWA do Técnico)
+  app.put("/api/tecnicos/os/:id", (req, res) => {
+    const { id } = req.params;
+    const { status, sinal_optico_dbm, onu_mac, onu_serial, observacoes } = req.body;
+    
+    const os = ordensServicoCampo.find(o => o.id === id);
+    if (!os) return res.status(404).json({ sucesso: false, erro: "Ordem de serviço não encontrada." });
+
+    if (status) os.status = status;
+    if (sinal_optico_dbm !== undefined) os.sinal_optico_dbm = Number(sinal_optico_dbm);
+    if (onu_mac) os.onu_mac = onu_mac;
+    if (onu_serial) os.onu_serial = onu_serial;
+    if (observacoes) os.observacoes = `${os.observacoes}\n[${new Date().toLocaleTimeString('pt-BR')}]: ${observacoes}`;
+
+    // Disparar push de atualização para Admin e Operadores
+    const pushMsg = `OS ${os.numero} atualizada para "${os.status.toUpperCase()}" pelo técnico ${os.tecnico_nome}.`;
+    operatorPushHistory.unshift({
+      id: `os_upd_${Date.now()}`,
+      titulo: `OS ${os.tipo} Atualizada`,
+      mensagem: pushMsg,
+      tipo: "suporte",
+      operador_alvo: "Admin & Operadores",
+      enviado_em: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      destinatarios: 2,
+      sucesso: true
+    });
+
+    res.json({
+      sucesso: true,
+      mensagem: "Ordem de serviço atualizada com sucesso.",
+      os
+    });
+  });
+
   // --- FreePBX CTI Reverso (SSE Mock) ---
   let sseClients: any[] = [];
 
