@@ -6,7 +6,7 @@ import {
   ShieldUser, Megaphone, Workflow, Server, LogOut, 
   ChevronLeft, ChevronRight, Menu, X, ExternalLink,
   PhoneCall, Activity, Sparkles, PanelLeftClose, PanelLeftOpen,
-  CreditCard, Headphones, ShoppingCart
+  CreditCard, Headphones, ShoppingCart, Router
 } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
@@ -64,6 +64,7 @@ export default function Layout() {
     if (path.startsWith('/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
     if (path.startsWith('/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-600" /> };
     if (path.startsWith('/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-600" /> };
+    if (path.startsWith('/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-600" /> };
     if (path.startsWith('/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
     if (path.startsWith('/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-600" /> };
     if (path.startsWith('/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-600" /> };
@@ -150,6 +151,7 @@ export default function Layout() {
               <NavItem to="/campanhas" icon={<Megaphone size={19} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />
               <NavItem to="/crm" icon={<Users size={19} />} label="CRM Clientes" isCollapsed={isCollapsed} />
               <NavItem to="/sgp" icon={<Server size={19} />} label="Consulta SGP" isCollapsed={isCollapsed} />
+              <NavItem to="/genieacs" icon={<Router size={19} />} label="GenieACS" isCollapsed={isCollapsed} />
             </nav>
           </div>
 

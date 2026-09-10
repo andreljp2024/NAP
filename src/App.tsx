@@ -12,6 +12,7 @@ import Analytics from './pages/Analytics';
 import Operadores from './pages/Operadores';
 import Campanhas from './pages/Campanhas';
 import Automacoes from './pages/Automacoes';
+import GenieACSDashboard from './pages/GenieACSDashboard';
 import PortalLayout from './components/PortalLayout';
 import PortalDashboard from './pages/PortalDashboard';
 import PortalFaturas from './pages/PortalFaturas';
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="vendas" element={<Kanban type="Vendas" />} />
               <Route path="crm" element={<CRM />} />
               <Route path="sgp" element={<ConsultaSGP />} />
+              <Route path="genieacs" element={<GenieACSDashboard />} />
               <Route path="campanhas" element={<Campanhas />} />
               <Route path="operadores" element={<Operadores />} />
               <Route path="automacoes" element={<Automacoes />} />
