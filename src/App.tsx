@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage';
 import Inbox from './pages/Inbox';
 import Kanban from './pages/Kanban';
 import SuperAdmin from './pages/SuperAdmin';
+import Helpers from './pages/Helpers';
 import CRM from './pages/CRM';
 import Analytics from './pages/Analytics';
 import Operadores from './pages/Operadores';
@@ -44,6 +45,7 @@ export default function App() {
               <Route path="operadores" element={<Operadores />} />
               <Route path="automacoes" element={<Automacoes />} />
               <Route path="configuracoes" element={<SuperAdmin />} />
+              <Route path="ajuda" element={<Helpers />} />
             </Route>
           </Route>
 

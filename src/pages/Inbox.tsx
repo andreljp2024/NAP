@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Tooltip } from '../components/Tooltip';
 import { 
   Search, Send, User, Phone, Zap, MessageCircle, MonitorSmartphone, 
   ArrowLeft, CheckCheck, Clock, ShieldCheck, Lock, Sparkles, 
@@ -401,18 +402,32 @@ export default function Inbox() {
   };
 
   // Desbloqueio em Confiança
-  const handleDesbloqueio48h = () => {
+  const handleDesbloqueio48h = async () => {
     if (!activeChat) return;
-    const desbloqueioText = `Olá ${activeChat.nome_cliente.split(' ')[0]}! Registramos no SGP o seu Desbloqueio em Confiança válido por 48 horas. Sua conexão já foi liberada com a velocidade contratada.`;
-    setMessageText(desbloqueioText);
-    setIsInternalNote(false);
-    showToast('Ação de Desbloqueio em Confiança preparada no SGP!');
+    try {
+      const res = await fetch(`/api/sgp/desbloqueio-confianca/${activeChat.id}`, { method: 'POST' });
+      if (res.ok) {
+        const desbloqueioText = `Olá ${activeChat.nome_cliente.split(' ')[0]}! Registramos no SGP o seu Desbloqueio em Confiança válido por 48 horas. Sua conexão já foi liberada no MikroTik.`;
+        setMessageText(desbloqueioText);
+        setIsInternalNote(false);
+        showToast('🔓 Desbloqueio em Confiança liberado no SGP e Radius!');
+      }
+    } catch {
+      showToast('Erro ao comunicar com o servidor.');
+    }
   };
 
   // Reiniciar ONU / Kick Radius
-  const handleKickRadius = () => {
+  const handleKickRadius = async () => {
     if (!activeChat) return;
-    showToast(`Comando Kick Radius enviado para ${activeChat.status_conexao.concentrador}. Sessão reiniciada.`);
+    try {
+      const res = await fetch(`/api/network/kick-radius/${activeChat.status_conexao.ip}`, { method: 'POST' });
+      if (res.ok) {
+        showToast(`⚡ Comando Kick Radius (PoD) enviado para ${activeChat.status_conexao.concentrador}. Sessão PPPoE derrubada com sucesso.`);
+      }
+    } catch {
+      showToast('Erro ao tentar derrubar a sessão PPPoE.');
+    }
   };
 
   // Auto-Tabulação Inteligente com Gemini
@@ -913,24 +928,27 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                         R$ {activeChat.financeiro.valor.toFixed(2)}
                       </span>
                     </div>
-                    <button 
-                      onClick={handleSendPixToChat}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all  flex items-center gap-1"
-                      title="Copiar e colar PIX diretamente no chat"
-                    >
-                      <Copy size={12} />
-                      <span>Enviar PIX</span>
-                    </button>
+                    <Tooltip content="Gera o código e joga no chat" position="top">
+                      <button 
+                        onClick={handleSendPixToChat}
+                        className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all  flex items-center gap-1"
+                      >
+                        <Copy size={12} />
+                        <span>Enviar PIX</span>
+                      </button>
+                    </Tooltip>
                   </div>
 
                   {/* Ação de Desbloqueio 48h */}
-                  <button 
-                    onClick={handleDesbloqueio48h}
-                    className="w-full py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
-                  >
-                    <ShieldCheck size={13} className="text-amber-700" />
-                    <span>Desbloqueio em Confiança (48h)</span>
-                  </button>
+                  <Tooltip content="Libera 48h de conexão no NAS/MikroTik" position="top" className="w-full">
+                    <button 
+                      onClick={handleDesbloqueio48h}
+                      className="w-full py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
+                    >
+                      <ShieldCheck size={13} className="text-amber-700" />
+                      <span>Desbloqueio em Confiança (48h)</span>
+                    </button>
+                  </Tooltip>
                 </div>
 
                 {/* Bloco 3: Dados Cadastrais */}

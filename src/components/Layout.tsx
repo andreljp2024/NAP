@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Tooltip } from './Tooltip';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { 
-  MessageSquare, Settings, Users, Trello, PieChart, 
+  MessageSquare, Settings, BookOpen, Users, Trello, PieChart, 
   ShieldUser, Megaphone, Workflow, Server, LogOut, 
   ChevronLeft, ChevronRight, Menu, X, ExternalLink,
   PhoneCall, Activity, Sparkles, PanelLeftClose, PanelLeftOpen,
@@ -178,6 +179,7 @@ export default function Layout() {
             <nav className="flex flex-col gap-0.5 px-3">
               <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />
               <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />
+              <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
             </nav>
           </div>
         </div>
@@ -328,7 +330,7 @@ interface NavItemProps {
 }
 
 function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
-  return (
+  const content = (
     <NavLink
       to={to}
       className={({ isActive }) =>
@@ -380,4 +382,14 @@ function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
       )}
     </NavLink>
   );
+  
+  if (isCollapsed) {
+    return (
+      <Tooltip content={label} position="right" className="w-full">
+        {content}
+      </Tooltip>
+    );
+  }
+  
+  return content;
 }

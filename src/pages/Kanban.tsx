@@ -18,6 +18,7 @@ import {
   Share2,
   Navigation
 } from 'lucide-react';
+import { Tooltip } from '../components/Tooltip';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import type { Deal } from '../types';
 import AddressMapModal from '../components/AddressMapModal';
