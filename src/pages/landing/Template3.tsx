@@ -85,26 +85,34 @@ export default function Template3() {
           className="mt-20 max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative h-[400px]"
         >
           {/* Abstract clean background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 to-blue-50"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex gap-12">
-               <div className="flex flex-col items-center gap-4 text-emerald-700">
-                  <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center">
-                    <Home size={32} />
+          <div className="absolute inset-0 z-0">
+             <img 
+               src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop" 
+               alt="Family using internet" 
+               className="w-full h-full object-cover"
+             />
+             <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/90 to-blue-900/80 mix-blend-multiply"></div>
+          </div>
+          
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="flex flex-col sm:flex-row gap-8 sm:gap-12">
+               <div className="flex flex-col items-center gap-4 text-white">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                    <Home size={32} className="text-white" />
                   </div>
-                  <span className="font-bold">Casa Inteligente</span>
+                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Casa Inteligente</span>
                </div>
-               <div className="flex flex-col items-center gap-4 text-emerald-700 mt-12">
-                  <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center">
-                    <Wifi size={32} />
+               <div className="flex flex-col items-center gap-4 text-white sm:mt-12">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                    <Wifi size={32} className="text-white" />
                   </div>
-                  <span className="font-bold">Wi-Fi Estável</span>
+                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Wi-Fi Estável</span>
                </div>
-               <div className="flex flex-col items-center gap-4 text-emerald-700">
-                  <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center">
-                    <Tv size={32} />
+               <div className="flex flex-col items-center gap-4 text-white">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                    <Tv size={32} className="text-white" />
                   </div>
-                  <span className="font-bold">Streaming 4K</span>
+                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Streaming 4K</span>
                </div>
             </div>
           </div>

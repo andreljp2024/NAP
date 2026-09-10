@@ -34,8 +34,18 @@ export default function Template2() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-56 lg:pb-40 px-6">
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+      <section className="relative pt-32 pb-20 lg:pt-56 lg:pb-40 px-6 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" 
+            alt="Gamer Setup Background" 
+            className="w-full h-full object-cover opacity-20 mix-blend-luminosity"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#090014] via-[#090014]/90 to-[#090014]/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#090014] via-transparent to-[#090014]/80"></div>
+        </div>
+
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-600/30 blur-[150px] rounded-full mix-blend-screen"></div>
           <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-600/20 blur-[120px] rounded-full mix-blend-screen"></div>
           
