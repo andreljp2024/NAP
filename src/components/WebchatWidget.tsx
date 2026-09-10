@@ -60,7 +60,7 @@ export default function WebchatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="webchat-widget-toggle fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-blue-700 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-105 transition-all z-50"
+          className="webchat-widget-toggle fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#128C7E] hover:scale-105 transition-all z-50"
         >
           <MessageCircle size={28} />
         </button>
@@ -68,33 +68,33 @@ export default function WebchatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 w-full md:w-[380px] h-[85vh] md:h-[600px] bg-slate-50 md:rounded-3xl border-slate-200 shadow-sm shadow-lg flex flex-col z-50 overflow-hidden  transition-all">
+        <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 w-full md:w-[380px] h-[85vh] md:h-[600px] bg-[#efeae2] md:rounded-2xl border border-slate-200 shadow-2xl flex flex-col z-50 overflow-hidden  transition-all">
           {/* Header */}
-          <div className="bg-white text-slate-900 p-4 flex justify-between border-b border-slate-200 items-center shrink-0">
+          <div className="bg-[#00a884] text-white p-4 flex justify-between items-center shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-600/10 border border-blue-200 rounded-2xl flex items-center justify-center">
-                <Bot size={22} className="text-blue-600" />
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <Bot size={22} className="text-white" />
               </div>
               <div>
                 <h3 className="font-bold text-sm">Assistente NAP</h3>
-                <p className="text-[10px] text-indigo-600 uppercase tracking-wider font-bold">Google Gemini Nativo (Sem n8n)</p>
+                <p className="text-[10px] text-white/80 uppercase tracking-wider font-bold">Google Gemini Nativo</p>
               </div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setIsOpen(false)} className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-2xl transition-colors">
-                <Minus size={20} />
+              <button onClick={() => setIsOpen(false)} className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
+                <X size={20} />
               </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-2xl p-4 text-sm shadow-inner ${
+                <div className={`max-w-[80%] rounded-lg p-2.5 text-[13.5px] shadow-sm ${
                   msg.sender === 'user' 
-                    ? 'bg-blue-700 text-white rounded-br-sm' 
-                    : 'bg-white border border-slate-200 text-slate-600 rounded-bl-sm'
+                    ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-none' 
+                    : 'bg-white text-[#111b21] rounded-tl-none'
                 }`}>
                   <p className="leading-relaxed">{msg.text}</p>
                 </div>
@@ -103,10 +103,10 @@ export default function WebchatWidget() {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white border border-slate-200 rounded-2xl rounded-bl-sm p-4 shadow-inner flex gap-1.5 items-center">
-                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-2xl animate-bounce"></div>
-                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-2xl animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-2xl animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                <div className="bg-white rounded-lg rounded-tl-none p-3 shadow-sm flex gap-1.5 items-center">
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                 </div>
               </div>
             )}
@@ -114,25 +114,27 @@ export default function WebchatWidget() {
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-200 shrink-0">
+          <form onSubmit={handleSend} className="p-3 bg-[#f0f2f5] shrink-0">
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Digite sua mensagem..."
-                className="flex-1 bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 rounded-xl px-4 py-3.5 text-sm text-slate-900 shadow-inner placeholder:text-slate-600 transition-all"
+                placeholder="Mensagem"
+                className="flex-1 bg-white border-none outline-none focus:ring-0 rounded-full px-4 py-3 text-[14px] text-[#111b21] shadow-sm placeholder:text-[#8696a0] transition-all"
               />
               <button 
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-12 h-12 bg-blue-700 text-white rounded-xl flex items-center justify-center hover:bg-blue-600 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-blue-700 transition-all shadow-lg hover:scale-105 active:scale-95 shrink-0"
+                className="w-11 h-11 bg-[#00a884] text-white rounded-full flex items-center justify-center hover:bg-[#008f6f] disabled:opacity-50 transition-all shadow-sm shrink-0"
               >
-                <Send size={18} />
+                <Send size={18} className="ml-0.5" />
               </button>
             </div>
-            <div className="text-center mt-3">
-              <span className="text-[10px] text-slate-600 font-medium">Protegido por criptografia ponta a ponta</span>
+            <div className="text-center mt-2 pb-1">
+              <span className="text-[10px] text-[#8696a0] font-medium flex items-center justify-center gap-1">
+                Protegido por criptografia
+              </span>
             </div>
           </form>
         </div>

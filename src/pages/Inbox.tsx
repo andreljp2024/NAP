@@ -755,7 +755,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           <div className="flex-1 flex overflow-hidden relative">
             
             {/* Thread de Mensagens */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4" style={{ scrollbarWidth: 'thin' }}>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#0b141a]" style={{ scrollbarWidth: 'thin' }}>
               
               {/* Alerta de Início do Chamado & Protocolo */}
               <div className="flex justify-center my-2">
@@ -778,36 +778,36 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     className={`flex ${isMe || isAi ? 'justify-end' : 'justify-start'} animate-in fade-in-50 duration-150`}
                   >
                     <div 
-                      className={`max-w-[85%] sm:max-w-[70%] rounded-2xl p-3.5 shadow-2xs text-xs sm:text-sm leading-relaxed ${
+                      className={`max-w-[85%] sm:max-w-[70%] rounded-xl p-3 shadow-sm text-xs sm:text-sm leading-relaxed ${
                         isNote 
-                          ? 'bg-amber-50 border border-amber-200 text-amber-950 w-full max-w-[90%]' 
+                          ? 'bg-[#3b2d13] text-[#e9edef] w-full max-w-[90%]' 
                           : isClient
-                            ? 'bg-[#101726] border border-white/10 text-white rounded-tl-xs'
+                            ? 'bg-[#202c33] text-[#e9edef] rounded-tl-sm'
                             : isAi
-                              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-500/20 text-blue-950 rounded-tr-xs'
-                              : 'bg-blue-600 text-white rounded-tr-xs shadow-md shadow-blue-600/10'
+                              ? 'bg-[#182229] border border-[#202c33] text-[#8696a0] rounded-tr-sm'
+                              : 'bg-[#005c4b] text-[#e9edef] rounded-tr-sm'
                       }`}
                     >
                       {/* Header da Mensagem */}
                       <div className="flex items-center justify-between gap-3 mb-1.5 pb-1 border-b border-black/5">
                         <span className={`text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${
                           isNote 
-                            ? 'text-amber-800' 
+                            ? 'text-amber-500' 
                             : isClient 
-                              ? 'text-slate-400' 
+                              ? 'text-[#8696a0]' 
                               : isAi 
-                                ? 'text-blue-400' 
-                                : 'text-blue-100'
+                                ? 'text-[#8696a0]' 
+                                : 'text-[#8696a0]'
                         }`}>
                           {isNote && <Lock size={10} />}
                           {isAi && <Sparkles size={10} />}
                           {isNote ? 'Sussurro (Nota Interna Privada)' : isClient ? activeChat.nome_cliente : isAi ? 'Assistente IA (9router)' : 'Você (Operador)'}
                         </span>
 
-                        <div className="flex items-center gap-1 text-[10px] font-mono opacity-75">
+                        <div className="flex items-center gap-1 text-[10px] font-mono text-[#8696a0]">
                           <span>{msg.enviada_em}</span>
                           {isMe && !isNote && (
-                            <CheckCheck size={12} className={msg.status === 'lido' ? 'text-cyan-200' : 'text-white/80'} />
+                            <CheckCheck size={14} className={msg.status === 'lido' ? 'text-[#53bdeb]' : 'text-[#8696a0]'} />
                           )}
                         </div>
                       </div>

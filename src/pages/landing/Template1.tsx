@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 
 export default function Template1() {
   return (
-    <div className="min-h-screen bg-[#060b14] text-white font-outfit overflow-x-hidden selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#060b14] text-white font-outfit overflow-x-hidden selection:bg-blue-500/30" style={{ backgroundImage: `url(https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000&auto=format&fit=crop)`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed" }}>
+<div className="absolute inset-0 bg-[#060b14]/90"></div>
+<div className="relative z-10">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-[#060b14]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -185,6 +187,7 @@ export default function Template1() {
         <p>© 2026 NAP Fibra Telecom. Todos os direitos reservados.</p>
       </footer>
     </div>
+</div>
   );
 }
 

@@ -35,7 +35,8 @@ export default function Login() {
   return (
     <div className="min-h-screen flex bg-slate-50">
       {/* Lado Esquerdo - Decorativo */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-between p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-between p-12" style={{ backgroundImage: `url(https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070&auto=format&fit=crop)`, backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div className="absolute inset-0 bg-[#0b0f19]/80 backdrop-blur-[2px]"></div>
         {/* Pattern de fundo */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px]"></div>
         

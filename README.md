@@ -1,49 +1,60 @@
-# NAP - Núcleo de Atendimento ao Provedor
+# NAP - Núcleo de Atendimento ao Provedor (WACRM)
 
-Uma plataforma Omnichannel Premium voltada para Provedores de Internet (ISPs), integrando atendimento, inteligência artificial e gestão em uma única interface escura (SaaS Dark Theme).
+Bem-vindo ao **NAP (Núcleo de Atendimento ao Provedor)**, um Ecossistema Omnichannel SaaS projetado exclusivamente para Provedores de Internet (ISPs).
 
-## Arquitetura e Ecossistema (Isolamento por VM)
+## 🚀 Visão Geral do Sistema
+O NAP foi concebido para unificar a operação técnica, financeira e de atendimento em uma única plataforma isolada (Tenant-Based), proporcionando segurança máxima e controle total da operação de provedores de fibra óptica.
 
-O projeto tem como proposta ser um ecossistema de atendimento que rodará de forma isolada e independente para cada provedor (Tenant) em sua própria infraestrutura (VPS/VM). A stack arquitetural validada inclui:
-- **SO:** Debian 12
-- **Telefonia:** FreePBX 17
-- **IA de Voz:** AVA Asterisk (AI Voice Agent)
-- **CRM WhatsApp:** WABA Integrado (Cloud API Oficial)
-- **Gerência de CPEs:** GenieACS (TR-069)
-- **Faturamento/ERP:** Integração nativa com SGP
+### Módulos Principais
+1. **AVA (Agente Virtual Autônoma):** Integração Full-Stack nativa com o **Google Gemini**, capaz de interpretar áudio, entender solicitações de clientes, analisar sentimentos em tempo real e disparar funções remotas no ERP (Mock SGP).
+2. **Inbox Omnichannel:** Caixa de entrada unificada que suporta WhatsApp (WABA), Webchat PWA e integração nativa de telefonia com Asterisk (FreePBX 17).
+3. **GenieACS (TR-069):** Dashboard de telemetria óptica e gerenciamento de CPEs, com leitura visual de potência (RSSI), Uptime e conectividade NBI.
+4. **CRM 360 & SGP ERP (Backend):** CRM integrado com pipelines (Kanban) de vendas. Emulador do sistema de faturamento SGP para simular emissão de códigos PIX, desbloqueios em confiança, 2ª via de faturas, e viabilidade de rede.
+5. **Portal do Assinante (PWA):** Aplicativo Mobile-First (Light Theme) para autoatendimento do cliente final, suportando instalação via Web Manifest, notificações Push, e roteamento de Webchat/Webphone.
 
-## Módulos Principais
+## 🛠️ Stack Tecnológica
+- **Frontend:** React 18, Vite, Tailwind CSS (Design System Anti-Slop, Dark Mode Premium SaaS no Admin, Light Mode no PWA)
+- **Backend:** Node.js, Express (Build Híbrido CJS via esbuild) rodando em `server.ts`
+- **Banco de Dados & Autenticação:** Firebase (Firestore NoSQL) + Firebase Auth
+- **PWA:** `vite-plugin-pwa` para Service Workers e suporte a instalação offline.
 
-### 1. Painel do Operador (Admin/Backoffice)
-Acessível via rotas padrão (`/`, `/crm`, `/suporte`, `/configuracoes`).
+## 🔧 Estrutura do Repositório
+- `/src/pages`: Contém as interfaces principais (`SuperAdmin.tsx`, `Kanban.tsx`, `CRM.tsx`, `GenieACSDashboard.tsx`, `Inbox.tsx`).
+- `/src/pages/landing`: Três templates de Landing Pages otimizados (Tech Dark, Gamer Vibrant, Clean Family).
+- `/src/components`: Componentes reutilizáveis (Layout, PortalLayout, Webphone, Mapas, etc).
+- `/server.ts`: Entry point do backend que concentra 100% das APIs seguras (`/api/gemini/*`, `/api/sgp/*`, `/api/push/*`).
 
-- **Login Simplificado (Firebase Spoofing):** Acesso realizado por "Usuário" (ex: `admin`, `suporte`), onde o sistema converte automaticamente para contas internas (ex: `@nap.local`) preservando a segurança do Firebase Authentication sem exigir a digitação de e-mails complexos pelos operadores.
-- **Inbox Unificado:** Centraliza mensagens de WhatsApp (WABA), Webchat e outras fontes. Integra-se diretamente com a IA, gerando sugestões de resposta automáticas com base no histórico do cliente. Inclui suporte nativo para atalhos de disparo (Templates HSM) e anexos da API do WhatsApp.
-- **CRM (Customer 360):** Tabela de clientes com busca inteligente. Ao clicar em um cliente, uma ficha lateral (*Slide-over*) exibe um painel 360° com histórico financeiro (SGP) e um histórico de ligações do PABX (FreePBX/Asterisk).
-- **GenieACS (TR-069):** Dashboard de telemetria e gestão de CPEs em tempo real. Monitora Roteadores e ONUs, exibindo KPIs (Online/Offline), nível de sinal óptico (dBm) e qualidade de transmissão (SNR).
-- **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar.
-- **Ativo (Campanhas):** Módulo para disparo preditivo de Voz (Discador Asterisk) e réguas de WhatsApp baseadas em inteligência da fatura.
-- **Motor Visual de Fluxos (n8n):** Interface na rota `/automacoes` que simula um canvas *node-based* do n8n para desenhar e espelhar o roteamento de webhooks e transbordo (WABA -> Agente IA -> SGP -> FreePBX).
-- **Gestão de Operadores:** Módulo completo (rota `/operadores`) para criação de atendentes, com mapeamento de ramal SIP, nível de acesso, e controle Omnichannel de filas/skills.
-- **CTI Reverso & Webphone:** Integração SIP (WebRTC) e painel flutuante que salta na tela via Server-Sent Events (SSE) do `server.ts` quando ocorre um *ring* no Asterisk.
-- **Super Admin (White-Label):** Tela global de configurações.
+## ⚙️ Inicialização
+O projeto utiliza um pipeline simplificado onde o frontend e backend rodam na mesma instância, de forma otimizada para implantações em containers.
 
-### 2. Portal do Cliente (PWA)
-Acessível via rota `/portal`. 
-Focado na experiência Mobile-first (Progressive Web App com suporte a Notificações Push).
+```bash
+# Instalar dependências
+npm install
 
-- **Webchat com Fila de Atendimento:** Permite contato direto com a tela do operador, caindo em uma fila após informar o tipo de atendimento desejado.
-- **Webphone (Voz Direta - WebRTC):** Permite ligação de voz direta entre o cliente e o operador do NAP através do navegador, sem custo de telefonia tradicional, usando infraestrutura VoIP interna.
-- **Faturas e Boletos:** Integração com SGP para 2ª via e Pix.
-- **Auto-diagnóstico:** Integração transparente com GenieACS para validar conexão do roteador antes de abrir chamado.
+# Rodar ambiente de desenvolvimento (Inicia backend e proxy do Vite na porta 3000)
+npm run dev
 
-## Integrações (server.ts)
-O backend (`server.ts`) atua como proxy vital para manter credenciais seguras:
-- `/api/ia/chat`: Rota do **9router**, utilizando SDK Gemini (`@google/genai`) para RAG simulado.
-- `/api/sgp/*`: Rotas que integram nativamente via HTTP Headers o Sistema de Gestão de Provedores (SGP).
-- `/api/webhooks/*`: Recebe os eventos de ligações (FreePBX) e mensagens de WhatsApp (Meta Graph API / n8n), distribuindo para o frontend via `SSE`.
+# Fazer o Build de produção (Gera o SPA PWA no /dist e compila o server.ts)
+npm run build
 
-## Como Testar
-1. **CTI:** Em "Painel Super Admin", clique em "Simular Chamada FreePBX".
-2. **Autoatendimento:** Acesse `/portal` e interaja com o chatbot flutuante azul.
-3. **White-label:** No "Painel Super Admin", modifique os dados em "Identidade Visual e Dados do Provedor" para validar os formulários que sustentam a regra multi-tenant física.
+# Iniciar o servidor de produção
+npm run start
+```
+
+## 🔐 Autenticação e Resiliência
+O sistema suporta login via **Firebase Authentication**.
+- **Usuário Padrão:** `admin` ou `admin@nap.local`
+- **Senha:** `admin123`
+
+*(Resiliência: Em ambientes de desenvolvimento sem o Auth configurado no Firebase, ou em caso de erro na API do Google, o sistema aciona automaticamente uma **Mock Session** local (Spoofing) para não bloquear a experiência do desenvolvedor/operador).*
+
+## 📡 Roteamento Principal
+- `/` - Landing Page de Aquisição (Para novos clientes contratarem planos, com seletor flutuante de temas)
+- `/login` - Tela de autenticação unificada (Firebase)
+- `/admin` - Painel Operacional SaaS (Exclusivo para o time do Provedor - Dashboards, CRM, SGP, URA)
+- `/portal` - Área do Assinante PWA (Visão do cliente: 2ª via, Pix, Suporte, Webphone)
+
+## 💡 Princípios de Design (Regras de Ouro)
+1. Sem interfaces clichês ("AI Slop"): Nada de bordas brilhantes excessivas ou textos ilegíveis.
+2. Contraste Máximo: Textos sobre fundos escuros (`#0b0f19`) utilizam tons opacos refinados e padding calculado. O PWA de clientes usa um tema claro acessível.
+3. Segurança Full-Stack: Todas as integrações externas (Gemini, ERP, VoIP, etc.) são roteadas obrigatoriamente pelo `server.ts`, mantendo as chaves privadas totalmente ocultas do navegador (Client-Side).
