@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ConfigProvider } from './contexts/ConfigContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Layout from './components/Layout';
@@ -25,41 +26,43 @@ import ConsultaSGP from './pages/ConsultaSGP';
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Operador / Admin Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/admin" element={<Layout />}>
-              <Route index element={<Inbox />} />
-              <Route path="dashboard" element={<Analytics />} />
-              <Route path="suporte" element={<Kanban type="Suporte" />} />
-              <Route path="cobranca" element={<Kanban type="Cobranca" />} />
-              <Route path="vendas" element={<Kanban type="Vendas" />} />
-              <Route path="crm" element={<CRM />} />
-              <Route path="sgp" element={<ConsultaSGP />} />
-              <Route path="genieacs" element={<GenieACSDashboard />} />
-              <Route path="campanhas" element={<Campanhas />} />
-              <Route path="operadores" element={<Operadores />} />
-              <Route path="automacoes" element={<Automacoes />} />
-              <Route path="configuracoes" element={<SuperAdmin />} />
-              <Route path="ajuda" element={<Helpers />} />
+      <ConfigProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            
+            {/* Operador / Admin Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/admin" element={<Layout />}>
+                <Route index element={<Inbox />} />
+                <Route path="dashboard" element={<Analytics />} />
+                <Route path="suporte" element={<Kanban type="Suporte" />} />
+                <Route path="cobranca" element={<Kanban type="Cobranca" />} />
+                <Route path="vendas" element={<Kanban type="Vendas" />} />
+                <Route path="crm" element={<CRM />} />
+                <Route path="sgp" element={<ConsultaSGP />} />
+                <Route path="genieacs" element={<GenieACSDashboard />} />
+                <Route path="campanhas" element={<Campanhas />} />
+                <Route path="operadores" element={<Operadores />} />
+                <Route path="automacoes" element={<Automacoes />} />
+                <Route path="configuracoes" element={<SuperAdmin />} />
+                <Route path="ajuda" element={<Helpers />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Cliente PWA Routes */}
-          <Route path="/portal" element={<PortalLayout />}>
-            <Route index element={<PortalDashboard />} />
-            <Route path="faturas" element={<PortalFaturas />} />
-            <Route path="suporte" element={<PortalSuporte />} />
-            <Route path="conta" element={<PortalConta />} />
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Cliente PWA Routes */}
+            <Route path="/portal" element={<PortalLayout />}>
+              <Route index element={<PortalDashboard />} />
+              <Route path="faturas" element={<PortalFaturas />} />
+              <Route path="suporte" element={<PortalSuporte />} />
+              <Route path="conta" element={<PortalConta />} />
+            </Route>
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </ConfigProvider>
     </AuthProvider>
   );
 }

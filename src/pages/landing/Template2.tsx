@@ -2,24 +2,77 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Gamepad2, Wifi, Zap, ArrowRight, ShieldAlert, MonitorPlay, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useConfig, SystemConfig } from '../../contexts/ConfigContext';
 
-export default function Template2() {
+interface TemplateProps {
+  config?: SystemConfig;
+}
+
+export default function Template2({ config: propsConfig }: TemplateProps) {
+  const { config: contextConfig } = useConfig();
+  const config = propsConfig || contextConfig;
+
+  const nomeProvedor = config?.provedor?.nomeFantasia || "DJD Telecom";
+  const logoUrl = config?.provedor?.logoUrl;
+  const tituloHero = config?.landingPage?.tituloPrincipal || "Zero Lag. 100% Vitória.";
+  const subtituloHero = config?.landingPage?.subtitulo || "A internet fibra óptica desenvolvida para entregar o menor ping e a maior taxa de download da região.";
+  const textoBotaoCta = config?.landingPage?.textoBotaoCta || "Quero Fibra Agora";
+  const whatsappVendas = config?.landingPage?.whatsappVendas || config?.provedor?.telefoneWhatsapp || "11987654321";
+  const zapClean = whatsappVendas.replace(/\D/g, '');
+
+  const planos = [
+    {
+      mb: config?.landingPage?.plano1?.velocidade || "500",
+      name: config?.landingPage?.plano1?.nome || "Start Gamer",
+      price: config?.landingPage?.plano1?.preco || "89,90",
+      desc: config?.landingPage?.plano1?.wifi || "Perfeito para streaming e jogatinas diárias",
+      glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]",
+      highlight: false
+    },
+    {
+      mb: config?.landingPage?.plano2?.velocidade || "700",
+      name: config?.landingPage?.plano2?.nome || "Pro Gamer",
+      price: config?.landingPage?.plano2?.preco || "109,90",
+      desc: config?.landingPage?.plano2?.wifi || "Ping otimizado para servidores de alta competição",
+      glow: "shadow-[0_0_40px_rgba(236,72,153,0.4)] border-pink-500/50",
+      highlight: true
+    },
+    {
+      mb: config?.landingPage?.plano3?.velocidade || "1000",
+      name: config?.landingPage?.plano3?.nome || "Extreme Ultra",
+      price: config?.landingPage?.plano3?.preco || "149,90",
+      desc: config?.landingPage?.plano3?.wifi || "Upload simétrico máximo com 2 Roteadores Wi-Fi 6 Mesh",
+      glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.3)]",
+      highlight: false
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#090014] text-white font-outfit overflow-x-hidden selection:bg-purple-500/30">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-[#090014]/60 backdrop-blur-xl border-b border-purple-500/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center [0_0_20px_rgba(168,85,247,0.4)]">
-              <Zap size={20} className="text-white fill-white" />
-            </div>
-            <span className="font-bold text-2xl tracking-tight">DJD <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-black italic">Telecom</span></span>
-          </div>
+          <Link to="/" className="flex items-center gap-3">
+            {logoUrl ? (
+              <img 
+                src={logoUrl} 
+                alt={nomeProvedor} 
+                className="h-10 w-auto max-w-[190px] object-contain"
+              />
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                  <Zap size={20} className="text-white fill-white" />
+                </div>
+                <span className="font-bold text-2xl tracking-tight text-white">{nomeProvedor}</span>
+              </div>
+            )}
+          </Link>
           
           <nav className="hidden md:flex gap-8 text-sm font-bold text-purple-200/60 uppercase tracking-wider">
             <a href="#planos" className="hover:text-purple-300 transition-colors">Planos</a>
-            <a href="#gamer" className="hover:text-purple-300 transition-colors">Modo Gamer</a>
-            <a href="#cobertura" className="hover:text-purple-300 transition-colors">Cobertura</a>
+            <a href="#cobertura" className="hover:text-purple-300 transition-colors">Vantagens</a>
+            <a href={`https://wa.me/55${zapClean}`} target="_blank" rel="noreferrer" className="hover:text-purple-300 transition-colors">WhatsApp</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -30,7 +83,7 @@ export default function Template2() {
               <Smartphone size={15} className="text-pink-400" />
               <span>Portal do Cliente</span>
             </Link>
-            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-1.5 uppercase tracking-wide">
+            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-1.5 uppercase tracking-wide">
               <span>Admin</span>
             </Link>
           </div>
@@ -65,28 +118,25 @@ export default function Template2() {
                 animate={{ opacity: 1, x: 0 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm font-bold mb-6 uppercase tracking-widest"
               >
-                <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span> Ultra Velocidade
+                <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span> Ultra Velocidade & Fibra Óptica
               </motion.div>
               
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-6xl lg:text-8xl font-black italic tracking-tighter mb-6 leading-[0.9]"
+                className="text-5xl lg:text-7xl font-black italic tracking-tighter mb-6 uppercase"
               >
-                JOGUE SEM <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-red-400">
-                  LAG.
-                </span>
+                {tituloHero}
               </motion.h1>
               
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-xl text-purple-200/70 mb-10 max-w-lg leading-relaxed"
+                className="text-lg text-purple-200/70 mb-10 max-w-lg leading-relaxed"
               >
-                A internet fibra óptica desenvolvida para entregar o menor ping e a maior taxa de download da região.
+                {subtituloHero}
               </motion.p>
               
               <motion.div 
@@ -95,9 +145,12 @@ export default function Template2() {
                 transition={{ delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4"
               >
-                <button className="bg-white text-black px-8 py-4 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide">
-                  Quero Fibra Agora
-                </button>
+                <a 
+                  href="#planos" 
+                  className="bg-white hover:bg-slate-100 text-black px-8 py-4 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide"
+                >
+                  {textoBotaoCta}
+                </a>
                 <Link to="/portal" className="bg-purple-900/50 border border-purple-500/40 hover:bg-purple-800/60 text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
                   <Smartphone size={20} className="text-pink-400" /> Acessar Portal do Cliente
                 </Link>
@@ -128,15 +181,11 @@ export default function Template2() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <h2 className="text-4xl font-black italic tracking-tight mb-4 uppercase">Escolha seu <span className="text-purple-400">Poder</span></h2>
-            <p className="text-purple-200/60 text-lg">Planos simétricos com instalação grátis.</p>
+            <p className="text-purple-200/60 text-lg">Planos simétricos com instalação grátis na {nomeProvedor}.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl">
-            {[
-              { mb: "400", name: "Start", price: "79,90", desc: "Perfeito para streaming", glow: "hover:[0_0_40px_rgba(168,85,247,0.3)]" },
-              { mb: "700", name: "Pro Gamer", price: "99,90", desc: "Ping otimizado para jogos", glow: "[0_0_40px_rgba(236,72,153,0.4)] border-pink-500/50", highlight: true },
-              { mb: "1000", name: "Extreme", price: "149,90", desc: "Upload simétrico máximo", glow: "hover:[0_0_40px_rgba(249,115,22,0.3)]" }
-            ].map((plan, i) => (
+            {planos.map((plan, i) => (
               <motion.div 
                 key={i}
                 whileHover={{ y: -10 }}
@@ -160,14 +209,23 @@ export default function Template2() {
                   <span className="text-purple-300">/mês</span>
                 </div>
                 
-                <button className={`w-full py-4 rounded-xl font-black uppercase tracking-widest transition-all ${plan.highlight ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white' : 'bg-purple-900/50 hover:bg-purple-800 text-white'}`}>
+                <a 
+                  href={`https://wa.me/55${zapClean}?text=${encodeURIComponent(`Olá! Quero assinar o plano ${plan.name} de ${plan.mb} MB por R$ ${plan.price}/mês na ${nomeProvedor}.`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest transition-all text-center block ${plan.highlight ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white' : 'bg-purple-900/50 hover:bg-purple-800 text-white'}`}
+                >
                   Contratar
-                </button>
+                </a>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      <footer className="py-8 border-t border-purple-500/10 text-center text-purple-300/40 text-sm">
+        <p>© {new Date().getFullYear()} {nomeProvedor}. Todos os direitos reservados.</p>
+      </footer>
     </div>
   );
 }

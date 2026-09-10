@@ -33,7 +33,8 @@ async function fetchSGP(endpoint, method = "GET", body = null) {
 
 
   app.use(cors());
-  app.use(express.json());
+  app.use(express.json({ limit: "15mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "15mb" }));
 
   // --- API Routes ---
   
@@ -1095,7 +1096,21 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       { id: "macro-3", atalho: "/desbloqueio", titulo: "Desbloqueio em Confiança", conteudo: "Seu sinal de internet foi liberado provisoriamente por 48 horas em confiança! O comprovante pode ser enviado por aqui.", categoria: "Financeiro" },
       { id: "macro-4", atalho: "/visita_tecnica", titulo: "Agendamento Visita Técnica", conteudo: "Ordem de serviço aberta com sucesso. Nossa equipe técnica entrará em contato para alinhar o turno de visita.", categoria: "Suporte" },
       { id: "macro-5", atalho: "/velocidade", titulo: "Instruções Teste de Velocidade", conteudo: "Para testar com precisão, pause downloads e acesse https://fast.com preferencialmente conectado via cabo de rede ou no Wi-Fi 5GHz.", categoria: "Suporte" }
-    ]
+    ],
+    landingPage: {
+      templatePadrao: 1 as 1 | 2 | 3,
+      tituloPrincipal: "Conexão Ultrarrápida em Fibra Óptica para Sua Casa ou Empresa",
+      subtitulo: "Internet 100% fibra simétrica com Wi-Fi 6 de alta performance, estabilidade absoluta e atendimento humanizado 24h por dia.",
+      textoBotaoCta: "Ver Planos Disponíveis",
+      whatsappVendas: "(11) 98765-4321",
+      telefoneVendas: "0800 591 0000",
+      mostrarBotaoPortal: true,
+      mostrarBotaoAdmin: true,
+      mostrarBarraFlutuante: true,
+      plano1: { nome: "Fibra 400 Mega", velocidade: "400", preco: "89,90", tag: "Essencial", wifi: "Wi-Fi 5 Dual-Band Incluso", streaming: "Paramount+ Incluso" },
+      plano2: { nome: "Fibra 700 Mega", velocidade: "700", preco: "119,90", tag: "Mais Popular", wifi: "Roteador Wi-Fi 6 Mesh Gigagold", streaming: "Paramount+ & Max Inclusos" },
+      plano3: { nome: "Fibra 1 Giga Gamer", velocidade: "1000", preco: "159,90", tag: "Gamer / Pro", wifi: "2x Nós Mesh Wi-Fi 6 Mesh", streaming: "IP Fixo + Rota Baixa Latência" }
+    }
   };
 
   let auditLogs: Array<{
@@ -1156,6 +1171,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
         ...systemConfig,
         ...novosDados,
         provedor: { ...systemConfig.provedor, ...(novosDados.provedor || {}) },
+        landingPage: { ...systemConfig.landingPage, ...(novosDados.landingPage || {}) },
         sgp: { ...systemConfig.sgp, ...(novosDados.sgp || {}) },
         telefonia: { ...systemConfig.telefonia, ...(novosDados.telefonia || {}) },
         whatsapp: { ...systemConfig.whatsapp, ...(novosDados.whatsapp || {}) },
@@ -1171,7 +1187,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
         usuario: "Admin NAP (SuperAdmin)",
         modulo: "Configurações Globais",
         acao: "Atualização de Parâmetros",
-        detalhes: `Parâmetros do sistema atualizados com sucesso via painel administrativo.`,
+        detalhes: `Parâmetros do sistema e vitrine landing page atualizados via painel administrativo.`,
         ip: req.ip || "127.0.0.1",
         data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
       };
@@ -1185,6 +1201,45 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       });
     } catch (e: any) {
       res.status(500).json({ error: e.message || "Erro ao salvar configurações." });
+    }
+  });
+
+  // Upload e processamento de Logotipo do Provedor
+  app.post("/api/configuracoes/upload-logo", (req, res) => {
+    try {
+      const { logoData, fileName } = req.body;
+      if (!logoData || typeof logoData !== "string") {
+        return res.status(400).json({ error: "Arquivo ou dados de imagem não fornecidos." });
+      }
+
+      // Validação básica se é Data URL de imagem ou URL http
+      const isDataUrl = logoData.startsWith("data:image/");
+      const isHttpUrl = logoData.startsWith("http://") || logoData.startsWith("https://");
+      if (!isDataUrl && !isHttpUrl) {
+        return res.status(400).json({ error: "Formato de arquivo inválido. Envie uma imagem válida (PNG, SVG, JPG, WebP)." });
+      }
+
+      systemConfig.provedor.logoUrl = logoData;
+
+      const novoLog = {
+        id: `log-${Date.now()}`,
+        usuario: "Admin NAP (SuperAdmin)",
+        modulo: "Identidade Visual",
+        acao: "Upload de Logotipo",
+        detalhes: `Novo logotipo carregado com sucesso (${fileName || "arquivo de imagem"}).`,
+        ip: req.ip || "127.0.0.1",
+        data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
+      };
+      auditLogs.unshift(novoLog);
+      if (auditLogs.length > 50) auditLogs.pop();
+
+      res.json({
+        success: true,
+        mensagem: "Logotipo atualizado e aplicado com sucesso ao sistema e à Landing Page!",
+        logoUrl: logoData
+      });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message || "Erro ao processar logotipo." });
     }
   });
 

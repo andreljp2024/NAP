@@ -4,190 +4,16 @@ import {
   Shield, Activity, Save, Loader2, Key, PhoneCall, CheckCircle2, 
   AlertTriangle, RefreshCw, Download, Upload, Copy, Check, Eye, 
   EyeOff, Clock, Sparkles, Globe, Lock, Sliders, Radio, 
-  Terminal, ShieldCheck, ChevronRight, Zap, Plus, Trash2, Edit3, X
+  Terminal, ShieldCheck, ChevronRight, Zap, Plus, Trash2, Edit3, X,
+  LayoutTemplate, Monitor, ExternalLink, CheckSquare
 } from 'lucide-react';
+import LogoUploader from '../components/LogoUploader';
+import { useConfig, SystemConfig, DEFAULT_CONFIG, MacroItem } from '../contexts/ConfigContext';
 
-export interface MacroItem {
-  id: string;
-  atalho: string;
-  titulo: string;
-  conteudo: string;
-  categoria: 'Financeiro' | 'Suporte' | 'Vendas' | 'Geral';
-}
-
-interface SystemConfig {
-  provedor: {
-    nomeFantasia: string;
-    razaoSocial: string;
-    cnpj: string;
-    inscricaoEstadual: string;
-    telefoneSuporte: string;
-    telefoneWhatsapp: string;
-    emailAtendimento: string;
-    cidadeUf: string;
-    corPrincipal: string;
-    corSecundaria: string;
-    logoUrl: string;
-    portalUrl: string;
-    themeMode: 'dark' | 'light';
-  };
-  sgp: {
-    urlBase: string;
-    appId: string;
-    token: string;
-    syncIntervalMinutes: number;
-    autoDesbloqueio48h: boolean;
-    avisoSonoroInadimplente: boolean;
-    habilitarConsultaRadius: boolean;
-    status: 'conectado' | 'desconectado' | 'alerta';
-  };
-  telefonia: {
-    amiHost: string;
-    amiPort: number;
-    amiUser: string;
-    amiSecret: string;
-    contextoDiscagem: string;
-    ramalWebRTC: string;
-    secretWebRTC: string;
-    websocketUrl: string;
-    gravarChamadas: boolean;
-    transcricaoAutomatica: boolean;
-    status: 'conectado' | 'desconectado' | 'alerta';
-  };
-  whatsapp: {
-    phoneNumberId: string;
-    businessAccountId: string;
-    tokenAcesso: string;
-    webhookUrl: string;
-    verifyToken: string;
-    canalOficial: boolean;
-    envioAutomaticoPix: boolean;
-    status: 'conectado' | 'desconectado' | 'alerta';
-  };
-  ia: {
-    modeloPrimario: string;
-    provedorGateway: string;
-    temperatura: number;
-    topP: number;
-    maxTokens: number;
-    promptSuporte: string;
-    promptVendas: string;
-    promptCobranca: string;
-    gatilhoTransbordo: 'imediato' | 'apos_3_falhas' | 'solicitacao_cliente';
-    copilotoAtivo: boolean;
-    status: 'conectado' | 'desconectado' | 'alerta';
-  };
-  seguranca: {
-    sessaoTimeoutMinutos: number;
-    exigir2FAOperadores: boolean;
-    permitirAcessoExterno: boolean;
-    limiteTentativasLogin: number;
-    armazenamentoLogsDias: number;
-  };
-  atendimento: {
-    horarioSemana: string;
-    horarioSabado: string;
-    horarioDomingoFeriado: string;
-    mensagemForaHorario: string;
-    slaRespostaMinutos: number;
-    slaResolucaoHoras: number;
-    mensagemBoasVindas: string;
-    permitirTransbordoNocForaHorario: boolean;
-  };
-  respostasRapidas: MacroItem[];
-}
-
-const DEFAULT_CONFIG: SystemConfig = {
-  provedor: {
-    nomeFantasia: "NAP Telecom Fibra",
-    razaoSocial: "NAP Telecomunicações e Conectividade Ltda",
-    cnpj: "18.345.678/0001-90",
-    inscricaoEstadual: "112.456.789.001",
-    telefoneSuporte: "0800 591 0000",
-    telefoneWhatsapp: "(11) 98765-4321",
-    emailAtendimento: "suporte@naptelecom.com.br",
-    cidadeUf: "São Paulo - SP",
-    corPrincipal: "#2563eb",
-    corSecundaria: "#10b981",
-    logoUrl: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=150&auto=format&fit=crop&q=80",
-    portalUrl: "https://central.naptelecom.com.br",
-    themeMode: "dark"
-  },
-  sgp: {
-    urlBase: "https://api.sgp.provedor.com.br/v1",
-    appId: "NAP_SGP_PROD_991",
-    token: "sgp_sec_token_99182374981729",
-    syncIntervalMinutes: 15,
-    autoDesbloqueio48h: true,
-    avisoSonoroInadimplente: true,
-    habilitarConsultaRadius: true,
-    status: "conectado"
-  },
-  telefonia: {
-    amiHost: "192.168.10.250",
-    amiPort: 5038,
-    amiUser: "nap_ami_user",
-    amiSecret: "ami_asterisk_secret_2026",
-    contextoDiscagem: "from-internal",
-    ramalWebRTC: "2001",
-    secretWebRTC: "sip_pass_2001_webrtc",
-    websocketUrl: "wss://pbx.naptelecom.com.br:8089/ws",
-    gravarChamadas: true,
-    transcricaoAutomatica: true,
-    status: "conectado"
-  },
-  whatsapp: {
-    phoneNumberId: "109823471029384",
-    businessAccountId: "394857201928374",
-    tokenAcesso: "EAAGm0PXq1...9823h4",
-    webhookUrl: "https://api.naptelecom.com.br/api/webhooks/whatsapp",
-    verifyToken: "nap_waba_verify_token_secure",
-    canalOficial: true,
-    envioAutomaticoPix: true,
-    status: "conectado"
-  },
-  ia: {
-    modeloPrimario: "gemini-2.5-flash",
-    provedorGateway: "9router",
-    temperatura: 0.6,
-    topP: 0.95,
-    maxTokens: 1024,
-    promptSuporte: "Você é o assistente virtual do {nome_provedor}. Atenda clientes de internet fibra óptica com empatia e precisão técnica. Identifique o sinal óptico e oriente o cliente a verificar conexões físicas e reset de 30s da ONU. Se houver rompimento de fibra ou sinal atenuado acima de -27dBm, ofereça abertura de OS presencial.",
-    promptVendas: "Você é consultor comercial do {nome_provedor}. Oferte planos residenciais de fibra óptica simétrica com Wi-Fi 6 Mesh, Paramount+ e suporte 24h. Destaque instalação gratuita e fidelidade de 12 meses.",
-    promptCobranca: "Você atua no setor financeiro do {nome_provedor}. Forneça a chave PIX copia-e-cola e código de barras instantâneo. Se o cliente tiver bloqueio parcial, explique a opção de Desbloqueio em Confiança válido por 48 horas.",
-    gatilhoTransbordo: "solicitacao_cliente",
-    copilotoAtivo: true,
-    status: "conectado"
-  },
-  seguranca: {
-    sessaoTimeoutMinutos: 60,
-    exigir2FAOperadores: true,
-    permitirAcessoExterno: true,
-    limiteTentativasLogin: 5,
-    armazenamentoLogsDias: 90
-  },
-  atendimento: {
-    horarioSemana: "08:00 - 20:00",
-    horarioSabado: "08:00 - 14:00",
-    horarioDomingoFeriado: "Plantão NOC Emergencial",
-    mensagemForaHorario: "Olá! Nosso atendimento humano encerrou por hoje. Você pode retirar sua 2ª via de fatura, obter a chave PIX ou solicitar o desbloqueio em confiança de 48h pelo Portal do Assinante ou diretamente com nosso assistente virtual!",
-    slaRespostaMinutos: 5,
-    slaResolucaoHoras: 4,
-    mensagemBoasVindas: "Olá! Seja bem-vindo à central de atendimento do {nome_provedor}. Para agilizar seu contato, informe seu CPF ou motivo do contato.",
-    permitirTransbordoNocForaHorario: true
-  },
-  respostasRapidas: [
-    { id: "macro-1", atalho: "/pix", titulo: "Chave PIX Copia e Cola", conteudo: "Aqui está sua chave PIX para pagamento: {chave_pix}. A baixa no sistema é imediata!", categoria: "Financeiro" },
-    { id: "macro-2", atalho: "/reset_onu", titulo: "Reinicialização da ONU", conteudo: "Por favor, desligue o roteador e a ONU da tomada por 30 segundos e ligue novamente. Aguarde os leds PON e Internet estabilizarem.", categoria: "Suporte" },
-    { id: "macro-3", atalho: "/desbloqueio", titulo: "Desbloqueio em Confiança", conteudo: "Seu sinal de internet foi liberado provisoriamente por 48 horas em confiança! O comprovante pode ser enviado por aqui.", categoria: "Financeiro" },
-    { id: "macro-4", atalho: "/visita_tecnica", titulo: "Agendamento Visita Técnica", conteudo: "Ordem de serviço aberta com sucesso. Nossa equipe técnica entrará em contato para alinhar o turno de visita.", categoria: "Suporte" },
-    { id: "macro-5", atalho: "/velocidade", titulo: "Instruções Teste de Velocidade", conteudo: "Para testar com precisão, pause downloads e acesse https://fast.com preferencialmente conectado via cabo de rede ou no Wi-Fi 5GHz.", categoria: "Suporte" }
-  ]
-};
-
-type TabType = 'identidade' | 'sgp' | 'telefonia' | 'whatsapp' | 'ia' | 'atendimento' | 'macros' | 'seguranca';
+type TabType = 'identidade' | 'landingpage' | 'sgp' | 'telefonia' | 'whatsapp' | 'ia' | 'atendimento' | 'macros' | 'seguranca';
 
 export default function SuperAdmin() {
+  const { uploadLogo: contextUploadLogo, updateConfig: contextUpdateConfig } = useConfig();
   const [activeTab, setActiveTab] = useState<TabType>('identidade');
   const [config, setConfig] = useState<SystemConfig>(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(true);
@@ -520,6 +346,12 @@ export default function SuperAdmin() {
               label="Identidade & White-label" 
             />
             <TabButton 
+              active={activeTab === 'landingpage'} 
+              onClick={() => setActiveTab('landingpage')} 
+              icon={<LayoutTemplate size={16} />} 
+              label="Landing Page & Vitrine" 
+            />
+            <TabButton 
               active={activeTab === 'sgp'} 
               onClick={() => setActiveTab('sgp')} 
               icon={<Database size={16} />} 
@@ -700,25 +532,6 @@ export default function SuperAdmin() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">URL do Logotipo (PNG / SVG)</label>
-                      <div className="flex gap-3">
-                        <input 
-                          type="text" 
-                          value={config.provedor.logoUrl} 
-                          onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, logoUrl: e.target.value } })}
-                          className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
-                        />
-                        <div className="w-12 h-11 bg-white/5 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden shrink-0">
-                          {config.provedor.logoUrl ? (
-                            <img src={config.provedor.logoUrl} alt="Logo Preview" className="max-h-8 max-w-10 object-contain" />
-                          ) : (
-                            <Globe size={18} className="text-slate-400" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Domínio do Portal do Assinante</label>
                       <input 
                         type="text" 
@@ -740,12 +553,636 @@ export default function SuperAdmin() {
                         <option value="light">Tema Claro Corporativo</option>
                       </select>
                     </div>
+
+                    <div className="md:col-span-2 pt-4 border-t border-white/5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                        Logotipo Principal do Provedor (Navbar, Faturas & Portal)
+                      </label>
+                      <LogoUploader
+                        currentLogoUrl={config.provedor.logoUrl}
+                        onLogoChange={(newLogoUrl) => setConfig({ ...config, provedor: { ...config.provedor, logoUrl: newLogoUrl } })}
+                        onFileUpload={contextUploadLogo}
+                        providerName={config.provedor.nomeFantasia}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* ABA 2: ERP SGP BILLING */}
+            {/* ABA 2: PERSONALIZAÇÃO DA LANDING PAGE & VITRINE */}
+            {activeTab === 'landingpage' && (
+              <div className="space-y-8">
+                {/* Header da aba */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/5">
+                  <div>
+                    <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
+                      <LayoutTemplate className="text-blue-400" size={18} />
+                      Personalização da Landing Page (Vitrine de Vendas)
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Configure o arquivo de logotipo, o modelo visual, textos comerciais e os 3 planos de fibra exibidos para os visitantes na página inicial.
+                    </p>
+                  </div>
+
+                  <a 
+                    href="/" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
+                  >
+                    <ExternalLink size={14} />
+                    <span>Visualizar Página Inicial</span>
+                  </a>
+                </div>
+
+                {/* 1. SELEÇÃO DO MODELO VISUAL (TEMPLATE) */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                      <Monitor size={14} className="text-blue-400" />
+                      1. Modelo Visual Padrão da Vitrine
+                    </h4>
+                    <span className="text-[11px] text-slate-500">
+                      O visitante verá este modelo ao entrar no site
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Template 1 */}
+                    <div 
+                      onClick={() => setConfig({
+                        ...config,
+                        landingPage: { ...config.landingPage, templatePadrao: 1 }
+                      })}
+                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                        config.landingPage?.templatePadrao === 1 
+                          ? 'bg-blue-950/40 border-blue-500 shadow-lg shadow-blue-500/10 scale-[1.01]' 
+                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-xs">
+                          T1
+                        </div>
+                        {config.landingPage?.templatePadrao === 1 ? (
+                          <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Check size={10} /> Ativo no Site
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-slate-500 font-semibold">Selecionar</span>
+                        )}
+                      </div>
+                      <h5 className="text-sm font-bold text-white mb-1">Tech Dark (Futurista)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Design tecnológico com fundo cyberpunk escuro, neon azul, foco em Wi-Fi 6 e estabilidade empresarial.
+                      </p>
+                    </div>
+
+                    {/* Template 2 */}
+                    <div 
+                      onClick={() => setConfig({
+                        ...config,
+                        landingPage: { ...config.landingPage, templatePadrao: 2 }
+                      })}
+                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                        config.landingPage?.templatePadrao === 2 
+                          ? 'bg-purple-950/40 border-purple-500 shadow-lg shadow-purple-500/10 scale-[1.01]' 
+                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xs">
+                          T2
+                        </div>
+                        {config.landingPage?.templatePadrao === 2 ? (
+                          <span className="bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Check size={10} /> Ativo no Site
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-slate-500 font-semibold">Selecionar</span>
+                        )}
+                      </div>
+                      <h5 className="text-sm font-bold text-white mb-1">Gamer Vibrant (Baixo Ping)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Gradientes vibrantes em roxo/rosa, foco em público gamer, latência ultra baixa e streamings.
+                      </p>
+                    </div>
+
+                    {/* Template 3 */}
+                    <div 
+                      onClick={() => setConfig({
+                        ...config,
+                        landingPage: { ...config.landingPage, templatePadrao: 3 }
+                      })}
+                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                        config.landingPage?.templatePadrao === 3 
+                          ? 'bg-emerald-950/40 border-emerald-500 shadow-lg shadow-emerald-500/10 scale-[1.01]' 
+                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
+                          T3
+                        </div>
+                        {config.landingPage?.templatePadrao === 3 ? (
+                          <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Check size={10} /> Ativo no Site
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-slate-500 font-semibold">Selecionar</span>
+                        )}
+                      </div>
+                      <h5 className="text-sm font-bold text-white mb-1">Clean Family (Residencial)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Visual limpo e acolhedor em tons claros e verdes, perfeito para famílias, conectividade e entretenimento doméstico.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. BUSCAR ARQUIVO DE LOGOTIPO DA LANDING PAGE */}
+                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-0.5 flex items-center gap-2">
+                        <Palette size={16} className="text-blue-400" />
+                        2. Logotipo da Landing Page (Buscador de Arquivo)
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        O arquivo carregado será exibido na barra de navegação de todos os modelos de vitrine da página inicial.
+                      </p>
+                    </div>
+                  </div>
+
+                  <LogoUploader
+                    currentLogoUrl={config.provedor.logoUrl}
+                    onLogoChange={(newLogoUrl) => setConfig({ ...config, provedor: { ...config.provedor, logoUrl: newLogoUrl } })}
+                    onFileUpload={contextUploadLogo}
+                    providerName={config.provedor.nomeFantasia}
+                  />
+                </div>
+
+                {/* 3. TEXTOS DO HERO DA LANDING PAGE */}
+                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <Sparkles size={16} className="text-amber-400" />
+                    3. Textos Principais de Destaque (Hero)
+                  </h4>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Título Principal (Headline)
+                      </label>
+                      <input 
+                        type="text" 
+                        value={config.landingPage?.tituloPrincipal || ''} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, tituloPrincipal: e.target.value }
+                        })}
+                        placeholder="Conexão Ultrarrápida em Fibra Óptica para Sua Casa ou Empresa"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Subtítulo / Proposta de Valor
+                      </label>
+                      <textarea 
+                        rows={2}
+                        value={config.landingPage?.subtitulo || ''} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, subtitulo: e.target.value }
+                        })}
+                        placeholder="Internet 100% fibra simétrica com Wi-Fi 6 de alta performance, baixa latência e suporte 24h."
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Texto do Botão de Ação (CTA)
+                      </label>
+                      <input 
+                        type="text" 
+                        value={config.landingPage?.textoBotaoCta || ''} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, textoBotaoCta: e.target.value }
+                        })}
+                        placeholder="Ver Planos Disponíveis"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Nome de Exibição do Provedor na Vitrine
+                      </label>
+                      <input 
+                        type="text" 
+                        value={config.provedor.nomeFantasia} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          provedor: { ...config.provedor, nomeFantasia: e.target.value }
+                        })}
+                        placeholder="NAP Telecom Fibra"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. CANAIS DE CONTATO DE VENDAS */}
+                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <PhoneCall size={16} className="text-emerald-400" />
+                    4. Contatos de Vendas na Vitrine
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        WhatsApp Comercial de Vendas (com DDD)
+                      </label>
+                      <input 
+                        type="text" 
+                        value={config.landingPage?.whatsappVendas || config.provedor.telefoneWhatsapp} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, whatsappVendas: e.target.value }
+                        })}
+                        placeholder="(11) 98765-4321"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        Telefone 0800 / Central de Televendas
+                      </label>
+                      <input 
+                        type="text" 
+                        value={config.landingPage?.telefoneVendas || config.provedor.telefoneSuporte} 
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, telefoneVendas: e.target.value }
+                        })}
+                        placeholder="0800 591 0000"
+                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. OPÇÕES DE NAVEGAÇÃO & ACESSO */}
+                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-3">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
+                    <Globe size={16} className="text-indigo-400" />
+                    5. Elementos de Navegação e Atalhos Rápidos
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                      <input 
+                        type="checkbox"
+                        checked={config.landingPage?.mostrarBotaoPortal ?? true}
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, mostrarBotaoPortal: e.target.checked }
+                        })}
+                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                      />
+                      <span className="text-xs font-semibold text-slate-200">
+                        Botão "Portal do Cliente"
+                      </span>
+                    </label>
+
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                      <input 
+                        type="checkbox"
+                        checked={config.landingPage?.mostrarBotaoAdmin ?? true}
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, mostrarBotaoAdmin: e.target.checked }
+                        })}
+                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                      />
+                      <span className="text-xs font-semibold text-slate-200">
+                        Botão "Login Admin"
+                      </span>
+                    </label>
+
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                      <input 
+                        type="checkbox"
+                        checked={config.landingPage?.mostrarBarraFlutuante ?? true}
+                        onChange={(e) => setConfig({
+                          ...config,
+                          landingPage: { ...config.landingPage, mostrarBarraFlutuante: e.target.checked }
+                        })}
+                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                      />
+                      <span className="text-xs font-semibold text-slate-200">
+                        Barra Flutuante de Atalhos
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 6. GESTÃO DOS 3 PLANOS EM DESTAQUE */}
+                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Zap size={16} className="text-amber-400" />
+                        6. Gestão dos 3 Planos Residenciais em Destaque
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        Personalize velocidades, preços mensais e vantagens exibidas nos cards da Landing Page.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    {/* Plano 1 */}
+                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                        <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">Plano 1 (Básico)</span>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano1?.tag || 'Essencial'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano1: { ...config.landingPage.plano1, tag: e.target.value }
+                            }
+                          })}
+                          placeholder="Tag (ex: Essencial)"
+                          className="w-24 px-2 py-0.5 text-[10px] font-bold bg-white/5 border border-white/10 rounded text-slate-300 text-right"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Nome do Plano</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano1?.nome || 'Fibra 400 Mega'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano1: { ...config.landingPage.plano1, nome: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Mega</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano1?.velocidade || '400'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano1: { ...config.landingPage.plano1, velocidade: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Preço R$</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano1?.preco || '89,90'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano1: { ...config.landingPage.plano1, preco: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Wi-Fi Incluso</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano1?.wifi || 'Wi-Fi Dual-Band'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano1: { ...config.landingPage.plano1, wifi: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Plano 2 */}
+                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-blue-500/30 space-y-3 relative">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                        <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Plano 2 (Destaque)</span>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano2?.tag || 'Mais Popular'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano2: { ...config.landingPage.plano2, tag: e.target.value }
+                            }
+                          })}
+                          placeholder="Tag (ex: Mais Popular)"
+                          className="w-24 px-2 py-0.5 text-[10px] font-bold bg-blue-500/10 border border-blue-500/30 rounded text-blue-300 text-right"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Nome do Plano</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano2?.nome || 'Fibra 700 Mega'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano2: { ...config.landingPage.plano2, nome: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Mega</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano2?.velocidade || '700'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano2: { ...config.landingPage.plano2, velocidade: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Preço R$</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano2?.preco || '119,90'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano2: { ...config.landingPage.plano2, preco: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Wi-Fi Incluso</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano2?.wifi || 'Roteador Wi-Fi 6 Mesh'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano2: { ...config.landingPage.plano2, wifi: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Plano 3 */}
+                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                        <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Plano 3 (Ultra / Gamer)</span>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano3?.tag || 'Gamer Pro'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano3: { ...config.landingPage.plano3, tag: e.target.value }
+                            }
+                          })}
+                          placeholder="Tag (ex: Gamer Pro)"
+                          className="w-24 px-2 py-0.5 text-[10px] font-bold bg-white/5 border border-white/10 rounded text-slate-300 text-right"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Nome do Plano</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano3?.nome || 'Fibra 1 Giga Gamer'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano3: { ...config.landingPage.plano3, nome: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Mega</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano3?.velocidade || '1000'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano3: { ...config.landingPage.plano3, velocidade: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Preço R$</label>
+                          <input 
+                            type="text"
+                            value={config.landingPage?.plano3?.preco || '159,90'}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              landingPage: {
+                                ...config.landingPage,
+                                plano3: { ...config.landingPage.plano3, preco: e.target.value }
+                              }
+                            })}
+                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Wi-Fi Incluso</label>
+                        <input 
+                          type="text"
+                          value={config.landingPage?.plano3?.wifi || '2x Nós Wi-Fi 6 Mesh'}
+                          onChange={(e) => setConfig({
+                            ...config,
+                            landingPage: {
+                              ...config.landingPage,
+                              plano3: { ...config.landingPage.plano3, wifi: e.target.value }
+                            }
+                          })}
+                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botão de Salvar no rodapé da aba */}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/5">
+                  <a 
+                    href="/" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-white/5"
+                  >
+                    <ExternalLink size={15} />
+                    <span>Ver no Site</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    <span>{saving ? 'Gravando...' : 'Salvar Personalização da Landing Page'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ABA 3: ERP SGP BILLING */}
             {activeTab === 'sgp' && (
               <div className="space-y-6">
                 <div>
