@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Gamepad2, Wifi, Zap, ArrowRight, ShieldAlert, MonitorPlay, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useConfig, SystemConfig } from '../../contexts/ConfigContext';
+import ConsultaViabilidadeBox from '../../components/ConsultaViabilidadeBox';
 
 interface TemplateProps {
   config?: SystemConfig;
@@ -154,6 +155,19 @@ export default function Template2({ config: propsConfig }: TemplateProps) {
                 <Link to="/portal" className="bg-purple-900/50 border border-purple-500/40 hover:bg-purple-800/60 text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
                   <Smartphone size={20} className="text-pink-400" /> Acessar Portal do Cliente
                 </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="mt-8"
+              >
+                <ConsultaViabilidadeBox
+                  nomeProvedor={nomeProvedor}
+                  telefoneWhatsapp={zapClean}
+                  theme="dark"
+                />
               </motion.div>
             </div>
             

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Wifi, Zap, Shield, ChevronRight, Globe, Phone, Smartphone, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useConfig, SystemConfig } from '../../contexts/ConfigContext';
+import ConsultaViabilidadeBox from '../../components/ConsultaViabilidadeBox';
 
 interface TemplateProps {
   config?: SystemConfig;
@@ -157,7 +158,7 @@ export default function Template1({ config: propsConfig }: TemplateProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
             >
               <a 
                 href="#planos" 
@@ -169,6 +170,20 @@ export default function Template1({ config: propsConfig }: TemplateProps) {
                 <Smartphone size={20} className="text-blue-400" />
                 Acessar Portal do Cliente
               </Link>
+            </motion.div>
+
+            {/* Consulta de Viabilidade Integrada */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="max-w-xl mx-auto"
+            >
+              <ConsultaViabilidadeBox 
+                nomeProvedor={nomeProvedor} 
+                telefoneWhatsapp={zapClean} 
+                theme="dark"
+              />
             </motion.div>
           </div>
         </section>

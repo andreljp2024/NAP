@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   BarChart, Bar, LineChart, Line, Legend, ComposedChart
 } from 'recharts';
-import { Users, Bot, Clock, TrendingUp, TrendingDown, Phone, MessageSquare, Zap, Radio, Signal, Headphones, DollarSign, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { 
+  Users, Bot, Clock, TrendingUp, TrendingDown, Phone, MessageSquare, 
+  Zap, Radio, Signal, Headphones, DollarSign, AlertCircle, CheckCircle2,
+  Star, HeartHandshake, Smile, Meh, Frown, ThumbsUp, Send, Filter, Sparkles, RefreshCw
+} from 'lucide-react';
 import Webphone from '../components/Webphone';
 
 const dataResolucao = [
@@ -33,55 +37,133 @@ const dataReceita = [
 ];
 
 export default function Analytics() {
+  const [abaAtiva, setAbaAtiva] = useState<'operacao' | 'nps'>('operacao');
+  const [npsStats, setNpsStats] = useState<any>(null);
+  const [npsFeed, setNpsFeed] = useState<any[]>([]);
+  const [filtroNps, setFiltroNps] = useState<'todos' | 'promotor' | 'neutro' | 'detrator'>('todos');
+  const [disparandoNps, setDisparandoNps] = useState(false);
+  const [disparoMsg, setDisparoMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/nps/stats')
+      .then(res => res.json())
+      .then(data => setNpsStats(data))
+      .catch(() => {});
+
+    fetch('/api/nps/feed')
+      .then(res => res.json())
+      .then(data => {
+        if (data.feed) setNpsFeed(data.feed);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleDispararTesteNps = async () => {
+    setDisparandoNps(true);
+    setDisparoMsg(null);
+    try {
+      const res = await fetch('/api/nps/disparar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente: 'Mariana Souza',
+          telefone: '+55 11 98877-6655',
+          canal: 'WhatsApp WABA',
+          ticketId: '1095'
+        })
+      });
+      const data = await res.json();
+      setDisparoMsg(data.mensagem);
+    } catch {
+      setDisparoMsg('Erro ao agendar disparo de teste.');
+    } finally {
+      setDisparandoNps(false);
+    }
+  };
+
+  const feedFiltrado = npsFeed.filter(item => {
+    if (filtroNps === 'todos') return true;
+    return item.classificacao === filtroNps;
+  });
+
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-[#0b0f19]">
       <div className="max-w-7xl mx-auto space-y-8">
         
-        <div className="flex justify-between items-end">
+        {/* Header com Switcher de Abas */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white font-outfit mb-2">Visão Geral da Operação</h1>
-            <p className="text-slate-400">Monitoramento em tempo real do ecossistema NAP.</p>
+            <p className="text-slate-400">Monitoramento e inteligência analítica do ecossistema NAP.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-            </span>
-            <span className="text-sm font-medium text-emerald-600">Tempo Real (9router)</span>
+          
+          <div className="flex items-center gap-3">
+            <div className="bg-[#101726] p-1 rounded-2xl border border-white/10 flex items-center gap-1">
+              <button
+                onClick={() => setAbaAtiva('operacao')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  abaAtiva === 'operacao' 
+                    ? 'bg-blue-600 text-white shadow-md' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Zap size={14} /> Métricas de Operação
+              </button>
+              <button
+                onClick={() => setAbaAtiva('nps')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  abaAtiva === 'nps' 
+                    ? 'bg-emerald-600 text-white shadow-md' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Star size={14} className={abaAtiva === 'nps' ? "fill-current" : ""} /> NPS & Qualidade
+              </button>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2 pl-2">
+              <span className="flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <span className="text-xs font-medium text-emerald-500">Tempo Real</span>
+            </div>
           </div>
         </div>
 
-        {/* Top KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard 
-            title="MRR Mensal" 
-            value="R$ 135.4K" 
-            trend="+8.2%" 
-            trendUp={true}
-            icon={<DollarSign className="text-emerald-400" size={24} />} 
-          />
-          <MetricCard 
-            title="Inadimplência (5+ dias)" 
-            value="4.2%" 
-            trend="-1.5%" 
-            trendUp={true}
-            icon={<AlertCircle className="text-red-400" size={24} />} 
-          />
-          <MetricCard 
-            title="Receita Recuperada (PIX IA)" 
-            value="R$ 8.9K" 
-            trend="+24%" 
-            trendUp={true}
-            icon={<CheckCircle2 className="text-blue-400" size={24} />} 
-          />
-          <MetricCard 
-            title="Taxa de Retenção IA" 
-            value="78.5%" 
-            trend="+5.4%" 
-            trendUp={true}
-            icon={<Bot className="text-indigo-400" size={24} />} 
-          />
-        </div>
+        {abaAtiva === 'operacao' ? (
+          <>
+            {/* Top KPIs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <MetricCard 
+                title="MRR Mensal" 
+                value="R$ 135.4K" 
+                trend="+8.2%" 
+                trendUp={true}
+                icon={<DollarSign className="text-emerald-400" size={24} />} 
+              />
+              <MetricCard 
+                title="Inadimplência (5+ dias)" 
+                value="4.2%" 
+                trend="-1.5%" 
+                trendUp={true}
+                icon={<AlertCircle className="text-red-400" size={24} />} 
+              />
+              <MetricCard 
+                title="Receita Recuperada (PIX IA)" 
+                value="R$ 8.9K" 
+                trend="+24%" 
+                trendUp={true}
+                icon={<CheckCircle2 className="text-blue-400" size={24} />} 
+              />
+              <MetricCard 
+                title="Taxa de Retenção IA" 
+                value="78.5%" 
+                trend="+5.4%" 
+                trendUp={true}
+                icon={<Bot className="text-indigo-400" size={24} />} 
+              />
+            </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -255,6 +337,304 @@ export default function Analytics() {
             <Webphone embedded={true} className="w-full" defaultExtension="2001" />
           </div>
         </div>
+      </>
+    ) : (
+        /* ABA NPS & QUALIDADE */
+        <div className="space-y-8 animate-in fade-in">
+          
+          {/* Banner de Status Global e KPIs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-[#101726] border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden group">
+              <div className="flex items-start justify-between mb-3">
+                <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+                  <HeartHandshake size={24} />
+                </div>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Excelente
+                </span>
+              </div>
+              <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">NPS Score Global</h4>
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-white font-outfit">+{npsStats?.npsScore || 78}</span>
+                <span className="text-xs text-slate-400">/ 100</span>
+              </div>
+              <p className="text-[11px] text-emerald-400 mt-2 flex items-center gap-1 font-medium">
+                <Sparkles size={12} /> Zona de Excelência (+75 a +100)
+              </p>
+            </div>
+
+            <MetricCard 
+              title="CSAT Médio (Satisfação)" 
+              value={`${npsStats?.csatMedio || 4.8} / 5.0`} 
+              trend="+0.2 pts" 
+              trendUp={true}
+              icon={<Star className="text-amber-400 fill-amber-400/20" size={24} />} 
+            />
+
+            <MetricCard 
+              title="Resolução 1º Contato (FCR)" 
+              value={npsStats?.resolucaoPrimeiroContato || "87.4%"} 
+              trend="+3.1%" 
+              trendUp={true}
+              icon={<CheckCircle2 className="text-blue-400" size={24} />} 
+            />
+
+            <MetricCard 
+              title="Taxa de Resposta à Pesquisa" 
+              value={npsStats?.taxaResposta || "42.8%"} 
+              trend="+5.6%" 
+              trendUp={true}
+              icon={<Send className="text-purple-400" size={24} />} 
+            />
+          </div>
+
+          {/* Distribuição de Notas NPS */}
+          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+              <div>
+                <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2">
+                  <ThumbsUp size={18} className="text-emerald-400" />
+                  Distribuição de Sentimento dos Clientes
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">Baseado em {npsStats?.totalRespostas || 486} avaliações validadas nos últimos 30 dias</p>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-medium">
+                <span className="flex items-center gap-1.5 text-emerald-400">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Promotores (9-10)
+                </span>
+                <span className="flex items-center gap-1.5 text-amber-400">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Neutros (7-8)
+                </span>
+                <span className="flex items-center gap-1.5 text-rose-400">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Detratores (0-6)
+                </span>
+              </div>
+            </div>
+
+            {/* Barra Segmentada */}
+            <div className="h-5 w-full bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+              <div 
+                style={{ width: `${npsStats?.promotoresPct || 84}%` }} 
+                className="bg-emerald-500 hover:bg-emerald-400 transition-all cursor-pointer flex items-center justify-center text-[10px] font-bold text-slate-950"
+                title="84% Promotores"
+              >
+                {npsStats?.promotoresPct || 84}%
+              </div>
+              <div 
+                style={{ width: `${npsStats?.neutrosPct || 11}%` }} 
+                className="bg-amber-400 hover:bg-amber-300 transition-all cursor-pointer flex items-center justify-center text-[10px] font-bold text-slate-950"
+                title="11% Neutros"
+              >
+                {npsStats?.neutrosPct || 11}%
+              </div>
+              <div 
+                style={{ width: `${npsStats?.detratoresPct || 5}%` }} 
+                className="bg-rose-500 hover:bg-rose-400 transition-all cursor-pointer flex items-center justify-center text-[10px] font-bold text-white"
+                title="5% Detratores"
+              >
+                {npsStats?.detratoresPct || 5}%
+              </div>
+            </div>
+
+            {/* Sub-cards explicativos */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                  <Smile size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Promotores (Notas 9-10)</p>
+                  <p className="text-lg font-bold text-white font-outfit">408 clientes ({npsStats?.promotoresPct || 84}%)</p>
+                  <p className="text-[11px] text-emerald-400">Fidelizados e propensos a indicar</p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <Meh size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Passivos / Neutros (Notas 7-8)</p>
+                  <p className="text-lg font-bold text-white font-outfit">54 clientes ({npsStats?.neutrosPct || 11}%)</p>
+                  <p className="text-[11px] text-amber-400">Satisfeitos, mas vulneráveis à concorrência</p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center">
+                  <Frown size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Detratores (Notas 0-6)</p>
+                  <p className="text-lg font-bold text-white font-outfit">24 clientes ({npsStats?.detratoresPct || 5}%)</p>
+                  <p className="text-[11px] text-rose-400">Prioritários para retenção ativa (CRM)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gráfico de Evolução & Automação de Disparo */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Gráfico de Evolução Semanal */}
+            <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl p-6">
+              <h3 className="text-base font-bold text-white font-outfit mb-4 flex items-center gap-2">
+                <TrendingUp size={18} className="text-blue-400" />
+                Evolução Semanal do NPS vs CSAT
+              </h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={npsStats?.historicoSemanal || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                    <XAxis dataKey="semana" stroke="#64748b" />
+                    <YAxis stroke="#64748b" domain={[60, 100]} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }}
+                      itemStyle={{ color: '#fff' }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="nps" name="Score NPS" stroke="#10b981" strokeWidth={3} dot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="promotores" name="% Promotores" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Card de Configuração do Gatilho */}
+            <div className="bg-[#101726] border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="text-base font-bold text-white font-outfit mb-2 flex items-center gap-2">
+                  <Zap size={18} className="text-amber-400" />
+                  Gatilho Automático de Pesquisa
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                  O NAP monitora o encerramento de tickets no Inbox, Webchat e URA. Após o prazo configurado, uma mensagem interativa de avaliação é despachada.
+                </p>
+
+                <div className="space-y-2.5 text-xs text-slate-300">
+                  <div className="p-2.5 rounded-xl bg-white/5 flex items-center justify-between">
+                    <span>Canal WhatsApp WABA:</span>
+                    <span className="font-bold text-emerald-400">Ativo (3 min após fim)</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/5 flex items-center justify-between">
+                    <span>Webchat no Portal PWA:</span>
+                    <span className="font-bold text-blue-400">Modal Instantâneo</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/5 flex items-center justify-between">
+                    <span>URA FreePBX Asterisk:</span>
+                    <span className="font-bold text-purple-400">Dígitos 1 a 5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/5">
+                {disparoMsg && (
+                  <p className="text-xs text-emerald-400 mb-3 bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/20">
+                    {disparoMsg}
+                  </p>
+                )}
+                <button
+                  onClick={handleDispararTesteNps}
+                  disabled={disparandoNps}
+                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                >
+                  <Send size={14} className={disparandoNps ? "animate-spin" : ""} />
+                  Testar Disparo de Pesquisa no Zap
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Feed de Avaliações em Tempo Real */}
+          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2">
+                  <MessageSquare size={18} className="text-blue-400" />
+                  Feed de Avaliações Recentes (Auditoria de Atendimento)
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">Comentários e notas registradas pelos clientes em todos os canais</p>
+              </div>
+
+              {/* Filtro por classificação */}
+              <div className="flex items-center gap-1.5 bg-[#0b0f19] p-1 rounded-xl border border-white/5">
+                <button
+                  onClick={() => setFiltroNps('todos')}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${filtroNps === 'todos' ? 'bg-white/10 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Todos ({npsFeed.length})
+                </button>
+                <button
+                  onClick={() => setFiltroNps('promotor')}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${filtroNps === 'promotor' ? 'bg-emerald-500/20 text-emerald-400 font-bold' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Promotores
+                </button>
+                <button
+                  onClick={() => setFiltroNps('neutro')}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${filtroNps === 'neutro' ? 'bg-amber-500/20 text-amber-400 font-bold' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Neutros
+                </button>
+                <button
+                  onClick={() => setFiltroNps('detrator')}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${filtroNps === 'detrator' ? 'bg-rose-500/20 text-rose-400 font-bold' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Detratores
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {feedFiltrado.map(item => (
+                <div 
+                  key={item.id}
+                  className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 hover:border-white/10 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
+                >
+                  <div className="flex items-start gap-3.5 flex-1">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold font-outfit shrink-0 border ${
+                      item.classificacao === 'promotor' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                      item.classificacao === 'neutro' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                      'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                    }`}>
+                      {item.nota}
+                    </div>
+
+                    <div className="space-y-1 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold text-sm text-white">{item.cliente}</span>
+                        <span className="text-[11px] text-slate-500 font-mono">{item.telefone}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-400 border border-white/5">
+                          {item.canal}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                          {item.setor}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-300 italic">
+                        "{item.comentario}"
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex sm:flex-col items-end justify-between sm:justify-center text-right shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-white/5">
+                    <span className="text-xs text-slate-400 font-medium">Atendente: <strong className="text-white">{item.atendente}</strong></span>
+                    <span className="text-[11px] text-slate-500">{item.data}</span>
+                  </div>
+                </div>
+              ))}
+
+              {feedFiltrado.length === 0 && (
+                <div className="p-8 text-center text-slate-500 text-xs">
+                  Nenhuma avaliação encontrada para este filtro.
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      )}
       </div>
     </div>
   );

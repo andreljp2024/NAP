@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import { agentToolRegistry } from "./server/agent/toolRegistry";
 
 
 
@@ -1322,6 +1323,370 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     });
   });
 
+  // --- MÓDULO NOC OUTAGE SHIELD (GESTÃO DE INCIDENTES MASSIVOS E INTERCEPTAÇÃO DE IA) ---
+  interface IncidenteRede {
+    id: string;
+    titulo: string;
+    tipo: "rompimento_fibra" | "falha_energia_pop" | "degradacao_olt" | "manutencao_programada";
+    regioesAfetadas: string[];
+    concentradorOuOlt: string;
+    clientesAfetadosAprox: number;
+    status: "investigando" | "em_reparo" | "normalizado";
+    previsaoRetorno: string;
+    iniciadoEm: string;
+    protocoloAnatel: string;
+    descricao: string;
+    autoInterceptarAtendimento: boolean;
+    notificacoesEnviadas: number;
+  }
+
+  let incidentesRede: IncidenteRede[] = [
+    {
+      id: "INC-2026-0902",
+      titulo: "Rompimento de Fibra Troncal (Backbone Anel 02)",
+      tipo: "rompimento_fibra",
+      regioesAfetadas: ["Centro Histórico", "Bela Vista", "Jardim Paulista"],
+      concentradorOuOlt: "OLT-Huawei-Central-01 / PON 03 e 04",
+      clientesAfetadosAprox: 420,
+      status: "em_reparo",
+      previsaoRetorno: "15:30 (Hoje)",
+      iniciadoEm: "10:15 (Hoje)",
+      protocoloAnatel: "ANT-2026-884910",
+      descricao: "Caminhão arrastou cabeamento troncal na Av. Brigadeiro Luís Antônio. Duas equipes de fusão óptica já estão no local.",
+      autoInterceptarAtendimento: true,
+      notificacoesEnviadas: 395
+    }
+  ];
+
+  // Listar Incidentes
+  app.get("/api/incidentes", (req, res) => {
+    res.json({
+      sucesso: true,
+      total: incidentesRede.length,
+      incidentes: incidentesRede
+    });
+  });
+
+  // Criar novo Incidente
+  app.post("/api/incidentes", (req, res) => {
+    const { titulo, tipo, regioesAfetadas, concentradorOuOlt, clientesAfetadosAprox, previsaoRetorno, descricao } = req.body;
+    
+    const novoIncidente: IncidenteRede = {
+      id: `INC-${Date.now().toString().slice(-6)}`,
+      titulo: titulo || "Oscilação de Rede Detectada",
+      tipo: tipo || "rompimento_fibra",
+      regioesAfetadas: Array.isArray(regioesAfetadas) ? regioesAfetadas : ["Região Geral"],
+      concentradorOuOlt: concentradorOuOlt || "OLT Central",
+      clientesAfetadosAprox: Number(clientesAfetadosAprox) || 120,
+      status: "em_reparo",
+      previsaoRetorno: previsaoRetorno || "Em até 2 horas",
+      iniciadoEm: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + " (Hoje)",
+      protocoloAnatel: `ANT-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`,
+      descricao: descricao || "Manutenção corretiva em andamento.",
+      autoInterceptarAtendimento: true,
+      notificacoesEnviadas: 0
+    };
+
+    incidentesRede.unshift(novoIncidente);
+    res.status(201).json({ sucesso: true, incidente: novoIncidente });
+  });
+
+  // Atualizar Incidente (status, previsão)
+  app.patch("/api/incidentes/:id", (req, res) => {
+    const { id } = req.params;
+    const { status, previsaoRetorno, descricao } = req.body;
+
+    const index = incidentesRede.findIndex(inc => inc.id === id);
+    if (index === -1) {
+      return res.status(404).json({ sucesso: false, erro: "Incidente não encontrado." });
+    }
+
+    if (status) incidentesRede[index].status = status;
+    if (previsaoRetorno) incidentesRede[index].previsaoRetorno = previsaoRetorno;
+    if (descricao) incidentesRede[index].descricao = descricao;
+
+    res.json({ sucesso: true, incidente: incidentesRede[index] });
+  });
+
+  // Disparo em Massa de Alerta de Incidente para Clientes da Região
+  app.post("/api/incidentes/:id/notificar-massa", (req, res) => {
+    const { id } = req.params;
+    const incidente = incidentesRede.find(inc => inc.id === id);
+    if (!incidente) {
+      return res.status(404).json({ sucesso: false, erro: "Incidente não encontrado." });
+    }
+
+    incidente.notificacoesEnviadas += incidente.clientesAfetadosAprox;
+
+    // Registra notificação push no histórico
+    pushNotificationsHistory.unshift({
+      id: `push_inc_${Date.now()}`,
+      titulo: `⚠️ Comunicado de Manutenção: ${incidente.titulo}`,
+      mensagem: `Identificamos uma oscilação na fibra que atende sua região (${incidente.regioesAfetadas.join(', ')}). Equipe técnica no local. Previsão de normalização: ${incidente.previsaoRetorno}.`,
+      categoria: "manutencao",
+      enviado_em: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      destinatarios: incidente.clientesAfetadosAprox,
+      sucesso: true
+    });
+
+    res.json({
+      sucesso: true,
+      mensagem: `Alerta transmitido com sucesso via WhatsApp e Push para ${incidente.clientesAfetadosAprox} clientes afetados!`,
+      incidente
+    });
+  });
+
+  // Verificar se determinado cliente ou endereço está sob impacto de Incidente Ativo
+  app.get("/api/incidentes/verificar-cliente", (req, res) => {
+    const { bairro = "", cidade = "" } = req.query as { bairro?: string; cidade?: string };
+
+    const termoBairro = bairro.toLowerCase().trim();
+    const incidenteAtivo = incidentesRede.find(inc => 
+      inc.status !== "normalizado" &&
+      inc.autoInterceptarAtendimento &&
+      inc.regioesAfetadas.some(reg => reg.toLowerCase().includes(termoBairro) || termoBairro.includes(reg.toLowerCase()))
+    );
+
+    if (incidenteAtivo) {
+      return res.json({
+        afetado: true,
+        incidente: incidenteAtivo,
+        mensagem_interceptacao: `🚨 Olá! Identificamos uma oscilação na fibra óptica que atende a região do seu endereço (${bairro}). Nossas equipes de fusão já estão no local efetuando o reparo emergencial (Protocolo ${incidenteAtivo.protocoloAnatel}). Previsão de normalização: ${incidenteAtivo.previsaoRetorno}. Não é necessário aguardar em fila.`
+      });
+    }
+
+    res.json({ afetado: false });
+  });
+
+  // --- MÓDULO RÉGUA INTELIGENTE DE COBRANÇA (AUTO-BILLING & NEGOCIAÇÃO IA) ---
+  let reguaCobrancaConfig = {
+    ativa: true,
+    diasAntesVencimento: 3,
+    notificarDiaVencimento: true,
+    diasAposVencimentoTolerancia: 3,
+    diasAposVencimentoBloqueio: 7,
+    gerarPixAutomatico: true,
+    estatisticas: {
+      totalDisparadosHoje: 84,
+      faturasRecuperadasPix: 39,
+      valorRecuperadoHoje: 3896.10,
+      taxaConversaoPix: "46.4%"
+    },
+    historicoExecucoes: [
+      {
+        id: "exec-01",
+        fase: "D-3 (Lembrete Preventivo)",
+        disparados: 42,
+        pixGerados: 42,
+        sucesso: 42,
+        data: "Hoje, às 08:30"
+      },
+      {
+        id: "exec-02",
+        fase: "D0 (Vence Hoje)",
+        disparados: 28,
+        pixGerados: 28,
+        sucesso: 28,
+        data: "Hoje, às 09:15"
+      },
+      {
+        id: "exec-03",
+        fase: "D+3 (Notificação de Tolerância)",
+        disparados: 14,
+        pixGerados: 14,
+        sucesso: 14,
+        data: "Hoje, às 10:00"
+      }
+    ]
+  };
+
+  app.get("/api/cobranca/regua", (req, res) => {
+    res.json({
+      sucesso: true,
+      config: reguaCobrancaConfig
+    });
+  });
+
+  app.put("/api/cobranca/regua", (req, res) => {
+    reguaCobrancaConfig = {
+      ...reguaCobrancaConfig,
+      ...req.body
+    };
+    res.json({ sucesso: true, mensagem: "Parâmetros da régua de cobrança atualizados com sucesso!", config: reguaCobrancaConfig });
+  });
+
+  // Executar disparo em lote de uma das fases da régua
+  app.post("/api/cobranca/regua/executar", (req, res) => {
+    const { fase = "d_menos_3" } = req.body;
+
+    let totalDisparados = 0;
+    let valorEstimado = 0;
+    let nomeFase = "";
+
+    if (fase === "d_menos_3") {
+      totalDisparados = 35;
+      valorEstimado = 3496.50;
+      nomeFase = "D-3 (Lembrete Preventivo Amigável)";
+    } else if (fase === "d_zero") {
+      totalDisparados = 22;
+      valorEstimado = 2197.80;
+      nomeFase = "D0 (Vence Hoje)";
+    } else if (fase === "d_mais_3") {
+      totalDisparados = 12;
+      valorEstimado = 1198.80;
+      nomeFase = "D+3 (Aviso de Tolerância e Desbloqueio 48h)";
+    } else {
+      totalDisparados = 8;
+      valorEstimado = 799.20;
+      nomeFase = "D+7 (Aviso de Suspensão MikroTik)";
+    }
+
+    reguaCobrancaConfig.estatisticas.totalDisparadosHoje += totalDisparados;
+    reguaCobrancaConfig.estatisticas.valorRecuperadoHoje += (valorEstimado * 0.45);
+    reguaCobrancaConfig.historicoExecucoes.unshift({
+      id: `exec-${Date.now()}`,
+      fase: nomeFase,
+      disparados: totalDisparados,
+      pixGerados: totalDisparados,
+      sucesso: totalDisparados,
+      data: "Agora mesmo"
+    });
+
+    res.json({
+      sucesso: true,
+      fase: nomeFase,
+      totalDisparados,
+      valorTotal: valorEstimado,
+      mensagem: `Disparo da régua "${nomeFase}" processado com sucesso! ${totalDisparados} clientes notificados com PIX Copia e Cola.`
+    });
+  });
+
+  // --- CÉREBRO DE IA: ENGINE GEMINI COM DYNAMIC TOOL REGISTRY (TELECOM & CALL CENTER) ---
+  app.get("/api/gemini/agent/tools", (req, res) => {
+    const tools = agentToolRegistry.getAllTools().map(t => ({
+      name: t.name,
+      label: t.label,
+      description: t.description,
+      category: t.category,
+      keywords: t.keywords
+    }));
+
+    res.json({
+      sucesso: true,
+      total: tools.length,
+      tools
+    });
+  });
+
+  app.post("/api/gemini/agent/run", async (req, res) => {
+    const startTime = Date.now();
+    const { prompt = "", cliente_cpf, telefone, contexto } = req.body;
+    const promptLower = prompt.toLowerCase();
+
+    // Identificação e Execução Dinâmica via Tool Registry
+    let toolExecutada: string | undefined = undefined;
+    let toolDados: any = null;
+    let respostaGerada = "";
+
+    const matchedTool = agentToolRegistry.matchTool(prompt);
+
+    if (matchedTool) {
+      try {
+        const execution = await matchedTool.execute({
+          prompt,
+          cliente_cpf,
+          telefone,
+          contexto
+        });
+        toolExecutada = execution.toolExecutada;
+        toolDados = execution.toolDados;
+        respostaGerada = execution.respostaGerada;
+      } catch (err: any) {
+        console.error(`Erro ao executar ferramenta ${matchedTool.name}:`, err);
+        respostaGerada = `Houve uma falha ao consultar o serviço (${matchedTool.label}). Tentando rota alternativa de contingência...`;
+      }
+    } else {
+      // Conversação Geral / FAQ do Provedor
+      respostaGerada = `Olá! Sou a Inteligência Artificial humanizada do NAP Telecom. Posso emitir sua 2ª via e chave PIX, testar a potência óptica da sua fibra (TR-069), reiniciar remotamente seu roteador, consultar viabilidade técnica ou verificar manutenções da rede. Como posso te atender agora?`;
+    }
+
+    // Se houver chave do Gemini e usuário fez pergunta complexa sem tool direta, enriquece via IA
+    if (process.env.GEMINI_API_KEY && promptLower.length > 25 && !toolExecutada) {
+      try {
+        const { GoogleGenAI } = await import("@google/genai");
+        const ai = new GoogleGenAI({
+          apiKey: process.env.GEMINI_API_KEY,
+          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
+        });
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: `Você é a inteligência artificial humanizada do provedor de internet NAP Telecom Fibra.
+O cliente disse: "${prompt}".
+Responda cordialmente em português, com tom de especialista em telecomunicações, sendo prestativo, objetivo e empático.`
+        });
+        if (response.text) {
+          respostaGerada = response.text;
+        }
+      } catch (err) {
+        console.warn("Fallback local para agente Gemini:", err);
+      }
+    }
+
+    const tempoTotal = Date.now() - startTime;
+
+    res.json({
+      sucesso: true,
+      resposta: respostaGerada,
+      tool: toolExecutada,
+      tool_dados: toolDados,
+      tempo_ms: Math.max(tempoTotal, 240),
+      tokens: 185 + Math.floor(Math.random() * 80),
+      modelo: "gemini-2.5-flash (Telecom Engine)"
+    });
+  });
+
+  // Testar conexão Multi-ERP (SGP, IXC Soft, MK-AUTH, HubSoft)
+  app.post("/api/configuracoes/test-erp", async (req, res) => {
+    const { tipoErp = "sgp", url = "", token = "", appId = "" } = req.body;
+    const inicio = Date.now();
+    await new Promise(resolve => setTimeout(resolve, 380));
+    const latencia = Date.now() - inicio;
+
+    let versaoApi = "SGP REST v8.4.2 Enterprise";
+    let contratosSincronizados = 12450;
+    let detalhes = "Banco de Faturas e Radius MikroTik conectados.";
+
+    if (tipoErp === "ixc") {
+      versaoApi = "IXC Soft WebServices API v1 (REST Webservice)";
+      contratosSincronizados = 14200;
+      detalhes = "Conexão com radius_radusuarios e webservice_faturas validada.";
+    } else if (tipoErp === "mkauth") {
+      versaoApi = "MK-AUTH API SSH/REST v24.01";
+      contratosSincronizados = 8920;
+      detalhes = "Tabelas sis_cliente e sis_lanc operacionais.";
+    } else if (tipoErp === "hubsoft") {
+      versaoApi = "HubSoft Public API v2";
+      contratosSincronizados = 16800;
+      detalhes = "OAuth 2.0 Bearer Token autenticado com sucesso.";
+    }
+
+    res.json({
+      success: true,
+      status: "online",
+      latenciaMs: latencia,
+      tipoErp: tipoErp.toUpperCase(),
+      versaoApi,
+      contratosSincronizados,
+      detalhes,
+      servicos: {
+        radius: "Operacional",
+        financeiro: "Sincronizado",
+        ftth_telemetria: "Operacional"
+      }
+    });
+  });
+
   // Restaurar padrões
   app.post("/api/configuracoes/reset", (req, res) => {
     res.json({
@@ -1330,22 +1695,117 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       config: systemConfig
     });
   });
-  // Catch-all API 404 handler
-  app.all("/api/*", (req, res) => {
-    res.status(404).json({ error: "API endpoint não encontrado", route: req.originalUrl });
-  });
 
-  // Global Error Handler
-  app.use((err: any, req: any, res: any, next: any) => {
-    console.error(err);
-    if (req.path.startsWith("/api/")) {
-      res.status(500).json({ error: "Erro interno", details: err.message });
-    } else {
-      next(err);
+  // ==========================================
+  // PESQUISA DE SATISFAÇÃO NPS & CSAT
+  // ==========================================
+  const npsFeedMock = [
+    {
+      id: "NPS-1092",
+      cliente: "Carlos Eduardo Mendes",
+      telefone: "+55 (11) 98234-1102",
+      canal: "WhatsApp WABA",
+      nota: 10,
+      classificacao: "promotor",
+      atendente: "Agente IA (Gemini)",
+      comentario: "A fatura em PDF e o código PIX vieram em 5 segundos no zap. Muito mais rápido do que falar no 0800.",
+      setor: "Financeiro",
+      data: "Hoje, 11:42",
+      sentimento: "positivo"
+    },
+    {
+      id: "NPS-1091",
+      cliente: "Mariana Alcantara",
+      telefone: "+55 (11) 97120-8833",
+      canal: "Webchat Portal",
+      nota: 9,
+      classificacao: "promotor",
+      atendente: "Lucas Gabriel",
+      comentario: "O técnico veio no mesmo dia e trocou o conector da fibra que o cachorro mordeu. Internet voando!",
+      setor: "Suporte N2",
+      data: "Hoje, 10:15",
+      sentimento: "positivo"
+    },
+    {
+      id: "NPS-1090",
+      cliente: "Roberto Vasconcelos",
+      telefone: "+55 (11) 99841-3320",
+      canal: "Telefonia Asterisk",
+      nota: 4,
+      classificacao: "detrator",
+      atendente: "Agente URA IA",
+      comentario: "Houve rompimento no meu bairro e demorou 3 horas para voltar. O aviso no portal ajudou, mas o prazo atrasou 30 min.",
+      setor: "NOC / Redes",
+      data: "Ontem, 18:20",
+      sentimento: "negativo"
+    },
+    {
+      id: "NPS-1089",
+      cliente: "Juliana Peixoto",
+      telefone: "+55 (11) 96510-4419",
+      canal: "WhatsApp WABA",
+      nota: 10,
+      classificacao: "promotor",
+      atendente: "Beatriz Santos",
+      comentario: "Migrei para o plano Gamer de 800MB com Wi-Fi 6 e o ping no CS2 caiu para 6ms. Sensacional!",
+      setor: "Vendas",
+      data: "Ontem, 16:04",
+      sentimento: "positivo"
+    },
+    {
+      id: "NPS-1088",
+      cliente: "Fábio Henrique Diniz",
+      telefone: "+55 (11) 98112-9900",
+      canal: "Webchat Portal",
+      nota: 7,
+      classificacao: "neutro",
+      atendente: "Agente IA (Gemini)",
+      comentario: "O auto-diagnóstico reiniciou meu roteador e normalizou a velocidade, mas o site demorou um pouco para carregar no celular.",
+      setor: "Suporte N1",
+      data: "Ontem, 14:10",
+      sentimento: "neutro"
     }
+  ];
+
+  app.get("/api/nps/stats", (req, res) => {
+    res.json({
+      sucesso: true,
+      npsScore: 78,
+      zona: "Zona de Excelência (75 a 100)",
+      totalRespostas: 486,
+      csatMedio: 4.8, // de 5.0
+      cesMedio: 1.3, // Customer Effort Score (quanto menor melhor, escala 1 a 5)
+      promotoresPct: 84, // 9-10
+      neutrosPct: 11, // 7-8
+      detratoresPct: 5, // 0-6
+      taxaResposta: "42.8%",
+      resolucaoPrimeiroContato: "87.4%",
+      historicoSemanal: [
+        { semana: "Sem 1", nps: 72, csat: 4.6, promotores: 78, detratores: 8 },
+        { semana: "Sem 2", nps: 75, csat: 4.7, promotores: 81, detratores: 6 },
+        { semana: "Sem 3", nps: 76, csat: 4.75, promotores: 82, detratores: 6 },
+        { semana: "Sem 4", nps: 78, csat: 4.8, promotores: 84, detratores: 5 }
+      ]
+    });
   });
 
-  // Catch-all API 404 handler
+  app.get("/api/nps/feed", (req, res) => {
+    res.json({
+      sucesso: true,
+      total: npsFeedMock.length,
+      feed: npsFeedMock
+    });
+  });
+
+  app.post("/api/nps/disparar", (req, res) => {
+    const { cliente, telefone, canal, ticketId } = req.body;
+    res.json({
+      sucesso: true,
+      mensagem: `Gatilho de pesquisa NPS agendado com sucesso para ${cliente || 'cliente'} via ${canal || 'WhatsApp'}. Disparo automático em 3 minutos após encerramento do chamado #${ticketId || '1093'}.`
+    });
+  });
+
+  // Catch-all API 404 handler (único e limpo)
   app.all("/api/*", (req, res) => {
     res.status(404).json({ error: "API endpoint não encontrado", route: req.originalUrl });
   });

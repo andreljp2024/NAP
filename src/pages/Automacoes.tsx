@@ -73,21 +73,35 @@ export default function Automacoes() {
     {
       id: 'fn_sgp_pix',
       name: 'sgp_gerar_pix',
-      description: 'Gera o código PIX Copia e Cola para pagamento imediato.',
+      description: 'Gera o código PIX Copia e Cola dinâmico no SGP para pagamento imediato.',
       category: 'Financeiro',
       parameters: { cliente_cpf: 'string' }
     },
     {
       id: 'fn_sgp_status',
       name: 'sgp_consultar_status_conexao',
-      description: 'Verifica uptime, latência, e status atual do PPPoE do cliente.',
+      description: 'Executa telemetria do sinal óptico RX/TX (-19.4 dBm), status PPPoE e latência.',
       category: 'Suporte N1',
       parameters: { cliente_cpf: 'string', pppoe_login: 'string (opcional)' }
     },
     {
+      id: 'fn_genieacs_reboot',
+      name: 'genieacs_reboot_cpe',
+      description: 'Envia comando TR-069 Reboot para reinicializar a ONU/roteador remotamente.',
+      category: 'Suporte N1 (TR-069)',
+      parameters: { serial_number: 'string', mac: 'string' }
+    },
+    {
+      id: 'fn_noc_outage',
+      name: 'verificar_incidente_rede',
+      description: 'Consulta no NOC se o bairro do cliente possui rompimento ou manutenção ativa.',
+      category: 'NOC / Rede',
+      parameters: { bairro: 'string', cidade: 'string' }
+    },
+    {
       id: 'fn_sgp_unlock',
       name: 'sgp_desbloqueio_confianca',
-      description: 'Realiza o desbloqueio provisório de 48h (apenas 1x por ciclo).',
+      description: 'Realiza o desbloqueio provisório de 48h no Radius (apenas 1x por ciclo).',
       category: 'Financeiro / Suporte',
       parameters: { cliente_cpf: 'string' }
     }
@@ -107,6 +121,27 @@ export default function Automacoes() {
   );
   
   const [savedPromptSuccess, setSavedPromptSuccess] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/gemini/agent/tools')
+      .then(res => res.json())
+      .then(data => {
+        if (data.tools && Array.isArray(data.tools)) {
+          setTools(data.tools.map((t: any) => ({
+            id: `fn_${t.name}`,
+            name: t.name,
+            description: t.description,
+            category: t.category === 'financeiro' ? 'Financeiro (SGP)' :
+                      t.category === 'suporte_noc' ? 'NOC / Rede' :
+                      t.category === 'telemetria_tr069' ? 'Suporte N1 (TR-069)' :
+                      t.category === 'radius_erp' ? 'Radius & MikroTik' :
+                      t.category === 'comercial' ? 'Comercial & Viabilidade' : 'Qualidade & NPS',
+            parameters: { cliente_cpf: 'string', prompt: 'string' }
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -137,34 +172,36 @@ export default function Automacoes() {
         role: 'agent',
         content: data.resposta || "Atendimento processado com sucesso.",
         tool_executada: data.tool,
-        tempo_ms: data.tempo_ms || 1250,
-        tokens: 342,
+        tempo_ms: data.tempo_ms || 320,
+        tokens: data.tokens || 215,
         timestamp: 'Agora'
       }]);
     } catch {
-      // Mocking a successful response for the UI if the backend isn't hooked up yet
-      setTimeout(() => {
-        let simulatedResponse = "Entendi! Deixe-me ajudar com isso.";
-        let tool = undefined;
-        
-        if (msg.toLowerCase().includes('pix') || msg.toLowerCase().includes('boleto')) {
-           tool = 'sgp_gerar_pix';
-           simulatedResponse = "Localizei sua fatura. Acabei de gerar o seu código PIX: 00020126580014br.gov.bcb.pix... Posso ajudar em algo mais?";
-        } else if (msg.toLowerCase().includes('lento') || msg.toLowerCase().includes('internet')) {
-           tool = 'sgp_consultar_status_conexao';
-           simulatedResponse = "Realizei um diagnóstico no seu roteador. Vi que o sinal óptico está excelente (-19dBm), mas há muitos dispositivos no Wi-Fi 2.4GHz. Vamos fazer um teste no 5GHz?";
-        }
+      // Fallback local
+      let simulatedResponse = "Entendi! Deixe-me ajudar com isso.";
+      let tool = undefined;
+      
+      if (msg.toLowerCase().includes('pix') || msg.toLowerCase().includes('boleto')) {
+          tool = 'sgp_gerar_pix';
+          simulatedResponse = "Localizei sua fatura. Acabei de gerar o seu código PIX Copia e Cola. Deseja também a 2ª via em PDF?";
+      } else if (msg.toLowerCase().includes('lento') || msg.toLowerCase().includes('internet')) {
+          tool = 'sgp_consultar_status_conexao';
+          simulatedResponse = "Realizei um diagnóstico no seu roteador. Vi que o sinal óptico está excelente (-19.4 dBm). Deseja que eu reinicie o roteador remotamente?";
+      } else if (msg.toLowerCase().includes('queda') || msg.toLowerCase().includes('bairro')) {
+          tool = 'verificar_incidente_rede';
+          simulatedResponse = "Identifiquei no NOC que estamos com uma manutenção ativa na fibra troncal da sua região com previsão para 15:30.";
+      }
 
-        setChatHistory(prev => [...prev, {
-          role: 'agent',
-          content: simulatedResponse,
-          tool_executada: tool,
-          tempo_ms: 1450,
-          tokens: 156,
-          timestamp: 'Agora'
-        }]);
-        setLoading(false);
-      }, 1500);
+      setChatHistory(prev => [...prev, {
+        role: 'agent',
+        content: simulatedResponse,
+        tool_executada: tool,
+        tempo_ms: 450,
+        tokens: 156,
+        timestamp: 'Agora'
+      }]);
+    } finally {
+      setLoading(false);
     }
   };
 

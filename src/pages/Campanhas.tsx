@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Megaphone, PhoneOutgoing, MessageCircle, Play, Pause, Plus, Search, BarChart2, Users, CheckCircle2, Bell, Send, ShieldCheck, Smartphone } from 'lucide-react';
+import { Megaphone, PhoneOutgoing, MessageCircle, Play, Pause, Plus, Search, BarChart2, Users, CheckCircle2, Bell, Send, ShieldCheck, Smartphone, DollarSign, Zap, Clock, CreditCard, ArrowRight, ShieldAlert, Sparkles, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export default function Campanhas() {
-  const [activeTab, setActiveTab] = useState<'voz' | 'whatsapp' | 'push'>('whatsapp');
+  const [activeTab, setActiveTab] = useState<'whatsapp' | 'voz' | 'push' | 'regua'>('regua');
   const [pushStatus, setPushStatus] = useState<any>(null);
   const [loadingPush, setLoadingPush] = useState(false);
   const [novoPushTitulo, setNovoPushTitulo] = useState('');
   const [novoPushMensagem, setNovoPushMensagem] = useState('');
   const [novoPushCategoria, setNovoPushCategoria] = useState<'cobranca' | 'suporte' | 'manutencao' | 'marketing' | 'geral'>('cobranca');
   const [feedbackPush, setFeedbackPush] = useState<string | null>(null);
+
+  // Régua de Cobrança com IA
+  const [reguaConfig, setReguaConfig] = useState<any>(null);
+  const [loadingRegua, setLoadingRegua] = useState(false);
+  const [executandoFase, setExecutandoFase] = useState<string | null>(null);
+  const [feedbackRegua, setFeedbackRegua] = useState<string | null>(null);
 
   const fetchPushStatus = () => {
     fetch('/api/push/status')
@@ -17,9 +23,40 @@ export default function Campanhas() {
       .catch(() => {});
   };
 
+  const fetchReguaConfig = () => {
+    fetch('/api/cobranca/regua')
+      .then(res => res.json())
+      .then(data => {
+        if (data.config) setReguaConfig(data.config);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     fetchPushStatus();
+    fetchReguaConfig();
   }, []);
+
+  const handleExecutarFaseRegua = async (fase: string) => {
+    setExecutandoFase(fase);
+    setFeedbackRegua(null);
+    try {
+      const res = await fetch('/api/cobranca/regua/executar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fase })
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackRegua(data.mensagem);
+        fetchReguaConfig();
+      }
+    } catch {
+      setFeedbackRegua("Falha ao processar disparo da régua.");
+    } finally {
+      setExecutandoFase(null);
+    }
+  };
 
   const handleEnviarPush = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +117,12 @@ export default function Campanhas() {
       {/* Tabs */}
       <div className="px-4 sm:px-6 pt-6 flex gap-4 border-b border-white/5 shrink-0 overflow-x-auto whitespace-nowrap" style={{ scrollbarWidth: 'none' }}>
         <button 
+          onClick={() => setActiveTab('regua')}
+          className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'regua' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
+        >
+          <Zap size={18} className="text-amber-400" /> Régua de Cobrança IA (Auto-Billing)
+        </button>
+        <button 
           onClick={() => setActiveTab('whatsapp')}
           className={`flex items-center gap-2 pb-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'whatsapp' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
         >
@@ -104,49 +147,258 @@ export default function Campanhas() {
         <div className="max-w-7xl mx-auto space-y-6">
 
           {/* Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
                 <Users size={24} />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                  {activeTab === 'push' ? 'Dispositivos Inscritos (Push)' : 'Leads Ativos'}
+                  {activeTab === 'regua' ? 'Clientes Notificados Hoje' : activeTab === 'push' ? 'Dispositivos Inscritos (Push)' : 'Leads Ativos'}
                 </p>
                 <p className="text-2xl font-bold text-white font-outfit">
-                  {activeTab === 'push' ? (pushStatus?.total_inscritos || 1) : '5,300'}
+                  {activeTab === 'regua' ? (reguaConfig?.estatisticas?.totalDisparadosHoje || 84) : activeTab === 'push' ? (pushStatus?.total_inscritos || 1) : '5,300'}
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-200 rounded-xl flex items-center justify-center text-emerald-600">
-                <CheckCircle2 size={24} />
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400">
+                <DollarSign size={24} />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                  {activeTab === 'push' ? 'Taxa de Entrega Push' : 'Taxa de Conversão'}
+                  {activeTab === 'regua' ? 'Recuperado via PIX Hoje' : activeTab === 'push' ? 'Taxa de Entrega Push' : 'Taxa de Conversão'}
                 </p>
-                <p className="text-2xl font-bold text-white font-outfit">
-                  {activeTab === 'push' ? '98.5%' : '18.4%'}
+                <p className="text-2xl font-bold text-emerald-400 font-outfit">
+                  {activeTab === 'regua' ? `R$ ${(reguaConfig?.estatisticas?.valorRecuperadoHoje || 3896).toFixed(2)}` : activeTab === 'push' ? '98.5%' : '18.4%'}
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-500/10 border border-amber-200 rounded-xl flex items-center justify-center text-amber-600">
-                <BarChart2 size={24} />
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-amber-400">
+                <Zap size={24} />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                  {activeTab === 'push' ? 'Disparos Push Efetuados' : 'Campanhas Rodando'}
+                  {activeTab === 'regua' ? 'Taxa de Conversão PIX' : activeTab === 'push' ? 'Disparos Push Efetuados' : 'Campanhas Rodando'}
                 </p>
                 <p className="text-2xl font-bold text-white font-outfit">
-                  {activeTab === 'push' ? (pushStatus?.historico_recente?.length || 1) : '2'}
+                  {activeTab === 'regua' ? (reguaConfig?.estatisticas?.taxaConversaoPix || '46.4%') : activeTab === 'push' ? (pushStatus?.historico_recente?.length || 1) : '2'}
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400">
+                <ShieldCheck size={24} />
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                  {activeTab === 'regua' ? 'Faturas Baixadas Hoje' : 'Sincronia Radius / MikroTik'}
+                </p>
+                <p className="text-2xl font-bold text-white font-outfit">
+                  {activeTab === 'regua' ? (reguaConfig?.estatisticas?.faturasRecuperadasPix || 39) : '100%'}
                 </p>
               </div>
             </div>
           </div>
 
-          {activeTab === 'push' ? (
+          {activeTab === 'regua' ? (
+            /* Régua Inteligente de Cobrança com IA */
+            <div className="space-y-6">
+              {/* Header do Módulo */}
+              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+                      <Sparkles size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white font-outfit flex items-center gap-2">
+                        Régua Ativa com Negociação e PIX Copia-e-Cola
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold">AUTOMATIZADA</span>
+                      </h3>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        A IA dispara mensagens personalizadas via WhatsApp com chave PIX dinâmica antes, no dia e após o vencimento, reduzindo em até 60% a inadimplência e bloqueios MikroTik.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={fetchReguaConfig} 
+                      className="p-2 bg-white/5 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white transition-colors border border-white/5"
+                      title="Atualizar Métricas"
+                    >
+                      <RefreshCw size={16} />
+                    </button>
+                    <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      SGP & Radius Conectados
+                    </span>
+                  </div>
+                </div>
+
+                {feedbackRegua && (
+                  <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                    {feedbackRegua}
+                  </div>
+                )}
+
+                {/* As 4 Fases da Régua Visual */}
+                <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-4">
+                  {/* Fase 1: D-3 */}
+                  <div className="bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">FASE 1 • D-3</span>
+                        <span className="text-[11px] text-slate-500">Preventivo</span>
+                      </div>
+                      <h4 className="font-bold text-white text-sm">Lembrete Amigável</h4>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Envia aviso cordial 3 dias antes do vencimento com o Copia-e-Cola do PIX.
+                      </p>
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
+                        "Oi João! Sua fatura de R$ 99,90 vence em 3 dias. Pague já via PIX sem taxas..."
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-white/5">
+                      <button 
+                        onClick={() => handleExecutarFaseRegua('d_menos_3')}
+                        disabled={executandoFase === 'd_menos_3'}
+                        className="w-full py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {executandoFase === 'd_menos_3' ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
+                        Disparar Lote D-3 (35 clientes)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fase 2: D0 */}
+                  <div className="bg-[#0b0f19] border border-white/5 hover:border-amber-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">FASE 2 • D0</span>
+                        <span className="text-[11px] text-amber-400 font-bold">Vence Hoje</span>
+                      </div>
+                      <h4 className="font-bold text-white text-sm">Vencimento da Fatura</h4>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Lembrete no dia do vencimento às 09:00 com PIX e PDF do boleto.
+                      </p>
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
+                        "Sua mensalidade vence HOJE. Pague com o QR Code abaixo para manter sua velocidade máxima."
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-white/5">
+                      <button 
+                        onClick={() => handleExecutarFaseRegua('d_zero')}
+                        disabled={executandoFase === 'd_zero'}
+                        className="w-full py-2 px-3 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {executandoFase === 'd_zero' ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
+                        Disparar Lote D0 (22 clientes)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fase 3: D+3 */}
+                  <div className="bg-[#0b0f19] border border-white/5 hover:border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">FASE 3 • D+3</span>
+                        <span className="text-[11px] text-emerald-400">Tolerância</span>
+                      </div>
+                      <h4 className="font-bold text-white text-sm">Auto-Desbloqueio & PIX</h4>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Oferece botão de Desbloqueio em Confiança 48h junto com a renegociação do PIX.
+                      </p>
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
+                        "Ainda não identificamos seu pagamento. Precisa de mais tempo? Clique para liberar 48h..."
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-white/5">
+                      <button 
+                        onClick={() => handleExecutarFaseRegua('d_mais_3')}
+                        disabled={executandoFase === 'd_mais_3'}
+                        className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {executandoFase === 'd_mais_3' ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
+                        Disparar Lote D+3 (12 clientes)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fase 4: D+7 */}
+                  <div className="bg-[#0b0f19] border border-white/5 hover:border-red-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">FASE 4 • D+7</span>
+                        <span className="text-[11px] text-red-400 font-bold">Pré-Bloqueio</span>
+                      </div>
+                      <h4 className="font-bold text-white text-sm">Aviso de Suspensão MikroTik</h4>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Último aviso antes da redução de banda no concentrador PPPoE/Radius.
+                      </p>
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
+                        "URGENTE: Sua conexão entrará em redução em 24h. Pague via PIX para não interromper..."
+                      </div>
+                    </div>
+                    <div className="mt-5 pt-3 border-t border-white/5">
+                      <button 
+                        onClick={() => handleExecutarFaseRegua('d_mais_7')}
+                        disabled={executandoFase === 'd_mais_7'}
+                        className="w-full py-2 px-3 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {executandoFase === 'd_mais_7' ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
+                        Disparar Lote D+7 (8 clientes)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Histórico Recente de Disparos da Régua */}
+                <div className="mt-8">
+                  <h4 className="text-xs uppercase tracking-wider font-bold text-slate-400 mb-3 flex items-center gap-2">
+                    <Clock size={14} className="text-amber-400" /> Histórico Recente de Disparos Automatizados da Régua
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs border border-white/5 rounded-xl overflow-hidden">
+                      <thead className="bg-[#0b0f19] text-slate-400 border-b border-white/5">
+                        <tr>
+                          <th className="px-4 py-3">Fase da Régua</th>
+                          <th className="px-4 py-3">Disparados</th>
+                          <th className="px-4 py-3">PIX Gerados</th>
+                          <th className="px-4 py-3">Taxa Entrega</th>
+                          <th className="px-4 py-3">Executado em</th>
+                          <th className="px-4 py-3 text-right">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5 text-slate-300">
+                        {(reguaConfig?.historicoExecucoes || [
+                          { id: "1", fase: "D-3 (Lembrete Preventivo)", disparados: 42, pixGerados: 42, sucesso: 42, data: "Hoje, às 08:30" },
+                          { id: "2", fase: "D0 (Vence Hoje)", disparados: 28, pixGerados: 28, sucesso: 28, data: "Hoje, às 09:15" },
+                          { id: "3", fase: "D+3 (Notificação de Tolerância)", disparados: 14, pixGerados: 14, sucesso: 14, data: "Hoje, às 10:00" }
+                        ]).map((item: any, idx: number) => (
+                          <tr key={idx} className="hover:bg-white/[0.02]">
+                            <td className="px-4 py-3 font-bold text-white flex items-center gap-2">
+                              <Zap size={13} className="text-amber-400" />
+                              {item.fase}
+                            </td>
+                            <td className="px-4 py-3 font-mono">{item.disparados} destinatários</td>
+                            <td className="px-4 py-3 font-mono text-emerald-400">{item.pixGerados} chaves criadas</td>
+                            <td className="px-4 py-3 text-emerald-400 font-bold">100%</td>
+                            <td className="px-4 py-3 text-slate-400">{item.data}</td>
+                            <td className="px-4 py-3 text-right">
+                              <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">CONCLUÍDO</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === 'push' ? (
             /* Push Notifications Management */
             <div className="space-y-6">
               {/* Form de Disparo Push */}

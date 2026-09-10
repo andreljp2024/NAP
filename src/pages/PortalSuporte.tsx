@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { HeadphonesIcon, Plus, MessageSquare, Clock, CheckCircle2, PhoneCall, Bot } from 'lucide-react';
+import { HeadphonesIcon, Plus, MessageSquare, Clock, CheckCircle2, PhoneCall, Bot, Activity, Wifi, ShieldAlert, RefreshCw } from 'lucide-react';
 import type { Deal } from '../types';
+import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
 
 export default function PortalSuporte() {
   const [chamados, setChamados] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCall, setActiveCall] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
+  const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
 
   useEffect(() => {
     // Busca apenas chamados de suporte (mock)
@@ -73,6 +75,36 @@ export default function PortalSuporte() {
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-2">Suporte Técnico</h1>
           <p className="text-slate-600 text-sm md:text-base">Meus chamados e contato direto.</p>
         </div>
+      </div>
+
+      {/* Banner de Auto-Diagnóstico */}
+      <div className="bg-gradient-to-r from-slate-900 to-indigo-950 p-6 rounded-3xl text-white mb-8 border border-indigo-900/50 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl shadow-slate-950/20">
+        <div className="flex items-start gap-4">
+          <div className="w-14 h-14 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-2xl flex items-center justify-center shrink-0">
+            <Activity size={28} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider">
+                GenieACS TR-069 Ativo
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold uppercase tracking-wider">
+                NOC Shield
+              </span>
+            </div>
+            <h2 className="text-xl font-bold font-outfit text-white mt-1.5">Auto-Diagnóstico de Fibra & Wi-Fi</h2>
+            <p className="text-slate-300 text-xs md:text-sm mt-1 max-w-xl">
+              Teste o sinal óptico da sua ONU, confira se há rompimentos no seu bairro e reinicie seu roteador remotamente sem precisar esperar na fila.
+            </p>
+          </div>
+        </div>
+
+        <button 
+          onClick={() => setIsDiagnosticoOpen(true)}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-2xl text-xs md:text-sm transition-all active:scale-95 shadow-lg shadow-blue-600/30 shrink-0 flex items-center gap-2"
+        >
+          <Activity size={18} /> Iniciar Diagnóstico Agora
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -161,6 +193,12 @@ export default function PortalSuporte() {
           )}
         </div>
       )}
+
+      <AutoDiagnosticoModal
+        isOpen={isDiagnosticoOpen}
+        onClose={() => setIsDiagnosticoOpen(false)}
+        clienteBairro="Centro Histórico"
+      />
     </div>
   );
 }

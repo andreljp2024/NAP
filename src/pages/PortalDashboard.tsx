@@ -5,6 +5,7 @@ import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import PortalWifiModal from '../components/PortalWifiModal';
+import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
 
 export default function PortalDashboard() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function PortalDashboard() {
   const [loadingBoleto, setLoadingBoleto] = useState(false);
   const [pixCode, setPixCode] = useState<string | null>(null);
   const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
+  const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
   const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
 
   useEffect(() => {
@@ -150,8 +152,11 @@ export default function PortalDashboard() {
             >
               <Lock size={15} /> Alterar Senha do Wi-Fi
             </button>
-            <button className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95">
-              <Activity size={15} /> Testar Velocidade
+            <button 
+              onClick={() => setIsDiagnosticoOpen(true)}
+              className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"
+            >
+              <Activity size={15} /> Auto-Diagnóstico de Rede
             </button>
           </div>
         </div>
@@ -247,6 +252,12 @@ export default function PortalDashboard() {
               }
             });
         }}
+      />
+
+      <AutoDiagnosticoModal
+        isOpen={isDiagnosticoOpen}
+        onClose={() => setIsDiagnosticoOpen(false)}
+        clienteBairro="Centro Histórico"
       />
     </div>
   );
