@@ -45,3 +45,24 @@ export const atendimentos = pgTable('atendimentos', {
   criadoEm: varchar('criado_em', { length: 50 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+
+export const conversas = pgTable('conversas', {
+  id: serial('id').primaryKey(),
+  telefone: varchar('telefone', { length: 20 }).notNull().unique(), // O ID do WABA ou telefone real
+  nomeCliente: varchar('nome_cliente', { length: 255 }),
+  clienteId: serial('cliente_id').references(() => clientes.id),
+  fila: varchar('fila', { length: 50 }).default('triagem_ia'), // 'triagem_ia', 'fila_geral', 'meus', 'finalizados'
+  statusConexao: text('status_conexao'), // JSON com uptime, sinal onu etc p/ contexto
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const mensagens = pgTable('mensagens', {
+  id: serial('id').primaryKey(),
+  conversaId: serial('conversa_id').references(() => conversas.id),
+  remetente: varchar('remetente', { length: 50 }).notNull(), // 'cliente', 'operador', 'ia', 'sistema'
+  conteudo: text('conteudo').notNull(),
+  tipo: varchar('tipo', { length: 50 }).default('texto'), // 'texto', 'audio', 'imagem'
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

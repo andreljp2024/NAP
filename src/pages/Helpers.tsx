@@ -124,14 +124,14 @@ const sections = [
           <h3 className="text-sm font-bold text-indigo-300 mb-2 flex items-center gap-2">
             <Sparkles size={16} /> Inteligência Artificial na Ligação
           </h3>
-          <p className="text-xs text-indigo-200/70 leading-relaxed">
+          <div className="text-xs text-indigo-200/70 leading-relaxed">
             Durante a ligação, o streaming de áudio é enviado à rota <code>/api/gemini/voice/analyze</code>. A IA faz:
             <ul className="list-disc ml-5 mt-2 space-y-1">
               <li>Transcrição Speech-to-Text ao vivo.</li>
               <li>Análise de Sentimento (Frustrado, Positivo, Neutro).</li>
               <li>Recomendações e Script dinâmico em tempo real para o Operador.</li>
             </ul>
-          </p>
+          </div>
         </div>
       </div>
     )

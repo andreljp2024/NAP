@@ -5,6 +5,7 @@ import cors from "cors";
 import { db } from "./src/db";
 import { users, atendimentos, clientes, faturas } from "./src/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { conversas, mensagens } from "./src/db/schema";
 
 
 import { agentToolRegistry } from "./server/agent/toolRegistry";
@@ -14,6 +15,10 @@ import { agentToolRegistry } from "./server/agent/toolRegistry";
 
   const app = express();
   const PORT = 3000;
+
+let mockWabaChats = [];
+let mockWabaMessages = [];
+
 
 const SGP_URL = process.env.SGP_URL || "";
 const SGP_APP = process.env.SGP_APP || "";
@@ -266,7 +271,11 @@ let kanbanDeals = [
       }
       res.json(formatted);
     } catch (e) {
-      console.error("Erro DB Deals GET", e);
+      if (e && (e.code === 'ECONNREFUSED' || e.message?.includes('ECONNREFUSED'))) {
+        console.warn("[Mock] Banco de dados offline. Usando fallback no /api/deals");
+      } else {
+        console.error("Erro DB Deals GET", e?.message || e);
+      }
       res.json(kanbanDeals);
     }
   });
@@ -320,7 +329,11 @@ let kanbanDeals = [
         status: user[0].ativo ? 'ativo' : 'inativo'
       });
     } catch (error) {
-      console.error("DB Login error:", error);
+      if (error && (error.code === 'ECONNREFUSED' || error.message?.includes('ECONNREFUSED'))) {
+        console.warn("[Mock] Banco de dados offline. Usando fallback no /api/login");
+      } else {
+        console.error("DB Login error:", error?.message || error);
+      }
       res.status(500).json({ error: "Database offline ou erro interno." });
     }
   });
@@ -811,6 +824,140 @@ let kanbanDeals = [
 
 
 
+
+
+  // --- WhatsApp Cloud API (WABA) Webhook & Endpoints ---
+  
+  // 1. Verificação do Webhook pela Meta
+  app.get("/api/webhooks/waba/incoming", (req, res) => {
+    const verify_token = process.env.WABA_VERIFY_TOKEN || "nap_token_secreto_123";
+    let mode = req.query["hub.mode"];
+    let token = req.query["hub.verify_token"];
+    let challenge = req.query["hub.challenge"];
+    
+    if (mode && token) {
+      if (mode === "subscribe" && token === verify_token) {
+        console.log("WABA Webhook verificado!");
+        return res.status(200).send(challenge);
+      } else {
+        return res.sendStatus(403);
+      }
+    }
+    return res.status(400).json({ error: "Parâmetros inválidos" });
+  });
+
+  // 2. Recebimento de mensagens (Eventos WABA) e Copiloto Gemini (Triagem IA)
+  app.post("/api/webhooks/waba/incoming", async (req, res) => {
+    try {
+      const body = req.body;
+      if (!body.entry || !body.entry[0].changes || !body.entry[0].changes[0].value.messages) {
+        return res.sendStatus(200); // Outros eventos
+      }
+      
+      const messageData = body.entry[0].changes[0].value.messages[0];
+      const contactData = body.entry[0].changes[0].value.contacts?.[0];
+      const telefone = messageData.from;
+      const texto = messageData.text?.body || "(Áudio/Mídia Recebida)";
+      const nome_cliente = contactData?.profile?.name || "Cliente SGP";
+      
+      console.log(`[WABA] Msg de ${telefone} (${nome_cliente}): ${texto}`);
+      
+      // Upsert Conversa
+      let chatId = null;
+      try {
+        let chat = await db.select().from(conversas).where(eq(conversas.telefone, telefone)).limit(1);
+        if (chat.length === 0) {
+           const newChat = await db.insert(conversas).values({
+             telefone,
+             nomeCliente: nome_cliente,
+             fila: 'triagem_ia',
+             statusConexao: '{"uptime":"2 dias", "sinal_onu":"-19.5 dBm", "status":"conectado"}'
+           }).returning();
+           chatId = newChat[0].id;
+        } else {
+           chatId = chat[0].id;
+           // Atualiza data
+           await db.update(conversas).set({ updatedAt: new Date() }).where(eq(conversas.id, chatId));
+        }
+        
+        // Salva a mensagem do cliente
+        await db.insert(mensagens).values({
+          conversaId: chatId,
+          remetente: 'cliente',
+          conteudo: texto,
+          tipo: messageData.type === 'audio' ? 'audio' : 'texto'
+        });
+        
+        // --- TRIAGEM IA (Gemini Auto-Resposta) ---
+        // Se a conversa estiver na fila "triagem_ia", a IA responde.
+        let isTriagem = false;
+        if(chat.length === 0 || chat[0].fila === 'triagem_ia') isTriagem = true;
+        
+        if (isTriagem) {
+           // Simula buscar histórico (na vida real, mandaríamos o array pro Gemini)
+           const prompt = `Você é a IA de Triagem do provedor NAP. O cliente ${nome_cliente} enviou: "${texto}". O sinal da ONU está normal (-19.5 dBm). Dê uma resposta curta e acolhedora em português, avisando que vai analisar.`;
+           
+           try {
+             // Chamada interna p/ agent/run (simplificada)
+             const { GoogleGenAI } = require("@google/genai");
+             const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+             const geminiResponse = await ai.models.generateContent({
+               model: "gemini-2.5-flash",
+               contents: prompt
+             });
+             const resposta_ia = geminiResponse.text;
+             
+             // Salva a resposta da IA no BD
+             await db.insert(mensagens).values({
+               conversaId: chatId,
+               remetente: 'ia',
+               conteudo: resposta_ia,
+               tipo: 'texto'
+             });
+             
+             // TODO: Disparar para a API do Meta WABA real a resposta (via POST /messages)
+           } catch (errAi) {
+             console.error("Erro no Gemini", errAi);
+           }
+        }
+      } catch (dbErr) {
+        console.error("DB WABA Error", dbErr);
+        // Fallback em memória
+        let chat = mockWabaChats.find(c => c.telefone === telefone);
+        if(!chat) {
+           chat = { id: Date.now(), telefone, nomeCliente: nome_cliente, fila: 'triagem_ia' };
+           mockWabaChats.push(chat);
+        }
+        mockWabaMessages.push({ conversaId: chat.id, remetente: 'cliente', conteudo: texto, createdAt: new Date() });
+      }
+
+      res.status(200).send("EVENT_RECEIVED");
+    } catch (e) {
+      console.error("[WABA Webhook Error]", e);
+      res.sendStatus(500);
+    }
+  });
+
+  // 3. API do Front para Listar Conversas e Mensagens
+  app.get("/api/conversas", async (req, res) => {
+    try {
+      const chats = await db.select().from(conversas).orderBy(desc(conversas.updatedAt));
+      res.json(chats);
+    } catch (e) {
+      // Silenced error for mock fallback
+      res.json(mockWabaChats);
+    }
+  });
+
+  app.get("/api/conversas/:id/mensagens", async (req, res) => {
+    try {
+      const msgs = await db.select().from(mensagens).where(eq(mensagens.conversaId, parseInt(req.params.id))).orderBy(mensagens.createdAt);
+      res.json(msgs);
+    } catch (e) {
+      // Silenced error for mock fallback
+      res.json(mockWabaMessages.filter(m => m.conversaId == req.params.id));
+    }
+  });
 
   // --- Push Notifications Gateway (PWA Web Push) ---
   interface PushSubscriptionRecord {

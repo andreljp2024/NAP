@@ -282,9 +282,9 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                         }`}
                       >
                         {stageDeals.map((deal, index) => {
-                          const draggableProps = { key: deal.id, draggableId: String(deal.id), index } as any;
+                          const DraggableItem = Draggable as any;
                           return (
-                            <Draggable {...draggableProps}>
+                            <DraggableItem key={deal.id} draggableId={String(deal.id)} index={index}>
                               {(provided: any, snapshot: any) => (
                                 <div 
                                   onClick={() => setSelectedDeal(deal)}
@@ -342,7 +342,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                                   </div>
                                 </div>
                               )}
-                            </Draggable>
+                            </DraggableItem>
                           );
                         })}
                         {provided.placeholder}
