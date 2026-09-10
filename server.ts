@@ -1830,6 +1830,36 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       config: systemConfig
     });
   });
+  // Catch-all API 404 handler
+  app.all("/api/*", (req, res) => {
+    res.status(404).json({ error: "API endpoint não encontrado", route: req.originalUrl });
+  });
+
+  // Global Error Handler
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error(err);
+    if (req.path.startsWith("/api/")) {
+      res.status(500).json({ error: "Erro interno", details: err.message });
+    } else {
+      next(err);
+    }
+  });
+
+  // Catch-all API 404 handler
+  app.all("/api/*", (req, res) => {
+    res.status(404).json({ error: "API endpoint não encontrado", route: req.originalUrl });
+  });
+
+  // Global Error Handler
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error(err);
+    if (req.path.startsWith("/api/")) {
+      res.status(500).json({ error: "Erro interno", details: err.message });
+    } else {
+      next(err);
+    }
+  });
+
   if (process.env.NODE_ENV !== "production") {
     // Wait until vite is imported
     while (!createViteServer) {
