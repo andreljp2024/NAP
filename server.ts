@@ -4,13 +4,13 @@ import cors from "cors";
 
 // We import createViteServer dynamically if not in production
 let createViteServer: any;
-if (process.env.NODE_ENV !== "production") {
+if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
   import("vite").then((vite) => {
     createViteServer = vite.createServer;
   });
 }
 
-async function startServer() {
+
   const app = express();
   const PORT = 3000;
 
@@ -1860,29 +1860,28 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     }
   });
 
-  if (process.env.NODE_ENV !== "production") {
-    // Wait until vite is imported
-    while (!createViteServer) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
+  if (!process.env.VERCEL) {
+  if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
+    import("vite").then(async (vite) => {
+      const viteServer = await vite.createServer({
+        server: { middlewareMode: true },
+        appType: "spa",
+      });
+      app.use(viteServer.middlewares);
+      app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
     });
-    app.use(vite.middlewares);
   } else {
-    // Production: serve static files from dist/
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    // SPA Fallback
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
   }
-
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
 }
 
-startServer();
+export default app;
