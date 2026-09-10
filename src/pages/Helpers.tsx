@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Sparkles, Server, MessageSquare, PhoneCall, LayoutDashboard, Database, ShieldCheck, Zap, Cog } from 'lucide-react';
+import { BookOpen, Sparkles, Server, MessageSquare, PhoneCall, LayoutDashboard, Database, ShieldCheck, Zap, Cog, Wifi, Smartphone } from 'lucide-react';
 
 const sections = [
   {
@@ -19,6 +19,52 @@ const sections = [
           <p className="text-xs text-blue-100/70 leading-relaxed">
             A plataforma conta com um Cérebro Baseado em Gemini 2.5 rodando no servidor Node.js. A IA orquestra o atendimento de auto-serviço e auxilia os operadores humanos gerando análises de sentimentos e transcrição em tempo real de voz.
           </p>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 'wifi-tr069',
+    title: 'Autoatendimento Wi-Fi (TR-069)',
+    icon: <Wifi size={18} />,
+    content: (
+      <div className="space-y-6">
+        <h2 className="text-xl font-bold text-white mb-4">Alteração de Senha do Wi-Fi pelo Cliente (Portal PWA)</h2>
+        
+        <p className="text-slate-300 text-sm leading-relaxed">
+          O assinante pode alterar o nome da rede (SSID) e a senha do Wi-Fi diretamente pelo <strong>Portal do Cliente (PWA)</strong> sem precisar ligar para a central de suporte ou chamar um técnico à residência.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-xl space-y-2">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <Zap size={16} /> Fluxo do Cliente no Portal
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              O cliente acessa <strong>Minha Conexão</strong> ou <strong>Minha Conta</strong> e clica em <em>"Alterar Senha do Wi-Fi"</em>. Ele digita a nova senha (mínimo 8 dígitos) e confirma. O portal envia a requisição para <code>POST /api/portal/wifi</code>.
+            </p>
+          </div>
+
+          <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-xl space-y-2">
+            <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
+              <Server size={16} /> Integração TR-069 (GenieACS)
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              O backend NAP envia uma tarefa RPC <code>SetParameterValues</code> ao servidor GenieACS, direcionada aos parâmetros <code>InternetGatewayDevice.LANDevice.1.WLANConfiguration</code> da ONU/roteador do assinante.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-xl space-y-3">
+          <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <Smartphone size={16} className="text-indigo-400" /> Recursos Inclusos para o Assinante
+          </h3>
+          <ul className="text-xs text-slate-400 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Medidor de Segurança:</strong> Avalia a força da senha digitada em tempo real (Fraca / Média / Forte).</li>
+            <li><strong>QR Code de Conexão:</strong> Gera um QR Code padrão Wi-Fi (WPA2) na tela para que familiares ou visitas se conectem instantaneamente apontando a câmera do celular.</li>
+            <li><strong>Mapeamento de Dispositivos Conectados:</strong> Exibe a lista de celulares, smart TVs e computadores autenticados na rede local com nível de sinal (dBm) e frequência (2.4GHz ou 5GHz).</li>
+            <li><strong>Reinicialização Remota:</strong> Permite ao cliente reiniciar a ONU caso perceba lentidão, via comando <code>Reboot</code> do TR-069.</li>
+          </ul>
         </div>
       </div>
     )

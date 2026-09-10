@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2, Bell, Smartphone } from 'lucide-react';
+import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2, Bell, Smartphone, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import PortalWifiModal from '../components/PortalWifiModal';
 
 export default function PortalDashboard() {
   const navigate = useNavigate();
@@ -13,11 +14,26 @@ export default function PortalDashboard() {
   const [loadingPix, setLoadingPix] = useState(false);
   const [loadingBoleto, setLoadingBoleto] = useState(false);
   const [pixCode, setPixCode] = useState<string | null>(null);
+  const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
+  const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
 
   useEffect(() => {
     fetch('/api/sgp/faturas')
       .then(res => res.json())
       .then(data => setFaturas(data));
+
+    fetch('/api/portal/wifi')
+      .then(res => res.json())
+      .then(data => {
+        if (data.sucesso && data.config) {
+          setWifiSummary({
+            ssid: data.config.ssid5 || data.config.ssid24,
+            modelo: data.config.modeloCpe,
+            dispositivos: data.config.dispositivosConectados?.length || 0
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const faturaPendente = faturas.find(f => f.status === 'pendente');
@@ -103,23 +119,41 @@ export default function PortalDashboard() {
               <CheckCircle2 size={14} /> Online
             </div>
           </div>
-          <div className="space-y-4 border-t border-slate-200 pt-5 relative z-10">
+          <div className="space-y-3.5 border-t border-slate-200 pt-5 relative z-10">
             <div className="flex justify-between items-center text-sm">
               <span className="text-slate-600 font-medium">Plano Atual</span>
               <span className="font-bold text-slate-900">Fibra 500MB</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">Uptime (SGP)</span>
-              <span className="font-bold text-slate-900">12 dias, 4h</span>
+              <span className="text-slate-600 font-medium">Rede Wi-Fi (SSID)</span>
+              <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 text-xs">
+                {wifiSummary?.ssid || 'Carregando...'}
+              </span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">IP Público</span>
-              <span className="font-bold text-slate-900 font-mono">189.12.X.X</span>
+              <span className="text-slate-600 font-medium">Dispositivos no Wi-Fi</span>
+              <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                {wifiSummary?.dispositivos || 5} aparelhos conectados
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-600 font-medium">Roteador / ONU</span>
+              <span className="font-bold text-slate-700 text-xs font-mono">{wifiSummary?.modelo?.split(' ')[0] || 'ZTE'} F670L</span>
             </div>
           </div>
-          <button className="w-full mt-8 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 relative z-10">
-            <Activity size={18} /> Testar Velocidade
-          </button>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-6 relative z-10">
+            <button 
+              onClick={() => setIsWifiModalOpen(true)}
+              className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
+            >
+              <Lock size={15} /> Alterar Senha do Wi-Fi
+            </button>
+            <button className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95">
+              <Activity size={15} /> Testar Velocidade
+            </button>
+          </div>
         </div>
 
         {/* Resumo Financeiro */}
@@ -189,15 +223,31 @@ export default function PortalDashboard() {
         Atendimento Rápido
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" onClick={() => navigate('/portal/suporte')} />
+        <QuickAction icon={<Wifi />} label="Wi-Fi & Senha" onClick={() => setIsWifiModalOpen(true)} />
         <QuickAction icon={<CreditCard />} label="Faturas SGP" onClick={() => navigate('/portal/faturas')} />
-        <QuickAction 
-          icon={<Bell />} 
-          label="Testar Push" 
-          onClick={() => triggerTestPush({ title: 'Portal NAP', body: 'A sua conexão está operando perfeitamente!' })}
-        />
-        <QuickAction icon={<Settings />} label="Alterar Senha" onClick={() => navigate('/portal/conta')} />
+        <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" onClick={() => navigate('/portal/suporte')} />
+        <QuickAction icon={<Settings />} label="Minha Conta" onClick={() => navigate('/portal/conta')} />
       </div>
+
+      {/* Modal de Gerenciamento do Wi-Fi Residencial via TR-069 */}
+      <PortalWifiModal 
+        isOpen={isWifiModalOpen} 
+        onClose={() => setIsWifiModalOpen(false)}
+        onSuccess={() => {
+          // Atualizar resumo na tela
+          fetch('/api/portal/wifi')
+            .then(res => res.json())
+            .then(data => {
+              if (data.sucesso && data.config) {
+                setWifiSummary({
+                  ssid: data.config.ssid5 || data.config.ssid24,
+                  modelo: data.config.modeloCpe,
+                  dispositivos: data.config.dispositivosConectados?.length || 0
+                });
+              }
+            });
+        }}
+      />
     </div>
   );
 }

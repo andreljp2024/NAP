@@ -714,6 +714,114 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     res.json({ success: true, message: `Cliente ${id} desbloqueado por 48 horas.` });
   });
 
+  // --- Módulo TR-069 / GenieACS: Gestão de Wi-Fi Residencial pelo Cliente (Portal PWA) ---
+  const customerWifiConfig: any = {
+    serialNumber: "ZTEGC1234567",
+    modeloCpe: "ZTE F670L Dual-Band AC1200",
+    fabricante: "ZTE",
+    mac: "00:11:22:33:44:55",
+    ipCpe: "192.168.1.1",
+    status: "online",
+    ssid24: "Fibra_JoaoSilva_2.4G",
+    ssid5: "Fibra_JoaoSilva_5G",
+    senhaWifi: "Fibra@2026",
+    ocultarSsid: false,
+    seguranca: "WPA2-PSK (AES)",
+    bandaSincronizada: true,
+    canal24: "Canal 6 (Auto)",
+    canal5: "Canal 149 (Auto)",
+    potenciaTx: "100%",
+    dispositivosConectados: [
+      { nome: "iPhone 15 Pro", ip: "192.168.1.104", mac: "8C:85:90:12:34:56", banda: "5 GHz", sinal: -48, tipo: "smartphone" },
+      { nome: "Smart TV Samsung 4K", ip: "192.168.1.108", mac: "D4:E6:B7:AA:BB:CC", banda: "5 GHz", sinal: -52, tipo: "tv" },
+      { nome: "Notebook Dell Inspiron", ip: "192.168.1.115", mac: "34:E6:D7:11:22:33", banda: "5 GHz", sinal: -61, tipo: "computador" },
+      { nome: "Echo Dot Alexa (Sala)", ip: "192.168.1.120", mac: "44:65:0D:88:99:00", banda: "2.4 GHz", sinal: -58, tipo: "iot" },
+      { nome: "Câmera Externa Wi-Fi", ip: "192.168.1.135", mac: "60:01:94:44:55:66", banda: "2.4 GHz", sinal: -69, tipo: "camera" }
+    ],
+    historicoAlteracoes: [
+      { data: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), autor: "Técnico de Instalação", acao: "Configuração Inicial da Fibra" }
+    ],
+    ultimaAlteracao: new Date().toISOString()
+  };
+
+  // Obter configurações Wi-Fi do assinante
+  app.get("/api/portal/wifi", (req, res) => {
+    res.json({
+      sucesso: true,
+      config: customerWifiConfig
+    });
+  });
+
+  // Atualizar senha e credenciais de Wi-Fi via TR-069
+  app.post("/api/portal/wifi", async (req, res) => {
+    const { senhaWifi, ssid24, ssid5, ocultarSsid, bandaSincronizada } = req.body;
+
+    // Validação de segurança WPA2/WPA3
+    if (senhaWifi !== undefined) {
+      if (typeof senhaWifi !== "string" || senhaWifi.length < 8 || senhaWifi.length > 63) {
+        return res.status(400).json({
+          sucesso: false,
+          erro: "A senha do Wi-Fi deve ter no mínimo 8 e no máximo 63 caracteres."
+        });
+      }
+      customerWifiConfig.senhaWifi = senhaWifi;
+    }
+
+    if (ssid24 && typeof ssid24 === "string" && ssid24.trim().length > 0) {
+      customerWifiConfig.ssid24 = ssid24.trim();
+    }
+
+    if (ssid5 && typeof ssid5 === "string" && ssid5.trim().length > 0) {
+      customerWifiConfig.ssid5 = ssid5.trim();
+    }
+
+    if (ocultarSsid !== undefined) {
+      customerWifiConfig.ocultarSsid = Boolean(ocultarSsid);
+    }
+
+    if (bandaSincronizada !== undefined) {
+      customerWifiConfig.bandaSincronizada = Boolean(bandaSincronizada);
+    }
+
+    customerWifiConfig.ultimaAlteracao = new Date().toISOString();
+    customerWifiConfig.historicoAlteracoes.unshift({
+      data: customerWifiConfig.ultimaAlteracao,
+      autor: "Assinante (Portal do Cliente PWA)",
+      acao: `Alteração de Credenciais Wi-Fi (SSID: ${customerWifiConfig.ssid24} / Senha atualizada)`
+    });
+
+    // Simula tempo de envio do comando TR-069 SetParameterValues para a CPE/ONU
+    await new Promise(r => setTimeout(r, 650));
+
+    res.json({
+      sucesso: true,
+      mensagem: "Senha de Wi-Fi alterada com sucesso! As novas credenciais foram enviadas e aplicadas no seu roteador via TR-069.",
+      config: customerWifiConfig,
+      tr069Job: {
+        id: "tr069_job_" + Math.random().toString(36).substring(2, 9),
+        metodo: "SetParameterValues",
+        parametrosAtualizados: [
+          "InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.PreSharedKey.1.PreSharedKey",
+          "InternetGatewayDevice.LANDevice.1.WLANConfiguration.1.SSID",
+          "InternetGatewayDevice.LANDevice.1.WLANConfiguration.2.PreSharedKey.1.PreSharedKey",
+          "InternetGatewayDevice.LANDevice.1.WLANConfiguration.2.SSID"
+        ],
+        status: "SUCCESS",
+        timestamp: new Date().toISOString()
+      }
+    });
+  });
+
+  // Reiniciar ONU / Roteador Wi-Fi remotamente via TR-069
+  app.post("/api/portal/wifi/reboot", async (req, res) => {
+    // Simula comando Reboot TR-069
+    await new Promise(r => setTimeout(r, 500));
+    res.json({
+      sucesso: true,
+      mensagem: "Comando de reinicialização enviado com sucesso para a ONU/Roteador via TR-069. O equipamento reconectará em aproximadamente 60 segundos."
+    });
+  });
+
   // Generate Boleto PDF (Real ou Mock)
   app.post("/api/sgp/boleto/:id", async (req, res) => {
     const { id } = req.params;

@@ -1,11 +1,38 @@
-import React, { useState } from 'react';
-import { User, Mail, Phone, Lock, Save, Shield, Bell, BellRing, Smartphone, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Mail, Phone, Lock, Save, Shield, Bell, BellRing, Smartphone, CheckCircle2, Wifi, QrCode, Eye, EyeOff, Copy, Check, RefreshCw } from 'lucide-react';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
+import PortalWifiModal from '../components/PortalWifiModal';
 
 export default function PortalConta() {
   const [loading, setLoading] = useState(false);
   const { permission, loading: loadingPush, requestPermission, triggerTestPush } = usePushNotifications();
+  const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
+  const [wifiData, setWifiData] = useState<any>(null);
+  const [showWifiPassword, setShowWifiPassword] = useState(false);
+  const [copiedWifi, setCopiedWifi] = useState(false);
+
+  const fetchWifi = () => {
+    fetch('/api/portal/wifi')
+      .then(res => res.json())
+      .then(data => {
+        if (data.sucesso && data.config) {
+          setWifiData(data.config);
+        }
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchWifi();
+  }, []);
+
+  const handleCopyWifi = () => {
+    if (!wifiData?.senhaWifi) return;
+    navigator.clipboard.writeText(wifiData.senhaWifi);
+    setCopiedWifi(true);
+    setTimeout(() => setCopiedWifi(false), 2000);
+  };
 
   const handleSave = () => {
     setLoading(true);
@@ -79,6 +106,81 @@ export default function PortalConta() {
               <Save size={18} />
               {loading ? 'Salvando...' : 'Salvar Alterações'}
             </button>
+          </div>
+        </div>
+
+        {/* Gestão do Wi-Fi Residencial (TR-069) */}
+        <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden relative">
+          <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center">
+                <Wifi size={20} />
+              </div>
+              <div>
+                <h2 className="font-bold text-slate-900 font-outfit">Roteador & Senha do Wi-Fi</h2>
+                <p className="text-xs text-slate-500">Controle remoto da ONU residencial via protocolo TR-069.</p>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Sincronizado
+            </span>
+          </div>
+
+          <div className="p-5 md:p-6 space-y-6 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Rede Wi-Fi (SSID)</span>
+                <span className="text-sm font-bold font-mono text-slate-900 block">
+                  {wifiData?.ssid5 || wifiData?.ssid24 || 'Carregando...'}
+                </span>
+                <span className="text-[11px] text-slate-500 block">
+                  Modelo: {wifiData?.modeloCpe || 'ZTE Dual-Band'}
+                </span>
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Senha da Rede</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold font-mono text-slate-900 tracking-wider">
+                    {showWifiPassword ? wifiData?.senhaWifi : '••••••••••••'}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowWifiPassword(!showWifiPassword)}
+                      className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg transition-colors"
+                      title={showWifiPassword ? "Ocultar senha" : "Ver senha"}
+                    >
+                      {showWifiPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCopyWifi}
+                      className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-slate-200/60 rounded-lg transition-colors"
+                      title="Copiar senha"
+                    >
+                      {copiedWifi ? <Check size={16} className="text-emerald-600" /> : <Copy size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <span className="text-[11px] text-emerald-700 font-medium block">
+                  ● {wifiData?.dispositivosConectados?.length || 5} aparelhos conectados
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+              <p className="text-xs text-slate-500">
+                Você pode alterar sua senha a qualquer momento. A nova chave é aplicada imediatamente.
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsWifiModalOpen(true)}
+                className="w-full sm:w-auto px-5 py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95"
+              >
+                <Lock size={15} /> Alterar Senha do Wi-Fi
+              </button>
+            </div>
           </div>
         </div>
 
@@ -176,6 +278,13 @@ export default function PortalConta() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Gestão Wi-Fi */}
+      <PortalWifiModal
+        isOpen={isWifiModalOpen}
+        onClose={() => setIsWifiModalOpen(false)}
+        onSuccess={() => fetchWifi()}
+      />
     </div>
   );
 }
