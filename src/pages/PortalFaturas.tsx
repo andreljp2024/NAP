@@ -61,7 +61,7 @@ export default function PortalFaturas() {
         <div className="flex justify-center p-8 text-slate-500">Carregando faturas...</div>
       ) : (
         <div className="bg-white rounded-3xl shadow-md shadow-sm border border-slate-200 overflow-hidden relative">
-          <div className="divide-y divide-slate-800/60 relative z-10">
+          <div className="divide-y divide-slate-200 relative z-10">
             {faturas.map(fatura => (
               <div key={fatura.id} className="p-5 md:p-6 hover:bg-slate-100/40 transition-colors group">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-3">
@@ -123,17 +123,17 @@ export default function PortalFaturas() {
 
                 {/* Área de exibição do PIX */}
                 {actionStates[fatura.id]?.type === 'pix' && actionStates[fatura.id]?.status === 'success' && actionStates[fatura.id]?.data && (
-                  <div className="mt-5 p-4 bg-indigo-950/30 border border-blue-200 rounded-2xl animate-in fade-in zoom-in-95">
-                    <p className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">Código PIX Copia e Cola:</p>
+                  <div className="mt-5 p-4 bg-blue-50 border border-blue-200 rounded-2xl animate-in fade-in zoom-in-95">
+                    <p className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-2">Código PIX Copia e Cola:</p>
                     <div className="flex items-center gap-2">
                       <input 
                         readOnly 
                         value={actionStates[fatura.id]?.data} 
-                        className="flex-1 bg-slate-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-700 outline-none font-mono shadow-inner"
+                        className="flex-1 bg-white border border-blue-200 rounded-xl p-3 text-xs text-blue-900 outline-none font-mono shadow-inner focus:ring-2 focus:ring-blue-600/50 transition-all"
                       />
                       <button 
                         onClick={() => copyPixCode(actionStates[fatura.id]?.data!)}
-                        className="bg-blue-700 text-white p-3 rounded-xl hover:bg-blue-600 flex items-center justify-center transition-all shadow-lg hover:scale-105 active:scale-95"
+                        className="bg-blue-700 text-white p-3 rounded-xl hover:bg-blue-600 flex items-center justify-center transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95 shrink-0"
                       >
                         <Copy size={16} />
                       </button>

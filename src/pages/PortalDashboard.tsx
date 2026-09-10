@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2, Bell, Smartphone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
 export default function PortalDashboard() {
+  const navigate = useNavigate();
   const { triggerTestPush, permission, requestPermission } = usePushNotifications();
   const { isInstallable, isInstalled } = usePWAInstall();
   const [faturas, setFaturas] = useState<any[]>([]);
@@ -121,31 +123,31 @@ export default function PortalDashboard() {
         </div>
 
         {/* Resumo Financeiro */}
-        <div className="bg-gradient-to-br from-blue-100/60 to-purple-900/30 p-6 rounded-3xl shadow-md shadow-blue-100/20 border border-blue-200 relative overflow-hidden flex flex-col">
+        <div className="bg-gradient-to-br from-blue-700 to-indigo-900 p-6 rounded-3xl shadow-md shadow-blue-900/20 border border-blue-600 relative overflow-hidden flex flex-col">
           {/* Decoração de fundo */}
           <div className="absolute top-0 right-0 p-8 opacity-10">
-            <QrCode size={160} className="fill-blue-600" />
+            <QrCode size={160} className="fill-white" />
           </div>
           
           <div className="relative z-10 flex-1 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <AlertCircle size={16} className="text-blue-600" />
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-700">Próximo Vencimento</p>
+                <AlertCircle size={16} className="text-blue-300" />
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-200">Próximo Vencimento</p>
               </div>
               {faturaPendente ? (
                 <>
                   <h2 className="text-4xl md:text-5xl font-bold mb-2 text-white font-outfit tracking-tight">
-                    <span className="text-xl md:text-2xl text-blue-600">R$</span> {faturaPendente.valor.toFixed(2).replace('.', ',')}
+                    <span className="text-xl md:text-2xl text-blue-300">R$</span> {faturaPendente.valor.toFixed(2).replace('.', ',')}
                   </h2>
-                  <p className="text-blue-700 text-sm font-medium">
+                  <p className="text-blue-200 text-sm font-medium">
                     Vence em {new Date(faturaPendente.vencimento).toLocaleDateString('pt-BR')}
                   </p>
                 </>
               ) : (
                 <div className="mt-4">
                   <h2 className="text-3xl font-bold mb-2 text-white font-outfit">Tudo em dia!</h2>
-                  <p className="text-blue-700 text-sm">Você não possui faturas pendentes.</p>
+                  <p className="text-blue-200 text-sm">Você não possui faturas pendentes.</p>
                 </div>
               )}
             </div>
@@ -156,7 +158,7 @@ export default function PortalDashboard() {
                   <button 
                     onClick={handleCopiarPix}
                     disabled={loadingPix}
-                    className="flex-1 bg-white text-blue-100 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-indigo-50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
+                    className="flex-1 bg-white text-blue-900 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-slate-50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
                   >
                     {loadingPix ? <Loader2 size={18} className="animate-spin" /> : <QrCode size={18} />}
                     {loadingPix ? 'Gerando...' : 'Copiar PIX'}
@@ -164,16 +166,16 @@ export default function PortalDashboard() {
                   <button 
                     onClick={handleVerBoleto}
                     disabled={loadingBoleto}
-                    className="flex-1 bg-blue-700/80 backdrop-blur-sm text-white font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-blue-600 border border-blue-600/50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg shadow-blue-100/20"
+                    className="flex-1 bg-blue-600/30 backdrop-blur-sm text-white font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-blue-600/50 border border-white/20 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
                   >
                     {loadingBoleto ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
                     {loadingBoleto ? 'Gerando...' : 'Ver Boleto'}
                   </button>
                 </div>
                 {pixCode && (
-                   <div className="mt-4 p-3 bg-indigo-950/50 rounded-xl border border-blue-200 backdrop-blur-sm animate-in fade-in zoom-in-95">
-                     <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-1">Linha Digitável Copiada:</p>
-                     <p className="text-xs font-mono break-all text-blue-800 leading-relaxed">{pixCode}</p>
+                   <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/10 backdrop-blur-sm animate-in fade-in zoom-in-95">
+                     <p className="text-[10px] font-bold uppercase tracking-wider text-blue-300 mb-1">Linha Digitável Copiada:</p>
+                     <p className="text-xs font-mono break-all text-white leading-relaxed">{pixCode}</p>
                    </div>
                 )}
               </div>
@@ -187,14 +189,14 @@ export default function PortalDashboard() {
         Atendimento Rápido
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" />
-        <QuickAction icon={<CreditCard />} label="Faturas SGP" />
+        <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" onClick={() => navigate('/portal/suporte')} />
+        <QuickAction icon={<CreditCard />} label="Faturas SGP" onClick={() => navigate('/portal/faturas')} />
         <QuickAction 
           icon={<Bell />} 
           label="Testar Push" 
           onClick={() => triggerTestPush({ title: 'Portal NAP', body: 'A sua conexão está operando perfeitamente!' })}
         />
-        <QuickAction icon={<Settings />} label="Alterar Senha" />
+        <QuickAction icon={<Settings />} label="Alterar Senha" onClick={() => navigate('/portal/conta')} />
       </div>
     </div>
   );

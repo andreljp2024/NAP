@@ -100,7 +100,13 @@ export default function PortalSuporte() {
           </div>
           <h3 className="text-xl font-bold font-outfit text-slate-900 mb-2">Atendimento via Chat</h3>
           <p className="text-slate-500 text-sm mb-6 max-w-[250px]">Inicie uma conversa por texto. Você será direcionado para o setor correto (Financeiro, Suporte ou Vendas).</p>
-          <button className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-700 transition-all active:scale-95 shadow-emerald-600/20 flex items-center gap-2">
+          <button 
+            onClick={() => {
+              const widget = document.querySelector('.webchat-widget-toggle') as HTMLButtonElement;
+              if (widget) widget.click();
+            }}
+            className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-700 transition-all active:scale-95 shadow-emerald-600/20 flex items-center gap-2"
+          >
             Entrar na Fila de Chat
           </button>
         </div>

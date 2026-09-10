@@ -60,7 +60,7 @@ export default function WebchatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-blue-700 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-105 transition-all z-50"
+          className="webchat-widget-toggle fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-blue-700 text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-105 transition-all z-50"
         >
           <MessageCircle size={28} />
         </button>
