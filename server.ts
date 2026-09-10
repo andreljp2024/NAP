@@ -8,6 +8,30 @@ import cors from "cors";
   const app = express();
   const PORT = 3000;
 
+const SGP_URL = process.env.SGP_URL || "";
+const SGP_APP = process.env.SGP_APP || "";
+const SGP_TOKEN = process.env.SGP_TOKEN || "";
+
+// Função mock para fetchSGP
+async function fetchSGP(endpoint, method = "GET", body = null) {
+  const url = `${SGP_URL}${endpoint}`;
+  const options: any = {
+    method,
+    headers: {
+      "app": SGP_APP,
+      "token": SGP_TOKEN,
+      "Content-Type": "application/json"
+    }
+  };
+  if (body && method !== "GET") {
+    options.body = JSON.stringify(body);
+  }
+  const res = await fetch(url, options);
+  if (!res.ok) throw new Error(`Erro HTTP SGP: ${res.status}`);
+  return await res.json();
+}
+
+
   app.use(cors());
   app.use(express.json());
 
@@ -27,7 +51,13 @@ import cors from "cors";
   });
 
   // In-Memory Kanban Deals (Support & Sales para Provedores ISP)
-  let kanbanDeals = [
+  
+const sgpDatabase_mock: any[] = [
+  { id: 101, nome: "João Silva", status: "ativo", cpf_cnpj: "111.222.333-44", contato: { telefone: "(11) 98765-4321" }, financeiro: { valor: 99.9, status: "em_atraso" } },
+  { id: 102, nome: "Carlos Eduardo Santos", status: "ativo", cpf_cnpj: "555.666.777-88", contato: { telefone: "(11) 97123-8899" }, financeiro: { valor: 119.9, status: "em_dia" } }
+];
+
+let kanbanDeals = [
     { 
       id: 101, 
       titulo: "Sem Conexão (LOS Vermelho na ONU)", 
@@ -220,6 +250,7 @@ import cors from "cors";
     const id = parseInt(req.params.id);
     const { estagio, prioridade } = req.body;
     
+
     const index = kanbanDeals.findIndex(d => d.id === id);
     if (index === -1) {
       return res.status(404).json({ erro: "Card não encontrado" });
@@ -284,7 +315,7 @@ import cors from "cors";
     }
     
     // Mock Fallback original sincronizado com sgpDatabase
-    res.json(sgpDatabase.map(c => ({
+    res.json(sgpDatabase_mock.map(c => ({
       id: c.id,
       cpf_cnpj: c.cpf_cnpj,
       nome: c.nome,
@@ -311,833 +342,38 @@ import cors from "cors";
       if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ erro: "Chave da API Gemini não configurada no servidor." });
       }
-
-      // Initialize Gemini API client on the server side
       const { GoogleGenAI } = await import("@google/genai");
       const ai = new GoogleGenAI({ 
         apiKey: process.env.GEMINI_API_KEY,
         httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
       });
-
       let systemInstruction = "";
       let bookstackContext = "";
-
-      // Simulated Vector DB (BookStack) Retrieval based on Vertical
       if (vertical === "suporte") {
-        bookstackContext = "[RAG BookStack]: Artigo ID #401 - Resolução de ONU com LOS Vermelho: Instruir cliente a verificar se o cabo óptico está dobrado ou rompido. Artigo ID #204: Lentidão - verificar uptime da ONU e dispositivos conectados via Wi-Fi vs Cabo.";
+        bookstackContext = "[RAG BookStack]: Artigo ID #401 - Resolução de ONU com LOS Vermelho: Instruir cliente a verificar se o cabo óptico está dobrado ou rompido.";
         systemInstruction = (systemConfig.ia?.promptSuporte || "Você é um assistente técnico do NAP.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       } else if (vertical === "vendas") {
-        bookstackContext = "[RAG BookStack]: Planos atuais: 500MB por R$99,90, 700MB por R$119,90. Promoção vigente: Instalação grátis para fidelidade de 12 meses.";
+        bookstackContext = "[RAG BookStack]: Planos atuais: 500MB por R$99,90, 700MB por R$119,90.";
         systemInstruction = (systemConfig.ia?.promptVendas || "Você é um consultor comercial.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       } else {
         bookstackContext = "[RAG BookStack]: Regras: Faturas atrasadas em 15 dias reduzem banda. PIX baixa na hora, boleto em 1 dia útil.";
         systemInstruction = (systemConfig.ia?.promptCobranca || "Você atua no setor financeiro.") + "\n\n[Base de Conhecimento]: " + bookstackContext;
       }
-
+      
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: mensagem,
         config: { systemInstruction }
       });
-
-      res.json({
-        resposta: response.text,
-        modelo: "gemini-2.5-flash (via 9router auth)",
-        tokens_consumidos: response.usageMetadata?.totalTokenCount || 0
-      });
-    } catch (error: any) {
-      console.error("Erro no Gateway de IA:", error);
-      res.status(500).json({ 
-        erro: "Falha na comunicação com o Gateway de IA", 
-        detalhes: error.message 
-      });
-    }
-  });
-
-  // --- SGP Integration Mocks & Real Proxy (Webhooks & Transactions) ---
-
-  const SGP_URL = process.env.SGP_URL;
-  const SGP_APP = process.env.SGP_APP;
-  const SGP_TOKEN = process.env.SGP_TOKEN;
-
-  // Base de dados SGP em memória para consultas completas do CRM
-  let sgpDatabase = [
-    {
-      id: 1001,
-      contrato_id: 88101,
-      nome: "João Silva",
-      cpf_cnpj: "111.222.333-44",
-      status_cliente: "ativo",
-      endereco: "Rua das Acácias, 412 - Jd. Primavera, São Paulo/SP",
-      logradouro: "Rua das Acácias",
-      numero: "412",
-      complemento: "Casa",
-      bairro: "Jardim Primavera",
-      cidade: "São Paulo",
-      uf: "SP",
-      cep: "04856-200",
-      ponto_referencia: "Próximo à Padaria Flor da Primavera / Em frente à CTO-12",
-      coordenadas: {
-        lat: -23.7083,
-        lng: -46.6852
-      },
-      contato: { telefone: "+55 11 99999-9999", email: "joao.silva@email.com" },
-      plano_atual: {
-        id: "p_500",
-        nome: "Fibra 500MB Simétrico",
-        download: "500 Mbps",
-        upload: "500 Mbps",
-        valor: 99.90,
-        tecnologia: "FTTH GPON",
-        fidelidade_fim: "2026-11-20",
-        vencimento_dia: 10,
-        ip_tipo: "CGNAT IPv4 / IPv6 Dinâmico"
-      },
-      conexao: {
-        status: "online",
-        uptime: "21d 08h 12m",
-        ip: "177.102.45.89",
-        mac: "48:8D:36:A1:B2:C3",
-        olt_pon: "OLT-CENTRAL-01 / PON-04 / CTO-12 (Porta 3)",
-        sinal_optico: "-19.2 dBm (Ótimo)",
-        concentrador: "BNG-MikroTik-CCR2116"
-      },
-      faturas: [
-        {
-          id: 501,
-          fatura_id: "FAT-202609-1001",
-          referencia: "09/2026",
-          vencimento: "2026-09-10",
-          valor: 99.90,
-          status: "aberto",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100198 1 98450000009990",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-joao-silva-set26520400005303986540599.905802BR5915NAP TELECOM SGP6009SAO PAULO62070503***6304E8A1",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202609-1001.pdf"
-        },
-        {
-          id: 502,
-          fatura_id: "FAT-202608-1001",
-          referencia: "08/2026",
-          vencimento: "2026-08-10",
-          valor: 99.90,
-          status: "pago",
-          pago_em: "2026-08-09 14:22 via PIX",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100198 1 98140000009990",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-pago-ago26",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202608-1001.pdf"
-        },
-        {
-          id: 503,
-          fatura_id: "FAT-202607-1001",
-          referencia: "07/2026",
-          vencimento: "2026-07-10",
-          valor: 99.90,
-          status: "pago",
-          pago_em: "2026-07-10 10:05 via Boleto Bancário",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100198 1 97830000009990",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-pago-jul26",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202607-1001.pdf"
-        }
-      ],
-      planos_catalogo: [
-        { id: "sgp_plano_750", nome: "Fibra 750MB Ultra Turbo", download: "750 Mbps", upload: "750 Mbps", valor: 119.90, tipo: "upgrade", destaque: true, descricao: "Ideal para streaming 4K simultâneo e jogos online com baixa latência." },
-        { id: "sgp_plano_1000", nome: "Fibra 1 GIGA Gamer Full Duplex", download: "1000 Mbps", upload: "1000 Mbps", valor: 149.90, tipo: "upgrade", destaque: true, descricao: "Inclui Wi-Fi 6 Mesh grátis + IP Fixo público para servidor/jogos." },
-        { id: "sgp_plano_combo", nome: "Fibra 600MB + Max Streaming + Telefone SIP", download: "600 Mbps", upload: "600 Mbps", valor: 129.90, tipo: "combo", destaque: false, descricao: "Combo com app de TV e linha digital SIP inclusa." }
-      ],
-      historico_ofertas: [],
-      envios_segunda_via: []
-    },
-    {
-      id: 1002,
-      contrato_id: 88102,
-      nome: "Maria Oliveira",
-      cpf_cnpj: "555.666.777-88",
-      status_cliente: "bloqueado",
-      endereco: "Rua das Flores, 123 - Centro, São Paulo/SP",
-      logradouro: "Rua das Flores",
-      numero: "123",
-      complemento: "Apto 34B",
-      bairro: "Centro Histórico",
-      cidade: "São Paulo",
-      uf: "SP",
-      cep: "01001-000",
-      ponto_referencia: "Ao lado da Estação Sé / Prédio Azul",
-      coordenadas: {
-        lat: -23.5489,
-        lng: -46.6388
-      },
-      contato: { telefone: "+55 11 88888-8888", email: "maria.oliveira@email.com" },
-      plano_atual: {
-        id: "p_1000",
-        nome: "Fibra 1GB Ultra",
-        download: "1000 Mbps",
-        upload: "500 Mbps",
-        valor: 149.90,
-        tecnologia: "FTTH GPON",
-        fidelidade_fim: "2026-10-15",
-        vencimento_dia: 10,
-        ip_tipo: "CGNAT IPv4"
-      },
-      conexao: {
-        status: "bloqueado_financeiro",
-        uptime: "Desconectado pelo Concentrador Radius",
-        ip: "10.64.12.18 (Pool Bloqueio SGP)",
-        mac: "00:1A:2B:3C:4D:5E",
-        olt_pon: "OLT-CENTRAL-01 / PON-02 / CTO-08 (Porta 5)",
-        sinal_optico: "-20.1 dBm",
-        concentrador: "BNG-MikroTik-CCR2116"
-      },
-      faturas: [
-        {
-          id: 601,
-          fatura_id: "FAT-202609-1002",
-          referencia: "09/2026",
-          vencimento: "2026-09-10",
-          valor: 149.90,
-          status: "aberto",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100298 1 98450000014990",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-maria-set265204000053039865405149.905802BR5915NAP TELECOM SGP6009SAO PAULO62070503***6304A1B2",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202609-1002.pdf"
-        },
-        {
-          id: 602,
-          fatura_id: "FAT-202608-1002",
-          referencia: "08/2026",
-          vencimento: "2026-08-10",
-          valor: 149.90,
-          status: "vencido",
-          dias_atraso: 30,
-          linha_digitavel: "00190.00009 01234.567802 00000.100298 1 98140000014990",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-maria-ago26-atraso",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202608-1002.pdf"
-        }
-      ],
-      planos_catalogo: [
-        { id: "sgp_plano_combo_fam", nome: "Fibra 1GB + Wi-Fi 6 Mesh Duo + Paramount+", download: "1000 Mbps", upload: "1000 Mbps", valor: 169.90, tipo: "upgrade", destaque: true, descricao: "Super velocidade com 2 roteadores Mesh inclusos." },
-        { id: "sgp_plano_fidelidade", nome: "Renovação Fibra 1GB com Desconto Fidelidade", download: "1000 Mbps", upload: "500 Mbps", valor: 129.90, tipo: "retencao", destaque: true, descricao: "Desconto especial de R$ 20/mês para renovação contratual por 12 meses." }
-      ],
-      historico_ofertas: [],
-      envios_segunda_via: []
-    },
-    {
-      id: 1003,
-      contrato_id: 88103,
-      nome: "Empresa XPTO Ltda",
-      cpf_cnpj: "22.333.444/0001-55",
-      status_cliente: "ativo",
-      endereco: "Av. Paulista, 1800, Conj 41 - Bela Vista, São Paulo/SP",
-      logradouro: "Avenida Paulista",
-      numero: "1800",
-      complemento: "Conjunto 41",
-      bairro: "Bela Vista",
-      cidade: "São Paulo",
-      uf: "SP",
-      cep: "01310-200",
-      ponto_referencia: "Próximo ao MASP / Torre Sul",
-      coordenadas: {
-        lat: -23.5614,
-        lng: -46.6559
-      },
-      contato: { telefone: "+55 11 3333-4444", email: "financeiro@xpto.com.br" },
-      plano_atual: {
-        id: "p_corp_2gb",
-        nome: "Link Dedicado 2GB Corporativo",
-        download: "2000 Mbps",
-        upload: "2000 Mbps",
-        valor: 1890.00,
-        tecnologia: "Fibra PTP Dedicada (DWDM)",
-        fidelidade_fim: "2027-04-10",
-        vencimento_dia: 15,
-        ip_tipo: "Bloco IPv4 /29 Público Fixo (8 IPs) + IPv6 /48"
-      },
-      conexao: {
-        status: "online",
-        uptime: "142d 19h 40m",
-        ip: "200.198.112.42",
-        mac: "70:4C:A5:DD:EE:11",
-        olt_pon: "SW-METRO-01 / Porta 10G-02 / DVI-01",
-        sinal_optico: "-16.8 dBm (Excelente)",
-        concentrador: "Cisco-ASR-1001-HX"
-      },
-      faturas: [
-        {
-          id: 701,
-          fatura_id: "FAT-202609-1003",
-          referencia: "09/2026",
-          vencimento: "2026-09-15",
-          valor: 1890.00,
-          status: "aberto",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100398 1 98500000189000",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-xpto-set26",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202609-1003.pdf"
-        },
-        {
-          id: 702,
-          fatura_id: "FAT-202608-1003",
-          referencia: "08/2026",
-          vencimento: "2026-08-15",
-          valor: 1890.00,
-          status: "pago",
-          pago_em: "2026-08-12 11:30 via TED/PIX",
-          dias_atraso: 0,
-          linha_digitavel: "00190.00009 01234.567802 00000.100398 1 98190000018900",
-          pix_copia_cola: "00020126580014BR.GOV.BCB.PIX0136sgp-pix-xpto-ago26",
-          link_pdf: "https://sgp.provedor.com.br/fatura/download/FAT-202608-1003.pdf"
-        }
-      ],
-      planos_catalogo: [
-        { id: "sgp_plano_corp_5gb", nome: "Link Dedicado 5GB Full Redundante", download: "5000 Mbps", upload: "5000 Mbps", valor: 3490.00, tipo: "upgrade", destaque: true, descricao: "Dupla abordagem de fibra física com BGP próprio e SLA 99.9% de 4 horas." },
-        { id: "sgp_plano_firewall", nome: "Managed Firewall Fortinet + Link 2GB", download: "2000 Mbps", upload: "2000 Mbps", valor: 2490.00, tipo: "adicional", destaque: false, descricao: "Segurança de borda com inspeção UTM e VPN site-to-site." }
-      ],
-      historico_ofertas: [],
-      envios_segunda_via: []
-    }
-  ];
-
-  // Helper para buscar ou proxy oficial SGP
-  async function fetchSGP(endpoint: string, method = "GET", body: any = null) {
-    if (!SGP_URL || !SGP_APP || !SGP_TOKEN) {
-      throw new Error("Credenciais do SGP não configuradas no .env");
-    }
-    const headers = {
-      "Content-Type": "application/json",
-      "app": SGP_APP,
-      "token": SGP_TOKEN
-    };
-    const config: any = { method, headers };
-    if (body) config.body = JSON.stringify(body);
-    
-    const res = await fetch(`${SGP_URL}${endpoint}`, config);
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`SGP API Erro (${res.status}): ${errorText}`);
-    }
-    return await res.json();
-  }
-
-  // --- Endpoint: Consulta Avançada SGP por ID / CPF / Telefone / Termo ---
-  app.get("/api/sgp/cliente/:identificador", async (req, res) => {
-    const { identificador } = req.params;
-    const cleanId = identificador.replace(/\D/g, '');
-
-    try {
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        // Tenta chamada real à API oficial do SGP
-        const sgpResponse = await fetchSGP(`/api/v1/cliente/consulta?termo=${encodeURIComponent(identificador)}`);
-        if (sgpResponse && sgpResponse.sucesso) {
-          return res.json({ sucesso: true, origem: "sgp_api_oficial", cliente: sgpResponse.dados });
-        }
-      }
-    } catch (err) {
-      console.warn("Aviso: Falha ao chamar SGP oficial, utilizando base local sincronizada.", err);
-    }
-
-    // Busca na base local do SGP
-    const cliente = sgpDatabase.find(c => 
-      c.id.toString() === identificador ||
-      c.contrato_id.toString() === identificador ||
-      (cleanId && c.cpf_cnpj.replace(/\D/g, '') === cleanId) ||
-      (cleanId && c.contato.telefone.replace(/\D/g, '').includes(cleanId)) ||
-      c.nome.toLowerCase().includes(identificador.toLowerCase())
-    );
-
-    if (!cliente) {
-      // Retorna o primeiro cliente como exemplo padrão se não encontrar exato
-      return res.status(404).json({ 
-        sucesso: false, 
-        mensagem: `Cliente não localizado no SGP para '${identificador}'.`,
-        sugestao: sgpDatabase[0]
-      });
-    }
-
-    res.json({
-      sucesso: true,
-      origem: "sgp_core_sync",
-      cliente
-    });
-  });
-
-  // --- Endpoint: Busca e Validação de CEP com Fallback Inteligente ---
-  app.get("/api/cep/:cep", async (req, res) => {
-    const rawCep = req.params.cep || "";
-    const cepClean = rawCep.replace(/\D/g, "");
-
-    if (cepClean.length !== 8) {
-      return res.status(400).json({ sucesso: false, erro: "CEP deve conter exatamente 8 dígitos numéricos." });
-    }
-
-    // Base de CEPs conhecidos locais para alta disponibilidade e velocidade
-    const localCeps: Record<string, any> = {
-      "04856200": {
-        cep: "04856-200",
-        logradouro: "Rua das Acácias",
-        complemento: "",
-        bairro: "Jardim Primavera",
-        localidade: "São Paulo",
-        uf: "SP",
-        coordenadas: { lat: -23.7083, lng: -46.6852 },
-        regiao_atendimento: "Região Sul - Zona CTO-12",
-        viabilidade_ftth: "Disponível (Portas OLT livres)"
-      },
-      "01001000": {
-        cep: "01001-000",
-        logradouro: "Praça da Sé",
-        complemento: "lado ímpar",
-        bairro: "Sé",
-        localidade: "São Paulo",
-        uf: "SP",
-        coordenadas: { lat: -23.5489, lng: -46.6388 },
-        regiao_atendimento: "Centro Expandido - Anel Óptico Metro",
-        viabilidade_ftth: "Disponível (GPON 2.5G)"
-      },
-      "01310200": {
-        cep: "01310-200",
-        logradouro: "Avenida Paulista",
-        complemento: "de 1512 a 2132 - lado par",
-        bairro: "Bela Vista",
-        localidade: "São Paulo",
-        uf: "SP",
-        coordenadas: { lat: -23.5614, lng: -46.6559 },
-        regiao_atendimento: "Paulista Corporativo - Metro Ethernet",
-        viabilidade_ftth: "Disponível (PTP DWDM Dedicado)"
-      }
-    };
-
-    // Tenta primeiro consultar via ViaCEP oficial
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cepClean}/json/`, {
-        headers: { "User-Agent": "NAP-Telecom-ISP-System" },
-        signal: AbortSignal.timeout(3000)
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (!data.erro) {
-          // Coordenadas aproximadas baseadas na base local ou estimativa
-          const localMatch = localCeps[cepClean];
-          const coords = localMatch ? localMatch.coordenadas : {
-            lat: -23.5505 + (Math.random() * 0.04 - 0.02),
-            lng: -46.6333 + (Math.random() * 0.04 - 0.02)
-          };
-
-          return res.json({
-            sucesso: true,
-            origem: "viacep_live",
-            dados: {
-              cep: data.cep,
-              logradouro: data.logradouro || "",
-              complemento: data.complemento || "",
-              bairro: data.bairro || "",
-              localidade: data.localidade || "",
-              uf: data.uf || "",
-              ibge: data.ibge,
-              ddd: data.ddd,
-              coordenadas: coords,
-              endereco_formatado: `${data.logradouro || 'Endereço'}, ${data.bairro || ''} - ${data.localidade}/${data.uf}`,
-              link_maps: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${data.logradouro || ''}, ${data.bairro || ''}, ${data.localidade || ''} - ${data.uf || ''}`)}`,
-              link_waze: `https://waze.com/ul?q=${encodeURIComponent(`${data.logradouro || ''}, ${data.bairro || ''}, ${data.localidade || ''}`)}`
-            }
-          });
-        }
-      }
-    } catch (apiErr) {
-      console.warn("Aviso: ViaCEP offline ou timeout, recorrendo à base local do provedor.");
-    }
-
-    // Fallback para base local do provedor
-    if (localCeps[cepClean]) {
-      const item = localCeps[cepClean];
-      return res.json({
-        sucesso: true,
-        origem: "base_provedor_local",
-        dados: {
-          ...item,
-          endereco_formatado: `${item.logradouro}, ${item.bairro} - ${item.localidade}/${item.uf}`,
-          link_maps: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${item.logradouro}, ${item.bairro}, ${item.localidade} - ${item.uf}`)}`,
-          link_waze: `https://waze.com/ul?ll=${item.coordenadas.lat},${item.coordenadas.lng}&navigate=yes`
-        }
-      });
-    }
-
-    // Retorno amigável caso não conste na base local
-    return res.status(404).json({
-      sucesso: false,
-      erro: `CEP ${rawCep} não encontrado nos serviços de endereçamento.`,
-      sugestoes: ["04856-200", "01001-000", "01310-200"]
-    });
-  });
-
-  // --- Endpoint: Atualizar Endereço/Ponto de Referência no SGP do Cliente ---
-  app.patch("/api/sgp/cliente/:id/endereco", (req, res) => {
-    const clienteId = parseInt(req.params.id);
-    const { logradouro, numero, complemento, bairro, cidade, uf, cep, ponto_referencia, coordenadas } = req.body;
-
-    const cliente = sgpDatabase.find(c => c.id === clienteId);
-    if (!cliente) {
-      return res.status(404).json({ sucesso: false, erro: "Cliente não encontrado no SGP." });
-    }
-
-    if (logradouro) (cliente as any).logradouro = logradouro;
-    if (numero) (cliente as any).numero = numero;
-    if (complemento !== undefined) (cliente as any).complemento = complemento;
-    if (bairro) (cliente as any).bairro = bairro;
-    if (cidade) (cliente as any).cidade = cidade;
-    if (uf) (cliente as any).uf = uf;
-    if (cep) (cliente as any).cep = cep;
-    if (ponto_referencia !== undefined) (cliente as any).ponto_referencia = ponto_referencia;
-    if (coordenadas) (cliente as any).coordenadas = coordenadas;
-
-    // Atualiza campo endereco consolidado
-    (cliente as any).endereco = `${(cliente as any).logradouro || logradouro || ''}, ${(cliente as any).numero || numero || 'S/N'}${((cliente as any).complemento || complemento) ? ` (${(cliente as any).complemento || complemento})` : ''} - ${(cliente as any).bairro || bairro || ''}, ${(cliente as any).cidade || cidade || ''}/${(cliente as any).uf || uf || ''}`;
-
-    res.json({
-      sucesso: true,
-      mensagem: "Endereço e coordenadas sincronizadas com sucesso no SGP.",
-      cliente
-    });
-  });
-
-  // --- Endpoint Oficial SGP: Enviar 2ª Via de Fatura (WhatsApp, Email ou SMS) ---
-  app.post("/api/sgp/fatura/enviar-segunda-via", async (req, res) => {
-    const { cliente_id, fatura_id, canal = "whatsapp", destino, operador = "Operador CRM" } = req.body;
-
-    if (!fatura_id) {
-      return res.status(400).json({ sucesso: false, erro: "fatura_id é obrigatório." });
-    }
-
-    try {
-      let resultadoSgpOficial: any = null;
-
-      // 1. Tenta acionar API oficial do SGP se configurada
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        try {
-          resultadoSgpOficial = await fetchSGP("/api/v1/faturas/segunda-via", "POST", {
-            fatura_id,
-            canal,
-            destino,
-            operador
-          });
-        } catch (apiErr: any) {
-          console.warn("Aviso SGP Oficial:", apiErr.message);
-        }
-      }
-
-      // 2. Atualiza estado e histórico na base SGP do provedor
-      const clienteIndex = sgpDatabase.findIndex(c => c.id === Number(cliente_id) || c.faturas.some(f => f.id === Number(fatura_id) || f.fatura_id === fatura_id));
-      let faturaAlvo: any = null;
-
-      if (clienteIndex !== -1) {
-        const cliente = sgpDatabase[clienteIndex];
-        faturaAlvo = cliente.faturas.find(f => f.id === Number(fatura_id) || f.fatura_id === fatura_id);
-        
-        const registroEnvio = {
-          id: Date.now(),
-          fatura_id: faturaAlvo ? faturaAlvo.fatura_id : fatura_id,
-          valor: faturaAlvo ? faturaAlvo.valor : 99.90,
-          vencimento: faturaAlvo ? faturaAlvo.vencimento : "2026-09-10",
-          canal,
-          destino: destino || (canal === "whatsapp" ? cliente.contato.telefone : cliente.contato.email),
-          enviado_em: new Date().toISOString(),
-          operador,
-          status: "enviado_com_sucesso",
-          protocolo_sgp: `SGP-ENV-${Math.floor(100000 + Math.random() * 900000)}`
-        };
-
-        cliente.envios_segunda_via.unshift(registroEnvio);
-
-        return res.json({
-          sucesso: true,
-          mensagem: `2ª via da fatura ${registroEnvio.fatura_id} enviada com sucesso via ${canal.toUpperCase()} para ${registroEnvio.destino}!`,
-          protocolo_sgp: registroEnvio.protocolo_sgp,
-          detalhes_envio: registroEnvio,
-          pix_copia_cola: faturaAlvo ? faturaAlvo.pix_copia_cola : "00020126580014BR.GOV.BCB.PIX...",
-          linha_digitavel: faturaAlvo ? faturaAlvo.linha_digitavel : "00190.00009 01234.567802",
-          link_pdf: faturaAlvo ? faturaAlvo.link_pdf : `https://sgp.provedor.com.br/fatura/${fatura_id}.pdf`,
-          sgp_oficial_response: resultadoSgpOficial
-        });
-      }
-
-      // Resposta genérica com protocolo SGP
-      const protocolo = `SGP-ENV-${Math.floor(100000 + Math.random() * 900000)}`;
-      res.json({
-        sucesso: true,
-        mensagem: `2ª via da fatura #${fatura_id} enviada com sucesso via ${canal.toUpperCase()}!`,
-        protocolo_sgp: protocolo,
-        sgp_oficial_response: resultadoSgpOficial
-      });
-    } catch (error: any) {
-      console.error("Erro ao enviar 2ª via no SGP:", error);
-      res.status(500).json({ sucesso: false, erro: "Falha ao processar envio no SGP", detalhes: error.message });
-    }
-  });
-
-  // --- Endpoint Oficial SGP: Registrar Oferta / Upgrade de Plano ---
-  app.post("/api/sgp/planos/registrar-oferta", async (req, res) => {
-    const { cliente_id, plano_id, plano_nome, valor_ofertado, desconto_promocional, canal = "crm", observacoes, operador = "Operador CRM" } = req.body;
-
-    if (!cliente_id || !plano_id) {
-      return res.status(400).json({ sucesso: false, erro: "cliente_id e plano_id são obrigatórios." });
-    }
-
-    try {
-      let resultadoSgpOficial: any = null;
-
-      // 1. Tenta registrar na API oficial do SGP
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        try {
-          resultadoSgpOficial = await fetchSGP("/api/v1/crm/ofertas", "POST", {
-            cliente_id,
-            plano_id,
-            plano_nome,
-            valor_ofertado,
-            desconto_promocional,
-            operador,
-            observacoes
-          });
-        } catch (apiErr: any) {
-          console.warn("Aviso SGP Oficial Ofertas:", apiErr.message);
-        }
-      }
-
-      // 2. Persiste na base em memória do SGP
-      const cliente = sgpDatabase.find(c => c.id === Number(cliente_id));
-      const protocoloOferta = `SGP-OFR-${Math.floor(100000 + Math.random() * 900000)}`;
-
-      const novaOferta = {
-        id: Date.now(),
-        protocolo: protocoloOferta,
-        plano_id,
-        plano_nome: plano_nome || "Plano Fibra Upgrade",
-        valor_ofertado: valor_ofertado || 119.90,
-        desconto_promocional: desconto_promocional || "Isenção de taxa de alteração de plano + Dobro de upload",
-        status: "ofertado_pendente_aceite",
-        registrado_em: new Date().toISOString(),
-        operador,
-        observacoes: observacoes || "Oferta registrada pelo operador durante contato no CRM.",
-        canal
-      };
-
-      if (cliente) {
-        cliente.historico_ofertas.unshift(novaOferta);
-      }
-
-      // Adiciona também um card automático no pipeline de Vendas (Kanban Deals)
-      const novoLeadDeal = {
-        id: Math.floor(1000 + Math.random() * 9000),
-        titulo: `Upgrade: ${novaOferta.plano_nome} (R$ ${novaOferta.valor_ofertado.toFixed(2)})`,
-        estagio: "Proposta Enviada",
-        pipeline: "Vendas" as const,
-        contato: cliente ? cliente.nome : `Cliente #${cliente_id}`,
-        telefone: cliente ? cliente.contato.telefone : "(11) 99999-9999",
-        endereco: cliente ? cliente.endereco : "Endereço cadastrado no SGP",
-        plano: novaOferta.plano_nome,
-        valor: novaOferta.valor_ofertado,
-        prioridade: 1,
-        criado_em: "Agora",
-        contexto_ia: `Oferta de plano registrada no SGP (${protocoloOferta}). Assinante demonstrou interesse em upgrade de velocidade. Operador: ${operador}.`
-      };
-      kanbanDeals.unshift(novoLeadDeal as any);
-
-      res.json({
-        sucesso: true,
-        mensagem: `Oferta do plano "${novaOferta.plano_nome}" registrada com sucesso no SGP!`,
-        protocolo_sgp: protocoloOferta,
-        oferta: novaOferta,
-        kanban_deal_id: novoLeadDeal.id,
-        sgp_oficial_response: resultadoSgpOficial
-      });
-    } catch (error: any) {
-      console.error("Erro ao registrar oferta no SGP:", error);
-      res.status(500).json({ sucesso: false, erro: "Falha ao registrar oferta no SGP", detalhes: error.message });
-    }
-  });
-
-  // Consultar Cliente da URA (Pesquisa Específica via CPF/CNPJ ou Telefone)
-  
-  // Busca SGP em tempo real (Operador)
-  // Workspace 360 do Cliente via SGP
-  app.get("/api/sgp/busca", async (req, res) => {
-    const { q } = req.query;
-    
-    // Simula latência
-    setTimeout(() => {
-      if (!q || q.toString().trim() === '') {
-        return res.json({ resultados: [] });
-      }
       
       res.json({
-        resultados: [
-          {
-            id: 9982,
-            nome: "Maria Oliveira",
-            cpf_cnpj: "123.456.789-00",
-            status_cliente: "bloqueado_parcial", // Para testar features de cobrança
-            endereco: "Rua das Flores, 123 - Centro, São Paulo/SP",
-            contato: { telefone: "11999998888", email: "maria.oliveira@email.com" },
-            conexao: {
-              status: "online",
-              uptime: "15d 2h 45m",
-              ip: "177.45.2.19",
-              mac: "AA:BB:CC:DD:EE:FF",
-              plano: "Fibra 500MB",
-              concentrador: "MikroTik-Core-01",
-              sinal_optico: "-19.5 dBm"
-            },
-            faturas: [
-              { id: 101, vencimento: "2026-09-10", valor: 99.90, status: "atrasado", dias_atraso: 12, linha_digitavel: "00190.00009 00000.000000 00000.000000 1 00000000000000", pix_copia_cola: "00020126580014BR.GOV.BCB.PIX..." },
-              { id: 102, vencimento: "2026-08-10", valor: 99.90, status: "pago", dias_atraso: 0 },
-              { id: 103, vencimento: "2026-07-10", valor: 99.90, status: "pago", dias_atraso: 0 }
-            ],
-            planos_disponiveis: [
-              { id: "p1", nome: "Fibra 1GB", valor: 149.90, tipo: "upgrade", destaque: true },
-              { id: "p2", nome: "Fibra 750MB", valor: 119.90, tipo: "upgrade", destaque: false }
-            ],
-            chamados_recentes: [
-              { id: 4402, data: "2026-08-20", assunto: "Lentidão à noite", status: "resolvido" }
-            ],
-            metricas: {
-              consumo_mes_gb: 450,
-              score_pagador: 9.2, // 0 a 10
-              tempo_contrato_meses: 24
-            }
-          }
-        ]
-      });
-    }, 800);
-  });
-
-
-  
-  // --- Google Gemini Agent Engine (Substituição de n8n para baixo consumo) ---
-
-  // Ferramentas nativas do Agente ISP
-  const AGENT_TOOLS = [
-    {
-      id: "consultar_sgp",
-      name: "Consultar Assinante no SGP",
-      description: "Localiza contrato, plano, status financeiro e autenticação do cliente por CPF ou telefone.",
-      category: "ERP / SGP",
-      parameters: { cpf_cnpj: "string (opcional)", telefone: "string (opcional)" }
-    },
-    {
-      id: "verificar_sinal_onu",
-      name: "Diagnosticar Sinal Óptico da ONU",
-      description: "Lê a potência óptica (dBm), status PPPoE, uptime e modelo da ONU no OLT/concentrador.",
-      category: "NOC / Telecom",
-      parameters: { contrato_id: "number" }
-    },
-    {
-      id: "gerar_pix_fatura",
-      name: "Gerar Chave PIX Copia e Cola",
-      description: "Gera cobrança PIX imediata com baixa automática no SGP em até 2 minutos.",
-      category: "Financeiro",
-      parameters: { contrato_id: "number", valor: "number (opcional)" }
-    },
-    {
-      id: "desbloqueio_48h",
-      name: "Desbloqueio em Confiança (48 Horas)",
-      description: "Libera a navegação em velocidade máxima por 48 horas enquanto o cliente quita a fatura.",
-      category: "ERP / SGP",
-      parameters: { contrato_id: "number" }
-    },
-    {
-      id: "abrir_os_suporte",
-      name: "Abertura de Ordem de Serviço (OS)",
-      description: "Agenda visita técnica presencial para reparo de drop ou troca de equipamento.",
-      category: "Atendimento",
-      parameters: { contrato_id: "number", motivo: "string", prioridade: "alta | normal" }
-    }
-  ];
-
-  // Listar ferramentas registradas do Agente
-  app.get("/api/gemini/agent/tools", (req, res) => {
-    res.json(AGENT_TOOLS);
-  });
-
-  // Estatísticas de Consumo da API Gemini (Free Tier Monitoring)
-  let apiMetrics = {
-    requests_today: 47,
-    daily_limit: 1500, // Cota diária gratuita do AI Studio
-    rpm_current: 2,
-    rpm_limit: 15,     // Cota por minuto gratuita
-    total_tokens: 18450,
-    cost_estimated_brl: 0.00, // Free tier
-    last_reset: new Date().toISOString().split('T')[0]
-  };
-
-  app.get("/api/gemini/agent/metrics", (req, res) => {
-    res.json(apiMetrics);
-  });
-
-  // Execução do Agente Inteligente com Raciocínio & Ferramentas
-  app.post("/api/gemini/agent/run", async (req, res) => {
-    const { prompt, clientContext, simulateTools = true } = req.body;
-    apiMetrics.requests_today += 1;
-
-    try {
-      if (!process.env.GEMINI_API_KEY) {
-        // Fallback simulado caso a chave ainda não tenha sido configurada
-        const lower = (prompt || "").toLowerCase();
-        let executedTool = null;
-        let responseText = "";
-
-        if (lower.includes("pix") || lower.includes("pagar") || lower.includes("fatura")) {
-          executedTool = "gerar_pix_fatura";
-          responseText = `Identifiquei sua fatura em aberto no valor de R$ 99,90. Gerei sua chave PIX com baixa automática:\n\n00020126580014br.gov.bcb.pix0136nap-provedor-fibra-fatura\n\nAssim que pagar, sua conexão é normalizada em instantes!`;
-        } else if (lower.includes("lenta") || lower.includes("sinal") || lower.includes("onu") || lower.includes("caiu")) {
-          executedTool = "verificar_sinal_onu";
-          responseText = `Realizei o teste de telemetria na sua fibra agora: o sinal da sua ONU está em -19.2 dBm (excelente) e a sessão está conectada há 12 dias. Recomendo reiniciar seu roteador na tomada por 30 segundos para limpar o cache Wi-Fi.`;
-        } else if (lower.includes("desbloque") || lower.includes("confiança")) {
-          executedTool = "desbloqueio_48h";
-          responseText = `Seu Desbloqueio em Confiança foi registrado no SGP com sucesso! A conexão foi liberada por 48 horas em velocidade integral.`;
-        } else {
-          executedTool = "consultar_sgp";
-          responseText = `Olá! Sou o assistente virtual do provedor. Localizei seu plano Fibra 500MB ativo. Como posso te ajudar hoje?`;
-        }
-
-        return res.json({
-          resposta: responseText,
-          tool_executada: executedTool,
-          modelo: "gemini-2.5-flash (Simulação Fallback)",
-          tokens_consumidos: 128,
-          tempo_execucao_ms: 320
-        });
-      }
-
-      const { GoogleGenAI } = await import("@google/genai");
-      const ai = new GoogleGenAI({
-        apiKey: process.env.GEMINI_API_KEY,
-        httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-      });
-
-      const basePrompt = systemConfig.ia?.promptSuporte || 'Você é o Agente Autônomo Oficial de um Provedor de Internet (ISP) com fibra óptica.';
-      const systemInstruction = `${basePrompt}\n\nSeu objetivo é resolver a solicitação do assinante com respostas claras, empáticas e objetivas.\nVocê possui acesso às seguintes ferramentas de sistema:\n1. \'consultar_sgp\': busca faturas, plano e status do cliente.\n2. \'verificar_sinal_onu\': mede o sinal óptico (-18 a -24 dBm é normal; abaixo de -27 dBm é atenuado).\n3. \'gerar_pix_fatura\': gera o código PIX Copia e Cola para pagamento imediato.\n4. \'desbloqueio_48h\': ativa o desbloqueio temporário em confiança.\n\nContexto do cliente atual: ${JSON.stringify(clientContext || { plano: 'Fibra 500MB', status: 'ativo' })}.`;
-
-      const startTime = Date.now();
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: { systemInstruction }
-      });
-      const endTime = Date.now();
-
-      const tokens = response.usageMetadata?.totalTokenCount || 150;
-      apiMetrics.total_tokens += tokens;
-
-      res.json({
         resposta: response.text,
-        modelo: "gemini-2.5-flash (Google AI Studio)",
-        tokens_consumidos: tokens,
-        tempo_execucao_ms: endTime - startTime
+        modelo: "gemini-2.5-flash (Integração Direta BookStack)",
+        tokens: response.usageMetadata?.totalTokenCount || 0
       });
     } catch (error: any) {
-      console.error("Erro no Agente Gemini:", error);
-      res.status(500).json({ erro: "Erro ao executar o Agente Gemini", detalhes: error.message });
+      console.error("Erro no /api/ia/chat:", error);
+      res.status(500).json({ erro: "Erro ao comunicar com a IA", detalhes: error.message });
     }
   });
 

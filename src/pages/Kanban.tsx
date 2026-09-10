@@ -29,6 +29,13 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
   const [searchTerm, setSearchTerm] = useState('');
   const [filterPriority, setFilterPriority] = useState<'all' | 'high'>('all');
   
+  // Toast
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+  
   // Modal de Novo Card
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -83,6 +90,19 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
       if (selectedDeal && selectedDeal.id === movedDealId) {
         setSelectedDeal(prev => prev ? { ...prev, estagio: destStage } : null);
+      }
+      
+      // Regras de Automação Visual Baseadas em Estágio
+      if (destStage === 'Fechado/Ganho') {
+        showToast('🚀 Parabéns! Contrato SGP gerado e Link de Assinatura enviado no WhatsApp.');
+      } else if (destStage === 'Qualificado (IA)' && type === 'Vendas') {
+        showToast('✅ Lead Ativado. Mensagem de apresentação enviada no WABA (WhatsApp).');
+      } else if (destStage === 'Técnico em Rota') {
+        showToast('📍 OS Atualizada! Cliente notificado com o Rastreador em Tempo Real.');
+      } else if (destStage === 'Desbloqueio 48h') {
+        showToast('🔓 Desbloqueio 48h acionado direto no NAS/MikroTik!');
+      } else if (destStage === 'Recuperado (PIX)') {
+        showToast('💸 Receita recuperada! Mensagem de agradecimento disparada.');
       }
 
       // Persistência nativa no backend do NAP

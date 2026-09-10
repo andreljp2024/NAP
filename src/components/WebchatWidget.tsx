@@ -33,6 +33,7 @@ export default function WebchatWidget() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           prompt: userMsg,
+          history: messages.map(m => ({ role: m.sender === 'user' ? 'user' : 'model', parts: [{ text: m.text }] })),
           clientContext: {
             nome: "Assinante Webchat",
             plano: "Fibra 500MB Simétrico",
