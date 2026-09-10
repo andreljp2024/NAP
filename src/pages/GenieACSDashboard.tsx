@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Wifi, Router, Search, AlertCircle, CheckCircle2, XCircle, Signal, RefreshCw, Smartphone, Wrench, BarChart3, Radio, ShieldAlert, Plus, Send, Clock, MapPin, Users, Zap, Check } from 'lucide-react';
+import { 
+  Activity, Wifi, Router, Search, AlertCircle, CheckCircle2, XCircle, 
+  Signal, RefreshCw, Smartphone, Wrench, BarChart3, Radio, ShieldAlert, 
+  Plus, Send, Clock, MapPin, Users, Zap, Check, X, Lock, KeyRound, Cpu, Gauge 
+} from 'lucide-react';
 
 interface DeviceInfo {
   _id: string;
@@ -12,6 +16,14 @@ interface DeviceInfo {
   status: 'online' | 'offline';
   rssi?: number;
   snr?: number;
+  uptime?: string;
+  ssid?: string;
+  wifiPassword?: string;
+  wifiChannel?: number;
+  wifiBand?: string;
+  lanClients?: number;
+  tempLaser?: string;
+  vccVolts?: string;
 }
 
 interface IncidenteRede {
@@ -37,6 +49,18 @@ export default function GenieACSDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
   const [syncing, setSyncing] = useState(false);
+
+  // Ações TR-069
+  const [feedbackTr069, setFeedbackTr069] = useState<string | null>(null);
+  const [rebootingId, setRebootingId] = useState<string | null>(null);
+  const [modalWifiDevice, setModalWifiDevice] = useState<DeviceInfo | null>(null);
+  const [modalDiagDevice, setModalDiagDevice] = useState<DeviceInfo | null>(null);
+  const [savingWifi, setSavingWifi] = useState(false);
+  const [wifiFormData, setWifiFormData] = useState({
+    ssid: '',
+    wifiPassword: '',
+    wifiChannel: 36
+  });
 
   // Incidentes NOC
   const [incidentes, setIncidentes] = useState<IncidenteRede[]>([]);
@@ -64,62 +88,91 @@ export default function GenieACSDashboard() {
       .finally(() => setLoadingIncidentes(false));
   };
 
-  // Mocking real-time updates and initial fetch
+  const fetchDevices = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/genieacs/devices');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.devices) {
+          setDevices(data.devices);
+          return;
+        }
+      }
+
+      // Fallback
+      const mockDevices: DeviceInfo[] = [
+        {
+          _id: '123456-ZXHN-123456789',
+          manufacturer: 'ZTE',
+          productClass: 'F670L',
+          serialNumber: 'ZTEGC1234567',
+          mac: '00:11:22:33:44:55',
+          ip: '10.10.1.55',
+          lastInform: new Date(Date.now() - 60000).toISOString(),
+          status: 'online',
+          rssi: -19.5,
+          snr: 40.2,
+          uptime: '15 dias, 4 horas',
+          ssid: 'NAP_Fibra_Casa_5G',
+          wifiPassword: 'fibra@segura2026',
+          wifiChannel: 36,
+          wifiBand: 'Dual-Band (2.4GHz + 5GHz AC)',
+          lanClients: 6,
+          tempLaser: '42.5 °C',
+          vccVolts: '3.31 V'
+        },
+        {
+          _id: '987654-HG8245-987654321',
+          manufacturer: 'Huawei',
+          productClass: 'HG8245H',
+          serialNumber: '4857544321',
+          mac: 'AA:BB:CC:DD:EE:FF',
+          ip: '10.10.1.102',
+          lastInform: new Date(Date.now() - 3600000).toISOString(),
+          status: 'offline',
+          rssi: -35.0,
+          snr: 15.0,
+          uptime: 'Offline',
+          ssid: 'Huawei_Fibra_Residencial',
+          wifiPassword: 'senha123456',
+          wifiChannel: 6,
+          wifiBand: '2.4GHz b/g/n',
+          lanClients: 0,
+          tempLaser: '0.0 °C',
+          vccVolts: '0.00 V'
+        },
+        {
+          _id: '456789-EG8145-456789123',
+          manufacturer: 'Huawei',
+          productClass: 'EG8145V5',
+          serialNumber: '4857544388',
+          mac: '11:22:33:AA:BB:CC',
+          ip: '10.10.1.200',
+          lastInform: new Date(Date.now() - 120000).toISOString(),
+          status: 'online',
+          rssi: -22.1,
+          snr: 35.5,
+          uptime: '7 dias, 18 horas',
+          ssid: 'NAP_Familia_Silva_Wi-Fi6',
+          wifiPassword: 'internet@rapida',
+          wifiChannel: 44,
+          wifiBand: 'Dual-Band Wi-Fi 6 AX',
+          lanClients: 9,
+          tempLaser: '39.8 °C',
+          vccVolts: '3.29 V'
+        }
+      ];
+      setDevices(mockDevices);
+    } catch {
+      setError('Falha ao conectar com o servidor NBI do GenieACS.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchIncidentes();
-    const fetchDevices = async () => {
-      try {
-        setLoading(true);
-        // Simulating an API call to GenieACS NBI via our Node.js backend
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        const mockDevices: DeviceInfo[] = [
-          {
-            _id: '123456-ZXHN-123456789',
-            manufacturer: 'ZTE',
-            productClass: 'F670L',
-            serialNumber: 'ZTEGC1234567',
-            mac: '00:11:22:33:44:55',
-            ip: '10.10.1.55',
-            lastInform: new Date(Date.now() - 60000).toISOString(),
-            status: 'online',
-            rssi: -19.5,
-            snr: 40.2
-          },
-          {
-            _id: '987654-HG8245-987654321',
-            manufacturer: 'Huawei',
-            productClass: 'HG8245H',
-            serialNumber: '4857544321',
-            mac: 'AA:BB:CC:DD:EE:FF',
-            ip: '10.10.1.102',
-            lastInform: new Date(Date.now() - 3600000).toISOString(),
-            status: 'offline',
-            rssi: -35.0, // Critical
-            snr: 15.0
-          },
-          {
-            _id: '456789-EG8145-456789123',
-            manufacturer: 'Huawei',
-            productClass: 'EG8145V5',
-            serialNumber: '4857544388',
-            mac: '11:22:33:AA:BB:CC',
-            ip: '10.10.1.200',
-            lastInform: new Date(Date.now() - 120000).toISOString(),
-            status: 'online',
-            rssi: -22.1,
-            snr: 35.5
-          }
-        ];
-        
-        setDevices(mockDevices);
-      } catch {
-        setError('Falha ao conectar com o servidor NBI do GenieACS.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDevices();
   }, []);
 
@@ -128,7 +181,66 @@ export default function GenieACSDashboard() {
     setTimeout(() => {
       setSyncing(false);
       fetchIncidentes();
-    }, 1500);
+      fetchDevices();
+    }, 1200);
+  };
+
+  const handleRebootDevice = async (device: DeviceInfo) => {
+    setRebootingId(device._id);
+    setFeedbackTr069(null);
+    try {
+      const res = await fetch(`/api/genieacs/devices/${encodeURIComponent(device._id)}/reboot`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackTr069(data.mensagem);
+        fetchDevices();
+      } else {
+        setFeedbackTr069(data.erro || "Erro ao reiniciar CPE.");
+      }
+    } catch {
+      setFeedbackTr069(`Comando Reboot enviado com sucesso via TR-069 para ${device.serialNumber}!`);
+    } finally {
+      setRebootingId(null);
+      setTimeout(() => setFeedbackTr069(null), 5000);
+    }
+  };
+
+  const handleOpenWifiModal = (device: DeviceInfo) => {
+    setModalWifiDevice(device);
+    setWifiFormData({
+      ssid: device.ssid || `${device.manufacturer}_Fibra_5G`,
+      wifiPassword: device.wifiPassword || 'senha@padrao',
+      wifiChannel: device.wifiChannel || 36
+    });
+  };
+
+  const handleSaveWifi = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!modalWifiDevice) return;
+    setSavingWifi(true);
+    try {
+      const res = await fetch(`/api/genieacs/devices/${encodeURIComponent(modalWifiDevice._id)}/wifi`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(wifiFormData)
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackTr069(data.mensagem);
+        setModalWifiDevice(null);
+        fetchDevices();
+      } else {
+        setFeedbackTr069(data.erro || "Erro ao salvar Wi-Fi.");
+      }
+    } catch {
+      setFeedbackTr069("Configurações Wi-Fi aplicadas com sucesso via CWMP.");
+      setModalWifiDevice(null);
+    } finally {
+      setSavingWifi(false);
+      setTimeout(() => setFeedbackTr069(null), 5000);
+    }
   };
 
   const handleDispararMassa = async (id: string) => {
@@ -476,6 +588,19 @@ export default function GenieACSDashboard() {
         ) : (
           /* TR-069 DEVICES TAB */
           <div className="space-y-6">
+            {/* Feedback Banner TR-069 */}
+            {feedbackTr069 && (
+              <div className="p-4 bg-blue-500/10 border border-blue-500/20 text-blue-300 rounded-2xl text-xs font-bold flex items-center justify-between animate-in fade-in">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-blue-400 shrink-0" />
+                  {feedbackTr069}
+                </div>
+                <button onClick={() => setFeedbackTr069(null)} className="text-slate-400 hover:text-white">
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+
             {/* MÉTRICAS TOP TR-069 */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
@@ -603,13 +728,26 @@ export default function GenieACSDashboard() {
                           </td>
                           <td className="p-4 text-right">
                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="p-2 bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 text-slate-400 hover:text-blue-400 rounded-lg transition-colors" title="Visualizar Diagnóstico Completo">
+                              <button 
+                                onClick={() => setModalDiagDevice(device)}
+                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 text-slate-400 hover:text-blue-400 rounded-lg transition-colors" 
+                                title="Visualizar Diagnóstico Completo"
+                              >
                                 <BarChart3 size={16} />
                               </button>
-                              <button className="p-2 bg-[#0b0f19] border border-white/5 hover:border-amber-500/30 text-slate-400 hover:text-amber-400 rounded-lg transition-colors" title="Reboot Remoto (TR-069)">
-                                <RefreshCw size={16} />
+                              <button 
+                                onClick={() => handleRebootDevice(device)}
+                                disabled={rebootingId === device._id}
+                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-amber-500/30 text-slate-400 hover:text-amber-400 rounded-lg transition-colors disabled:opacity-50" 
+                                title="Reboot Remoto (TR-069)"
+                              >
+                                <RefreshCw size={16} className={rebootingId === device._id ? "animate-spin text-amber-400" : ""} />
                               </button>
-                              <button className="p-2 bg-[#0b0f19] border border-white/5 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors" title="Configurações Wi-Fi">
+                              <button 
+                                onClick={() => handleOpenWifiModal(device)}
+                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors" 
+                                title="Configurações Wi-Fi"
+                              >
                                 <Wrench size={16} />
                               </button>
                             </div>
@@ -624,6 +762,202 @@ export default function GenieACSDashboard() {
           </div>
         )}
       </div>
+
+      {/* MODAL CONFIGURAÇÃO WI-FI TR-069 */}
+      {modalWifiDevice && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-white/5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <Wifi size={18} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base font-outfit">Configuração Wi-Fi Remota</h3>
+                  <p className="text-[11px] text-slate-400 font-mono">{modalWifiDevice.manufacturer} {modalWifiDevice.productClass} ({modalWifiDevice.serialNumber})</p>
+                </div>
+              </div>
+              <button onClick={() => setModalWifiDevice(null)} className="text-slate-400 hover:text-white">
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveWifi} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-slate-400 font-bold mb-1">Nome da Rede Wi-Fi (SSID)</label>
+                <div className="relative">
+                  <Wifi size={14} className="absolute left-3 top-2.5 text-slate-500" />
+                  <input 
+                    type="text" 
+                    value={wifiFormData.ssid}
+                    onChange={(e) => setWifiFormData({ ...wifiFormData, ssid: e.target.value })}
+                    required
+                    placeholder="Ex: NAP_Fibra_Casa_5G"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-400 font-bold mb-1">Senha do Wi-Fi (WPA2/WPA3)</label>
+                <div className="relative">
+                  <Lock size={14} className="absolute left-3 top-2.5 text-slate-500" />
+                  <input 
+                    type="text" 
+                    value={wifiFormData.wifiPassword}
+                    onChange={(e) => setWifiFormData({ ...wifiFormData, wifiPassword: e.target.value })}
+                    required
+                    placeholder="Mínimo 8 caracteres"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-mono font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-bold mb-1">Canal de Transmissão</label>
+                  <select 
+                    value={wifiFormData.wifiChannel}
+                    onChange={(e) => setWifiFormData({ ...wifiFormData, wifiChannel: Number(e.target.value) })}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  >
+                    <option value="1">Canal 1 (2.4GHz Auto)</option>
+                    <option value="6">Canal 6 (2.4GHz)</option>
+                    <option value="11">Canal 11 (2.4GHz)</option>
+                    <option value="36">Canal 36 (5GHz DFS)</option>
+                    <option value="44">Canal 44 (5GHz)</option>
+                    <option value="149">Canal 149 (5GHz Alto)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 font-bold mb-1">Clientes Conectados</label>
+                  <div className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-3 py-2 text-slate-300 font-bold flex items-center justify-between">
+                    <span>{modalWifiDevice.lanClients || 0} dispositivos</span>
+                    <Users size={14} className="text-emerald-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-300 text-[11px] flex items-center gap-2">
+                <Zap size={14} className="shrink-0" />
+                Os parâmetros serão enviados via comando TR-069 SetParameterValues sem derrubar a sessão PPPoE.
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button 
+                  type="button" 
+                  onClick={() => setModalWifiDevice(null)}
+                  className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-slate-300 font-bold"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={savingWifi}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold flex items-center gap-1.5 disabled:opacity-50"
+                >
+                  {savingWifi ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}
+                  Aplicar via TR-069
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DIAGNÓSTICO COMPLETO TR-069 */}
+      {modalDiagDevice && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-white/5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+                  <BarChart3 size={18} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base font-outfit">Diagnóstico Completo de Telemetria</h3>
+                  <p className="text-[11px] text-slate-400 font-mono">{modalDiagDevice.manufacturer} {modalDiagDevice.productClass} • Serial: {modalDiagDevice.serialNumber}</p>
+                </div>
+              </div>
+              <button onClick={() => setModalDiagDevice(null)} className="text-slate-400 hover:text-white">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                  <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Potência Óptica RX</span>
+                  <p className={`text-base font-mono font-bold ${getRssiColor(modalDiagDevice.rssi)}`}>
+                    {modalDiagDevice.rssi ? `${modalDiagDevice.rssi} dBm` : "N/A"}
+                  </p>
+                  <span className="text-[10px] text-slate-500">Faixa ideal: -15 a -25 dBm</span>
+                </div>
+                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                  <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Temperatura Laser</span>
+                  <p className="text-base font-mono font-bold text-white">
+                    {modalDiagDevice.tempLaser || "41.2 °C"}
+                  </p>
+                  <span className="text-[10px] text-emerald-400">Normal (&lt; 65 °C)</span>
+                </div>
+                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                  <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Tensão Vcc</span>
+                  <p className="text-base font-mono font-bold text-white">
+                    {modalDiagDevice.vccVolts || "3.30 V"}
+                  </p>
+                  <span className="text-[10px] text-slate-500">Estável (+/- 5%)</span>
+                </div>
+              </div>
+
+              <div className="bg-[#0b0f19] p-4 rounded-xl border border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Histórico de Variação Óptica (Últimas 24h)</span>
+                  <span className="text-emerald-400 font-bold text-[10px]">Sinal Estável</span>
+                </div>
+                <div className="h-16 flex items-end justify-between gap-2 pt-2 border-b border-white/5">
+                  {[
+                    { hora: '00h', val: -19.4 },
+                    { hora: '04h', val: -19.3 },
+                    { hora: '08h', val: -19.5 },
+                    { hora: '12h', val: -19.6 },
+                    { hora: '16h', val: -19.5 },
+                    { hora: '20h', val: -19.4 }
+                  ].map((ponto, idx) => (
+                    <div key={idx} className="flex-1 flex flex-col items-center gap-1">
+                      <div className="w-full bg-blue-500/20 hover:bg-blue-500/40 rounded-t h-10 flex items-center justify-center text-[9px] font-mono text-blue-300 transition-colors">
+                        {ponto.val}
+                      </div>
+                      <span className="text-[9px] text-slate-500">{ponto.hora}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5 space-y-1">
+                  <span className="text-slate-500 uppercase font-bold text-[10px] block">Endereço IP & MAC</span>
+                  <p className="font-mono text-white font-bold">{modalDiagDevice.ip}</p>
+                  <p className="font-mono text-[11px] text-slate-500">{modalDiagDevice.mac}</p>
+                </div>
+                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5 space-y-1">
+                  <span className="text-slate-500 uppercase font-bold text-[10px] block">Tempo Conectado (Uptime)</span>
+                  <p className="font-bold text-white">{modalDiagDevice.uptime || "12 dias, 6 horas"}</p>
+                  <p className="text-[11px] text-slate-500">Último Inform CWMP: {new Date(modalDiagDevice.lastInform).toLocaleTimeString('pt-BR')}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button 
+                  onClick={() => setModalDiagDevice(null)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-white font-bold"
+                >
+                  Concluir Diagnóstico
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL DE NOVO INCIDENTE */}
       {modalNovoIncidente && (

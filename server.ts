@@ -1634,6 +1634,193 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     });
   });
 
+  // --- MÓDULO TELEMETRIA GENIEACS (TR-069 / CWMP NBI) ---
+  interface GenieACSDevice {
+    _id: string;
+    manufacturer: string;
+    productClass: string;
+    serialNumber: string;
+    mac: string;
+    ip: string;
+    lastInform: string;
+    status: 'online' | 'offline';
+    rssi: number;
+    snr: number;
+    uptime: string;
+    ssid: string;
+    wifiPassword: string;
+    wifiChannel: number;
+    wifiBand: string;
+    lanClients: number;
+    tempLaser: string;
+    vccVolts: string;
+  }
+
+  let genieacsDevices: GenieACSDevice[] = [
+    {
+      _id: '123456-ZXHN-123456789',
+      manufacturer: 'ZTE',
+      productClass: 'F670L',
+      serialNumber: 'ZTEGC1234567',
+      mac: '00:11:22:33:44:55',
+      ip: '10.10.1.55',
+      lastInform: new Date(Date.now() - 45000).toISOString(),
+      status: 'online',
+      rssi: -19.5,
+      snr: 40.2,
+      uptime: '15 dias, 4 horas',
+      ssid: 'NAP_Fibra_Casa_5G',
+      wifiPassword: 'fibra@segura2026',
+      wifiChannel: 36,
+      wifiBand: 'Dual-Band (2.4GHz + 5GHz AC)',
+      lanClients: 6,
+      tempLaser: '42.5 °C',
+      vccVolts: '3.31 V'
+    },
+    {
+      _id: '987654-HG8245-987654321',
+      manufacturer: 'Huawei',
+      productClass: 'HG8245H',
+      serialNumber: '4857544321',
+      mac: 'AA:BB:CC:DD:EE:FF',
+      ip: '10.10.1.102',
+      lastInform: new Date(Date.now() - 3600000).toISOString(),
+      status: 'offline',
+      rssi: -35.0,
+      snr: 15.0,
+      uptime: 'Offline',
+      ssid: 'Huawei_Fibra_Residencial',
+      wifiPassword: 'senha123456',
+      wifiChannel: 6,
+      wifiBand: '2.4GHz b/g/n',
+      lanClients: 0,
+      tempLaser: '0.0 °C',
+      vccVolts: '0.00 V'
+    },
+    {
+      _id: '456789-EG8145-456789123',
+      manufacturer: 'Huawei',
+      productClass: 'EG8145V5',
+      serialNumber: '4857544388',
+      mac: '11:22:33:AA:BB:CC',
+      ip: '10.10.1.200',
+      lastInform: new Date(Date.now() - 90000).toISOString(),
+      status: 'online',
+      rssi: -22.1,
+      snr: 35.5,
+      uptime: '7 dias, 18 horas',
+      ssid: 'NAP_Familia_Silva_Wi-Fi6',
+      wifiPassword: 'internet@rapida',
+      wifiChannel: 44,
+      wifiBand: 'Dual-Band Wi-Fi 6 AX',
+      lanClients: 9,
+      tempLaser: '39.8 °C',
+      vccVolts: '3.29 V'
+    },
+    {
+      _id: '789123-AN5506-789123456',
+      manufacturer: 'Fiberhome',
+      productClass: 'AN5506-04-F',
+      serialNumber: 'FHTT88990011',
+      mac: 'CC:DD:EE:11:22:33',
+      ip: '10.10.1.78',
+      lastInform: new Date(Date.now() - 25000).toISOString(),
+      status: 'online',
+      rssi: -24.8,
+      snr: 32.1,
+      uptime: '22 dias, 1 hora',
+      ssid: 'NAP_Fiberhome_Giga',
+      wifiPassword: 'fibra@supernet',
+      wifiChannel: 11,
+      wifiBand: 'Dual-Band (2.4GHz + 5GHz)',
+      lanClients: 4,
+      tempLaser: '44.1 °C',
+      vccVolts: '3.30 V'
+    }
+  ];
+
+  // Listar todos os dispositivos TR-069 gerenciados
+  app.get("/api/genieacs/devices", (req, res) => {
+    res.json({
+      sucesso: true,
+      total: genieacsDevices.length,
+      online: genieacsDevices.filter(d => d.status === 'online').length,
+      offline: genieacsDevices.filter(d => d.status === 'offline').length,
+      devices: genieacsDevices
+    });
+  });
+
+  // Reboot remoto via TR-069 CWMP
+  app.post("/api/genieacs/devices/:id/reboot", (req, res) => {
+    const { id } = req.params;
+    const device = genieacsDevices.find(d => d._id === id || d.serialNumber === id);
+
+    if (!device) {
+      return res.status(404).json({ sucesso: false, erro: "Dispositivo CPE não encontrado no GenieACS." });
+    }
+
+    device.lastInform = new Date().toISOString();
+    device.uptime = "Recém reiniciado (0m)";
+
+    res.json({
+      sucesso: true,
+      mensagem: `Comando de reinicialização remota (SetParameterValues/Reboot) enviado com sucesso para ${device.manufacturer} ${device.productClass} (${device.serialNumber})!`,
+      device
+    });
+  });
+
+  // Atualizar configurações Wi-Fi remotamente (SSID e Senha)
+  app.post("/api/genieacs/devices/:id/wifi", (req, res) => {
+    const { id } = req.params;
+    const { ssid, wifiPassword, wifiChannel } = req.body;
+    const device = genieacsDevices.find(d => d._id === id || d.serialNumber === id);
+
+    if (!device) {
+      return res.status(404).json({ sucesso: false, erro: "Dispositivo CPE não encontrado no GenieACS." });
+    }
+
+    if (ssid) device.ssid = ssid;
+    if (wifiPassword) device.wifiPassword = wifiPassword;
+    if (wifiChannel) device.wifiChannel = Number(wifiChannel);
+    device.lastInform = new Date().toISOString();
+
+    res.json({
+      sucesso: true,
+      mensagem: `Parâmetros Wi-Fi aplicados na CPE ${device.serialNumber} via CWMP TR-069!`,
+      device
+    });
+  });
+
+  // Diagnóstico Detalhado de Telemetria Óptica e RF
+  app.get("/api/genieacs/devices/:id/diagnostics", (req, res) => {
+    const { id } = req.params;
+    const device = genieacsDevices.find(d => d._id === id || d.serialNumber === id);
+
+    if (!device) {
+      return res.status(404).json({ sucesso: false, erro: "Dispositivo CPE não encontrado no GenieACS." });
+    }
+
+    res.json({
+      sucesso: true,
+      device,
+      telemetria: {
+        historicoSinalRx: [
+          { hora: "00:00", rx: device.rssi - 0.2 },
+          { hora: "04:00", rx: device.rssi - 0.1 },
+          { hora: "08:00", rx: device.rssi },
+          { hora: "12:00", rx: device.rssi + 0.3 },
+          { hora: "Agora", rx: device.rssi }
+        ],
+        perdaPacotesLan: "0%",
+        perdaPacotesWan: "0%",
+        pingDnsPrimario: "3.8 ms",
+        pingGateway: "1.2 ms",
+        portaPon: "PON 02 / OLT Central",
+        caboDropMetrosAprox: 72
+      }
+    });
+  });
+
   // --- CÉREBRO DE IA: ENGINE GEMINI COM DYNAMIC TOOL REGISTRY (TELECOM & CALL CENTER) ---
   app.get("/api/gemini/agent/tools", (req, res) => {
     const tools = agentToolRegistry.getAllTools().map(t => ({
