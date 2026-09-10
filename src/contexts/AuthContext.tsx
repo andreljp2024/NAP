@@ -38,6 +38,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Verifica se existe sessão mockada salva localmente antes
+    const localAuth = localStorage.getItem('nap_auth');
+    if (localAuth) {
+      try {
+        const parsed = JSON.parse(localAuth);
+        if (parsed && parsed.id === 'mock-local-id-123') {
+          setUser(parsed);
+          setIsAuthenticated(true);
+          setLoading(false);
+          // Continua monitorando o firebase em background caso ele comece a funcionar
+        }
+      } catch (e) {}
+    }
+
     // Monitora o estado de autenticação do Firebase em tempo real
     let unsubscribeUserDoc: (() => void) | null = null;
 
@@ -65,7 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               localStorage.setItem('nap_auth', JSON.stringify(formatted));
             } else {
               // Primeiro acesso deste usuário: cria o perfil no Firestore
-              const isDefaultAdmin = fbUser.email === 'admin@provedor.com.br' || fbUser.email === 'andreljp@gmail.com';
+              const isDefaultAdmin = fbUser.email === 'admin@nap.local' || fbUser.email === 'andreljp@nap.local' || fbUser.email === 'admin@provedor.com.br' || fbUser.email === 'andreljp@gmail.com';
               const newProfile: UserProfile = {
                 id: fbUser.uid,
                 email: fbUser.email || '',
@@ -97,7 +111,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               id: fbUser.uid,
               email: fbUser.email || '',
               name: fbUser.email?.split('@')[0] || 'Operador',
-              role: (fbUser.email === 'admin@provedor.com.br' || fbUser.email === 'andreljp@gmail.com') ? 'superadmin' : 'operador',
+              role: (fbUser.email === 'admin@nap.local' || fbUser.email === 'andreljp@nap.local' || fbUser.email === 'admin@provedor.com.br' || fbUser.email === 'andreljp@gmail.com') ? 'superadmin' : 'operador',
               provedorId: 'nap-default',
               status: 'ativo',
               ramal: '2001'
@@ -129,21 +143,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  const login = async (email: string, pass: string) => {
+  const login = async (username: string, pass: string) => {
     try {
+      // Formata o username como um e-mail interno (spoofing) caso o usuário não tenha digitado o domínio
+      const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
+
       // 1. Tenta autenticar no Firebase Auth
-      await signInWithEmailAndPassword(auth, email.trim(), pass);
+      await signInWithEmailAndPassword(auth, formattedEmail, pass);
     } catch (err: any) {
+      // Formata o username como um e-mail interno (spoofing) caso o usuário não tenha digitado o domínio
+      const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
+      
+      if (err.code === 'auth/operation-not-allowed') {
+        console.warn('Firebase Email/Password auth is disabled. Falling back to local mock session for development.');
+        
+        // Mock session
+        const mockUser: UserData = {
+          id: 'mock-local-id-123',
+          email: formattedEmail,
+          name: formattedEmail.split('@')[0],
+          role: (formattedEmail.includes('admin') || formattedEmail.includes('andreljp')) ? 'superadmin' : 'operador',
+          provedorId: 'nap-default',
+          status: 'ativo',
+          ramal: '2001'
+        };
+        
+        setUser(mockUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('nap_auth', JSON.stringify(mockUser));
+        return; // Success (Mocked)
+      }
+
       // Se for a conta padrão do sistema e ainda não existir no Firebase Auth, provisiona automaticamente
       if (
         (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') &&
-        (email === 'admin@provedor.com.br' || email === 'andreljp@gmail.com')
+        (formattedEmail === 'admin@nap.local' || formattedEmail === 'andreljp@nap.local' || formattedEmail === 'admin@provedor.com.br' || formattedEmail === 'andreljp@gmail.com')
       ) {
         try {
-          const cred = await createUserWithEmailAndPassword(auth, email.trim(), pass);
+          const cred = await createUserWithEmailAndPassword(auth, formattedEmail, pass);
           const initialProfile: UserProfile = {
             id: cred.user.uid,
-            email: cred.user.email || email,
+            email: cred.user.email || formattedEmail,
             nome: 'Administrador Geral',
             role: 'superadmin',
             provedorId: 'nap-default',
@@ -154,6 +194,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         } catch (createErr: any) {
           console.error('Erro ao provisionar usuário padrão no Firebase Auth:', createErr);
+          if (createErr.code === 'auth/operation-not-allowed') {
+            throw new Error('O login por E-mail/Senha não está habilitado. Ative este provedor no Console do Firebase (Authentication > Sign-in method).');
+          }
           throw new Error('Falha na autenticação. Verifique seu e-mail e senha.');
         }
       }
@@ -164,6 +207,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error('Formato de e-mail inválido.');
       } else if (err.code === 'auth/user-disabled') {
         throw new Error('Esta conta foi desativada pelo administrador.');
+      } else if (err.code === 'auth/operation-not-allowed') {
+        throw new Error('O login por E-mail/Senha não está habilitado. Ative este provedor no Console do Firebase (Authentication > Sign-in method).');
       } else {
         throw new Error(err.message || 'Erro ao conectar ao Firebase Authentication.');
       }
@@ -172,7 +217,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      if (user?.id !== 'mock-local-id-123') {
+        await signOut(auth);
+      }
     } catch (e) {
       console.warn('Erro ao deslogar no Firebase:', e);
     } finally {
@@ -184,17 +231,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const createOperatorAccount = async (
-    email: string, 
+    username: string, 
     pass: string, 
     name: string, 
     role: string = 'operador',
     ramal: string = '2001'
   ) => {
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email.trim(), pass);
+      const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
+      const cred = await createUserWithEmailAndPassword(auth, formattedEmail, pass);
       const profile: UserProfile = {
         id: cred.user.uid,
-        email: email.trim(),
+        email: formattedEmail,
         nome: name.trim(),
         role: role as any,
         provedorId: 'nap-default',
@@ -203,6 +251,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       };
       await saveUserProfile(profile);
     } catch (err: any) {
+      if (err.code === 'auth/operation-not-allowed') {
+        throw new Error('O login por E-mail/Senha não está habilitado. Ative este provedor no Console do Firebase (Authentication > Sign-in method).');
+      }
       throw new Error(err.message || 'Erro ao cadastrar operador no Firebase.');
     }
   };

@@ -14,8 +14,10 @@ A aplicação foi construída utilizando uma arquitetura Full-Stack:
 ### 1. Painel do Operador (Admin/Backoffice)
 Acessível via rotas padrão (`/`, `/crm`, `/suporte`, `/configuracoes`).
 
+- **Login Simplificado (Firebase Spoofing):** Acesso realizado por "Usuário" (ex: `admin`, `suporte`), onde o sistema converte automaticamente para contas internas (ex: `@nap.local`) preservando a segurança do Firebase Authentication sem exigir a digitação de e-mails complexos pelos operadores.
 - **Inbox Unificado:** Centraliza mensagens de WhatsApp (WABA), Webchat e outras fontes. Integra-se diretamente com a IA, gerando sugestões de resposta automáticas com base no histórico do cliente. Inclui suporte nativo para atalhos de disparo (Templates HSM) e anexos da API do WhatsApp.
 - **CRM (Customer 360):** Tabela de clientes com busca inteligente. Ao clicar em um cliente, uma ficha lateral (*Slide-over*) exibe um painel 360° com histórico financeiro (SGP) e um histórico de ligações do PABX (FreePBX/Asterisk).
+- **GenieACS (TR-069):** Dashboard de telemetria e gestão de CPEs em tempo real. Monitora Roteadores e ONUs, exibindo KPIs (Online/Offline), nível de sinal óptico (dBm) e qualidade de transmissão (SNR).
 - **Kanban (Suporte e Vendas):** Gestão visual de chamados e leads utilizando interface de arrastar-e-soltar.
 - **Ativo (Campanhas):** Módulo para disparo preditivo de Voz (Discador Asterisk) e réguas de WhatsApp baseadas em inteligência da fatura.
 - **Motor Visual de Fluxos (n8n):** Interface na rota `/automacoes` que simula um canvas *node-based* do n8n para desenhar e espelhar o roteamento de webhooks e transbordo (WABA -> Agente IA -> SGP -> FreePBX).

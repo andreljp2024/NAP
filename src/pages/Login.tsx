@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Lock, Mail, Server, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
+import { Lock, User, Server, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@provedor.com.br');
+  const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('admin123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,7 +17,7 @@ export default function Login() {
     setError('');
     
     try {
-      await login(email, password);
+      await login(username, password);
       navigate('/');
     } catch (err: any) {
       setError(err?.message || 'Credenciais inválidas. Tente novamente.');
@@ -26,8 +26,8 @@ export default function Login() {
     }
   };
 
-  const handleQuickFill = (quickEmail: string, quickPass: string) => {
-    setEmail(quickEmail);
+  const handleQuickFill = (quickUser: string, quickPass: string) => {
+    setUsername(quickUser);
     setPassword(quickPass);
     setError('');
   };
@@ -100,21 +100,21 @@ export default function Login() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
               <button
                 type="button"
-                onClick={() => handleQuickFill('admin@provedor.com.br', 'admin123')}
+                onClick={() => handleQuickFill('admin', 'admin123')}
                 className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
               >
                 <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Administrador Geral</span>
-                <span className="block font-mono text-[10px] text-slate-500 truncate">admin@provedor.com.br</span>
+                <span className="block font-mono text-[10px] text-slate-500 truncate">admin</span>
                 <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickFill('andreljp@gmail.com', 'admin123')}
+                onClick={() => handleQuickFill('suporte', 'admin123')}
                 className="text-left p-2 bg-white hover:bg-blue-100/50 border border-blue-200 rounded-xl transition-all group"
               >
-                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Conta Master (Google)</span>
-                <span className="block font-mono text-[10px] text-slate-500 truncate">andreljp@gmail.com</span>
+                <span className="block font-bold text-slate-900 text-[11px] group-hover:text-blue-700">Operador Suporte</span>
+                <span className="block font-mono text-[10px] text-slate-500 truncate">suporte</span>
                 <span className="block font-mono text-[10px] text-blue-600 font-semibold">senha: admin123</span>
               </button>
             </div>
@@ -128,13 +128,13 @@ export default function Login() {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">E-mail Corporativo</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Usuário</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium shadow-sm"
                   required
                 />
