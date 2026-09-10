@@ -1,11 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, Activity, AlertCircle, CheckCircle2, Download, Copy, QrCode, HeadphonesIcon, CreditCard, Settings, Loader2, Bell, Smartphone, Lock } from 'lucide-react';
+import { 
+  Wifi, 
+  Activity, 
+  AlertCircle, 
+  CheckCircle2, 
+  Download, 
+  Copy, 
+  QrCode, 
+  HeadphonesIcon, 
+  CreditCard, 
+  Settings, 
+  Loader2, 
+  Bell, 
+  Smartphone, 
+  Lock, 
+  Gauge, 
+  BarChart2, 
+  ShieldAlert, 
+  ShieldCheck, 
+  ArrowRight, 
+  Wrench,
+  ChevronRight
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import PortalWifiModal from '../components/PortalWifiModal';
 import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
+import PortalSpeedtestModal from '../components/PortalSpeedtestModal';
+import PortalConsumoModal from '../components/PortalConsumoModal';
+import PortalIncidenteDetalheModal from '../components/PortalIncidenteDetalheModal';
 
 export default function PortalDashboard() {
   const navigate = useNavigate();
@@ -17,7 +42,13 @@ export default function PortalDashboard() {
   const [pixCode, setPixCode] = useState<string | null>(null);
   const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
   const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
+  const [isSpeedtestModalOpen, setIsSpeedtestModalOpen] = useState(false);
+  const [isConsumoModalOpen, setIsConsumoModalOpen] = useState(false);
+  const [isIncidenteModalOpen, setIsIncidenteModalOpen] = useState(false);
+  const [incidenteAtivo, setIncidenteAtivo] = useState<any | null>(null);
   const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
+
+  const clienteBairro = "Centro Histórico";
 
   useEffect(() => {
     fetch('/api/sgp/faturas')
@@ -33,6 +64,16 @@ export default function PortalDashboard() {
             modelo: data.config.modeloCpe,
             dispositivos: data.config.dispositivosConectados?.length || 0
           });
+        }
+      })
+      .catch(() => {});
+
+    // Checagem proativa de incidentes do NOC para o bairro do assinante
+    fetch(`/api/incidentes/verificar-cliente?bairro=${encodeURIComponent(clienteBairro)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.afetado && data.incidente) {
+          setIncidenteAtivo(data.incidente);
         }
       })
       .catch(() => {});
@@ -102,67 +143,136 @@ export default function PortalDashboard() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
-        {/* Status da Conexão */}
-        <div className="bg-white p-6 rounded-3xl   border border-slate-200 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
-          
-          <div className="flex justify-between items-start mb-6 relative z-10">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-emerald-50 text-emerald-700 border border-emerald-200  rounded-2xl flex items-center justify-center">
-                <Wifi size={26} />
+      {/* BANNER PROATIVO DE STATUS DA REDE / NOC SHIELD */}
+      {incidenteAtivo ? (
+        <div className="mb-6 p-4 md:p-5 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-slate-800 relative overflow-hidden shadow-sm animate-in fade-in">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20">
+                <ShieldAlert size={24} />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Status da Rede</p>
-                <h3 className="text-xl font-bold text-slate-900 font-outfit">Conectado</h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-900 border border-amber-500/30">
+                    MANUTENÇÃO NO BAIRRO ({clienteBairro.toUpperCase()})
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-500">
+                    Prot. Anatel: {incidenteAtivo.protocoloAnatel}
+                  </span>
+                </div>
+                <h4 className="font-bold text-slate-900 text-sm md:text-base mt-1 font-outfit">
+                  {incidenteAtivo.titulo}
+                </h4>
+                <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                  Equipes de fusão óptica atuando no local. Previsão de normalização: <strong className="text-slate-900 font-semibold">{incidenteAtivo.previsaoRetorno}</strong>.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-500/10 border border-emerald-200 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
-              <CheckCircle2 size={14} /> Online
+
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button
+                onClick={() => setIsIncidenteModalOpen(true)}
+                className="flex-1 sm:flex-none px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-amber-600/20 flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <Wrench size={14} /> Detalhes do Reparo
+              </button>
             </div>
           </div>
-          <div className="space-y-3.5 border-t border-slate-200 pt-5 relative z-10">
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">Plano Atual</span>
-              <span className="font-bold text-slate-900">Fibra 500MB</span>
+        </div>
+      ) : (
+        <div className="mb-6 px-4 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-medium">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck size={18} className="text-emerald-600 shrink-0" />
+            <span>Rede 100% Operacional na sua região ({clienteBairro}) • SLA 99.9%</span>
+          </div>
+          <span className="font-mono text-[11px] text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-lg border border-emerald-300/50 self-start sm:self-auto">
+            Latência PTT IX.br: 3.4ms
+          </span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
+        {/* Status da Conexão */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 relative overflow-hidden flex flex-col justify-between">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+          
+          <div>
+            <div className="flex justify-between items-start mb-6 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-2xl flex items-center justify-center">
+                  <Wifi size={26} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Status da Rede</p>
+                  <h3 className="text-xl font-bold text-slate-900 font-outfit">Conectado</h3>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-500/10 border border-emerald-200 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                <CheckCircle2 size={14} /> Online
+              </div>
             </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">Rede Wi-Fi (SSID)</span>
-              <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 text-xs">
-                {wifiSummary?.ssid || 'Carregando...'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">Dispositivos no Wi-Fi</span>
-              <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                {wifiSummary?.dispositivos || 5} aparelhos conectados
-              </span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-600 font-medium">Roteador / ONU</span>
-              <span className="font-bold text-slate-700 text-xs font-mono">{wifiSummary?.modelo?.split(' ')[0] || 'ZTE'} F670L</span>
+            <div className="space-y-3.5 border-t border-slate-200 pt-5 relative z-10">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-600 font-medium">Plano Atual</span>
+                <span className="font-bold text-slate-900">Fibra 500MB Simétrico</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-600 font-medium">Rede Wi-Fi (SSID)</span>
+                <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 text-xs">
+                  {wifiSummary?.ssid || 'Carregando...'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-600 font-medium">Dispositivos no Wi-Fi</span>
+                <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  {wifiSummary?.dispositivos || 5} aparelhos conectados
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-600 font-medium">Roteador / ONU</span>
+                <span className="font-bold text-slate-700 text-xs font-mono">{wifiSummary?.modelo?.split(' ')[0] || 'ZTE'} F670L</span>
+              </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-6 relative z-10">
-            <button 
-              onClick={() => setIsWifiModalOpen(true)}
-              className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
-            >
-              <Lock size={15} /> Alterar Senha do Wi-Fi
-            </button>
-            <button 
-              onClick={() => setIsDiagnosticoOpen(true)}
-              className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"
-            >
-              <Activity size={15} /> Auto-Diagnóstico de Rede
-            </button>
+          <div className="mt-6 space-y-2 relative z-10">
+            {/* Speedtest e Consumo */}
+            <div className="grid grid-cols-2 gap-2">
+              <button 
+                onClick={() => setIsSpeedtestModalOpen(true)}
+                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <Gauge size={15} className="text-blue-600" /> Teste Velocidade
+              </button>
+              <button 
+                onClick={() => setIsConsumoModalOpen(true)}
+                className="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-800 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <BarChart2 size={15} className="text-indigo-600" /> Consumo Banda
+              </button>
+            </div>
+
+            {/* Wi-Fi e Diagnóstico */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button 
+                onClick={() => setIsWifiModalOpen(true)}
+                className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
+              >
+                <Lock size={15} /> Alterar Wi-Fi
+              </button>
+              <button 
+                onClick={() => setIsDiagnosticoOpen(true)}
+                className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"
+              >
+                <Activity size={15} /> Diagnóstico TR-069
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Resumo Financeiro */}
-        <div className="bg-gradient-to-br from-blue-700 to-indigo-900 p-6 rounded-3xl  -900/20 border border-blue-600 relative overflow-hidden flex flex-col">
+        <div className="bg-gradient-to-br from-blue-700 to-indigo-900 p-6 rounded-3xl -900/20 border border-blue-600 relative overflow-hidden flex flex-col">
           {/* Decoração de fundo */}
           <div className="absolute top-0 right-0 p-8 opacity-10">
             <QrCode size={160} className="fill-white" />
@@ -223,15 +333,17 @@ export default function PortalDashboard() {
         </div>
       </div>
 
-      {/* Atalhos Rápidos */}
-      <h3 className="font-bold text-slate-900 font-outfit mb-5 px-1 flex items-center gap-2">
-        Atendimento Rápido
+      {/* Atalhos Rápidos Expandidos (6 Ações) */}
+      <h3 className="font-bold text-slate-900 font-outfit mb-4 px-1 flex items-center gap-2">
+        Atendimento & Auto-Serviço
       </h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <QuickAction icon={<Wifi />} label="Wi-Fi & Senha" onClick={() => setIsWifiModalOpen(true)} />
-        <QuickAction icon={<CreditCard />} label="Faturas SGP" onClick={() => navigate('/portal/faturas')} />
-        <QuickAction icon={<HeadphonesIcon />} label="Abrir Chamado" onClick={() => navigate('/portal/suporte')} />
-        <QuickAction icon={<Settings />} label="Minha Conta" onClick={() => navigate('/portal/conta')} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <QuickAction icon={<Wifi size={20} />} label="Wi-Fi & Senha" onClick={() => setIsWifiModalOpen(true)} />
+        <QuickAction icon={<Gauge size={20} />} label="Speedtest" onClick={() => setIsSpeedtestModalOpen(true)} />
+        <QuickAction icon={<BarChart2 size={20} />} label="Consumo" onClick={() => setIsConsumoModalOpen(true)} />
+        <QuickAction icon={<CreditCard size={20} />} label="Faturas SGP" onClick={() => navigate('/portal/faturas')} />
+        <QuickAction icon={<HeadphonesIcon size={20} />} label="Suporte Técnico" onClick={() => navigate('/portal/suporte')} />
+        <QuickAction icon={<Settings size={20} />} label="Minha Conta" onClick={() => navigate('/portal/conta')} />
       </div>
 
       {/* Modal de Gerenciamento do Wi-Fi Residencial via TR-069 */}
@@ -239,7 +351,6 @@ export default function PortalDashboard() {
         isOpen={isWifiModalOpen} 
         onClose={() => setIsWifiModalOpen(false)}
         onSuccess={() => {
-          // Atualizar resumo na tela
           fetch('/api/portal/wifi')
             .then(res => res.json())
             .then(data => {
@@ -254,10 +365,34 @@ export default function PortalDashboard() {
         }}
       />
 
+      {/* Auto-Diagnóstico de Rede */}
       <AutoDiagnosticoModal
         isOpen={isDiagnosticoOpen}
         onClose={() => setIsDiagnosticoOpen(false)}
-        clienteBairro="Centro Histórico"
+        clienteBairro={clienteBairro}
+      />
+
+      {/* Speedtest Integrado */}
+      <PortalSpeedtestModal
+        isOpen={isSpeedtestModalOpen}
+        onClose={() => setIsSpeedtestModalOpen(false)}
+        planoNome="Fibra 500MB"
+        velocidadeNominal={500}
+      />
+
+      {/* Extrato de Consumo de Banda */}
+      <PortalConsumoModal
+        isOpen={isConsumoModalOpen}
+        onClose={() => setIsConsumoModalOpen(false)}
+        planoNome="Fibra 500MB"
+      />
+
+      {/* Detalhes do Incidente do NOC */}
+      <PortalIncidenteDetalheModal
+        isOpen={isIncidenteModalOpen}
+        onClose={() => setIsIncidenteModalOpen(false)}
+        incidente={incidenteAtivo}
+        clienteBairro={clienteBairro}
       />
     </div>
   );

@@ -2,6 +2,22 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Suprime avisos benignos de websocket do Vite em ambientes com DISABLE_HMR ativo
+      (function() {
+        const isViteNotice = (arg) => typeof arg === 'string' && (arg.includes('[vite]') || arg.includes('failed to connect to websocket'));
+        const _err = console.error;
+        const _warn = console.warn;
+        console.error = function(...args) {
+          if (args.some(isViteNotice)) return;
+          _err.apply(console, args);
+        };
+        console.warn = function(...args) {
+          if (args.some(isViteNotice)) return;
+          _warn.apply(console, args);
+        };
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NAP - Núcleo de Atendimento ao Provedor</title>
     <meta name="theme-color" content="#1d4ed8" />

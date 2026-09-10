@@ -3,7 +3,8 @@ import {
   Megaphone, PhoneOutgoing, MessageCircle, Play, Pause, Plus, Search, 
   BarChart2, Users, CheckCircle2, Bell, Send, ShieldCheck, Smartphone, 
   DollarSign, Zap, Clock, CreditCard, ArrowRight, ShieldAlert, Sparkles, 
-  RefreshCw, AlertTriangle, X 
+  RefreshCw, AlertTriangle, X, Settings, Sliders, Eye, Copy, Check, 
+  Filter, ExternalLink, MessageSquare, PhoneCall
 } from 'lucide-react';
 
 export default function Campanhas() {
@@ -15,11 +16,35 @@ export default function Campanhas() {
   const [novoPushCategoria, setNovoPushCategoria] = useState<'cobranca' | 'suporte' | 'manutencao' | 'marketing' | 'geral'>('cobranca');
   const [feedbackPush, setFeedbackPush] = useState<string | null>(null);
 
-  // Régua de Cobrança com IA
+  // Régua de Cobrança com IA & Automação Completa
   const [reguaConfig, setReguaConfig] = useState<any>(null);
   const [loadingRegua, setLoadingRegua] = useState(false);
   const [executandoFase, setExecutandoFase] = useState<string | null>(null);
   const [feedbackRegua, setFeedbackRegua] = useState<string | null>(null);
+
+  // Estados Avançados da Régua (Modais, Filtros e Simulador)
+  const [modalConfigRegua, setModalConfigRegua] = useState(false);
+  const [modalTemplatesRegua, setModalTemplatesRegua] = useState(false);
+  const [templateFaseAtiva, setTemplateFaseAtiva] = useState<'d_menos_3' | 'd_zero' | 'd_mais_3' | 'd_mais_7'>('d_menos_3');
+  const [templatesLocais, setTemplatesLocais] = useState<Record<string, string>>({});
+  const [configLocal, setConfigLocal] = useState<any>({
+    ativa: true,
+    horarioInicio: "08:30",
+    horarioFim: "19:30",
+    descontoPontualidade: 10,
+    diasAntesVencimento: 3,
+    diasAposVencimentoTolerancia: 3,
+    diasAposVencimentoBloqueio: 7,
+    canais: { whatsapp: true, sms: true, push: true, email: false }
+  });
+  const [salvandoConfigRegua, setSalvandoConfigRegua] = useState(false);
+  const [telefoneTeste, setTelefoneTeste] = useState('(11) 98765-4321');
+  const [enviandoTeste, setEnviandoTeste] = useState(false);
+  const [resultadoTeste, setResultadoTeste] = useState<any>(null);
+  const [filtroFaseFila, setFiltroFaseFila] = useState<string>('todas');
+  const [filtroStatusEnvio, setFiltroStatusEnvio] = useState<string>('todos');
+  const [disparandoClienteId, setDisparandoClienteId] = useState<string | null>(null);
+  const [pixCopiadoId, setPixCopiadoId] = useState<string | null>(null);
 
   // Campanhas Ativas (WhatsApp e Voz)
   const [campanhas, setCampanhas] = useState<any[]>([]);
@@ -46,9 +71,118 @@ export default function Campanhas() {
     fetch('/api/cobranca/regua')
       .then(res => res.json())
       .then(data => {
-        if (data.config) setReguaConfig(data.config);
+        if (data.config) {
+          setReguaConfig(data.config);
+          if (data.config.templates) setTemplatesLocais(data.config.templates);
+          setConfigLocal({
+            ativa: data.config.ativa,
+            horarioInicio: data.config.horarioInicio || "08:30",
+            horarioFim: data.config.horarioFim || "19:30",
+            descontoPontualidade: data.config.descontoPontualidade || 10,
+            diasAntesVencimento: data.config.diasAntesVencimento || 3,
+            diasAposVencimentoTolerancia: data.config.diasAposVencimentoTolerancia || 3,
+            diasAposVencimentoBloqueio: data.config.diasAposVencimentoBloqueio || 7,
+            canais: data.config.canais || { whatsapp: true, sms: true, push: true, email: false }
+          });
+        }
       })
       .catch(() => {});
+  };
+
+  const handleSalvarConfigRegua = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSalvandoConfigRegua(true);
+    try {
+      const res = await fetch('/api/cobranca/regua', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(configLocal)
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackRegua("Parâmetros e horários da régua salvos com sucesso!");
+        fetchReguaConfig();
+        setModalConfigRegua(false);
+        setTimeout(() => setFeedbackRegua(null), 4000);
+      }
+    } catch {
+      setFeedbackRegua("Erro ao salvar parâmetros da régua.");
+    } finally {
+      setSalvandoConfigRegua(false);
+    }
+  };
+
+  const handleSalvarTemplatesRegua = async () => {
+    setSalvandoConfigRegua(true);
+    try {
+      const res = await fetch('/api/cobranca/regua', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ templates: templatesLocais })
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackRegua("Templates de cobrança atualizados com sucesso!");
+        fetchReguaConfig();
+        setModalTemplatesRegua(false);
+        setTimeout(() => setFeedbackRegua(null), 4000);
+      }
+    } catch {
+      setFeedbackRegua("Erro ao salvar templates.");
+    } finally {
+      setSalvandoConfigRegua(false);
+    }
+  };
+
+  const handleSimularTesteEnvio = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEnviandoTeste(true);
+    setResultadoTeste(null);
+    try {
+      const res = await fetch('/api/cobranca/regua/simular-teste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telefone: telefoneTeste,
+          fase: templateFaseAtiva
+        })
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setResultadoTeste(data);
+      }
+    } catch {
+      setResultadoTeste({ sucesso: false, mensagem: "Erro ao simular envio de teste." });
+    } finally {
+      setEnviandoTeste(false);
+    }
+  };
+
+  const handleDispararIndividual = async (id: string) => {
+    setDisparandoClienteId(id);
+    try {
+      const res = await fetch('/api/cobranca/regua/disparar-individual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackRegua(data.mensagem);
+        fetchReguaConfig();
+        setTimeout(() => setFeedbackRegua(null), 4000);
+      }
+    } catch {
+      setFeedbackRegua("Falha ao enviar cobrança individual.");
+    } finally {
+      setDisparandoClienteId(null);
+    }
+  };
+
+  const handleCopiarPix = (id: string, chave: string) => {
+    navigator.clipboard.writeText(chave);
+    setPixCopiadoId(id);
+    setTimeout(() => setPixCopiadoId(null), 2500);
   };
 
   const fetchCampanhas = () => {
@@ -315,22 +449,43 @@ export default function Campanhas() {
             <div className="space-y-6">
               {/* Header do Módulo */}
               <div className="bg-[#101726] rounded-3xl border border-white/5 p-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
                       <Sparkles size={24} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-white font-outfit flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-white font-outfit flex flex-wrap items-center gap-2">
                         Régua Ativa com Negociação e PIX Copia-e-Cola
                         <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold">AUTOMATIZADA</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+                          {configLocal.horarioInicio} às {configLocal.horarioFim}
+                        </span>
                       </h3>
                       <p className="text-xs text-slate-400 mt-0.5">
-                        A IA dispara mensagens personalizadas via WhatsApp com chave PIX dinâmica antes, no dia e após o vencimento, reduzindo em até 60% a inadimplência e bloqueios MikroTik.
+                        Disparo automatizado de mensagens via WhatsApp com chave PIX dinâmica antes, no dia e após o vencimento, reduzindo bloqueios no concentrador MikroTik/Radius.
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  
+                  {/* Botões de Ação Rápida no Topo */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button 
+                      onClick={() => setModalConfigRegua(true)}
+                      className="px-3 py-2 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all border border-white/10 flex items-center gap-1.5"
+                    >
+                      <Sliders size={14} className="text-amber-400" />
+                      Parâmetros & Horários
+                    </button>
+
+                    <button 
+                      onClick={() => setModalTemplatesRegua(true)}
+                      className="px-3 py-2 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all border border-white/10 flex items-center gap-1.5"
+                    >
+                      <Eye size={14} className="text-blue-400" />
+                      Templates & Preview
+                    </button>
+
                     <button 
                       onClick={fetchReguaConfig} 
                       className="p-2 bg-white/5 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white transition-colors border border-white/5"
@@ -338,22 +493,28 @@ export default function Campanhas() {
                     >
                       <RefreshCw size={16} />
                     </button>
+
                     <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      SGP & Radius Conectados
+                      SGP & Radius Online
                     </span>
                   </div>
                 </div>
 
                 {feedbackRegua && (
-                  <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
-                    {feedbackRegua}
+                  <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl text-xs font-bold flex items-center justify-between gap-2 animate-in fade-in">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                      {feedbackRegua}
+                    </div>
+                    <button onClick={() => setFeedbackRegua(null)} className="text-slate-400 hover:text-white">
+                      <X size={14} />
+                    </button>
                   </div>
                 )}
 
                 {/* As 4 Fases da Régua Visual */}
-                <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Fase 1: D-3 */}
                   <div className="bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
                     <div>
@@ -363,10 +524,10 @@ export default function Campanhas() {
                       </div>
                       <h4 className="font-bold text-white text-sm">Lembrete Amigável</h4>
                       <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        Envia aviso cordial 3 dias antes do vencimento com o Copia-e-Cola do PIX.
+                        Aviso cordial 3 dias antes do vencimento com Copia-e-Cola do PIX e desconto de R$ {configLocal.descontoPontualidade?.toFixed(2) || '10,00'}.
                       </p>
-                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
-                        "Oi João! Sua fatura de R$ 99,90 vence em 3 dias. Pague já via PIX sem taxas..."
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono line-clamp-2">
+                        {reguaConfig?.templates?.d_menos_3 || "Olá, {{nome_cliente}}! Sua fatura vence em 3 dias..."}
                       </div>
                     </div>
                     <div className="mt-5 pt-3 border-t border-white/5">
@@ -390,10 +551,10 @@ export default function Campanhas() {
                       </div>
                       <h4 className="font-bold text-white text-sm">Vencimento da Fatura</h4>
                       <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        Lembrete no dia do vencimento às 09:00 com PIX e PDF do boleto.
+                        Lembrete matinal no dia do vencimento com PIX e link da 2ª via sem taxas.
                       </p>
-                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
-                        "Sua mensalidade vence HOJE. Pague com o QR Code abaixo para manter sua velocidade máxima."
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono line-clamp-2">
+                        {reguaConfig?.templates?.d_zero || "Sua mensalidade vence HOJE. Pague com o QR Code abaixo..."}
                       </div>
                     </div>
                     <div className="mt-5 pt-3 border-t border-white/5">
@@ -417,10 +578,10 @@ export default function Campanhas() {
                       </div>
                       <h4 className="font-bold text-white text-sm">Auto-Desbloqueio & PIX</h4>
                       <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        Oferece botão de Desbloqueio em Confiança 48h junto com a renegociação do PIX.
+                        Notificação cordial com oferta de Desbloqueio em Confiança 48h direto no Portal.
                       </p>
-                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
-                        "Ainda não identificamos seu pagamento. Precisa de mais tempo? Clique para liberar 48h..."
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono line-clamp-2">
+                        {reguaConfig?.templates?.d_mais_3 || "Não identificamos o pagamento. Precisa de 48h de liberação?..."}
                       </div>
                     </div>
                     <div className="mt-5 pt-3 border-t border-white/5">
@@ -442,12 +603,12 @@ export default function Campanhas() {
                         <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">FASE 4 • D+7</span>
                         <span className="text-[11px] text-red-400 font-bold">Pré-Bloqueio</span>
                       </div>
-                      <h4 className="font-bold text-white text-sm">Aviso de Suspensão MikroTik</h4>
+                      <h4 className="font-bold text-white text-sm">Aviso de Suspensão</h4>
                       <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                        Último aviso antes da redução de banda no concentrador PPPoE/Radius.
+                        Último aviso legal antes da redução de velocidade no concentrador PPPoE/Radius.
                       </p>
-                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono">
-                        "URGENTE: Sua conexão entrará em redução em 24h. Pague via PIX para não interromper..."
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[11px] text-slate-400 font-mono line-clamp-2">
+                        {reguaConfig?.templates?.d_mais_7 || "URGENTE: Sua conexão entrará em redução em 24h. Pague via PIX..."}
                       </div>
                     </div>
                     <div className="mt-5 pt-3 border-t border-white/5">
@@ -460,6 +621,182 @@ export default function Campanhas() {
                         Disparar Lote D+7 (8 clientes)
                       </button>
                     </div>
+                  </div>
+                </div>
+
+                {/* FILA DE ASSINANTES NA RÉGUA HOJE */}
+                <div className="mt-8 bg-[#0b0f19] border border-white/5 rounded-2xl p-5">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/5">
+                    <div>
+                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                        <Users size={16} className="text-blue-400" />
+                        Assinantes na Fila da Régua Hoje
+                        <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          {reguaConfig?.filaAssinantes?.length || 6} assinantes
+                        </span>
+                      </h4>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Gerencie notificações individuais com envio pontual de WhatsApp, cópia de PIX e status de sincronia com o concentrador.
+                      </p>
+                    </div>
+
+                    {/* Filtros da Fila */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-1 bg-[#101726] p-1 rounded-xl border border-white/5">
+                        <button 
+                          onClick={() => setFiltroFaseFila('todas')}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'todas' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          Todas
+                        </button>
+                        <button 
+                          onClick={() => setFiltroFaseFila('d_menos_3')}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'd_menos_3' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          D-3
+                        </button>
+                        <button 
+                          onClick={() => setFiltroFaseFila('d_zero')}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'd_zero' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          D0
+                        </button>
+                        <button 
+                          onClick={() => setFiltroFaseFila('d_mais_3')}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'd_mais_3' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          D+3
+                        </button>
+                        <button 
+                          onClick={() => setFiltroFaseFila('d_mais_7')}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'd_mais_7' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'text-slate-400 hover:text-white'}`}
+                        >
+                          D+7
+                        </button>
+                      </div>
+
+                      <select 
+                        value={filtroStatusEnvio}
+                        onChange={(e) => setFiltroStatusEnvio(e.target.value)}
+                        className="bg-[#101726] border border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-300 outline-none"
+                      >
+                        <option value="todos">Status: Todos</option>
+                        <option value="pendente">Apenas Pendentes</option>
+                        <option value="enviado">Já Notificados</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Tabela de Assinantes */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="text-slate-400 uppercase tracking-wider border-b border-white/5 text-[10px]">
+                        <tr>
+                          <th className="py-3 px-3">Assinante</th>
+                          <th className="py-3 px-3">Plano & Valor</th>
+                          <th className="py-3 px-3">Fase & Vencimento</th>
+                          <th className="py-3 px-3">Concentrador</th>
+                          <th className="py-3 px-3">Status Envio</th>
+                          <th className="py-3 px-3 text-right">Ações Rápidas</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5 text-slate-300">
+                        {((reguaConfig?.filaAssinantes || []) as any[])
+                          .filter(cli => filtroFaseFila === 'todas' || cli.fase === filtroFaseFila)
+                          .filter(cli => filtroStatusEnvio === 'todos' || cli.statusEnvio === filtroStatusEnvio)
+                          .map((cli) => {
+                            const faseBadge = {
+                              d_menos_3: { label: 'D-3 • Preventivo', class: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+                              d_zero: { label: 'D0 • Vence Hoje', class: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+                              d_mais_3: { label: 'D+3 • Tolerância', class: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+                              d_mais_7: { label: 'D+7 • Pré-Bloqueio', class: 'bg-red-500/10 text-red-400 border-red-500/20' }
+                            }[cli.fase as 'd_menos_3' | 'd_zero' | 'd_mais_3' | 'd_mais_7'];
+
+                            return (
+                              <tr key={cli.id} className="hover:bg-white/[0.02] transition-colors">
+                                <td className="py-3 px-3">
+                                  <div className="font-bold text-white">{cli.nome}</div>
+                                  <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                                    <span>{cli.telefone}</span>
+                                    <span>•</span>
+                                    <span className="text-slate-500">{cli.bairro}</span>
+                                  </div>
+                                </td>
+                                <td className="py-3 px-3">
+                                  <div className="text-white font-medium">{cli.plano}</div>
+                                  <div className="text-xs font-mono font-bold text-emerald-400">R$ {cli.valor?.toFixed(2)}</div>
+                                </td>
+                                <td className="py-3 px-3">
+                                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${faseBadge?.class}`}>
+                                    {faseBadge?.label}
+                                  </span>
+                                  <div className="text-[11px] text-slate-400 mt-1">{cli.vencimento}</div>
+                                </td>
+                                <td className="py-3 px-3">
+                                  {cli.statusRadius === 'bloqueio_parcial' ? (
+                                    <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold">
+                                      Bloqueio Parcial
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
+                                      Conexão Ativa
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-3">
+                                  {cli.statusEnvio === 'enviado' ? (
+                                    <div>
+                                      <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold inline-flex items-center gap-1">
+                                        <Check size={10} /> Enviado
+                                      </span>
+                                      <div className="text-[10px] text-slate-500 mt-0.5">{cli.ultimoEnvio || 'Hoje'}</div>
+                                    </div>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold inline-flex items-center gap-1">
+                                      <Clock size={10} /> Pendente
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="py-3 px-3 text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <button 
+                                      onClick={() => handleCopiarPix(cli.id, cli.pixCopiaECola)}
+                                      className="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-all border border-white/5"
+                                      title="Copiar Chave PIX"
+                                    >
+                                      {pixCopiadoId === cli.id ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                                    </button>
+
+                                    <a 
+                                      href={`https://wa.me/55${cli.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá ${cli.nome}, segue o código PIX da sua fatura de internet:\n\n${cli.pixCopiaECola}`)}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="p-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-lg transition-all border border-emerald-500/20"
+                                      title="Conversar via WhatsApp"
+                                    >
+                                      <MessageSquare size={14} />
+                                    </a>
+
+                                    <button 
+                                      onClick={() => handleDispararIndividual(cli.id)}
+                                      disabled={disparandoClienteId === cli.id}
+                                      className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 disabled:opacity-50"
+                                      title="Disparar régua agora via WABA"
+                                    >
+                                      {disparandoClienteId === cli.id ? (
+                                        <RefreshCw size={12} className="animate-spin" />
+                                      ) : (
+                                        <Send size={12} />
+                                      )}
+                                      {cli.statusEnvio === 'enviado' ? 'Reenviar' : 'Disparar'}
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
@@ -860,6 +1197,377 @@ export default function Campanhas() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 1: CONFIGURAÇÃO DE PARÂMETROS & HORÁRIOS DA RÉGUA */}
+      {modalConfigRegua && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-xl p-6 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between pb-4 border-b border-white/5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+                  <Sliders size={18} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base">Parâmetros da Régua de Cobrança</h3>
+                  <p className="text-xs text-slate-400">Configure horários de disparo, canais ativos e regras financeiras</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setModalConfigRegua(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSalvarConfigRegua} className="mt-5 space-y-4">
+              {/* Status da Régua */}
+              <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-white block">Automação da Régua Ativa</span>
+                  <span className="text-[11px] text-slate-400">Permitir que o sistema analise e dispare cobranças nos horários definidos</span>
+                </div>
+                <input 
+                  type="checkbox"
+                  checked={configLocal.ativa}
+                  onChange={e => setConfigLocal({ ...configLocal, ativa: e.target.checked })}
+                  className="w-5 h-5 accent-emerald-500 cursor-pointer"
+                />
+              </div>
+
+              {/* Janela de Horário Permitido */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Janela de Horário Permitida para Disparos
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-[11px] text-slate-500 block mb-1">Início dos Disparos</span>
+                    <input 
+                      type="time"
+                      value={configLocal.horarioInicio || "08:30"}
+                      onChange={e => setConfigLocal({ ...configLocal, horarioInicio: e.target.value })}
+                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-slate-500 block mb-1">Término Máximo</span>
+                    <input 
+                      type="time"
+                      value={configLocal.horarioFim || "19:30"}
+                      onChange={e => setConfigLocal({ ...configLocal, horarioFim: e.target.value })}
+                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Desconto de Pontualidade & Tolerância */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Desconto de Pontualidade (R$)
+                  </label>
+                  <input 
+                    type="number"
+                    step="0.50"
+                    min="0"
+                    value={configLocal.descontoPontualidade || 10}
+                    onChange={e => setConfigLocal({ ...configLocal, descontoPontualidade: parseFloat(e.target.value) || 0 })}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Dias Tolerância (D+)
+                  </label>
+                  <input 
+                    type="number"
+                    min="1"
+                    max="15"
+                    value={configLocal.diasAposVencimentoTolerancia || 3}
+                    onChange={e => setConfigLocal({ ...configLocal, diasAposVencimentoTolerancia: parseInt(e.target.value) || 3 })}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+
+              {/* Seleção de Canais */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Canais de Notificação Habilitados
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="flex items-center gap-2.5 p-2.5 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer hover:bg-white/[0.04]">
+                    <input 
+                      type="checkbox"
+                      checked={configLocal.canais?.whatsapp}
+                      onChange={e => setConfigLocal({
+                        ...configLocal,
+                        canais: { ...configLocal.canais, whatsapp: e.target.checked }
+                      })}
+                      className="accent-emerald-500"
+                    />
+                    <span className="text-xs text-slate-300 font-medium">WhatsApp WABA (Oficial)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2.5 p-2.5 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer hover:bg-white/[0.04]">
+                    <input 
+                      type="checkbox"
+                      checked={configLocal.canais?.sms}
+                      onChange={e => setConfigLocal({
+                        ...configLocal,
+                        canais: { ...configLocal.canais, sms: e.target.checked }
+                      })}
+                      className="accent-blue-500"
+                    />
+                    <span className="text-xs text-slate-300 font-medium">SMS Flash / Gateway</span>
+                  </label>
+
+                  <label className="flex items-center gap-2.5 p-2.5 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer hover:bg-white/[0.04]">
+                    <input 
+                      type="checkbox"
+                      checked={configLocal.canais?.push}
+                      onChange={e => setConfigLocal({
+                        ...configLocal,
+                        canais: { ...configLocal.canais, push: e.target.checked }
+                      })}
+                      className="accent-indigo-500"
+                    />
+                    <span className="text-xs text-slate-300 font-medium">Push Notification (PWA)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2.5 p-2.5 bg-white/[0.02] border border-white/5 rounded-xl cursor-pointer hover:bg-white/[0.04]">
+                    <input 
+                      type="checkbox"
+                      checked={configLocal.canais?.email}
+                      onChange={e => setConfigLocal({
+                        ...configLocal,
+                        canais: { ...configLocal.canais, email: e.target.checked }
+                      })}
+                      className="accent-purple-500"
+                    />
+                    <span className="text-xs text-slate-300 font-medium">E-mail Transacional</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-white/5">
+                <button
+                  type="button"
+                  onClick={() => setModalConfigRegua(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={salvandoConfigRegua}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-amber-600/20 disabled:opacity-50"
+                >
+                  {salvandoConfigRegua ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}
+                  Salvar Parâmetros
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: EDITOR DE TEMPLATES & PREVIEW COM SIMULADOR DE ENVIO */}
+      {modalTemplatesRegua && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-4xl p-6 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-white/5 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
+                  <MessageSquare size={18} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base">Templates de Notificação da Régua</h3>
+                  <p className="text-xs text-slate-400">Edite as mensagens de cada fase e teste o envio em tempo real</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setModalTemplatesRegua(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Abas das 4 Fases */}
+            <div className="flex items-center gap-2 mt-4 pb-3 border-b border-white/5 shrink-0 overflow-x-auto">
+              <button
+                onClick={() => { setTemplateFaseAtiva('d_menos_3'); setResultadoTeste(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${templateFaseAtiva === 'd_menos_3' ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-400 hover:text-white'}`}
+              >
+                Fase 1 • D-3 (Preventivo)
+              </button>
+              <button
+                onClick={() => { setTemplateFaseAtiva('d_zero'); setResultadoTeste(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${templateFaseAtiva === 'd_zero' ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400 hover:text-white'}`}
+              >
+                Fase 2 • D0 (Vence Hoje)
+              </button>
+              <button
+                onClick={() => { setTemplateFaseAtiva('d_mais_3'); setResultadoTeste(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${templateFaseAtiva === 'd_mais_3' ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400 hover:text-white'}`}
+              >
+                Fase 3 • D+3 (Tolerância 48h)
+              </button>
+              <button
+                onClick={() => { setTemplateFaseAtiva('d_mais_7'); setResultadoTeste(null); }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${templateFaseAtiva === 'd_mais_7' ? 'bg-red-600 text-white' : 'bg-white/5 text-slate-400 hover:text-white'}`}
+              >
+                Fase 4 • D+7 (Pré-Bloqueio)
+              </button>
+            </div>
+
+            {/* Conteúdo Principal: Editor à Esquerda, Preview e Teste à Direita */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4 overflow-y-auto pr-1">
+              {/* Coluna Esquerda: Editor de Texto e Tags */}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      Texto do Template (WhatsApp / SMS)
+                    </label>
+                    <span className="text-[11px] text-slate-500 font-mono">
+                      {templatesLocais[templateFaseAtiva]?.length || 0} caracteres
+                    </span>
+                  </div>
+                  <textarea 
+                    rows={8}
+                    value={templatesLocais[templateFaseAtiva] || ''}
+                    onChange={e => setTemplatesLocais({
+                      ...templatesLocais,
+                      [templateFaseAtiva]: e.target.value
+                    })}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-2xl p-3.5 text-xs text-white outline-none focus:border-blue-500 transition-colors font-mono leading-relaxed resize-none"
+                    placeholder="Digite a mensagem do template..."
+                  />
+                </div>
+
+                {/* Tags Disponíveis */}
+                <div>
+                  <span className="text-[11px] text-slate-400 font-bold block mb-1.5">Tags Dinâmicas Disponíveis (Clique para inserir):</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      '{{nome_cliente}}',
+                      '{{plano}}',
+                      '{{valor_fatura}}',
+                      '{{data_vencimento}}',
+                      '{{desconto_pontualidade}}',
+                      '{{chave_pix}}',
+                      '{{link_segunda_via}}'
+                    ].map(tag => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => {
+                          const atual = templatesLocais[templateFaseAtiva] || '';
+                          setTemplatesLocais({
+                            ...templatesLocais,
+                            [templateFaseAtiva]: `${atual} ${tag}`
+                          });
+                        }}
+                        className="px-2 py-1 bg-white/5 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 rounded-lg text-[10px] font-mono border border-white/5 transition-all"
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Coluna Direita: Preview Visual no WhatsApp e Simulador de Envio */}
+              <div className="space-y-4">
+                {/* Visualização de Balão WhatsApp */}
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
+                    Pré-Visualização Real no WhatsApp
+                  </span>
+                  <div className="bg-[#0b141a] border border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-inner min-h-[190px]">
+                    <div className="max-w-[90%] bg-[#005c4b] text-white p-3 rounded-2xl rounded-tl-none text-xs leading-relaxed shadow space-y-2">
+                      <div className="whitespace-pre-line">
+                        {(templatesLocais[templateFaseAtiva] || '')
+                          .replace(/{{nome_cliente}}/g, "Carlos Silva")
+                          .replace(/{{plano}}/g, "Fibra 500MB")
+                          .replace(/{{valor_fatura}}/g, "99,90")
+                          .replace(/{{data_vencimento}}/g, "15/10/2026")
+                          .replace(/{{desconto_pontualidade}}/g, "10,00")
+                          .replace(/{{chave_pix}}/g, "00020126580014BR.GOV.BCB.PIX0136pix-cobranca@isp.com.br520400005303986540599.905802BR5912CARLOS SILVA6009SAO PAULO62070503***6304E8A1")
+                          .replace(/{{link_segunda_via}}/g, "https://isp.provedor.com.br/faturas/123")}
+                      </div>
+                      <div className="text-[10px] text-emerald-200/60 text-right flex items-center justify-end gap-1">
+                        <span>10:42</span>
+                        <span>✓✓</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulador de Envio para Teste */}
+                <form onSubmit={handleSimularTesteEnvio} className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3.5 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <Smartphone size={14} className="text-emerald-400" />
+                      Testar Envio com Número Real
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono">Simulador WABA</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="text"
+                      value={telefoneTeste}
+                      onChange={e => setTelefoneTeste(e.target.value)}
+                      placeholder="(11) 99999-9999"
+                      className="w-full bg-[#101726] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-emerald-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={enviandoTeste}
+                      className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 disabled:opacity-50"
+                    >
+                      {enviandoTeste ? <RefreshCw size={13} className="animate-spin" /> : <Send size={13} />}
+                      Enviar Teste
+                    </button>
+                  </div>
+
+                  {resultadoTeste && (
+                    <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-xl text-[11px] font-mono flex items-center justify-between">
+                      <span>{resultadoTeste.mensagem}</span>
+                      <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+
+            {/* Footer do Modal de Templates */}
+            <div className="pt-4 mt-4 border-t border-white/5 flex items-center justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setModalTemplatesRegua(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+              >
+                Fechar
+              </button>
+              <button
+                type="button"
+                onClick={handleSalvarTemplatesRegua}
+                disabled={salvandoConfigRegua}
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
+              >
+                {salvandoConfigRegua ? <RefreshCw size={14} className="animate-spin" /> : <Check size={14} />}
+                Salvar Todos os Templates
+              </button>
+            </div>
           </div>
         </div>
       )}

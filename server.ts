@@ -824,6 +824,75 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     });
   });
 
+  // --- TELEMETRIA DE CONSUMO DE BANDA (TRÁFEGO DO CONCENTRADOR BNG / RADIUS) ---
+  app.get("/api/portal/consumo", (req, res) => {
+    res.json({
+      sucesso: true,
+      periodo: "01/09/2026 a 30/09/2026",
+      diasCicloRestantes: 20,
+      plano: "Fibra 500MB Simétrico",
+      franquia: "Ilimitada (100% Fibra Óptica Regulamentada Anatel)",
+      totalDownloadGB: 482.6,
+      totalUploadGB: 89.4,
+      totalGeralGB: 572.0,
+      mediaDiariaGB: 19.06,
+      picoHorario: "20:00 às 23:30 (Streaming 4K / Games)",
+      dispositivoMaisAtivo: {
+        nome: "Smart TV Samsung 4K (Sala)",
+        consumoGB: 218.4,
+        percentual: 38.2
+      },
+      consumoPorDispositivo: [
+        { nome: "Smart TV 4K (Sala)", tipo: "tv", consumoGB: 218.4, percentual: 38 },
+        { nome: "PC Gamer (Quarto)", tipo: "pc", consumoGB: 154.2, percentual: 27 },
+        { nome: "iPhone 15 Pro (João)", tipo: "smartphone", consumoGB: 82.5, percentual: 14 },
+        { nome: "Notebook Trabalho (Home Office)", tipo: "laptop", consumoGB: 68.3, percentual: 12 },
+        { nome: "Echo Dot & IoT", tipo: "iot", consumoGB: 48.6, percentual: 9 }
+      ],
+      historicoSemanal: [
+        { dia: "Qui 04/09", data: "04/09", downloadGB: 68.4, uploadGB: 12.1, totalGB: 80.5 },
+        { dia: "Sex 05/09", data: "05/09", downloadGB: 84.2, uploadGB: 15.6, totalGB: 99.8 },
+        { dia: "Sáb 06/09", data: "06/09", downloadGB: 96.5, uploadGB: 18.2, totalGB: 114.7 },
+        { dia: "Dom 07/09", data: "07/09", downloadGB: 104.1, uploadGB: 19.8, totalGB: 123.9 },
+        { dia: "Seg 08/09", data: "08/09", downloadGB: 52.3, uploadGB: 9.4, totalGB: 61.7 },
+        { dia: "Ter 09/09", data: "09/09", downloadGB: 56.8, uploadGB: 10.2, totalGB: 67.0 },
+        { dia: "Qua 10/09", data: "10/09 (Hoje)", downloadGB: 20.3, uploadGB: 4.1, totalGB: 24.4 }
+      ]
+    });
+  });
+
+  // --- SERVIDOR DE TESTE DE VELOCIDADE (SPEEDTEST ISP LOCAL / PTT) ---
+  app.post("/api/portal/speedtest", async (req, res) => {
+    // Simula cálculo de latência e rota com servidor local de PTT
+    await new Promise(r => setTimeout(r, 600));
+
+    // Pequena variação para realismo dinâmico
+    const variacaoDown = (Math.random() * 18 - 6);
+    const variacaoUp = (Math.random() * 12 - 5);
+    const download = +(508.4 + variacaoDown).toFixed(1);
+    const upload = +(256.2 + variacaoUp).toFixed(1);
+    const ping = +(3.2 + Math.random() * 1.5).toFixed(1);
+    const jitter = +(0.6 + Math.random() * 0.5).toFixed(1);
+
+    res.json({
+      sucesso: true,
+      servidor: "NAP Telecom • Servidor CDN / IX.br SP-01 (São Paulo)",
+      distanciaKm: 4.2,
+      ipPublico: "177.85.112.44",
+      planoContratado: "Fibra 500MB (500/250)",
+      downloadMbps: download,
+      uploadMbps: upload,
+      pingMs: ping,
+      jitterMs: jitter,
+      percentualDownload: Math.round((download / 500) * 100),
+      percentualUpload: Math.round((upload / 250) * 100),
+      classificacao: "Excelente",
+      diagnostico: "Sua conexão está entregando acima de 100% da velocidade contratada com latência ultra-baixa de servidor local.",
+      indicadoPara: ["Streaming 4K / 8K HDR", "Jogos Online Competitivos", "Videoconferências em HD", "Uploads de Arquivos Grandes"],
+      data: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+    });
+  });
+
   // Generate Boleto PDF (Real ou Mock)
   app.post("/api/sgp/boleto/:id", async (req, res) => {
     const { id } = req.params;
@@ -1459,13 +1528,45 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
   });
 
   // --- MÓDULO RÉGUA INTELIGENTE DE COBRANÇA (AUTO-BILLING & NEGOCIAÇÃO IA) ---
+  interface AssinanteFilaRegua {
+    id: string;
+    nome: string;
+    telefone: string;
+    cpf: string;
+    bairro: string;
+    plano: string;
+    valor: number;
+    vencimento: string;
+    fase: "d_menos_3" | "d_zero" | "d_mais_3" | "d_mais_7";
+    statusRadius: "ativo" | "bloqueio_parcial" | "normal";
+    statusEnvio: "pendente" | "enviado" | "erro";
+    ultimoEnvio?: string;
+    pixCopiaECola: string;
+    linkSegundaVia: string;
+  }
+
   let reguaCobrancaConfig = {
     ativa: true,
+    horarioInicio: "08:30",
+    horarioFim: "19:30",
+    descontoPontualidade: 10.00,
     diasAntesVencimento: 3,
     notificarDiaVencimento: true,
     diasAposVencimentoTolerancia: 3,
     diasAposVencimentoBloqueio: 7,
     gerarPixAutomatico: true,
+    canais: {
+      whatsapp: true,
+      sms: true,
+      push: true,
+      email: false
+    },
+    templates: {
+      d_menos_3: "Olá, {{nome_cliente}}! 💙 Passando para lembrar que sua fatura de {{plano}} no valor de R$ {{valor_fatura}} vence em 3 dias ({{data_vencimento}}). Pague agora via PIX e mantenha seu desconto de pontualidade de R$ {{desconto_pontualidade}}:\n\n🔑 PIX Copia-e-Cola:\n{{chave_pix}}\n\n📄 2ª Via em PDF: {{link_segunda_via}}",
+      d_zero: "Olá, {{nome_cliente}}! 🚀 Sua mensalidade de internet vence HOJE ({{data_vencimento}}). Para manter sua conexão rápida e sem interrupções, pague agora via PIX:\n\n🔑 PIX Copia-e-Cola:\n{{chave_pix}}\n\nPrecisa de 2ª via? Acesse: {{link_segunda_via}}",
+      d_mais_3: "Olá, {{nome_cliente}}. Não localizamos o pagamento da sua fatura vencida em {{data_vencimento}}. Aconteceu algo? 🤝\n\nCaso precise de um prazo para regularizar, você pode ativar o Desbloqueio em Confiança 48h pelo Portal do Cliente ou pagar com o PIX abaixo sem juros:\n\n🔑 PIX Copia-e-Cola:\n{{chave_pix}}",
+      d_mais_7: "⚠️ AVISO URGENTE: Prezado(a) {{nome_cliente}}, sua fatura está com 7 dias de atraso. Conforme regulamentação Anatel, sua conexão poderá sofrer redução de velocidade nas próximas 24 horas no concentrador.\n\nEvite a suspensão do serviço efetuando o pagamento via PIX (baixa bancária em até 2 minutos):\n\n🔑 PIX:\n{{chave_pix}}"
+    },
     estatisticas: {
       totalDisparadosHoje: 84,
       faturasRecuperadasPix: 39,
@@ -1497,7 +1598,101 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
         sucesso: 14,
         data: "Hoje, às 10:00"
       }
-    ]
+    ],
+    filaAssinantes: [
+      {
+        id: "reg-101",
+        nome: "Ana Beatriz Moreira",
+        telefone: "(11) 98765-1101",
+        cpf: "123.456.789-01",
+        bairro: "Centro Histórico",
+        plano: "Fibra 500MB",
+        valor: 99.90,
+        vencimento: "Em 3 dias",
+        fase: "d_menos_3",
+        statusRadius: "ativo",
+        statusEnvio: "pendente",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br520400005303986540599.905802BR5918ANA B MOREIRA6009SAO PAULO62070503***6304E8A1",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/101"
+      },
+      {
+        id: "reg-102",
+        nome: "Carlos Eduardo Ramos",
+        telefone: "(11) 98765-1102",
+        cpf: "234.567.890-12",
+        bairro: "Jardim América",
+        plano: "Fibra 700MB Gamer",
+        valor: 129.90,
+        vencimento: "Em 3 dias",
+        fase: "d_menos_3",
+        statusRadius: "ativo",
+        statusEnvio: "enviado",
+        ultimoEnvio: "Hoje às 08:32",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br5204000053039865406129.905802BR5916CARLOS E RAMOS6009SAO PAULO62070503***6304C9F2",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/102"
+      },
+      {
+        id: "reg-103",
+        nome: "Mariana Fonseca Silva",
+        telefone: "(11) 98765-1103",
+        cpf: "345.678.901-23",
+        bairro: "Vila Nova",
+        plano: "Fibra 300MB",
+        valor: 79.90,
+        vencimento: "Hoje",
+        fase: "d_zero",
+        statusRadius: "ativo",
+        statusEnvio: "pendente",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br520400005303986540579.905802BR5916MARIANA F SILVA6009SAO PAULO62070503***6304A1B2",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/103"
+      },
+      {
+        id: "reg-104",
+        nome: "Roberto Mendes Braga",
+        telefone: "(11) 98765-1104",
+        cpf: "456.789.012-34",
+        bairro: "Bela Vista",
+        plano: "Fibra 500MB",
+        valor: 99.90,
+        vencimento: "Hoje",
+        fase: "d_zero",
+        statusRadius: "ativo",
+        statusEnvio: "enviado",
+        ultimoEnvio: "Hoje às 09:16",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br520400005303986540599.905802BR5917ROBERTO M BRAGA6009SAO PAULO62070503***6304D4E5",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/104"
+      },
+      {
+        id: "reg-105",
+        nome: "Juliana Peixoto Alencar",
+        telefone: "(11) 98765-1105",
+        cpf: "567.890.123-45",
+        bairro: "Parque Industrial",
+        plano: "Fibra 1 Giga Dedicado",
+        valor: 199.90,
+        vencimento: "3 dias atrás",
+        fase: "d_mais_3",
+        statusRadius: "ativo",
+        statusEnvio: "pendente",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br5204000053039865406199.905802BR5918JULIANA P ALENCAR6009SAO PAULO62070503***6304B7F8",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/105"
+      },
+      {
+        id: "reg-106",
+        nome: "Fernando Guedes Lima",
+        telefone: "(11) 98765-1106",
+        cpf: "678.901.234-56",
+        bairro: "Centro Histórico",
+        plano: "Fibra 500MB",
+        valor: 99.90,
+        vencimento: "7 dias atrás",
+        fase: "d_mais_7",
+        statusRadius: "bloqueio_parcial",
+        statusEnvio: "pendente",
+        pixCopiaECola: "00020126580014BR.GOV.BCB.PIX0136nap-isp-cobranca@provedor.com.br520400005303986540599.905802BR5916FERNANDO G LIMA6009SAO PAULO62070503***63049F12",
+        linkSegundaVia: "https://isp.provedor.com.br/faturas/pdf/106"
+      }
+    ] as AssinanteFilaRegua[]
   };
 
   app.get("/api/cobranca/regua", (req, res) => {
@@ -1541,6 +1736,14 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       nomeFase = "D+7 (Aviso de Suspensão MikroTik)";
     }
 
+    // Marcar os assinantes dessa fase como enviados
+    reguaCobrancaConfig.filaAssinantes.forEach(ass => {
+      if (ass.fase === fase) {
+        ass.statusEnvio = "enviado";
+        ass.ultimoEnvio = "Agora mesmo";
+      }
+    });
+
     reguaCobrancaConfig.estatisticas.totalDisparadosHoje += totalDisparados;
     reguaCobrancaConfig.estatisticas.valorRecuperadoHoje += (valorEstimado * 0.45);
     reguaCobrancaConfig.historicoExecucoes.unshift({
@@ -1557,7 +1760,50 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       fase: nomeFase,
       totalDisparados,
       valorTotal: valorEstimado,
-      mensagem: `Disparo da régua "${nomeFase}" processado com sucesso! ${totalDisparados} clientes notificados com PIX Copia e Cola.`
+      mensagem: `Disparo da régua "${nomeFase}" processado com sucesso! ${totalDisparados} clientes notificados com PIX Copia e Cola via WhatsApp WABA.`
+    });
+  });
+
+  // Disparo individual para um assinante da fila
+  app.post("/api/cobranca/regua/disparar-individual", (req, res) => {
+    const { id } = req.body;
+    const cliente = reguaCobrancaConfig.filaAssinantes.find(a => a.id === id);
+
+    if (!cliente) {
+      return res.status(404).json({ sucesso: false, mensagem: "Assinante não encontrado na régua." });
+    }
+
+    cliente.statusEnvio = "enviado";
+    cliente.ultimoEnvio = "Agora mesmo";
+    reguaCobrancaConfig.estatisticas.totalDisparadosHoje += 1;
+
+    res.json({
+      sucesso: true,
+      mensagem: `Notificação WhatsApp com PIX enviada com sucesso para ${cliente.nome} (${cliente.telefone})!`,
+      cliente
+    });
+  });
+
+  // Simular envio de teste de template de régua
+  app.post("/api/cobranca/regua/simular-teste", (req, res) => {
+    const { telefone = "(11) 99999-9999", fase = "d_menos_3" } = req.body;
+    const templateTexto = reguaCobrancaConfig.templates[fase as keyof typeof reguaCobrancaConfig.templates] || "";
+
+    const mensagemRenderizada = templateTexto
+      .replace(/{{nome_cliente}}/g, "João da Silva (Teste)")
+      .replace(/{{plano}}/g, "Fibra 500MB")
+      .replace(/{{valor_fatura}}/g, "99,90")
+      .replace(/{{data_vencimento}}/g, "15/10/2026")
+      .replace(/{{desconto_pontualidade}}/g, reguaCobrancaConfig.descontoPontualidade.toFixed(2).replace('.', ','))
+      .replace(/{{chave_pix}}/g, "00020126580014BR.GOV.BCB.PIX0136teste-nap@provedor.com.br520400005303986540599.905802BR5910JOAO SILVA6009SAO PAULO62070503***6304E8A1")
+      .replace(/{{link_segunda_via}}/g, "https://isp.provedor.com.br/faturas/teste");
+
+    res.json({
+      sucesso: true,
+      telefone,
+      fase,
+      mensagemRenderizada,
+      mensagem: `Simulação de envio para ${telefone} realizada com sucesso!`
     });
   });
 
