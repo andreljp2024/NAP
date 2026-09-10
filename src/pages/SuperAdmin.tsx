@@ -147,7 +147,7 @@ const DEFAULT_CONFIG: SystemConfig = {
     status: "conectado"
   },
   ia: {
-    modeloPrimario: "gemini-3.8-flash",
+    modeloPrimario: "gemini-2.5-flash",
     provedorGateway: "9router",
     temperatura: 0.6,
     topP: 0.95,
@@ -503,7 +503,7 @@ export default function SuperAdmin() {
           />
           <IntegrationStatusBadge 
             title="Gemini IA 9router" 
-            sub="gemini-3.8-flash" 
+            sub="gemini-2.5-flash" 
             status="online" 
             icon={<Sparkles size={16} className="text-indigo-600" />} 
             latency={testResults.gemini?.latenciaMs || 185}
@@ -1192,7 +1192,7 @@ export default function SuperAdmin() {
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, modeloPrimario: e.target.value } })}
                       className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                     >
-                      <option value="gemini-3.8-flash">gemini-3.8-flash (Recomendado - Ultra Rápido & Menor Custo)</option>
+                      <option value="gemini-2.5-flash">gemini-2.5-flash (Recomendado - Ultra Rápido & Menor Custo)</option>
                       <option value="gemini-3.5-pro">gemini-3.5-pro (Raciocínio Técnico Profundo)</option>
                       <option value="gemini-2.5-flash">gemini-2.5-flash (Backup de Alta Disponibilidade)</option>
                     </select>

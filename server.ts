@@ -341,14 +341,14 @@ async function startServer() {
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+        model: "gemini-2.5-flash",
         contents: mensagem,
         config: { systemInstruction }
       });
 
       res.json({
         resposta: response.text,
-        modelo: "gemini-3.8-flash (via 9router auth)",
+        modelo: "gemini-2.5-flash (via 9router auth)",
         tokens_consumidos: response.usageMetadata?.totalTokenCount || 0
       });
     } catch (error: any) {
@@ -1109,7 +1109,7 @@ async function startServer() {
         return res.json({
           resposta: responseText,
           tool_executada: executedTool,
-          modelo: "gemini-3.8-flash (Simulação Fallback)",
+          modelo: "gemini-2.5-flash (Simulação Fallback)",
           tokens_consumidos: 128,
           tempo_execucao_ms: 320
         });
@@ -1133,7 +1133,7 @@ Responda diretamente em português do Brasil sem enrolação.`;
 
       const startTime = Date.now();
       const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: { systemInstruction }
       });
@@ -1144,7 +1144,7 @@ Responda diretamente em português do Brasil sem enrolação.`;
 
       res.json({
         resposta: response.text,
-        modelo: "gemini-3.8-flash (Google AI Studio)",
+        modelo: "gemini-2.5-flash (Google AI Studio)",
         tokens_consumidos: tokens,
         tempo_execucao_ms: endTime - startTime
       });
@@ -1187,7 +1187,7 @@ Responda diretamente em português do Brasil sem enrolação.`;
             "Ação sugerida: validar potência óptica no SGP e agendar técnico N2."
           ],
           sugestao_resposta: "Compreendo a urgência para o seu trabalho. Estou verificando a telemetria da sua ONU no sistema agora mesmo para normalizarmos sua fibra.",
-          modelo: "gemini-3.8-flash (Simulação Fallback)",
+          modelo: "gemini-2.5-flash (Simulação Fallback)",
           tempo_ms: Date.now() - startTime
         });
       }
@@ -1257,7 +1257,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+        model: "gemini-2.5-flash",
         contents: contents,
         config: {
           responseMimeType: "application/json"
@@ -1283,7 +1283,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
 
       res.json({
         ...parsedResult,
-        modelo: "gemini-3.8-flash (Audio & Sentiment Engine)",
+        modelo: "gemini-2.5-flash (Audio & Sentiment Engine)",
         tempo_ms: Date.now() - startTime
       });
     } catch (err: any) {
@@ -1615,7 +1615,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       status: "conectado" as "conectado" | "desconectado" | "alerta"
     },
     ia: {
-      modeloPrimario: "gemini-3.8-flash",
+      modeloPrimario: "gemini-2.5-flash",
       provedorGateway: "9router",
       temperatura: 0.6,
       topP: 0.95,
