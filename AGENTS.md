@@ -4,25 +4,26 @@ These are the core architectural and design constraints for any AI agent interac
 
 ## 1. Project Context
 NAP is an Omnichannel SaaS platform built for ISPs (Internet Service Providers).
-It integrates billing (SGP), telephony (FreePBX/Asterisk), WhatsApp (WABA), workflows (n8n), and AI intelligence (Gemini via 9router).
-The architecture is Multi-tenant/White-label, intended to run independently in Debian 12 environments alongside a PBX.
+It is designed to run completely isolated per ISP on its own dedicated VPS/VM infrastructure.
+The core stack includes Debian 12, FreePBX 17, AVA Asterisk (AI Voice Agent), GenieACS (TR-069), WABA (WhatsApp Cloud API), and SGP (Billing/ERP).
 
 ## 2. Tech Stack
-- **Frontend:** React 18, Vite, React Router DOM, Tailwind CSS, Lucide React (Icons).
+- **Frontend:** React 18, Vite, Tailwind CSS, Lucide React (Icons).
 - **Backend:** Node.js, Express (running from `server.ts`).
+- **PWA Portal:** Mobile-first customer portal (`/portal`) with push notifications, direct Webchat queues, and WebRTC Webphone for direct voice calls to the operator without traditional PSTN.
 - **Build System:** Vite builds the SPA, esbuild bundles `server.ts` into a CommonJS server (`dist/server.cjs`).
-- **Styling:** "Premium SaaS Dark Theme". Primary backgrounds (`#0b0f19`, `#101726`), accents (Indigo-500, Emerald-400).
+- **Styling:** "Premium SaaS Dark Theme" for admin (`#0b0f19`, `#101726`), light theme for Customer PWA.
 
 ## 3. Core Principles
 - **No AI Slop:** Keep the UI strictly professional. No gratuitous gradients, glowing shadows, or nested boxes. Use mathematical padding and typography.
-- **Full-stack by default:** All external integrations (SGP, Gemini, WhatsApp APIs, Webhooks) MUST be routed through `/api/*` endpoints in `server.ts` to protect credentials.
-- **Tenant Isolation:** Configuration variables (Theme color, Logo, API Keys, Prompts) are managed in the `SuperAdmin` module and should be passed dynamically, maintaining tenant isolation.
+- **Full-stack by default:** All external integrations MUST be routed through `/api/*` endpoints in `server.ts` to protect credentials.
+- **Tenant Isolation:** Although the code supports multi-tenancy, the deployment model assumes one ISP per VM for strict data privacy and telephony isolation.
 
 ## 4. Key Modules to Preserve
-- **Inbox Unificado:** Handles WhatsApp WABA and Webchat. Contains Macro templates (HSM) and attachments.
-- **CRM 360:** Uses Slide-over panels to show customer context (SGP billing + FreePBX call history).
-- **Automacoes (n8n):** A visual CSS/SVG node graph simulating n8n logic.
-- **Portal do Cliente (PWA):** Mobile-first auto-service app (`/portal`).
+- **Inbox Unificado:** Handles WhatsApp WABA and Webchat.
+- **CRM 360:** Uses Slide-over panels to show customer context.
+- **GenieACS:** Dashboard for CPE telemetry.
+- **Portal do Cliente (PWA):** Mobile-first auto-service app (`/portal`). Features Webchat routing and WebRTC Webphone.
 
 ## 5. Development Workflow
 When making changes:
