@@ -147,17 +147,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       // Formata o username como um e-mail interno (spoofing) caso o usuário não tenha digitado o domínio
       const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
-
-      // 1. Tenta autenticar no Firebase Auth
-      await signInWithEmailAndPassword(auth, formattedEmail, pass);
-    } catch (err: any) {
-      // Formata o username como um e-mail interno (spoofing) caso o usuário não tenha digitado o domínio
-      const formattedEmail = username.includes('@') ? username.trim() : `${username.trim()}@nap.local`;
       
-      if (err.code === 'auth/operation-not-allowed') {
+      const activateMockSession = () => {
         console.warn('Firebase Email/Password auth is disabled. Falling back to local mock session for development.');
-        
-        // Mock session
         const mockUser: UserData = {
           id: 'mock-local-id-123',
           email: formattedEmail,
@@ -167,51 +159,61 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           status: 'ativo',
           ramal: '2001'
         };
-        
         setUser(mockUser);
         setIsAuthenticated(true);
         localStorage.setItem('nap_auth', JSON.stringify(mockUser));
-        return; // Success (Mocked)
-      }
+      };
 
-      // Se for a conta padrão do sistema e ainda não existir no Firebase Auth, provisiona automaticamente
-      if (
-        (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') &&
-        (formattedEmail === 'admin@nap.local' || formattedEmail === 'andreljp@nap.local' || formattedEmail === 'admin@provedor.com.br' || formattedEmail === 'andreljp@gmail.com')
-      ) {
-        try {
-          const cred = await createUserWithEmailAndPassword(auth, formattedEmail, pass);
-          const initialProfile: UserProfile = {
-            id: cred.user.uid,
-            email: cred.user.email || formattedEmail,
-            nome: 'Administrador Geral',
-            role: 'superadmin',
-            provedorId: 'nap-default',
-            status: 'ativo',
-            criadoEm: new Date().toISOString()
-          };
-          await saveUserProfile(initialProfile);
-          return;
-        } catch (createErr: any) {
-          console.error('Erro ao provisionar usuário padrão no Firebase Auth:', createErr);
-          if (createErr.code === 'auth/operation-not-allowed') {
-            throw new Error('O login por E-mail/Senha não está habilitado. Ative este provedor no Console do Firebase (Authentication > Sign-in method).');
+      try {
+        // 1. Tenta autenticar no Firebase Auth
+        await signInWithEmailAndPassword(auth, formattedEmail, pass);
+      } catch (err: any) {
+        
+        if (err.code === 'auth/operation-not-allowed') {
+          activateMockSession();
+          return; // Success (Mocked)
+        }
+
+        // Se for a conta padrão do sistema e ainda não existir no Firebase Auth, provisiona automaticamente
+        if (
+          (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') &&
+          (formattedEmail === 'admin@nap.local' || formattedEmail === 'andreljp@nap.local' || formattedEmail === 'admin@provedor.com.br' || formattedEmail === 'andreljp@gmail.com')
+        ) {
+          try {
+            const cred = await createUserWithEmailAndPassword(auth, formattedEmail, pass);
+            const initialProfile: UserProfile = {
+              id: cred.user.uid,
+              email: cred.user.email || formattedEmail,
+              nome: 'Administrador Geral',
+              role: 'superadmin',
+              provedorId: 'nap-default',
+              status: 'ativo',
+              criadoEm: new Date().toISOString()
+            };
+            await saveUserProfile(initialProfile);
+            return;
+          } catch (createErr: any) {
+            console.error('Erro ao provisionar usuário padrão no Firebase Auth:', createErr);
+            if (createErr.code === 'auth/operation-not-allowed') {
+              activateMockSession();
+              return;
+            }
+            throw new Error('Falha na autenticação. Verifique seu e-mail e senha.');
           }
-          throw new Error('Falha na autenticação. Verifique seu e-mail e senha.');
+        }
+
+        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+          throw new Error('Senha incorreta ou usuário não encontrado.');
+        } else if (err.code === 'auth/invalid-email') {
+          throw new Error('Formato de e-mail inválido.');
+        } else if (err.code === 'auth/user-disabled') {
+          throw new Error('Esta conta foi desativada pelo administrador.');
+        } else {
+          throw new Error(err.message || 'Erro ao conectar ao Firebase Authentication.');
         }
       }
-
-      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        throw new Error('Senha incorreta ou usuário não encontrado.');
-      } else if (err.code === 'auth/invalid-email') {
-        throw new Error('Formato de e-mail inválido.');
-      } else if (err.code === 'auth/user-disabled') {
-        throw new Error('Esta conta foi desativada pelo administrador.');
-      } else if (err.code === 'auth/operation-not-allowed') {
-        throw new Error('O login por E-mail/Senha não está habilitado. Ative este provedor no Console do Firebase (Authentication > Sign-in method).');
-      } else {
-        throw new Error(err.message || 'Erro ao conectar ao Firebase Authentication.');
-      }
+    } catch (outerErr: any) {
+      throw outerErr;
     }
   };
 
