@@ -2,13 +2,7 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 
-// We import createViteServer dynamically if not in production
-let createViteServer: any;
-if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
-  import("vite").then((vite) => {
-    createViteServer = vite.createServer;
-  });
-}
+
 
 
   const app = express();
@@ -1951,28 +1945,15 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     }
   });
 
-  if (!process.env.VERCEL) {
-  if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
-    import("vite").then(async (vite) => {
-      const viteServer = await vite.createServer({
-        server: { middlewareMode: true },
-        appType: "spa",
-      });
-      app.use(viteServer.middlewares);
-      app.listen(PORT, "0.0.0.0", () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-      });
-    });
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  }
+  if (!process.env.VERCEL && process.env.NODE_ENV === "production") {
+  const distPath = path.join(process.cwd(), "dist");
+  app.use(express.static(distPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Production server running on http://localhost:${PORT}`);
+  });
 }
 
 export default app;
