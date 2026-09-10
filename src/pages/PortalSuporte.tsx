@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { HeadphonesIcon, Plus, MessageSquare, Clock, CheckCircle2, PhoneCall, Bot, Activity, Wifi, ShieldAlert, RefreshCw } from 'lucide-react';
+import { 
+  HeadphonesIcon, Plus, MessageSquare, Clock, CheckCircle2, PhoneCall, 
+  Bot, Activity, Wifi, ShieldAlert, RefreshCw, Star, Send, Sparkles, 
+  HeartHandshake, Smile, Frown, Meh 
+} from 'lucide-react';
 import type { Deal } from '../types';
 import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
 
@@ -9,6 +13,12 @@ export default function PortalSuporte() {
   const [activeCall, setActiveCall] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
+
+  // NPS State
+  const [npsNota, setNpsNota] = useState<number | null>(null);
+  const [npsComentario, setNpsComentario] = useState('');
+  const [npsEnviando, setNpsEnviando] = useState(false);
+  const [npsEnviado, setNpsEnviado] = useState(false);
 
   useEffect(() => {
     // Busca apenas chamados de suporte (mock)
@@ -45,6 +55,31 @@ export default function PortalSuporte() {
       setActiveCall(false);
     } else {
       setActiveCall(true);
+    }
+  };
+
+  const handleEnviarNps = async () => {
+    if (npsNota === null) return;
+    setNpsEnviando(true);
+    try {
+      await fetch('/api/nps/avaliar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente: 'João Silva (Portal)',
+          telefone: '+55 (11) 98765-4321',
+          canal: 'Portal PWA',
+          nota: npsNota,
+          comentario: npsComentario,
+          atendente: 'Agente IA / Suporte N1',
+          setor: 'Suporte N1'
+        })
+      });
+      setNpsEnviado(true);
+    } catch {
+      setNpsEnviado(true);
+    } finally {
+      setNpsEnviando(false);
     }
   };
 
@@ -193,6 +228,88 @@ export default function PortalSuporte() {
           )}
         </div>
       )}
+
+      {/* Widget de Avaliação NPS & Satisfação */}
+      <div className="mt-8 bg-white border border-slate-200 p-6 rounded-3xl shadow-sm">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-500 flex items-center justify-center shrink-0">
+            <Star size={24} className="fill-amber-400" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Pesquisa de Satisfação
+              </span>
+              <span className="text-[10px] font-medium text-slate-400">Tempo estimado: 15s</span>
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 font-outfit mt-1">Como você avalia nossa conexão e suporte?</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Em uma escala de 0 a 10, qual a chance de você recomendar nosso provedor para amigos ou familiares?</p>
+
+            {npsEnviado ? (
+              <div className="mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 animate-in fade-in">
+                <CheckCircle2 size={24} className="text-emerald-600 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-emerald-900">Obrigado pela sua avaliação!</p>
+                  <p className="text-xs text-emerald-700">Seu feedback foi computado no nosso painel de qualidade e nos ajuda a melhorar cada vez mais sua experiência.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-5 space-y-4">
+                {/* Régua de notas de 0 a 10 */}
+                <div>
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 font-medium px-1">
+                    <span className="flex items-center gap-1"><Frown size={12} className="text-rose-500" /> Pouco provável (0)</span>
+                    <span className="flex items-center gap-1 text-emerald-600 font-bold"><Smile size={12} /> Com certeza (10)</span>
+                  </div>
+                  <div className="grid grid-cols-11 gap-1 sm:gap-2">
+                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nota => (
+                      <button
+                        key={nota}
+                        onClick={() => setNpsNota(nota)}
+                        className={`h-10 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center border ${
+                          npsNota === nota
+                            ? nota >= 9
+                              ? 'bg-emerald-600 text-white border-emerald-600 shadow-md scale-105'
+                              : nota >= 7
+                              ? 'bg-amber-500 text-white border-amber-500 shadow-md scale-105'
+                              : 'bg-rose-600 text-white border-rose-600 shadow-md scale-105'
+                            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                        }`}
+                      >
+                        {nota}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Comentário e botão enviar */}
+                {npsNota !== null && (
+                  <div className="space-y-3 pt-2 animate-in fade-in">
+                    <textarea
+                      rows={2}
+                      value={npsComentario}
+                      onChange={(e) => setNpsComentario(e.target.value)}
+                      placeholder="Conte-nos o motivo da sua nota (opcional)..."
+                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
+                    />
+
+                    <div className="flex justify-end">
+                      <button
+                        onClick={handleEnviarNps}
+                        disabled={npsEnviando}
+                        className="py-2.5 px-5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                      >
+                        <Send size={14} className={npsEnviando ? "animate-spin" : ""} />
+                        Enviar Avaliação
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <AutoDiagnosticoModal
         isOpen={isDiagnosticoOpen}

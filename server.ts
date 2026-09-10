@@ -1561,6 +1561,79 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
     });
   });
 
+  // --- MÓDULO OPERAÇÃO ATIVA & GESTÃO DE CAMPANHAS ---
+  interface CampanhaItem {
+    id: number;
+    canal: "whatsapp" | "voz" | "push";
+    nome: string;
+    leads: number;
+    processados: number;
+    conversao: string;
+    status: "Rodando" | "Concluída" | "Agendada" | "Pausada";
+    tipo: string;
+    dropRate?: string;
+    mensagemOuTemplate?: string;
+    criadoEm: string;
+  }
+
+  let campanhasList: CampanhaItem[] = [
+    { id: 1, canal: "whatsapp", nome: "Cobrança Preventiva (Vencimento -3 dias)", leads: 1250, processados: 450, conversao: "12%", status: "Rodando", tipo: "HSM Template", criadoEm: "Hoje, 08:00" },
+    { id: 2, canal: "whatsapp", nome: "Promoção Upgrade Fibra 1GB", leads: 3200, processados: 3200, conversao: "8.5%", status: "Concluída", tipo: "HSM Template", criadoEm: "Ontem, 14:00" },
+    { id: 3, canal: "whatsapp", nome: "Aviso Manutenção Programada (Bairro Centro)", leads: 850, processados: 0, conversao: "0%", status: "Agendada", tipo: "Texto Livre", criadoEm: "Hoje, 09:30" },
+    { id: 4, canal: "voz", nome: "Retenção de Cancelamentos (Discador Preditivo)", leads: 150, processados: 85, conversao: "22%", status: "Rodando", tipo: "URA Reversa", dropRate: "3%", criadoEm: "Hoje, 09:00" },
+    { id: 5, canal: "voz", nome: "Pesquisa NPS Automática (URA Reversa)", leads: 500, processados: 500, conversao: "64%", status: "Concluída", tipo: "URA Asterisk", dropRate: "1%", criadoEm: "Ontem, 11:00" },
+  ];
+
+  app.get("/api/campanhas", (req, res) => {
+    res.json({
+      sucesso: true,
+      campanhas: campanhasList
+    });
+  });
+
+  app.post("/api/campanhas", (req, res) => {
+    const { nome, canal, tipo, leads, mensagemOuTemplate, dropRate } = req.body;
+    const nova: CampanhaItem = {
+      id: Date.now(),
+      canal: canal || "whatsapp",
+      nome: nome || "Nova Campanha Ativa",
+      leads: Number(leads) || 100,
+      processados: 0,
+      conversao: "0%",
+      status: "Rodando",
+      tipo: tipo || (canal === "voz" ? "URA Discador" : "HSM Template"),
+      dropRate: canal === "voz" ? (dropRate || "2.5%") : undefined,
+      mensagemOuTemplate: mensagemOuTemplate || "",
+      criadoEm: "Agora mesmo"
+    };
+
+    campanhasList.unshift(nova);
+    res.status(201).json({
+      sucesso: true,
+      mensagem: `Campanha "${nova.nome}" iniciada com sucesso com ${nova.leads} destinatários!`,
+      campanha: nova
+    });
+  });
+
+  app.post("/api/campanhas/:id/toggle", (req, res) => {
+    const id = Number(req.params.id);
+    const camp = campanhasList.find(c => c.id === id);
+    if (!camp) {
+      return res.status(404).json({ sucesso: false, erro: "Campanha não encontrada" });
+    }
+
+    if (camp.status === "Rodando") {
+      camp.status = "Pausada";
+    } else if (camp.status === "Pausada" || camp.status === "Agendada") {
+      camp.status = "Rodando";
+    }
+
+    res.json({
+      sucesso: true,
+      campanha: camp
+    });
+  });
+
   // --- CÉREBRO DE IA: ENGINE GEMINI COM DYNAMIC TOOL REGISTRY (TELECOM & CALL CENTER) ---
   app.get("/api/gemini/agent/tools", (req, res) => {
     const tools = agentToolRegistry.getAllTools().map(t => ({
@@ -1768,23 +1841,37 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
   ];
 
   app.get("/api/nps/stats", (req, res) => {
+    const total = npsFeedMock.length;
+    const promotores = npsFeedMock.filter(i => i.classificacao === "promotor").length;
+    const neutros = npsFeedMock.filter(i => i.classificacao === "neutro").length;
+    const detratores = npsFeedMock.filter(i => i.classificacao === "detrator").length;
+
+    const promotoresPct = total > 0 ? Math.round((promotores / total) * 100) : 84;
+    const detratoresPct = total > 0 ? Math.round((detratores / total) * 100) : 5;
+    const neutrosPct = total > 0 ? (100 - promotoresPct - detratoresPct) : 11;
+    const npsScore = promotoresPct - detratoresPct;
+
+    const mediaNotas = total > 0 
+      ? (npsFeedMock.reduce((acc, curr) => acc + curr.nota, 0) / total / 2).toFixed(1)
+      : "4.8";
+
     res.json({
       sucesso: true,
-      npsScore: 78,
-      zona: "Zona de Excelência (75 a 100)",
-      totalRespostas: 486,
-      csatMedio: 4.8, // de 5.0
+      npsScore,
+      zona: npsScore >= 75 ? "Zona de Excelência (75 a 100)" : npsScore >= 50 ? "Zona de Qualidade (50 a 74)" : "Zona de Aperfeiçoamento",
+      totalRespostas: 486 + total - 5,
+      csatMedio: Number(mediaNotas), // de 5.0
       cesMedio: 1.3, // Customer Effort Score (quanto menor melhor, escala 1 a 5)
-      promotoresPct: 84, // 9-10
-      neutrosPct: 11, // 7-8
-      detratoresPct: 5, // 0-6
+      promotoresPct,
+      neutrosPct,
+      detratoresPct,
       taxaResposta: "42.8%",
       resolucaoPrimeiroContato: "87.4%",
       historicoSemanal: [
         { semana: "Sem 1", nps: 72, csat: 4.6, promotores: 78, detratores: 8 },
         { semana: "Sem 2", nps: 75, csat: 4.7, promotores: 81, detratores: 6 },
         { semana: "Sem 3", nps: 76, csat: 4.75, promotores: 82, detratores: 6 },
-        { semana: "Sem 4", nps: 78, csat: 4.8, promotores: 84, detratores: 5 }
+        { semana: "Sem 4", nps: npsScore, csat: Number(mediaNotas), promotores: promotoresPct, detratores: detratoresPct }
       ]
     });
   });
@@ -1794,6 +1881,35 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
       sucesso: true,
       total: npsFeedMock.length,
       feed: npsFeedMock
+    });
+  });
+
+  app.post("/api/nps/avaliar", (req, res) => {
+    const { cliente, telefone, canal, nota, comentario, atendente, setor } = req.body;
+    const notaNum = Math.max(0, Math.min(10, Number(nota) !== undefined && !isNaN(Number(nota)) ? Number(nota) : 10));
+    const classificacao = notaNum >= 9 ? "promotor" : notaNum >= 7 ? "neutro" : "detrator";
+    const sentimento = notaNum >= 9 ? "positivo" : notaNum >= 7 ? "neutro" : "negativo";
+
+    const novoFeedback = {
+      id: `NPS-${Date.now().toString().slice(-4)}`,
+      cliente: cliente || "João Silva (Portal)",
+      telefone: telefone || "+55 (11) 98765-4321",
+      canal: canal || "Webchat Portal",
+      nota: notaNum,
+      classificacao,
+      atendente: atendente || "Suporte Digital / IA",
+      comentario: comentario || (notaNum >= 9 ? "Atendimento rápido, conectividade restabelecida perfeitamente!" : "Demorou um pouco para normalizar."),
+      setor: setor || "Suporte N1",
+      data: "Agora mesmo",
+      sentimento
+    };
+
+    npsFeedMock.unshift(novoFeedback);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Avaliação registrada com sucesso! Muito obrigado pelo seu feedback.",
+      feedback: novoFeedback
     });
   });
 

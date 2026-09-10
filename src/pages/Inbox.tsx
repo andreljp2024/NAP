@@ -482,6 +482,20 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
   // Concluir Tabulação
   const handleFinishTicket = () => {
     if (!activeChat) return;
+
+    if (tabulationData.enviarPesquisaNps) {
+      fetch('/api/nps/disparar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente: activeChat.nome_cliente,
+          telefone: activeChat.telefone,
+          canal: activeChat.canal === 'whatsapp' ? 'WhatsApp WABA' : activeChat.canal === 'webchat' ? 'Webchat Portal' : 'Telefonia Asterisk',
+          ticketId: activeChat.protocolo
+        })
+      }).catch(() => {});
+    }
+
     setChats(prev => prev.map(c => {
       if (c.id === activeChat.id) {
         return { ...c, status: 'fechada' };
@@ -489,7 +503,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
       return c;
     }));
     setIsTabulating(false);
-    showToast(`Atendimento #${activeChat.protocolo} tabulado e finalizado com sucesso!`);
+    showToast(`Atendimento #${activeChat.protocolo} tabulado! ${tabulationData.enviarPesquisaNps ? 'Pesquisa NPS enviada.' : ''}`);
   };
 
   const getPilarBadge = (pilar?: 'suporte' | 'cobranca' | 'vendas') => {

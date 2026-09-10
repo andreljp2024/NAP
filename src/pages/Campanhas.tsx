@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Megaphone, PhoneOutgoing, MessageCircle, Play, Pause, Plus, Search, BarChart2, Users, CheckCircle2, Bell, Send, ShieldCheck, Smartphone, DollarSign, Zap, Clock, CreditCard, ArrowRight, ShieldAlert, Sparkles, RefreshCw, AlertTriangle } from 'lucide-react';
+import { 
+  Megaphone, PhoneOutgoing, MessageCircle, Play, Pause, Plus, Search, 
+  BarChart2, Users, CheckCircle2, Bell, Send, ShieldCheck, Smartphone, 
+  DollarSign, Zap, Clock, CreditCard, ArrowRight, ShieldAlert, Sparkles, 
+  RefreshCw, AlertTriangle, X 
+} from 'lucide-react';
 
 export default function Campanhas() {
   const [activeTab, setActiveTab] = useState<'whatsapp' | 'voz' | 'push' | 'regua'>('regua');
@@ -15,6 +20,20 @@ export default function Campanhas() {
   const [loadingRegua, setLoadingRegua] = useState(false);
   const [executandoFase, setExecutandoFase] = useState<string | null>(null);
   const [feedbackRegua, setFeedbackRegua] = useState<string | null>(null);
+
+  // Campanhas Ativas (WhatsApp e Voz)
+  const [campanhas, setCampanhas] = useState<any[]>([]);
+  const [isModalNovaCampanhaOpen, setIsModalNovaCampanhaOpen] = useState(false);
+  const [salvandoCampanha, setSalvandoCampanha] = useState(false);
+  const [feedbackCampanha, setFeedbackCampanha] = useState<string | null>(null);
+
+  const [formCampanha, setFormCampanha] = useState({
+    nome: '',
+    canal: 'whatsapp' as 'whatsapp' | 'voz' | 'push',
+    tipo: 'HSM Template',
+    leads: 500,
+    mensagem: ''
+  });
 
   const fetchPushStatus = () => {
     fetch('/api/push/status')
@@ -32,10 +51,66 @@ export default function Campanhas() {
       .catch(() => {});
   };
 
+  const fetchCampanhas = () => {
+    fetch('/api/campanhas')
+      .then(res => res.json())
+      .then(data => {
+        if (data.campanhas) setCampanhas(data.campanhas);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     fetchPushStatus();
     fetchReguaConfig();
+    fetchCampanhas();
   }, []);
+
+  const handleToggleStatus = async (id: number) => {
+    try {
+      const res = await fetch(`/api/campanhas/${id}/toggle`, { method: 'POST' });
+      if (res.ok) {
+        fetchCampanhas();
+      }
+    } catch {}
+  };
+
+  const handleCriarCampanha = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formCampanha.nome) return;
+    setSalvandoCampanha(true);
+    try {
+      const res = await fetch('/api/campanhas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: formCampanha.nome,
+          canal: formCampanha.canal,
+          tipo: formCampanha.tipo,
+          leads: Number(formCampanha.leads) || 100,
+          mensagemOuTemplate: formCampanha.mensagem
+        })
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        setFeedbackCampanha(data.mensagem);
+        fetchCampanhas();
+        setIsModalNovaCampanhaOpen(false);
+        setFormCampanha({
+          nome: '',
+          canal: activeTab === 'voz' ? 'voz' : 'whatsapp',
+          tipo: activeTab === 'voz' ? 'URA Reversa' : 'HSM Template',
+          leads: 500,
+          mensagem: ''
+        });
+        setTimeout(() => setFeedbackCampanha(null), 4000);
+      }
+    } catch {
+      setFeedbackCampanha('Erro ao criar campanha.');
+    } finally {
+      setSalvandoCampanha(false);
+    }
+  };
 
   const handleExecutarFaseRegua = async (fase: string) => {
     setExecutandoFase(fase);
@@ -87,16 +162,24 @@ export default function Campanhas() {
     }
   };
 
-  const campanhasWhatsapp = [
+  const defaultWhatsapp = [
     { id: 1, nome: "Cobrança Preventiva (Vencimento -3 dias)", leads: 1250, processados: 450, conversao: "12%", status: "Rodando", tipo: "HSM Template" },
     { id: 2, nome: "Promoção Upgrade Fibra 1GB", leads: 3200, processados: 3200, conversao: "8.5%", status: "Concluída", tipo: "HSM Template" },
     { id: 3, nome: "Aviso Manutenção Programada (Bairro Centro)", leads: 850, processados: 0, conversao: "0%", status: "Agendada", tipo: "Texto Livre" },
   ];
 
-  const campanhasVoz = [
-    { id: 1, nome: "Retenção de Cancelamentos (Discador Preditivo)", leads: 150, processados: 85, conversao: "22%", status: "Rodando", dropRate: "3%" },
-    { id: 2, nome: "Pesquisa NPS Automática (URA Reversa)", leads: 500, processados: 500, conversao: "64%", status: "Concluída", dropRate: "1%" },
+  const defaultVoz = [
+    { id: 4, nome: "Retenção de Cancelamentos (Discador Preditivo)", leads: 150, processados: 85, conversao: "22%", status: "Rodando", dropRate: "3%", tipo: "URA Reversa" },
+    { id: 5, nome: "Pesquisa NPS Automática (URA Reversa)", leads: 500, processados: 500, conversao: "64%", status: "Concluída", dropRate: "1%", tipo: "URA Asterisk" },
   ];
+
+  const campanhasWhatsapp = campanhas.length > 0 
+    ? campanhas.filter(c => c.canal === 'whatsapp') 
+    : defaultWhatsapp;
+
+  const campanhasVoz = campanhas.length > 0 
+    ? campanhas.filter(c => c.canal === 'voz') 
+    : defaultVoz;
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#0b0f19]">
@@ -109,10 +192,35 @@ export default function Campanhas() {
           </h1>
           <p className="text-sm text-slate-400 mt-1">Disparo em massa, discador automático (FreePBX) e réguas de relacionamento.</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all  -700/20 hover:scale-105 active:scale-95">
+        <button 
+          onClick={() => {
+            setFormCampanha({
+              nome: '',
+              canal: activeTab === 'voz' ? 'voz' : 'whatsapp',
+              tipo: activeTab === 'voz' ? 'URA Reversa' : 'HSM Template',
+              leads: 500,
+              mensagem: ''
+            });
+            setIsModalNovaCampanhaOpen(true);
+          }}
+          className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all -700/20 hover:scale-105 active:scale-95"
+        >
           <Plus size={18} /> Nova Campanha
         </button>
       </header>
+
+      {/* Feedback de Campanha */}
+      {feedbackCampanha && (
+        <div className="mx-6 mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 rounded-2xl text-xs font-bold flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+            {feedbackCampanha}
+          </div>
+          <button onClick={() => setFeedbackCampanha(null)} className="text-slate-400 hover:text-white">
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="px-4 sm:px-6 pt-6 flex gap-4 border-b border-white/5 shrink-0 overflow-x-auto whitespace-nowrap" style={{ scrollbarWidth: 'none' }}>
@@ -588,11 +696,19 @@ export default function Campanhas() {
                         </td>
                         <td className="px-6 py-4 text-center">
                           {camp.status === 'Rodando' ? (
-                            <button className="w-8 h-8 bg-amber-500/10 border border-amber-200 text-amber-600 hover:bg-amber-500/20 hover:scale-105 rounded-lg flex items-center justify-center transition-all mx-auto">
+                            <button 
+                              onClick={() => handleToggleStatus(camp.id)}
+                              title="Pausar Campanha"
+                              className="w-8 h-8 bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 hover:scale-105 rounded-lg flex items-center justify-center transition-all mx-auto"
+                            >
                               <Pause size={14} />
                             </button>
-                          ) : camp.status === 'Agendada' ? (
-                            <button className="w-8 h-8 bg-emerald-500/10 border border-emerald-200 text-emerald-600 hover:bg-emerald-500/20 hover:scale-105 rounded-lg flex items-center justify-center transition-all mx-auto">
+                          ) : (camp.status === 'Agendada' || camp.status === 'Pausada') ? (
+                            <button 
+                              onClick={() => handleToggleStatus(camp.id)}
+                              title="Iniciar / Retomar Campanha"
+                              className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 hover:scale-105 rounded-lg flex items-center justify-center transition-all mx-auto"
+                            >
                               <Play size={14} className="ml-0.5" />
                             </button>
                           ) : (
@@ -611,6 +727,142 @@ export default function Campanhas() {
 
         </div>
       </div>
+
+      {/* Modal Nova Campanha */}
+      {isModalNovaCampanhaOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+            <div className="p-6 border-b border-white/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
+                  <Megaphone size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-base font-outfit">Criar Nova Campanha</h3>
+                  <p className="text-xs text-slate-400">Disparo em lote via WhatsApp WABA ou Discador Asterisk</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsModalNovaCampanhaOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCriarCampanha} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Nome da Campanha
+                </label>
+                <input 
+                  type="text"
+                  value={formCampanha.nome}
+                  onChange={e => setFormCampanha({ ...formCampanha, nome: e.target.value })}
+                  placeholder="Ex: Campanha Retenção - Bairro Morumbi"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Canal de Saída
+                  </label>
+                  <select 
+                    value={formCampanha.canal}
+                    onChange={(e: any) => {
+                      const canal = e.target.value;
+                      setFormCampanha({ 
+                        ...formCampanha, 
+                        canal,
+                        tipo: canal === 'voz' ? 'URA Reversa' : 'HSM Template'
+                      });
+                    }}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
+                  >
+                    <option value="whatsapp">WhatsApp WABA</option>
+                    <option value="voz">Discador FreePBX (Voz)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Tipo / Formato
+                  </label>
+                  <select 
+                    value={formCampanha.tipo}
+                    onChange={e => setFormCampanha({ ...formCampanha, tipo: e.target.value })}
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
+                  >
+                    {formCampanha.canal === 'whatsapp' ? (
+                      <>
+                        <option value="HSM Template">HSM Template (Aprovado Meta)</option>
+                        <option value="Texto Livre">Texto Livre com Variáveis</option>
+                        <option value="PIX Copia e Cola">Cobrança PIX Direta</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="URA Reversa">URA Reversa Interativa</option>
+                        <option value="Discador Preditivo">Discador Preditivo (Operadores)</option>
+                        <option value="Pesquisa NPS Voz">Pesquisa NPS com Reconhecimento de Voz</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Quantidade Estimada de Leads / Destinatários
+                </label>
+                <input 
+                  type="number"
+                  min={1}
+                  value={formCampanha.leads}
+                  onChange={e => setFormCampanha({ ...formCampanha, leads: Number(e.target.value) })}
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  {formCampanha.canal === 'whatsapp' ? 'Mensagem / Parâmetros do HSM' : 'Script do Áudio / TTS da URA'}
+                </label>
+                <textarea 
+                  rows={3}
+                  value={formCampanha.mensagem}
+                  onChange={e => setFormCampanha({ ...formCampanha, mensagem: e.target.value })}
+                  placeholder={formCampanha.canal === 'whatsapp' 
+                    ? "Olá {{1}}, temos uma condição especial para seu plano de {{2}} Mega..." 
+                    : "Olá, aqui é do suporte técnico do provedor. Identificamos que você avaliou seu serviço recentemente..."}
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500 transition-colors resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsModalNovaCampanhaOpen(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={salvandoCampanha}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
+                >
+                  {salvandoCampanha ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
+                  Disparar Campanha
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
