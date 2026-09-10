@@ -72,3 +72,13 @@ O NAP conta com uma arquitetura de perfis baseada em RBAC (Role-Based Access Con
 
 ### Atualização da Hierarquia (Operadores)
 Foi aplicada uma revisão na segurança de rotas (Route Protection) e na visibilidade dos menus. **Operadores** tiveram seus acessos estritamente limitados às rotas de Operação (Vendas, Cobrança, CRM, Inbox e Suporte). Todos os módulos de configuração e parâmetros sistêmicos (`/admin/dashboard`, `/admin/automacoes`, `/admin/configuracoes`, `/admin/usuarios` e `/admin/operadores`) agora são de acesso exclusivo de `admin` e `superadmin`.
+
+### Acesso ao Portal do Cliente (PWA)
+O fluxo de login do cliente final foi implementado garantindo facilidade de uso em dispositivos móveis.
+- **Login por CPF**: O cliente insere apenas seu CPF. O sistema valida a máscara e cria a sessão `JWT`/`localStorage`.
+- **Roteamento Protegido**: As rotas do PWA (`/portal/*`) agora são guardadas por um validador de sessão. Se não houver autenticação, o usuário cai diretamente em `/portal/login`.
+
+### Acesso ao Portal do Cliente (PWA)
+O fluxo de login do cliente final foi implementado garantindo facilidade de uso em dispositivos móveis.
+- **Login por CPF**: O cliente insere apenas seu CPF. O sistema valida a máscara e cria a sessão `JWT`/`localStorage`.
+- **Roteamento Protegido**: As rotas do PWA (`/portal/*`) agora são guardadas por um validador de sessão. Se não houver autenticação, o usuário cai diretamente em `/portal/login`.

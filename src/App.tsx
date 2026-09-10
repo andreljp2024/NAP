@@ -21,6 +21,7 @@ import PortalDashboard from './pages/PortalDashboard';
 import PortalFaturas from './pages/PortalFaturas';
 import PortalSuporte from './pages/PortalSuporte';
 import PortalConta from './pages/PortalConta';
+import PortalLogin from './pages/PortalLogin';
 import ConsultaSGP from './pages/ConsultaSGP';
 import UsuariosHierarquia from './pages/UsuariosHierarquia';
 import TecnicoCampo from './pages/TecnicoCampo';
@@ -98,6 +99,7 @@ export default function App() {
             </Route>
 
             {/* Cliente PWA Routes */}
+            <Route path="/portal/login" element={<PortalLogin />} />
             <Route path="/portal" element={<PortalLayout />}>
               <Route index element={<PortalDashboard />} />
               <Route path="faturas" element={<PortalFaturas />} />

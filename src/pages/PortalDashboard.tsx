@@ -49,6 +49,9 @@ export default function PortalDashboard() {
   const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
 
   const clienteBairro = "Centro Histórico";
+  const authData = localStorage.getItem('@nap_client_auth');
+  const clientData = authData ? JSON.parse(authData) : { nome: 'João', plano: '600 Mega Fibra' };
+  const firstName = clientData.nome.split(' ')[0];
 
   useEffect(() => {
     fetch('/api/sgp/faturas')
@@ -125,8 +128,8 @@ export default function PortalDashboard() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
       <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-1">Olá, João!</h1>
-          <p className="text-slate-600 text-sm md:text-base">Acompanhe sua conexão e faturas em tempo real.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-1">Olá, {firstName}!</h1>
+          <p className="text-slate-600 text-sm md:text-base">Contrato: {clientData.plano} • Ativo</p>
         </div>
         {(!isInstalled || permission !== 'granted') && (
           <div className="flex items-center gap-2">

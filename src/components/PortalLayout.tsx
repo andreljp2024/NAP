@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, Navigate } from 'react-router-dom';
 import { Wifi, CreditCard, HeadphonesIcon, Settings } from 'lucide-react';
 import WebchatWidget from './WebchatWidget';
 import { PWAInstallButton } from './PWAInstallButton';
@@ -12,6 +12,15 @@ export default function PortalLayout() {
   const { config } = useConfig();
   const nomeProvedor = config.provedor?.nomeFantasia || 'NAP Telecom';
   const inicialProvedor = nomeProvedor.charAt(0).toUpperCase() || 'N';
+
+  const authData = localStorage.getItem('@nap_client_auth');
+  
+  if (!authData) {
+    return <Navigate to="/portal/login" replace />;
+  }
+
+  const clientData = JSON.parse(authData);
+  const clientInitials = clientData.nome ? clientData.nome.charAt(0).toUpperCase() : 'C';
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-50 text-slate-700 font-sans">
@@ -36,7 +45,7 @@ export default function PortalLayout() {
           )}
           <PWAInstallButton />
           <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-sm text-slate-600">
-            JS
+            {clientInitials}
           </div>
         </div>
       </div>

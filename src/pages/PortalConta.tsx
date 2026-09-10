@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, Lock, Save, Shield, Bell, BellRing, Smartphone, CheckCircle2, Wifi, QrCode, Eye, EyeOff, Copy, Check, RefreshCw } from 'lucide-react';
+import { User, Mail, Phone, Lock, Save, Shield, Bell, BellRing, Smartphone, CheckCircle2, Wifi, QrCode, Eye, EyeOff, Copy, Check, RefreshCw, LogOut } from 'lucide-react';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import PortalWifiModal from '../components/PortalWifiModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function PortalConta() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { permission, loading: loadingPush, requestPermission, triggerTestPush } = usePushNotifications();
   const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
@@ -39,11 +41,26 @@ export default function PortalConta() {
     setTimeout(() => setLoading(false), 1000);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('@nap_client_auth');
+    navigate('/portal/login');
+  };
+
+  const authData = localStorage.getItem('@nap_client_auth');
+  const clientData = authData ? JSON.parse(authData) : { nome: 'João Silva', cpf: '***.456.789-**' };
+  const clientInitials = clientData.nome ? clientData.nome.charAt(0).toUpperCase() : 'C';
+
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto w-full">
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-2">Minha Conta</h1>
-        <p className="text-slate-600 text-sm md:text-base">Gerencie seus dados pessoais e de acesso.</p>
+      <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-2">Minha Conta</h1>
+          <p className="text-slate-600 text-sm md:text-base">Gerencie seus dados pessoais e de acesso.</p>
+        </div>
+        <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-6 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-bold transition-all border border-red-100">
+          <LogOut size={18} />
+          Sair da Conta
+        </button>
       </div>
 
       <div className="space-y-6">
@@ -60,7 +77,7 @@ export default function PortalConta() {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Nome Completo</label>
               <input 
                 type="text" 
-                defaultValue="João Silva" 
+                defaultValue={clientData.nome} 
                 disabled
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium "
               />
@@ -70,7 +87,7 @@ export default function PortalConta() {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">CPF / CNPJ</label>
               <input 
                 type="text" 
-                defaultValue="111.222.333-44" 
+                defaultValue={clientData.cpf} 
                 disabled
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium "
               />

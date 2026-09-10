@@ -1555,7 +1555,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       resumo_hierarquia: {
         admin: usuariosProvedor.filter(u => u.cargo === 'admin').length,
         operador: usuariosProvedor.filter(u => u.cargo === 'operador').length,
-        tecnico: usuariosProvedor.filter(u => u.cargo === 'tecnico').length,
+        tecnico: usuariosProvedor.filter(u => u.cargo === 'tecnico_campo').length,
         com_geolocalizacao: usuariosProvedor.filter(u => u.geolocalizacao?.ativo).length,
         pwa_ativo: usuariosProvedor.filter(u => u.pwa?.push_ativo).length
       },
@@ -1609,7 +1609,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
       filas: Array.isArray(filas) ? filas : [],
       telefone: telefone || '',
       geolocalizacao: {
-        ativo: cargo === 'tecnico' || cargo === 'operador', // Habilitado por padrão
+        ativo: cargo === 'tecnico_campo' || cargo === 'operador', // Habilitado por padrão
         lat: -23.5505,
         lng: -46.6333,
         precisao_metros: 15,
@@ -1675,7 +1675,7 @@ Contexto da chamada: ${JSON.stringify(callContext || {})}`
 
   // Mapa de campo ao vivo: Técnicos em rota + Ordens de Serviço
   app.get("/api/tecnicos/mapa", (req, res) => {
-    const tecnicos = usuariosProvedor.filter(u => u.cargo === 'tecnico');
+    const tecnicos = usuariosProvedor.filter(u => u.cargo === 'tecnico_campo');
     const operadores = usuariosProvedor.filter(u => u.cargo === 'operador');
 
     res.json({
