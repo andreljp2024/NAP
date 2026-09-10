@@ -184,13 +184,45 @@ const INITIAL_CHATS: ExtendedConversa[] = [
     mensagens: [
       { id: 7, conversa_id: 3, autor_tipo: 'cliente', conteudo: 'Olá, gostaria de saber se é possível fazer o upgrade para o roteador Wi-Fi 6 Mesh.', enviada_em: '10:04', status: 'entregue' }
     ]
+  },
+  {
+    id: 4,
+    canal: 'whatsapp',
+    contato_id: 9999,
+    nome_cliente: 'João Cliente (Teste IA)',
+    telefone: '(11) 91111-2222',
+    cpf: '111.222.333-44',
+    plano: 'Fibra 500MB',
+    protocolo: 'NAP-2026-0910-999',
+    tempo_espera: 'Ao vivo',
+    fila: 'Triagem IA',
+    pilar_negocio: 'suporte',
+    status: 'triagem_ia',
+    prioridade: 1,
+    endereco: 'Rua de Teste, 100',
+    status_conexao: {
+      status: 'online',
+      sinal_onu: '-20.1 dBm (Bom)',
+      ip: '177.45.1.10',
+      concentrador: 'MikroTik-Teste',
+      uptime: '2d 4h'
+    },
+    financeiro: {
+      valor: 99.90,
+      vencimento: '2026-09-10',
+      status: 'pendente',
+      pix_copia_cola: '000201...'
+    },
+    mensagens: [
+      { id: 10, conversa_id: 4, autor_tipo: 'ia', conteudo: 'Olá João! Sou o Assistente Virtual do NAP Telecom. Identifiquei seu contrato, como posso ajudar hoje?', enviada_em: '10:15', status: 'entregue' }
+    ]
   }
 ];
 
 export default function Inbox() {
   const [chats, setChats] = useState<ExtendedConversa[]>(INITIAL_CHATS);
-  const [activeChatId, setActiveChatId] = useState<number | null>(1);
-  const [filterQueue, setFilterQueue] = useState<'meus' | 'fila_geral' | 'finalizados'>('meus');
+  const [activeChatId, setActiveChatId] = useState<number | null>(4);
+  const [filterQueue, setFilterQueue] = useState<'meus' | 'fila_geral' | 'triagem_ia' | 'finalizados'>('triagem_ia');
   const [searchQuery, setSearchQuery] = useState('');
   
   // Painel Lateral 360 / SGP no chat
@@ -282,42 +314,90 @@ export default function Inbox() {
     if (filterQueue === 'fila_geral') {
       return matchesSearch && chat.status === 'aberta' && chat.id === 3;
     }
+    if (filterQueue === 'triagem_ia') {
+      return matchesSearch && chat.status === 'triagem_ia';
+    }
     if (filterQueue === 'finalizados') {
       return matchesSearch && chat.status === 'fechada';
     }
     return matchesSearch;
   });
 
-  // Enviar Mensagem Real
-  const handleSendMessage = () => {
+  // Enviar Mensagem Real (ou simular resposta do Gemini em triagem)
+  const handleSendMessage = async () => {
     if (!messageText.trim() || !activeChat) return;
 
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
+    // Se estiver em modo Triagem IA, o texto digitado finge ser do Cliente
+    const isModoTriagem = activeChat.status === 'triagem_ia';
+    const textMsg = messageText.trim();
+    setMessageText('');
+
     const newMsg: Mensagem = {
       id: Date.now(),
       conversa_id: activeChat.id,
-      autor_tipo: 'operador',
-      tipo: isInternalNote ? 'nota_interna' : 'texto',
-      conteudo: messageText.trim(),
+      autor_tipo: isModoTriagem ? 'cliente' : 'operador',
+      tipo: isModoTriagem ? 'texto' : (isInternalNote ? 'nota_interna' : 'texto'),
+      conteudo: textMsg,
       enviada_em: timeStr,
       status: 'enviado'
     };
 
     setChats(prev => prev.map(c => {
       if (c.id === activeChat.id) {
-        return {
-          ...c,
-          mensagens: [...c.mensagens, newMsg]
-        };
+        return { ...c, mensagens: [...c.mensagens, newMsg] };
       }
       return c;
     }));
 
-    setMessageText('');
+    if (isModoTriagem) {
+      // Simula a Engine Gemini respondendo
+      try {
+        const res = await fetch('/api/gemini/agent/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: textMsg, cliente_cpf: activeChat.cpf })
+        });
+        const data = await res.json();
+        
+        const aiReply: Mensagem = {
+          id: Date.now() + 1,
+          conversa_id: activeChat.id,
+          autor_tipo: 'ia',
+          conteudo: data.resposta || 'Atendimento processado com sucesso.',
+          enviada_em: timeStr,
+          status: 'entregue'
+        };
 
-    // Se for mensagem pública, simula resposta do cliente após 2 segundos
+        setChats(prev => prev.map(c => {
+          if (c.id === activeChat.id) {
+            return { ...c, mensagens: [...c.mensagens, aiReply] };
+          }
+          return c;
+        }));
+      } catch (e) {
+        // Fallback local se API falhar
+        const fallbackMsg: Mensagem = {
+          id: Date.now() + 1,
+          conversa_id: activeChat.id,
+          autor_tipo: 'ia',
+          conteudo: 'Desculpe, houve um erro ao consultar o Cérebro IA.',
+          enviada_em: timeStr,
+          status: 'entregue'
+        };
+        setChats(prev => prev.map(c => {
+          if (c.id === activeChat.id) {
+            return { ...c, mensagens: [...c.mensagens, fallbackMsg] };
+          }
+          return c;
+        }));
+      }
+      return;
+    }
+
+    // Se for mensagem pública de Operador, simula resposta do cliente após 2 segundos
     if (!isInternalNote) {
       setTimeout(() => {
         const clientReply: Mensagem = {
@@ -591,11 +671,11 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           </div>
 
           {/* Abas de Fila */}
-          <div className="flex rounded-xl bg-white/[0.02] p-1 mb-3 text-xs font-semibold text-slate-400">
+          <div className="flex rounded-xl bg-white/[0.02] p-1 mb-3 text-xs font-semibold text-slate-400 overflow-x-auto whitespace-nowrap hide-scrollbar">
             <button
               onClick={() => setFilterQueue('meus')}
-              className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'meus' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
+              className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                filterQueue === 'meus' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
               }`}
             >
               <span>Meus</span>
@@ -603,20 +683,30 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             </button>
             <button
               onClick={() => setFilterQueue('fila_geral')}
-              className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
+              className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
               }`}
             >
               <span>Espera</span>
               <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded-full font-bold">1</span>
             </button>
             <button
-              onClick={() => setFilterQueue('finalizados')}
-              className={`flex-1 py-1.5 rounded-lg transition-all ${
-                filterQueue === 'finalizados' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
+              onClick={() => setFilterQueue('triagem_ia')}
+              className={`flex-1 min-w-[80px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                filterQueue === 'triagem_ia' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
               }`}
             >
-              <span>Histórico</span>
+              <Sparkles size={12} className={filterQueue === 'triagem_ia' ? 'text-indigo-400' : 'text-slate-500'} />
+              <span>Triagem IA</span>
+              <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-0.2 rounded-full font-bold">1</span>
+            </button>
+            <button
+              onClick={() => setFilterQueue('finalizados')}
+              className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all ${
+                filterQueue === 'finalizados' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
+              }`}
+            >
+              <span>Fechados</span>
             </button>
           </div>
 
@@ -746,37 +836,55 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
             {/* Ações Rápidas do Header */}
             <div className="flex items-center gap-2">
-              <a 
-                href={`tel:${activeChat.telefone}`}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-300 bg-white/[0.02] hover:bg-white/10 border border-white/10 rounded-xl transition-all"
-                title="Ligar via Ramal SIP"
-              >
-                <Phone size={13} className="text-slate-400" />
-                <span>{activeChat.telefone}</span>
-              </a>
+              {activeChat.status === 'triagem_ia' ? (
+                <button
+                  onClick={() => {
+                    setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, status: 'aberta', fila: 'Financeiro & Cobrança' } : c));
+                    setActiveChatId(null);
+                    setFilterQueue('fila_geral');
+                    showToast('Hand-off realizado! Chat enviado para a fila humana.');
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all"
+                  title="Transferir da IA para Atendimento Humano"
+                >
+                  <UserCheck size={13} />
+                  <span className="hidden sm:inline">Transferir para Humano (Handoff)</span>
+                </button>
+              ) : (
+                <>
+                  <a 
+                    href={`tel:${activeChat.telefone}`}
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-300 bg-white/[0.02] hover:bg-white/10 border border-white/10 rounded-xl transition-all"
+                    title="Ligar via Ramal SIP"
+                  >
+                    <Phone size={13} className="text-slate-400" />
+                    <span>{activeChat.telefone}</span>
+                  </a>
 
-              {/* Alternar Drawer Contextual SGP */}
-              <button
-                onClick={() => setIsSgpDrawerOpen(!isSgpDrawerOpen)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all ${
-                  isSgpDrawerOpen 
-                    ? 'bg-blue-500/10 border-blue-300 text-blue-400' 
-                    : 'bg-[#101726] hover:bg-white/[0.02] border-white/10 text-slate-300'
-                }`}
-                title="Painel 360 do Assinante no ERP SGP"
-              >
-                <Layers size={13} />
-                <span className="hidden sm:inline">CRM & SGP</span>
-              </button>
+                  {/* Alternar Drawer Contextual SGP */}
+                  <button
+                    onClick={() => setIsSgpDrawerOpen(!isSgpDrawerOpen)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all ${
+                      isSgpDrawerOpen 
+                        ? 'bg-blue-500/10 border-blue-300 text-blue-400' 
+                        : 'bg-[#101726] hover:bg-white/[0.02] border-white/10 text-slate-300'
+                    }`}
+                    title="Painel 360 do Assinante no ERP SGP"
+                  >
+                    <Layers size={13} />
+                    <span className="hidden sm:inline">CRM & SGP</span>
+                  </button>
 
-              {/* Finalizar / Tabular Atendimento */}
-              <button
-                onClick={() => setIsTabulating(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-all "
-              >
-                <CheckCircle size={13} className="text-emerald-600" />
-                <span className="hidden sm:inline">Finalizar</span>
-              </button>
+                  {/* Finalizar / Tabular Atendimento */}
+                  <button
+                    onClick={() => setIsTabulating(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-all "
+                  >
+                    <CheckCircle size={13} className="text-emerald-600" />
+                    <span className="hidden sm:inline">Finalizar</span>
+                  </button>
+                </>
+              )}
             </div>
           </header>
 
@@ -1063,42 +1171,46 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               </div>
 
               {/* Botões Rápidos de HSM / Macros do Provedor e Copiloto Gemini */}
-              <div className="flex items-center gap-1.5 overflow-x-auto text-xs" style={{ scrollbarWidth: 'none' }}>
-                <button
-                  onClick={handleGeminiCopilot}
-                  disabled={isGeneratingCopilot}
-                  className={`px-3 py-1 rounded-lg font-bold text-[11px] whitespace-nowrap transition-all flex items-center gap-1.5  border ${
-                    copilotSuccess
-                      ? 'bg-emerald-500 text-white border-emerald-600'
-                      : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
-                  }`}
-                  title="O Gemini analisa a dúvida do cliente e o sinal da fibra no SGP e gera uma resposta pronta"
-                >
-                  <Sparkles size={12} className={isGeneratingCopilot ? 'animate-spin text-indigo-500' : 'text-indigo-600'} />
-                  <span>{isGeneratingCopilot ? 'Gemini gerando...' : copilotSuccess ? 'Sugestão Aplicada!' : 'Copiloto Gemini'}</span>
-                </button>
-
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden sm:inline ml-1">
-                  Macros:
-                </span>
-                {macros.slice(0, 5).map((macro) => (
-                  <button 
-                    key={macro.id || macro.atalho}
-                    onClick={() => applyMacro(macro)}
-                    className="px-2.5 py-1 bg-white/[0.02] hover:bg-blue-500/10 hover:text-blue-400 text-slate-300 rounded-lg font-mono font-bold text-[11px] whitespace-nowrap transition-colors"
-                    title={macro.titulo || macro.atalho}
+              {activeChat.status !== 'triagem_ia' && (
+                <div className="flex items-center gap-1.5 overflow-x-auto text-xs" style={{ scrollbarWidth: 'none' }}>
+                  <button
+                    onClick={handleGeminiCopilot}
+                    disabled={isGeneratingCopilot}
+                    className={`px-3 py-1 rounded-lg font-bold text-[11px] whitespace-nowrap transition-all flex items-center gap-1.5  border ${
+                      copilotSuccess
+                        ? 'bg-emerald-500 text-white border-emerald-600'
+                        : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
+                    }`}
+                    title="O Gemini analisa a dúvida do cliente e o sinal da fibra no SGP e gera uma resposta pronta"
                   >
-                    {macro.atalho}
+                    <Sparkles size={12} className={isGeneratingCopilot ? 'animate-spin text-indigo-500' : 'text-indigo-600'} />
+                    <span>{isGeneratingCopilot ? 'Gemini gerando...' : copilotSuccess ? 'Sugestão Aplicada!' : 'Copiloto Gemini'}</span>
                   </button>
-                ))}
-              </div>
+
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden sm:inline ml-1">
+                    Macros:
+                  </span>
+                  {macros.slice(0, 5).map((macro) => (
+                    <button 
+                      key={macro.id || macro.atalho}
+                      onClick={() => applyMacro(macro)}
+                      className="px-2.5 py-1 bg-white/[0.02] hover:bg-blue-500/10 hover:text-blue-400 text-slate-300 rounded-lg font-mono font-bold text-[11px] whitespace-nowrap transition-colors"
+                      title={macro.titulo || macro.atalho}
+                    >
+                      {macro.atalho}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Caixa de Entrada e Envio */}
-            <div className={`flex items-end gap-2 p-1.5 rounded-2xl border-none transition-all ${
-              isInternalNote 
-                ? 'bg-[#3b2d13] border-amber-300' 
-                : 'bg-[#2a3942]'
+            <div className={`flex items-end gap-2 p-1.5 rounded-2xl border transition-all ${
+              activeChat.status === 'triagem_ia'
+                ? 'bg-[#101726] border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.1)]'
+                : isInternalNote 
+                  ? 'bg-[#3b2d13] border-amber-300' 
+                  : 'bg-[#2a3942] border-transparent'
             }`}>
               
               <textarea
@@ -1111,21 +1223,29 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   }
                 }}
                 rows={1}
-                placeholder={isInternalNote ? 'Escreva uma anotação interna visível apenas para os operadores...' : 'Digite sua mensagem (use Enter para enviar)...'}
-                className="flex-1 bg-transparent border-0 outline-none text-xs sm:text-sm text-white placeholder:text-slate-500 resize-none max-h-32 px-2 py-1.5 leading-relaxed"
+                placeholder={
+                  activeChat.status === 'triagem_ia'
+                    ? 'Modo IA Ativo: Simule a mensagem do cliente (IA responderá)...'
+                    : isInternalNote 
+                      ? 'Escreva uma anotação interna visível apenas para os operadores...' 
+                      : 'Digite sua mensagem (use Enter para enviar)...'
+                }
+                className={`flex-1 bg-transparent border-0 outline-none text-xs sm:text-sm text-white placeholder:text-slate-500 resize-none max-h-32 px-2 py-1.5 leading-relaxed ${activeChat.status === 'triagem_ia' ? 'placeholder:text-indigo-300' : ''}`}
               />
 
               <button
                 onClick={handleSendMessage}
                 disabled={!messageText.trim()}
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all  active:scale-95 disabled:opacity-40 shrink-0 ${
-                  isInternalNote 
-                    ? 'bg-amber-600 hover:bg-amber-700' 
-                    : 'bg-[#00a884] hover:bg-[#008f6f]'
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all active:scale-95 disabled:opacity-40 shrink-0 ${
+                  activeChat.status === 'triagem_ia'
+                    ? 'bg-indigo-600 hover:bg-indigo-500'
+                    : isInternalNote 
+                      ? 'bg-amber-600 hover:bg-amber-700' 
+                      : 'bg-[#00a884] hover:bg-[#008f6f]'
                 }`}
                 title="Enviar Mensagem (Enter)"
               >
-                <Send size={18} className="ml-0.5" />
+                {activeChat.status === 'triagem_ia' ? <Sparkles size={18} className="text-white" /> : <Send size={18} className="ml-0.5" />}
               </button>
             </div>
           </footer>

@@ -22,10 +22,12 @@ The core stack includes Debian 12, FreePBX 17, GenieACS (TR-069), WABA (WhatsApp
 - **Tenant Isolation:** Although the code supports multi-tenancy, the deployment model assumes one ISP per VM for strict data privacy and telephony isolation.
 
 ## 4. Key Modules to Preserve
-- **Inbox Unificado:** Handles WhatsApp WABA and Webchat integrations.
+- **Inbox Unificado & Triagem IA:** Handles WhatsApp WABA and Webchat integrations. Inclui modo Triagem IA com o Cérebro Gemini operando como Copiloto e filtro dedicado para Handoff (transferência humano-IA).
 - **CRM 360 & Kanban:** Uses Slide-over panels to show customer context and manages SGP billing operations (PIX, Unblocks).
 - **GenieACS:** Dashboard for CPE telemetry (ONU Power, Uptime).
 - **Portal do Cliente (PWA):** Mobile-first auto-service app (`/portal`). Features Webchat routing, invoice payments, and WebRTC Webphone.
+- **Técnico de Campo (PWA) & Geolocalização:** Módulo em `/admin/campo` Mobile-First para gestão de Ordens de Serviço na rua. Conta com rastreamento GPS em tempo real transmitido para o "Radar" no dashboard administrativo.
+- **Hierarquia de Usuários:** Módulo de controle de permissões em 4 níveis (Admin Geral, Operador, Técnico N1, Técnico N2) gerenciado via painel.
 - **Landing Pages (`/src/pages/landing`):** Modular templates with background images and responsive design.
 
 ## 5. Development Workflow

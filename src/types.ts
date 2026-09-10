@@ -39,7 +39,7 @@ export interface Conversa {
   tempo_espera?: string;
   fila?: string;
   operador_id?: number;
-  status: "aberta" | "fechada";
+  status: "aberta" | "fechada" | "triagem_ia";
   prioridade: number;
   mensagens: Mensagem[];
 }

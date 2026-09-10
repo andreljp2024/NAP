@@ -7,10 +7,12 @@ O NAP foi concebido para unificar a operação técnica, financeira e de atendim
 
 ### Módulos Principais
 1. **AVA (Agente Virtual Autônoma):** Integração Full-Stack nativa com o **Google Gemini**, capaz de interpretar áudio, entender solicitações de clientes, analisar sentimentos em tempo real e disparar funções remotas no ERP (Mock SGP).
-2. **Inbox Omnichannel:** Caixa de entrada unificada que suporta WhatsApp (WABA), Webchat PWA e integração nativa de telefonia com Asterisk (FreePBX 17).
+2. **Inbox Omnichannel & Triagem IA:** Caixa de entrada unificada que suporta WhatsApp (WABA), Webchat PWA e integração nativa de telefonia com Asterisk (FreePBX 17). Conta com interface de **Triagem IA** para testes de handover entre Robô e Humano.
 3. **GenieACS (TR-069):** Dashboard de telemetria óptica e gerenciamento de CPEs, com leitura visual de potência (RSSI), Uptime e conectividade NBI.
 4. **CRM 360 & SGP ERP (Backend):** CRM integrado com pipelines (Kanban) de vendas. Emulador do sistema de faturamento SGP para simular emissão de códigos PIX, desbloqueios em confiança, 2ª via de faturas, e viabilidade de rede.
 5. **Portal do Assinante (PWA):** Aplicativo Mobile-First (Light Theme) para autoatendimento do cliente final, suportando instalação via Web Manifest, notificações Push, e roteamento de Webchat/Webphone.
+6. **Aplicativo Técnico de Campo (PWA):** Módulo responsivo otimizado para celulares para gestão de Ordens de Serviço externas, integração de mapas e **transmissão de Geolocalização (GPS) em tempo real**.
+7. **Hierarquia e Usuários:** Gestão de papéis do sistema (Admin, Operador, Técnicos) centralizando o envio de notificações universais Push via Web-Push.
 
 ## 🛠️ Stack Tecnológica
 - **Frontend:** React 18, Vite, Tailwind CSS (Design System Anti-Slop, Dark Mode Premium SaaS no Admin, Light Mode no PWA)
