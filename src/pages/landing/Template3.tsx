@@ -26,7 +26,7 @@ export default function Template3() {
             <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors">
               Portal do Cliente
             </Link>
-            <Link to="/login" className="bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+            <Link to="/login" className="bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-emerald-700 transition-all flex items-center gap-2  -600/20">
               Assine Já
             </Link>
           </div>
@@ -68,7 +68,7 @@ export default function Template3() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row justify-center gap-4"
           >
-            <button className="bg-emerald-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95">
+            <button className="bg-emerald-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-emerald-700 transition-all  -600/20 active:scale-95">
               Ver planos residenciais
             </button>
             <button className="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
@@ -82,7 +82,7 @@ export default function Template3() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-20 max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative h-[400px]"
+          className="mt-20 max-w-5xl mx-auto bg-white rounded-3xl  border border-slate-100 overflow-hidden relative h-[400px]"
         >
           {/* Abstract clean background */}
           <div className="absolute inset-0 z-0">
@@ -97,22 +97,22 @@ export default function Template3() {
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="flex flex-col sm:flex-row gap-8 sm:gap-12">
                <div className="flex flex-col items-center gap-4 text-white">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl  border border-white/30 flex items-center justify-center">
                     <Home size={32} className="text-white" />
                   </div>
-                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Casa Inteligente</span>
+                  <span className="font-bold text-sm sm:text-base text-">Casa Inteligente</span>
                </div>
                <div className="flex flex-col items-center gap-4 text-white sm:mt-12">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl  border border-white/30 flex items-center justify-center">
                     <Wifi size={32} className="text-white" />
                   </div>
-                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Wi-Fi Estável</span>
+                  <span className="font-bold text-sm sm:text-base text-">Wi-Fi Estável</span>
                </div>
                <div className="flex flex-col items-center gap-4 text-white">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/30 flex items-center justify-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-md rounded-2xl  border border-white/30 flex items-center justify-center">
                     <Tv size={32} className="text-white" />
                   </div>
-                  <span className="font-bold text-sm sm:text-base text-shadow-sm">Streaming 4K</span>
+                  <span className="font-bold text-sm sm:text-base text-">Streaming 4K</span>
                </div>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function Template3() {
             ].map((plan, i) => (
               <div 
                 key={i}
-                className={`bg-white rounded-3xl p-8 border ${plan.highlight ? 'border-emerald-500 shadow-2xl shadow-emerald-500/10' : 'border-slate-200 shadow-sm'} flex flex-col`}
+                className={`bg-white rounded-3xl p-8 border ${plan.highlight ? 'border-emerald-500  -500/10' : 'border-slate-200 '} flex flex-col`}
               >
                 {plan.highlight && (
                   <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full self-start mb-4">

@@ -383,7 +383,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
       {!embedded && (
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all shadow-2xs ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all  ${
             onCall 
               ? 'bg-emerald-50 border-emerald-300 text-emerald-800 animate-pulse' 
               : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
@@ -407,14 +407,14 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
       {(isOpen || embedded) && (
         <div className={
           embedded 
-            ? `w-full bg-white border border-slate-200 shadow-lg rounded-3xl overflow-hidden flex flex-col ${className}` 
-            : "absolute top-12 right-0 w-80 max-w-[calc(100vw-1.5rem)] bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-3 duration-200"
+            ? `w-full bg-white border border-slate-200  rounded-3xl overflow-hidden flex flex-col ${className}` 
+            : "absolute top-12 right-0 w-80 max-w-[calc(100vw-1.5rem)] bg-white border border-slate-200  rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-3 duration-200"
         }>
           
           {/* Header com Indicadores de Conexão Asterisk / FreePBX */}
           <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-xs"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse "></div>
               <span className="text-xs font-bold text-emerald-800 tracking-wide">{sipStatus}</span>
               <span className="text-[10px] text-slate-700 bg-white border border-slate-200 px-2 py-0.5 rounded-md font-mono font-semibold">
                 Ramal {ramal}
@@ -512,7 +512,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
 
               {/* Sugestão Dinâmica da IA para o Operador */}
               {latestSuggestion && (
-                <div className="bg-indigo-950/70 border border-indigo-500/40 rounded-xl p-2 flex items-start gap-2 text-[11px] text-indigo-100 shadow-inner">
+                <div className="bg-indigo-950/70 border border-indigo-500/40 rounded-xl p-2 flex items-start gap-2 text-[11px] text-indigo-100 ">
                   <Sparkles size={14} className="text-indigo-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-indigo-300 block text-[10px] uppercase">
@@ -613,7 +613,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                   className={`px-3 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
                     savedToSgp
                       ? 'bg-emerald-600 text-white'
-                      : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white '
                   }`}
                 >
                   {savedToSgp ? (
@@ -638,7 +638,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                   <button 
                     key={key}
                     onClick={() => handleKeyPress(key)}
-                    className="h-11 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-lg font-bold text-slate-800 flex items-center justify-center transition-all active:scale-95 shadow-2xs hover:border-slate-300"
+                    className="h-11 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-lg font-bold text-slate-800 flex items-center justify-center transition-all active:scale-95  hover:border-slate-300"
                   >
                     {key}
                   </button>
@@ -650,7 +650,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                 <button 
                   onClick={toggleCall}
                   disabled={dialNumber.trim().length === 0}
-                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md active:scale-95"
+                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all  active:scale-95"
                 >
                   <Phone size={18} />
                   <span>Chamar</span>
@@ -659,7 +659,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                 <button 
                   onClick={handleBackspace}
                   disabled={dialNumber.length === 0}
-                  className="w-12 h-12 bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-500 hover:text-slate-800 rounded-xl flex items-center justify-center transition-all active:scale-95 shadow-2xs"
+                  className="w-12 h-12 bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-500 hover:text-slate-800 rounded-xl flex items-center justify-center transition-all active:scale-95 "
                   title="Apagar dígito"
                 >
                   <Delete size={18} />
@@ -702,7 +702,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                   <div className="grid grid-cols-4 gap-2">
                     <button 
                       onClick={() => setMuted(!muted)}
-                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border shadow-2xs ${
+                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border  ${
                         muted 
                           ? 'bg-amber-100 border-amber-300 text-amber-900' 
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -715,7 +715,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
 
                     <button 
                       onClick={() => setOnHold(!onHold)}
-                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border shadow-2xs ${
+                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border  ${
                         onHold 
                           ? 'bg-amber-100 border-amber-300 text-amber-900' 
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -728,7 +728,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
 
                     <button 
                       onClick={() => setShowTransfer(true)}
-                      className="h-12 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 flex flex-col items-center justify-center text-[10px] font-bold transition-all shadow-2xs"
+                      className="h-12 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 flex flex-col items-center justify-center text-[10px] font-bold transition-all "
                       title="Transferir Chamada"
                     >
                       <PhoneForwarded size={18} />
@@ -737,7 +737,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
 
                     <button 
                       onClick={() => setShowKeypadInCall(!showKeypadInCall)}
-                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border shadow-2xs ${
+                      className={`h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold transition-all border  ${
                         showKeypadInCall 
                           ? 'bg-blue-100 border-blue-300 text-blue-900' 
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -772,7 +772,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                   {/* Encerrar Chamada */}
                   <button 
                     onClick={toggleCall}
-                    className="w-full h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-md active:scale-95"
+                    className="w-full h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all  active:scale-95"
                   >
                     <PhoneOff size={18} />
                     <span>Desligar Chamada</span>

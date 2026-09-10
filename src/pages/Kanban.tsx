@@ -214,7 +214,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
 
           <button 
             onClick={() => setIsModalOpen(true)}
-            className={`flex items-center gap-1.5 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-none active:scale-95 ${
+            className={`flex items-center gap-1.5 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all  active:scale-95 ${
               type === 'Cobranca' ? 'bg-amber-600 hover:bg-amber-700' : type === 'Vendas' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
@@ -245,7 +245,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                         {stage}
                       </h3>
                     </div>
-                    <span className="text-[11px] font-bold bg-[#101726] text-slate-400 px-2 py-0.5 rounded-md border border-white/10 shadow-2xs">
+                    <span className="text-[11px] font-bold bg-[#101726] text-slate-400 px-2 py-0.5 rounded-md border border-white/10 ">
                       {stageDeals.length}
                     </span>
                   </div>
@@ -270,10 +270,10 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`bg-[#101726] p-4 rounded-xl border border-white/10/90 shadow-2xs cursor-grab select-none ${
+                                  className={`bg-[#101726] p-4 rounded-xl border border-white/10/90  cursor-grab select-none ${
                                     snapshot.isDragging 
-                                      ? 'shadow-xl ring-2 ring-blue-500 rotate-1 scale-105 z-50' 
-                                      : 'hover:border-white/10 hover:shadow-xs'
+                                      ? ' ring-2 ring-blue-500 rotate-1 scale-105 z-50' 
+                                      : 'hover:border-white/10 hover:'
                                   } transition-all`}
                                 >
                                   <div className="flex justify-between items-start mb-2">
@@ -349,7 +349,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
             className="fixed inset-0 bg-[#0b0f19]/40 backdrop-blur-2xs z-40"
             aria-hidden="true"
           />
-          <div className="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#101726] shadow-2xl border-l border-white/10 animate-in slide-in-from-right flex flex-col z-50 font-sans">
+          <div className="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#101726]  border-l border-white/10 animate-in slide-in-from-right flex flex-col z-50 font-sans">
             
             {/* Header */}
             <div className="p-5 border-b border-white/10 bg-[#101726] flex justify-between items-start">
@@ -383,7 +383,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
             <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#0b0f19]">
               
               {/* Cliente SGP */}
-              <div className="bg-[#101726] p-4 rounded-xl border border-white/10 shadow-2xs space-y-3 text-xs">
+              <div className="bg-[#101726] p-4 rounded-xl border border-white/10  space-y-3 text-xs">
                 <h3 className="font-bold text-white font-outfit pb-2 border-b border-slate-100 flex items-center gap-2">
                   <User size={14} className="text-blue-400" /> Detalhes do Assinante
                 </h3>
@@ -440,7 +440,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                     <button
                       type="button"
                       onClick={() => setMapTargetDeal(selectedDeal)}
-                      className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0 transition-colors shadow-2xs"
+                      className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 shrink-0 transition-colors "
                       title="Compartilhar localização e rotas com técnico via WhatsApp"
                     >
                       <Share2 size={11} />
@@ -451,7 +451,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               </div>
 
               {/* Contexto IA */}
-              <div className="bg-gradient-to-br from-indigo-50/80 to-blue-50/80 border border-indigo-100 rounded-xl p-4 shadow-2xs">
+              <div className="bg-gradient-to-br from-indigo-50/80 to-blue-50/80 border border-indigo-100 rounded-xl p-4 ">
                 <div className="flex items-center gap-1.5 text-indigo-700 font-bold uppercase tracking-wider mb-2 text-[10px]">
                   <Activity size={12} />
                   Contexto IA & Telemetria
@@ -465,7 +465,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               </div>
 
               {/* Histórico */}
-              <div className="bg-[#101726] p-4 rounded-xl border border-white/10 shadow-2xs">
+              <div className="bg-[#101726] p-4 rounded-xl border border-white/10 ">
                 <h3 className="font-bold text-white font-outfit mb-3 text-xs flex items-center gap-1.5">
                   <Clock size={14} className="text-blue-400" /> Linha do Tempo
                 </h3>
@@ -491,7 +491,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                 href={`https://wa.me/55${(selectedDeal.telefone || '').replace(/\D/g, '')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 bg-[#101726] hover:bg-[#0b0f19] border border-white/10 text-slate-300 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+                className="flex-1 bg-[#101726] hover:bg-[#0b0f19] border border-white/10 text-slate-300 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 "
               >
                 <MessageSquare size={14} className="text-emerald-600" />
                 <span>WhatsApp</span>
@@ -500,7 +500,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
               {stages.indexOf(selectedDeal.estagio) < stages.length - 1 ? (
                 <button 
                   onClick={() => handleAdvanceStage(selectedDeal)}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition-all  flex items-center justify-center gap-1.5"
                 >
                   <span>Avançar Etapa</span>
                   <ArrowRight size={14} />
@@ -518,7 +518,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
       {/* Modal de Criação de Novo Card */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] rounded-2xl max-w-md w-full p-6 shadow-2xl border border-white/10 animate-in zoom-in-95">
+          <div className="bg-[#101726] rounded-2xl max-w-md w-full p-6  border border-white/10 animate-in zoom-in-95">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
               <h3 className="font-bold text-white font-outfit text-base">
                 Criar Novo {type === 'Suporte' ? 'Chamado de Suporte' : 'Lead Comercial'}
@@ -645,7 +645,7 @@ export default function Kanban({ type }: { type: "Suporte" | "Vendas" | "Cobranc
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-xs transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold  transition-all flex items-center gap-1.5"
                 >
                   {isSaving ? 'Salvando...' : 'Adicionar ao Kanban'}
                 </button>

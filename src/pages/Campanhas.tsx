@@ -72,7 +72,7 @@ export default function Campanhas() {
           </h1>
           <p className="text-sm text-slate-400 mt-1">Disparo em massa, discador automático (FreePBX) e réguas de relacionamento.</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95">
+        <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all  -700/20 hover:scale-105 active:scale-95">
           <Plus size={18} /> Nova Campanha
         </button>
       </header>
@@ -105,7 +105,7 @@ export default function Campanhas() {
 
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
                 <Users size={24} />
               </div>
@@ -118,7 +118,7 @@ export default function Campanhas() {
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-200 rounded-xl flex items-center justify-center text-emerald-600">
                 <CheckCircle2 size={24} />
               </div>
@@ -131,7 +131,7 @@ export default function Campanhas() {
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl shadow-md shadow-none flex items-center gap-4">
+            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl   flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-500/10 border border-amber-200 rounded-xl flex items-center justify-center text-amber-600">
                 <BarChart2 size={24} />
               </div>
@@ -150,7 +150,7 @@ export default function Campanhas() {
             /* Push Notifications Management */
             <div className="space-y-6">
               {/* Form de Disparo Push */}
-              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
+              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center">
@@ -183,7 +183,7 @@ export default function Campanhas() {
                         value={novoPushTitulo} 
                         onChange={(e) => setNovoPushTitulo(e.target.value)}
                         placeholder="Ex: Fatura Pronta para Pagamento ou Aviso de Manutenção" 
-                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600 shadow-inner"
+                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600 "
                         required
                       />
                     </div>
@@ -210,7 +210,7 @@ export default function Campanhas() {
                       onChange={(e) => setNovoPushMensagem(e.target.value)}
                       rows={2} 
                       placeholder="Ex: Olá! Sua fatura do plano Fibra 500MB vence amanhã. Clique para pagar via PIX sem juros." 
-                      className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-3 text-sm text-white outline-none focus:border-indigo-600 shadow-inner"
+                      className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-3 text-sm text-white outline-none focus:border-indigo-600 "
                       required
                     />
                   </div>
@@ -223,7 +223,7 @@ export default function Campanhas() {
                     <button 
                       type="submit" 
                       disabled={loadingPush}
-                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-md shadow-indigo-600/20 active:scale-95 disabled:opacity-50"
+                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all  -600/20 active:scale-95 disabled:opacity-50"
                     >
                       <Send size={16} />
                       {loadingPush ? 'Transmitindo...' : 'Disparar Notificação Push'}
@@ -234,7 +234,7 @@ export default function Campanhas() {
 
               {/* Histórico e Dispositivos */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
+                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
                   <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Smartphone size={18} className="text-slate-500" /> Dispositivos Inscritos
                   </h4>
@@ -253,7 +253,7 @@ export default function Campanhas() {
                   </div>
                 </div>
 
-                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6 shadow-md shadow-none">
+                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
                   <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Bell size={18} className="text-slate-500" /> Histórico de Envios
                   </h4>
@@ -273,14 +273,14 @@ export default function Campanhas() {
             </div>
           ) : (
             /* List */
-            <div className="bg-[#101726] rounded-3xl border border-white/5 overflow-hidden shadow-md shadow-none">
+            <div className="bg-[#101726] rounded-3xl border border-white/5 overflow-hidden  ">
               <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#101726]">
                 <div className="relative w-72">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                   <input 
                     type="text" 
                     placeholder="Buscar campanha..." 
-                    className="w-full bg-[#0b0f19] border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white outline-none focus:border-blue-600/50 shadow-inner"
+                    className="w-full bg-[#0b0f19] border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white outline-none focus:border-blue-600/50 "
                   />
                 </div>
               </div>

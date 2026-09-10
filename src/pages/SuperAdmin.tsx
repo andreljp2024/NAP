@@ -418,14 +418,14 @@ export default function SuperAdmin() {
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#101726] p-6 rounded-2xl border border-white/5">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-100">
+              <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
                 <Sliders size={22} />
               </span>
               <h1 className="text-2xl font-bold text-white font-outfit">Configurações do Sistema</h1>
-              <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+              <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] uppercase font-bold px-2 py-0.5 rounded flex items-center gap-1 tracking-wider">
                 <ShieldCheck size={12} /> Multi-tenant Ativo
               </span>
             </div>
@@ -438,14 +438,14 @@ export default function SuperAdmin() {
             <button
               onClick={handleExportBackup}
               type="button"
-              className="px-3.5 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
+              className="px-4 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
               title="Exportar arquivo JSON com todas as configurações"
             >
               <Download size={14} />
               <span className="hidden sm:inline">Exportar Backup</span>
             </button>
 
-            <label className="cursor-pointer px-3.5 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs">
+            <label className="cursor-pointer px-4 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5">
               <Upload size={14} />
               <span className="hidden sm:inline">Restaurar</span>
               <input type="file" accept=".json" onChange={handleImportBackup} className="hidden" />
@@ -455,7 +455,7 @@ export default function SuperAdmin() {
               onClick={handleSave}
               disabled={saving}
               type="button"
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-none disabled:opacity-50"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2  disabled:opacity-50"
             >
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               <span>{saving ? 'Gravando...' : 'Salvar Alterações'}</span>
@@ -465,16 +465,16 @@ export default function SuperAdmin() {
 
         {/* Toast Notifier */}
         {toastMessage && (
-          <div className={`p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-none transition-all ${
+          <div className={`p-4 rounded-xl text-sm font-medium flex items-center justify-between transition-all ${
             toastMessage.type === 'success' 
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
-              : 'bg-rose-50 text-rose-800 border border-rose-200'
+              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+              : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
           }`}>
             <div className="flex items-center gap-2">
-              {toastMessage.type === 'success' ? <CheckCircle2 size={18} className="text-emerald-600" /> : <AlertTriangle size={18} className="text-rose-600" />}
+              {toastMessage.type === 'success' ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
               <span>{toastMessage.text}</span>
             </div>
-            <button onClick={() => setToastMessage(null)} className="text-xs font-bold underline ml-4">Fechar</button>
+            <button onClick={() => setToastMessage(null)} className="text-xs font-bold underline ml-4 hover:opacity-80">Fechar</button>
           </div>
         )}
 
@@ -511,8 +511,8 @@ export default function SuperAdmin() {
         </div>
 
         {/* Abas de Navegação Principal */}
-        <div className="bg-[#101726] rounded-2xl border border-white/5 shadow-xs overflow-hidden">
-          <div className="flex border-b border-white/5 overflow-x-auto bg-[#0b0f19]/50">
+        <div className="bg-[#101726] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="flex border-b border-white/5 overflow-x-auto bg-[#0b0f19]">
             <TabButton 
               active={activeTab === 'identidade'} 
               onClick={() => setActiveTab('identidade')} 
@@ -692,7 +692,7 @@ export default function SuperAdmin() {
                             type="button"
                             onClick={() => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: hex } })}
                             style={{ backgroundColor: hex }}
-                            className="w-6 h-6 rounded-md border border-white/5 hover:scale-110 transition-transform shadow-2xs"
+                            className="w-6 h-6 rounded-md border border-white/5 hover:scale-110 transition-transform "
                             title={hex}
                           />
                         ))}
@@ -857,16 +857,16 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste SGP */}
-                <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5 mb-1">
-                      <Database size={14} className="text-emerald-700" /> Teste de Conectividade do SGP
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 mb-1">
+                      <Database size={14} className="text-emerald-400" /> Teste de Conectividade do SGP
                     </h4>
-                    <p className="text-xs text-emerald-700">
+                    <p className="text-xs text-slate-400">
                       Executa verificação da API REST, banco de faturas e servidores de autenticação RADIUS.
                     </p>
                     {testResults.sgp && (
-                      <p className="text-xs font-mono text-emerald-900 mt-2 font-bold">
+                      <p className="text-xs font-mono text-emerald-400 mt-2 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg inline-block">
                         ✓ Status: {testResults.sgp.status.toUpperCase()} • Latência: {testResults.sgp.latenciaMs}ms • Versão: {testResults.sgp.versaoApi}
                       </p>
                     )}
@@ -875,7 +875,7 @@ export default function SuperAdmin() {
                     onClick={() => runTest('sgp')}
                     disabled={testing.sgp}
                     type="button"
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-2xs shrink-0"
+                    className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-emerald-500/20 shrink-0"
                   >
                     {testing.sgp ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                     <span>{testing.sgp ? 'Testando...' : 'Testar Conexão SGP'}</span>
@@ -1000,16 +1000,16 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste FreePBX */}
-                <div className="p-4 bg-blue-500/10/50 rounded-2xl border border-blue-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 flex items-center gap-1.5 mb-1">
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5 mb-1">
                       <Server size={14} className="text-blue-400" /> Diagnóstico de Conexão Asterisk / FreePBX
                     </h4>
-                    <p className="text-xs text-blue-400">
+                    <p className="text-xs text-slate-400">
                       Valida credenciais do socket AMI, canais simultâneos e registro de WebRTC.
                     </p>
                     {testResults.freepbx && (
-                      <p className="text-xs font-mono text-blue-900 mt-2 font-bold">
+                      <p className="text-xs font-mono text-blue-400 mt-2 font-bold bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg inline-block">
                         ✓ Status: {testResults.freepbx.status.toUpperCase()} • Latência: {testResults.freepbx.latenciaMs}ms • {testResults.freepbx.versaoAsterisk} • {testResults.freepbx.ramaisRegistrados} Ramais Ativos
                       </p>
                     )}
@@ -1019,7 +1019,7 @@ export default function SuperAdmin() {
                       onClick={() => runTest('freepbx')}
                       disabled={testing.freepbx}
                       type="button"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-2xs shrink-0"
+                      className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 active:scale-95 text-blue-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-blue-500/20 shrink-0"
                     >
                       {testing.freepbx ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                       <span>{testing.freepbx ? 'Testando...' : 'Testar Conexão Asterisk'}</span>
@@ -1027,7 +1027,7 @@ export default function SuperAdmin() {
                     <button
                       onClick={() => fetch('/api/webhooks/freepbx/incoming', { method: 'POST' })}
                       type="button"
-                      className="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0"
+                      className="px-3.5 py-2 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-all shrink-0"
                     >
                       Simular Chamada
                     </button>
@@ -1144,16 +1144,16 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste WABA */}
-                <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5 mb-1">
-                      <MessageCircle size={14} className="text-emerald-700" /> Diagnóstico WhatsApp Business Cloud API
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 mb-1">
+                      <MessageCircle size={14} className="text-emerald-400" /> Diagnóstico WhatsApp Business Cloud API
                     </h4>
-                    <p className="text-xs text-emerald-700">
+                    <p className="text-xs text-slate-400">
                       Verifica token de acesso permanente, qualidade do número de envio na Meta e templates HSM aprovados.
                     </p>
                     {testResults.whatsapp && (
-                      <p className="text-xs font-mono text-emerald-900 mt-2 font-bold">
+                      <p className="text-xs font-mono text-emerald-400 mt-2 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg inline-block">
                         ✓ Número: {testResults.whatsapp.phoneNumber} • Qualidade: {testResults.whatsapp.qualidadeNumero} • {testResults.whatsapp.templatesAprovados} Templates HSM Prontos
                       </p>
                     )}
@@ -1162,7 +1162,7 @@ export default function SuperAdmin() {
                     onClick={() => runTest('whatsapp')}
                     disabled={testing.whatsapp}
                     type="button"
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-2xs shrink-0"
+                    className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-emerald-500/20 shrink-0"
                   >
                     {testing.whatsapp ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                     <span>{testing.whatsapp ? 'Testando...' : 'Testar Conexão WhatsApp'}</span>
@@ -1278,8 +1278,8 @@ export default function SuperAdmin() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'solicitacao_cliente' 
-                        ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-[#101726] border-white/5 text-slate-300'
+                        ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
+                        : 'bg-[#101726] border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1295,8 +1295,8 @@ export default function SuperAdmin() {
 
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'apos_3_falhas' 
-                        ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-[#101726] border-white/5 text-slate-300'
+                        ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
+                        : 'bg-[#101726] border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1312,8 +1312,8 @@ export default function SuperAdmin() {
 
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'imediato' 
-                        ? 'bg-indigo-50/50 border-indigo-300 text-indigo-900' 
-                        : 'bg-[#101726] border-white/5 text-slate-300'
+                        ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
+                        : 'bg-[#101726] border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1330,16 +1330,16 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste IA */}
-                <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 flex items-center gap-1.5 mb-1">
-                      <Sparkles size={14} className="text-indigo-700" /> Diagnóstico de Latência do Gateway Gemini
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5 mb-1">
+                      <Sparkles size={14} className="text-indigo-400" /> Diagnóstico de Latência do Gateway Gemini
                     </h4>
-                    <p className="text-xs text-indigo-700">
+                    <p className="text-xs text-slate-400">
                       Dispara prompt de verificação ao modelo para auditar tempo de resposta e integridade da chave.
                     </p>
                     {testResults.gemini && (
-                      <p className="text-xs font-mono text-indigo-900 mt-2 font-bold">
+                      <p className="text-xs font-mono text-indigo-400 mt-2 font-bold bg-indigo-500/10 border border-indigo-500/20 px-2 py-1 rounded-lg inline-block">
                         ✓ Modelo: {testResults.gemini.modelo} • Latência: {testResults.gemini.latenciaMs}ms • Gateway: {testResults.gemini.provedor}
                       </p>
                     )}
@@ -1348,7 +1348,7 @@ export default function SuperAdmin() {
                     onClick={() => runTest('gemini')}
                     disabled={testing.gemini}
                     type="button"
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-2xs shrink-0"
+                    className="px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 active:scale-95 text-indigo-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-indigo-500/20 shrink-0"
                   >
                     {testing.gemini ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
                     <span>{testing.gemini ? 'Testando...' : 'Testar Conexão IA'}</span>
@@ -1629,7 +1629,7 @@ export default function SuperAdmin() {
                   <button
                     type="button"
                     onClick={handleOpenNewMacro}
-                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-2xs shrink-0 self-start sm:self-auto"
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2  shrink-0 self-start sm:self-auto"
                   >
                     <Plus size={14} />
                     <span>Nova Resposta Rápida</span>
@@ -1645,7 +1645,7 @@ export default function SuperAdmin() {
                       onClick={() => setMacroFilterCategory(cat)}
                       className={`px-3 py-1.5 rounded-xl font-bold transition-colors whitespace-nowrap capitalize ${
                         macroFilterCategory === cat 
-                          ? 'bg-blue-600 text-white shadow-2xs' 
+                          ? 'bg-blue-600 text-white ' 
                           : 'bg-white/5 text-slate-400 hover:bg-white/10'
                       }`}
                     >
@@ -1662,7 +1662,7 @@ export default function SuperAdmin() {
                   {(config.respostasRapidas || [])
                     .filter(m => macroFilterCategory === 'todos' || m.categoria === macroFilterCategory)
                     .map((macro) => (
-                      <div key={macro.id} className="p-4 bg-[#101726] rounded-2xl border border-white/5 hover:border-blue-500/20 transition-all shadow-2xs flex flex-col justify-between group">
+                      <div key={macro.id} className="p-4 bg-[#101726] rounded-2xl border border-white/5 hover:border-blue-500/20 transition-all  flex flex-col justify-between group">
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -1729,7 +1729,7 @@ export default function SuperAdmin() {
         {/* MODAL DE ADICIONAR / EDITAR MACRO */}
         {macroModalOpen && (
           <div className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
-            <div className="bg-[#101726] rounded-3xl p-6 w-full max-w-lg shadow-2xl border border-white/5 animate-in zoom-in-95">
+            <div className="bg-[#101726] rounded-3xl p-6 w-full max-w-lg  border border-white/5 animate-in zoom-in-95">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="p-2 bg-amber-50 text-amber-600 rounded-xl">
@@ -1848,8 +1848,8 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
       type="button"
       className={`px-5 py-3.5 text-xs font-bold flex items-center gap-2 transition-colors border-b-2 whitespace-nowrap ${
         active 
-          ? 'border-blue-600 text-blue-400 bg-[#101726]' 
-          : 'border-transparent text-slate-500 hover:text-slate-200 hover:bg-white/5/50'
+          ? 'border-blue-500 text-blue-400 bg-[#101726]' 
+          : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
       }`}
     >
       {icon}
@@ -1860,19 +1860,19 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
 
 function IntegrationStatusBadge({ title, sub, status, icon, latency }: { title: string; sub: string; status: 'online' | 'alerta'; icon: React.ReactNode; latency: number }) {
   return (
-    <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-2xs flex items-center justify-between">
+    <div className="bg-[#101726] p-4 rounded-xl border border-white/5 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-[#0b0f19] rounded-lg border border-slate-100">
+        <div className="p-2.5 bg-[#0b0f19] rounded-lg border border-white/10">
           {icon}
         </div>
         <div>
-          <h4 className="text-xs font-bold text-white leading-tight">{title}</h4>
-          <span className="text-[10px] text-slate-400 block">{sub}</span>
+          <h4 className="text-[11px] font-bold uppercase tracking-wider text-white leading-tight">{title}</h4>
+          <span className="text-[10px] text-slate-400 block mt-0.5">{sub}</span>
         </div>
       </div>
       <div className="text-right">
-        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           {latency}ms
         </span>
       </div>

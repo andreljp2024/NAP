@@ -110,7 +110,7 @@ export default function GenieACSDashboard() {
       <div className="px-6 py-5 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 z-10">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-inner">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 ">
               <Router size={22} />
             </div>
             <div>
@@ -133,7 +133,7 @@ export default function GenieACSDashboard() {
               placeholder="Buscar Serial, MAC ou IP..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm w-full sm:w-64 transition-all bg-[#0b0f19] text-white placeholder:text-slate-500 shadow-inner outline-none"
+              className="pl-9 pr-4 py-2 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm w-full sm:w-64 transition-all bg-[#0b0f19] text-white placeholder:text-slate-500 outline-none"
             />
           </div>
           <button 
@@ -156,7 +156,7 @@ export default function GenieACSDashboard() {
 
       {/* MÉTRICAS TOP */}
       <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-4 z-10 shrink-0">
-        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-xl flex items-center gap-4">
+        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
           <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center shrink-0">
             <Activity size={24} />
           </div>
@@ -166,7 +166,7 @@ export default function GenieACSDashboard() {
           </div>
         </div>
         
-        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-xl flex items-center gap-4">
+        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
           <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center shrink-0">
             <CheckCircle2 size={24} />
           </div>
@@ -176,7 +176,7 @@ export default function GenieACSDashboard() {
           </div>
         </div>
         
-        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-xl flex items-center gap-4">
+        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
           <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center shrink-0">
             <XCircle size={24} />
           </div>
@@ -186,7 +186,7 @@ export default function GenieACSDashboard() {
           </div>
         </div>
 
-        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-xl flex items-center gap-4">
+        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
           <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center shrink-0">
             <AlertCircle size={24} />
           </div>
@@ -199,7 +199,7 @@ export default function GenieACSDashboard() {
 
       {/* TABELA DE DISPOSITIVOS */}
       <div className="flex-1 px-6 pb-6 overflow-hidden flex flex-col">
-        <div className="flex-1 bg-[#101726] border border-white/5 rounded-2xl shadow-xl flex flex-col overflow-hidden">
+        <div className="flex-1 bg-[#101726] border border-white/5 rounded-2xl flex flex-col overflow-hidden">
           
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">
@@ -234,7 +234,7 @@ export default function GenieACSDashboard() {
                     <tr key={device._id} className="hover:bg-white/[0.02] transition-colors group">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-inner shrink-0 ${device.status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-slate-800 border-white/5 text-slate-500'}`}>
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center border  shrink-0 ${device.status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-slate-800 border-white/5 text-slate-500'}`}>
                             {device.productClass.includes('F670') || device.productClass.includes('HG') ? <Wifi size={20} /> : <Router size={20} />}
                           </div>
                           <div>
@@ -248,7 +248,7 @@ export default function GenieACSDashboard() {
                         <div className="text-xs text-slate-500 font-mono">{device.mac}</div>
                       </td>
                       <td className="p-4">
-                        <span className="bg-[#0b0f19] border border-white/5 px-2.5 py-1 rounded-lg text-xs text-blue-400 font-mono font-bold shadow-inner">
+                        <span className="bg-[#0b0f19] border border-white/5 px-2.5 py-1 rounded-lg text-xs text-blue-400 font-mono font-bold ">
                           {device.ip}
                         </span>
                       </td>

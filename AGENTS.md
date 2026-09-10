@@ -5,7 +5,7 @@ These are the core architectural and design constraints for any AI agent interac
 ## 1. Project Context
 NAP is an Omnichannel SaaS platform built for ISPs (Internet Service Providers).
 It is designed to run completely isolated per ISP on its own dedicated VPS/VM infrastructure.
-The core stack includes Debian 12, FreePBX 17, AVA Asterisk (AI Voice Agent via Gemini), GenieACS (TR-069), WABA (WhatsApp Cloud API), and SGP (Billing/ERP Emulator).
+The core stack includes Debian 12, FreePBX 17, GenieACS (TR-069), WABA (WhatsApp Cloud API), and SGP (Billing/ERP Emulator). The NAP (Node.js backend) acts directly as the AI Voice Agent via Gemini, connecting with Asterisk via AMI/ARI.
 
 ## 2. Tech Stack
 - **Frontend:** React 18, Vite, Tailwind CSS, Lucide React (Icons).

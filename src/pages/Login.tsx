@@ -46,7 +46,7 @@ export default function Login() {
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center  -600/20">
               <span className="text-white font-bold text-xl">N</span>
             </div>
             <span className="font-bold text-2xl text-white tracking-tight font-outfit">NAP <span className="text-blue-500 font-medium text-lg">Omni</span></span>
@@ -78,7 +78,7 @@ export default function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-2 mb-12 justify-center">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center ">
               <span className="text-white font-bold">N</span>
             </div>
             <span className="font-bold text-xl text-slate-900 tracking-tight font-outfit">NAP <span className="text-blue-600 font-medium text-sm">Omni</span></span>
@@ -136,7 +136,7 @@ export default function Login() {
                   type="text" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium shadow-sm"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium "
                   required
                 />
               </div>
@@ -153,7 +153,7 @@ export default function Login() {
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium shadow-sm"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium "
                   required
                 />
               </div>
@@ -162,7 +162,7 @@ export default function Login() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-700 hover:bg-blue-600 text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 mt-4"
+              className="w-full bg-blue-700 hover:bg-blue-600 text-white py-4 rounded-xl font-bold transition-all  -700/20 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 mt-4"
             >
               {loading ? <Loader2 size={20} className="animate-spin" /> : 'Acessar Painel'}
             </button>

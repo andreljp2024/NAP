@@ -60,13 +60,13 @@ export default function PortalFaturas() {
       {loading ? (
         <div className="flex justify-center p-8 text-slate-500">Carregando faturas...</div>
       ) : (
-        <div className="bg-white rounded-3xl shadow-md shadow-sm border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl   border border-slate-200 overflow-hidden relative">
           <div className="divide-y divide-slate-200 relative z-10">
             {faturas.map(fatura => (
               <div key={fatura.id} className="p-5 md:p-6 hover:bg-slate-100/40 transition-colors group">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-3">
                   <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border shadow-inner transition-colors ${
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border  transition-colors ${
                       fatura.status === 'pago' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200 group-hover:bg-emerald-500/20' : 'bg-amber-500/10 text-amber-600 border-amber-200 group-hover:bg-amber-500/20'
                     }`}>
                       <FileText size={22} />
@@ -98,7 +98,7 @@ export default function PortalFaturas() {
                         <button 
                           onClick={() => handleGeneratePix(fatura.id)}
                           disabled={actionStates[fatura.id]?.status === 'loading'}
-                          className="flex-1 md:flex-none bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
+                          className="flex-1 md:flex-none bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all  -700/20 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
                         >
                           {actionStates[fatura.id]?.type === 'pix' && actionStates[fatura.id]?.status === 'loading' ? <Loader2 size={16} className="animate-spin" /> : <QrCode size={16} />}
                           PIX
@@ -106,7 +106,7 @@ export default function PortalFaturas() {
                         <button 
                           onClick={() => handleGenerateBoleto(fatura.id)}
                           disabled={actionStates[fatura.id]?.status === 'loading'}
-                          className="flex-1 md:flex-none bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 shadow-inner"
+                          className="flex-1 md:flex-none bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 "
                         >
                           {actionStates[fatura.id]?.type === 'boleto' && actionStates[fatura.id]?.status === 'loading' ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                           Boleto
@@ -114,7 +114,7 @@ export default function PortalFaturas() {
                       </div>
                     )}
                     {fatura.status === 'pago' && (
-                      <button className="w-full md:w-auto bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-inner">
+                      <button className="w-full md:w-auto bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ">
                         <Download size={16} /> Recibo
                       </button>
                     )}
@@ -129,11 +129,11 @@ export default function PortalFaturas() {
                       <input 
                         readOnly 
                         value={actionStates[fatura.id]?.data} 
-                        className="flex-1 bg-white border border-blue-200 rounded-xl p-3 text-xs text-blue-900 outline-none font-mono shadow-inner focus:ring-2 focus:ring-blue-600/50 transition-all"
+                        className="flex-1 bg-white border border-blue-200 rounded-xl p-3 text-xs text-blue-900 outline-none font-mono  focus:ring-2 focus:ring-blue-600/50 transition-all"
                       />
                       <button 
                         onClick={() => copyPixCode(actionStates[fatura.id]?.data!)}
-                        className="bg-blue-700 text-white p-3 rounded-xl hover:bg-blue-600 flex items-center justify-center transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95 shrink-0"
+                        className="bg-blue-700 text-white p-3 rounded-xl hover:bg-blue-600 flex items-center justify-center transition-all  -700/20 hover:scale-105 active:scale-95 shrink-0"
                       >
                         <Copy size={16} />
                       </button>

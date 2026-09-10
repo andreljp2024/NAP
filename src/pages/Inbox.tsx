@@ -535,7 +535,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
       
       {/* Toast Notifier */}
       {toastMessage && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#101726] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#101726] text-white text-xs font-semibold px-4 py-2.5 rounded-xl  flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
           <CheckCircle size={14} className="text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
@@ -566,7 +566,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('meus')}
               className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'meus' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
+                filterQueue === 'meus' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
               }`}
             >
               <span>Meus</span>
@@ -575,7 +575,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('fila_geral')}
               className={`flex-1 py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
+                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
               }`}
             >
               <span>Espera</span>
@@ -584,7 +584,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('finalizados')}
               className={`flex-1 py-1.5 rounded-lg transition-all ${
-                filterQueue === 'finalizados' ? 'bg-[#101726] text-white shadow-2xs font-bold' : 'hover:text-white'
+                filterQueue === 'finalizados' ? 'bg-[#101726] text-white  font-bold' : 'hover:text-white'
               }`}
             >
               <span>Histórico</span>
@@ -622,7 +622,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   onClick={() => setActiveChatId(chat.id)}
                   className={`p-3.5 cursor-pointer transition-all border-l-4 ${
                     isSelected 
-                      ? 'bg-blue-500/10/70 border-l-blue-600 shadow-2xs' 
+                      ? 'bg-blue-500/10/70 border-l-blue-600 ' 
                       : 'hover:bg-[#0b0f19] border-l-transparent'
                   }`}
                 >
@@ -680,7 +680,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         <div className={`flex-1 flex-col bg-[#0b0f19] relative ${activeChatId ? 'flex' : 'hidden md:flex'} overflow-hidden`}>
           
           {/* Header Superior do Atendimento */}
-          <header className="h-16 border-b border-white/10 bg-[#101726] px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 shadow-2xs">
+          <header className="h-16 border-b border-[#202c33] bg-[#202c33] px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 ">
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setActiveChatId(null)}
@@ -690,8 +690,8 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <ArrowLeft size={18} />
               </button>
 
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-2xs shrink-0">
-                {activeChat.nome_cliente.slice(0, 2).toUpperCase()}
+              <div className="w-10 h-10 bg-slate-600 text-white rounded-full flex items-center justify-center font-bold text-sm  shrink-0 overflow-hidden">
+                <User size={20} className="text-white/80 mt-1" />
               </div>
 
               <div>
@@ -743,7 +743,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               {/* Finalizar / Tabular Atendimento */}
               <button
                 onClick={() => setIsTabulating(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-all shadow-2xs"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-all "
               >
                 <CheckCircle size={13} className="text-emerald-600" />
                 <span className="hidden sm:inline">Finalizar</span>
@@ -755,7 +755,15 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           <div className="flex-1 flex overflow-hidden relative">
             
             {/* Thread de Mensagens */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#0b141a]" style={{ scrollbarWidth: 'thin' }}>
+            <div 
+              className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#0b141a]" 
+              style={{ 
+                scrollbarWidth: 'thin',
+                backgroundImage: 'url("https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png")',
+                backgroundRepeat: 'repeat',
+                backgroundSize: '400px'
+              }}
+            >
               
               {/* Alerta de Início do Chamado & Protocolo */}
               <div className="flex justify-center my-2">
@@ -778,7 +786,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     className={`flex ${isMe || isAi ? 'justify-end' : 'justify-start'} animate-in fade-in-50 duration-150`}
                   >
                     <div 
-                      className={`max-w-[85%] sm:max-w-[70%] rounded-xl p-3 shadow-sm text-xs sm:text-sm leading-relaxed ${
+                      className={`max-w-[85%] sm:max-w-[70%] rounded-xl p-3  text-xs sm:text-sm leading-relaxed ${
                         isNote 
                           ? 'bg-[#3b2d13] text-[#e9edef] w-full max-w-[90%]' 
                           : isClient
@@ -824,7 +832,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
             {/* COLUNA 3: Contexto 360 do Assinante & Ações SGP (Drawer Direito) */}
             {isSgpDrawerOpen && (
-              <aside className="w-80 lg:w-96 border-l border-white/10 bg-[#101726] overflow-y-auto p-4 space-y-4 shrink-0 shadow-none animate-in slide-in-from-right-3 duration-200">
+              <aside className="w-80 lg:w-96 border-l border-white/10 bg-[#101726] overflow-y-auto p-4 space-y-4 shrink-0  animate-in slide-in-from-right-3 duration-200">
                 
                 {/* Header do Drawer */}
                 <div className="flex items-center justify-between pb-2 border-b border-white/10">
@@ -878,7 +886,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
                   <button 
                     onClick={handleKickRadius}
-                    className="w-full py-1.5 bg-[#101726] hover:bg-white/[0.02] border border-white/10 text-slate-300 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                    className="w-full py-1.5 bg-[#101726] hover:bg-white/[0.02] border border-white/10 text-slate-300 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
                   >
                     <RefreshCw size={12} className="text-slate-500" />
                     <span>Reautenticar Sessão (Kick)</span>
@@ -907,7 +915,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     </div>
                     <button 
                       onClick={handleSendPixToChat}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-2xs flex items-center gap-1"
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all  flex items-center gap-1"
                       title="Copiar e colar PIX diretamente no chat"
                     >
                       <Copy size={12} />
@@ -918,7 +926,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   {/* Ação de Desbloqueio 48h */}
                   <button 
                     onClick={handleDesbloqueio48h}
-                    className="w-full py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                    className="w-full py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
                   >
                     <ShieldCheck size={13} className="text-amber-700" />
                     <span>Desbloqueio em Confiança (48h)</span>
@@ -972,7 +980,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     <button
                       type="button"
                       onClick={() => setMapModalOpen(true)}
-                      className="py-1.5 px-2 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+                      className="py-1.5 px-2 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors "
                       title="Ver mapa, consultar CEP ou abrir rotas no GPS"
                     >
                       <MapPin size={11} />
@@ -981,7 +989,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     <button
                       type="button"
                       onClick={() => setMapModalOpen(true)}
-                      className="py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+                      className="py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 transition-colors "
                       title="Disparar rota e dados para técnico via WhatsApp"
                     >
                       <Share2 size={11} />
@@ -995,7 +1003,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
           </div>
 
           {/* COMPOSER OMNICHANNEL MODERNO */}
-          <footer className="border-t border-white/10 bg-[#101726] p-3 sm:p-4 z-20 space-y-2">
+          <footer className="border-t border-[#202c33] bg-[#202c33] p-3 sm:p-4 z-20 space-y-2 shrink-0">
             
             {/* Barra de Modos & Macros Rápidas */}
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1005,7 +1013,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <button
                   onClick={() => setIsInternalNote(false)}
                   className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
-                    !isInternalNote ? 'bg-[#101726] text-blue-400 shadow-2xs font-bold' : 'text-slate-400 hover:text-white'
+                    !isInternalNote ? 'bg-[#2a3942] text-[#00a884]  font-bold' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <MessageCircle size={12} />
@@ -1014,7 +1022,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <button
                   onClick={() => setIsInternalNote(true)}
                   className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
-                    isInternalNote ? 'bg-amber-100 text-amber-900 shadow-2xs font-bold' : 'text-slate-400 hover:text-white'
+                    isInternalNote ? 'bg-amber-100 text-amber-900  font-bold' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <Lock size={12} className="text-amber-700" />
@@ -1027,7 +1035,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <button
                   onClick={handleGeminiCopilot}
                   disabled={isGeneratingCopilot}
-                  className={`px-3 py-1 rounded-lg font-bold text-[11px] whitespace-nowrap transition-all flex items-center gap-1.5 shadow-xs border ${
+                  className={`px-3 py-1 rounded-lg font-bold text-[11px] whitespace-nowrap transition-all flex items-center gap-1.5  border ${
                     copilotSuccess
                       ? 'bg-emerald-500 text-white border-emerald-600'
                       : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
@@ -1055,10 +1063,10 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             </div>
 
             {/* Caixa de Entrada e Envio */}
-            <div className={`flex items-end gap-2 p-1.5 rounded-2xl border transition-all ${
+            <div className={`flex items-end gap-2 p-1.5 rounded-2xl border-none transition-all ${
               isInternalNote 
-                ? 'bg-amber-50/60 border-amber-300 focus-within:ring-2 focus-within:ring-amber-500/20' 
-                : 'bg-[#0b0f19] border-white/10 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500'
+                ? 'bg-[#3b2d13] border-amber-300' 
+                : 'bg-[#2a3942]'
             }`}>
               
               <textarea
@@ -1078,14 +1086,14 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               <button
                 onClick={handleSendMessage}
                 disabled={!messageText.trim()}
-                className={`p-2.5 rounded-xl text-white font-bold transition-all shadow-md active:scale-95 disabled:opacity-40 shrink-0 ${
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all  active:scale-95 disabled:opacity-40 shrink-0 ${
                   isInternalNote 
-                    ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' 
-                    : 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/20'
+                    ? 'bg-amber-600 hover:bg-amber-700' 
+                    : 'bg-[#00a884] hover:bg-[#008f6f]'
                 }`}
                 title="Enviar Mensagem (Enter)"
               >
-                <Send size={16} />
+                <Send size={18} className="ml-0.5" />
               </button>
             </div>
           </footer>
@@ -1094,7 +1102,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
       ) : (
         /* Estado Vazio */
         <div className="flex-1 flex flex-col items-center justify-center bg-[#0b0f19] text-slate-500 p-8 text-center">
-          <div className="w-16 h-16 bg-[#101726] rounded-2xl flex items-center justify-center mb-4 border border-white/10 shadow-none">
+          <div className="w-16 h-16 bg-[#101726] rounded-2xl flex items-center justify-center mb-4 border border-white/10 ">
             <MessageCircle size={28} className="text-slate-400" />
           </div>
           <h3 className="font-outfit text-lg text-slate-200 font-bold mb-1">
@@ -1114,7 +1122,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 animate-in fade-in-50"
             aria-hidden="true"
           />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#101726] rounded-3xl p-6 shadow-2xl border border-white/10 z-50 animate-in zoom-in-95 duration-150">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#101726] rounded-3xl p-6  border border-white/10 z-50 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div>
                 <h3 className="font-bold text-base text-white font-outfit">
@@ -1133,7 +1141,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             {/* Banner de Auto-Tabulação com Gemini */}
             <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center ">
                   <Sparkles size={16} />
                 </div>
                 <div>
@@ -1144,7 +1152,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               <button
                 onClick={handleAutoTabulateGemini}
                 disabled={isAutoTabulating}
-                className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-[11px] font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 active:scale-95"
+                className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-[11px] font-bold rounded-xl  transition-all flex items-center gap-1.5 active:scale-95"
               >
                 {isAutoTabulating ? (
                   <>
@@ -1222,7 +1230,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               </button>
               <button 
                 onClick={handleFinishTicket}
-                className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95"
+                className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all  active:scale-95"
               >
                 Concluir & Tabular
               </button>

@@ -214,7 +214,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in">
       <div 
-        className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95"
+        className="bg-white rounded-3xl border border-slate-200  w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header do Modal */}
@@ -283,14 +283,14 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
                   onChange={(e) => setCepInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleBuscarCep()}
                   placeholder="Digite o CEP (Ex: 04856-200)..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 font-mono shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 font-mono "
                 />
               </div>
               <button
                 type="button"
                 onClick={handleBuscarCep}
                 disabled={loadingCep || !cepInput.trim()}
-                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-xs shrink-0"
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50  shrink-0"
               >
                 {loadingCep ? (
                   <span className="animate-spin text-sm">⏳</span>
@@ -314,7 +314,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
             
             {/* Detalhes do Endereço (Editável / Conferência) */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-2xs space-y-3">
+              <div className="border border-slate-200 rounded-2xl p-4 bg-white  space-y-3">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                     <MapPin size={14} className="text-blue-600" />
@@ -393,7 +393,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
                     value={pontoReferencia}
                     onChange={(e) => setPontoReferencia(e.target.value)}
                     placeholder="Ex: Próximo à Padaria Flor da Primavera / Em frente à CTO-12 / Casa com portão preto"
-                    className="w-full px-3 py-2 bg-amber-50/50 border border-amber-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500 shadow-inner font-medium"
+                    className="w-full px-3 py-2 bg-amber-50/50 border border-amber-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500  font-medium"
                   />
                 </div>
 
@@ -428,9 +428,9 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
 
             {/* Painel de Compartilhamento Direto para o Técnico */}
             <div className="space-y-3">
-              <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-200 rounded-2xl p-4 shadow-2xs">
+              <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-200 rounded-2xl p-4 ">
                 <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center ">
                     <Share2 size={16} />
                   </div>
                   <div>
@@ -447,7 +447,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
                   <button
                     type="button"
                     onClick={handleCompartilharWhatsApp}
-                    className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20 active:scale-98"
+                    className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all  -600/20 active:scale-98"
                   >
                     <Share2 size={15} />
                     <span>Compartilhar no WhatsApp</span>
@@ -456,7 +456,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
                   <button
                     type="button"
                     onClick={handleCopiarTexto}
-                    className="w-full py-2 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-2xs"
+                    className="w-full py-2 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors "
                   >
                     {copiado ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                     <span>{copiado ? 'Texto Copiado!' : 'Copiar Texto da OS'}</span>
@@ -498,7 +498,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
           </div>
 
           {/* Visualizador de Mapa Embutido */}
-          <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+          <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white ">
             <div className="p-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Layers size={15} className="text-slate-500" />
@@ -536,7 +536,7 @@ _Enviado via NAP Telecom (SGP / CRM Integrado)_`;
               />
 
               {/* Overlay com resumo do ponto no mapa */}
-              <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs border border-slate-200 px-3 py-2 rounded-xl shadow-lg max-w-xs text-xs pointer-events-none">
+              <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs border border-slate-200 px-3 py-2 rounded-xl  max-w-xs text-xs pointer-events-none">
                 <p className="font-bold text-slate-900 truncate">{enderecoAtual.nome || 'Local de Instalação'}</p>
                 <p className="text-[11px] text-slate-600 truncate">{enderecoAtual.endereco || fullAddressQuery}</p>
                 {pontoReferencia && (

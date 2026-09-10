@@ -54,7 +54,7 @@ export default function CRM() {
               onClick={() => setCrmView('tabela')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 crmView === 'tabela' 
-                  ? 'bg-[#101726] text-white shadow-2xs' 
+                  ? 'bg-[#101726] text-white ' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -64,7 +64,7 @@ export default function CRM() {
               onClick={() => setCrmView('consulta_avancada_sgp')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
                 crmView === 'consulta_avancada_sgp' 
-                  ? 'bg-blue-600 text-white shadow-2xs' 
+                  ? 'bg-blue-600 text-white ' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -83,11 +83,11 @@ export default function CRM() {
                   setLoading(false);
                 });
             }}
-            className="flex items-center gap-2 bg-[#101726] hover:bg-[#0b0f19] border border-white/5 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors shadow-2xs"
+            className="flex items-center gap-2 bg-[#101726] hover:bg-[#0b0f19] border border-white/5 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors "
           >
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Sync SGP
           </button>
-          <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-700/20 hover:scale-102 active:scale-98">
+          <button className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all  -700/20 hover:scale-102 active:scale-98">
             <UserPlus size={14} /> Novo Contato
           </button>
         </div>
@@ -115,7 +115,7 @@ export default function CRM() {
             />
           </div>
         ) : (
-          <div className="bg-[#101726] rounded-2xl border border-white/5 shadow-md shadow-none overflow-hidden flex flex-col">
+          <div className="bg-[#101726] rounded-2xl border border-white/5   overflow-hidden flex flex-col">
             <div className="p-5 border-b border-white/5 bg-[#101726] flex gap-4 items-center">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-4 top-3 text-slate-500" size={18} />
@@ -124,7 +124,7 @@ export default function CRM() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar por nome, CPF/CNPJ ou telefone..." 
-                  className="w-full pl-11 pr-4 py-2.5 bg-[#0b0f19] border border-white/5 rounded-lg text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 placeholder:text-slate-500 transition-all shadow-inner"
+                  className="w-full pl-11 pr-4 py-2.5 bg-[#0b0f19] border border-white/5 rounded-lg text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 placeholder:text-slate-500 transition-all "
                 />
               </div>
               <button className="flex items-center gap-2 bg-[#0b0f19] border border-white/5 text-slate-400 hover:bg-white/5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
@@ -200,7 +200,7 @@ export default function CRM() {
                                   e.stopPropagation();
                                   setMapTargetCliente(contato);
                                 }}
-                                className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 transition-colors shadow-2xs"
+                                className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 transition-colors "
                                 title="Ver no Mapa / Consultar CEP"
                               >
                                 <MapPin size={13} />
@@ -211,7 +211,7 @@ export default function CRM() {
                                   e.stopPropagation();
                                   setMapTargetCliente(contato);
                                 }}
-                                className="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200 transition-colors shadow-2xs"
+                                className="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200 transition-colors "
                                 title="Compartilhar localização com técnico via WhatsApp"
                               >
                                 <Share2 size={13} />
@@ -245,7 +245,7 @@ export default function CRM() {
                           <div className="flex items-center justify-center gap-2">
                             <button 
                               onClick={() => handleOpenSgpConsulta(contato.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold transition-colors shadow-2xs"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold transition-colors "
                               title="Abrir Consulta Avançada SGP com Financeiro e Ofertas"
                             >
                               <Zap size={13} className="text-blue-400" />
@@ -286,7 +286,7 @@ export default function CRM() {
             className="fixed inset-0 bg-[#0b0f19]/40 backdrop-blur-2xs z-40 md:hidden"
             aria-hidden="true"
           />
-          <div className="absolute top-0 right-0 h-full w-full sm:max-w-xl bg-[#101726] shadow-2xl border-l border-white/5 animate-in slide-in-from-right flex flex-col z-50">
+          <div className="absolute top-0 right-0 h-full w-full sm:max-w-xl bg-[#101726]  border-l border-white/5 animate-in slide-in-from-right flex flex-col z-50">
           <div className="p-6 border-b border-white/5 bg-[#101726] flex justify-between items-start">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
@@ -305,7 +305,7 @@ export default function CRM() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setMapTargetCliente(selectedContato)}
-                className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+                className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors "
                 title="Abrir mapa, consultar CEP ou compartilhar rota via WhatsApp com técnico"
               >
                 <MapPin size={13} className="text-emerald-600" />
@@ -334,14 +334,14 @@ export default function CRM() {
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             
             {/* Componente Integrado de Consulta Avançada SGP dentro da Ficha 360 */}
-            <div className="border border-blue-500/20 rounded-2xl overflow-hidden shadow-xs">
+            <div className="border border-blue-500/20 rounded-2xl overflow-hidden ">
               <SgpAdvancedSearch 
                 initialClienteId={selectedContato.id}
               />
             </div>
 
             {/* AI Summary Block */}
-            <div className="bg-gradient-to-br from-blue-100/40 to-purple-900/20 border border-blue-500/20 rounded-xl p-5 shadow-lg shadow-blue-100/10 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-blue-100/40 to-purple-900/20 border border-blue-500/20 rounded-xl p-5  -100/10 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Zap size={64} className="fill-blue-600" />
               </div>
@@ -358,7 +358,7 @@ export default function CRM() {
               <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
                 <Phone size={16} className="text-blue-400" /> Histórico PABX (FreePBX)
               </h3>
-              <div className="bg-[#0b0f19] border border-white/5 rounded-xl divide-y divide-white/5 shadow-inner">
+              <div className="bg-[#0b0f19] border border-white/5 rounded-xl divide-y divide-white/5 ">
                 <div className="p-4 flex justify-between items-center hover:bg-white/5/40 transition-colors">
                   <div className="flex gap-3 items-center">
                     <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-200 flex items-center justify-center">
@@ -396,7 +396,7 @@ export default function CRM() {
               <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
                 <Trello size={16} className="text-blue-400" /> Histórico de Chamados
               </h3>
-              <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-4 shadow-inner hover:border-slate-600 transition-colors">
+              <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-4  hover:border-slate-600 transition-colors">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-[10px] uppercase tracking-wider font-bold text-blue-400 bg-blue-600/10 border border-blue-500/20 px-2 py-0.5 rounded">Suporte</span>
                   <span className="text-xs font-medium text-slate-500">Há 2 dias</span>
@@ -418,7 +418,7 @@ export default function CRM() {
               <Zap size={14} className="text-blue-400" />
               <span>Abrir no SGP</span>
             </button>
-            <button className="flex-1 bg-blue-700 hover:bg-blue-600 text-white px-4 py-3 rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-700/20">
+            <button className="flex-1 bg-blue-700 hover:bg-blue-600 text-white px-4 py-3 rounded-xl text-xs font-bold transition-all  -700/20">
               Iniciar Atendimento
             </button>
           </div>

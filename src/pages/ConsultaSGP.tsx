@@ -48,7 +48,7 @@ export default function ConsultaSGP() {
   return (
     <div className="flex-1 flex flex-col h-full bg-[#0b0f19] overflow-hidden relative">
       {/* Header */}
-      <div className="p-6 border-b border-white/5 bg-[#101726] z-10 shadow-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="p-6 border-b border-white/5 bg-[#101726] z-10  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
             <Server className="text-blue-400" size={24} />
@@ -60,7 +60,7 @@ export default function ConsultaSGP() {
 
       <div className="flex-1 overflow-y-auto p-6 md:p-8">
         {/* Search Bar */}
-        <div className="bg-[#101726] rounded-2xl border border-white/5 shadow-none p-6 mb-8 max-w-5xl mx-auto">
+        <div className="bg-[#101726] rounded-2xl border border-white/5  p-6 mb-8 max-w-5xl mx-auto">
           <form onSubmit={handleSearch} className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -69,13 +69,13 @@ export default function ConsultaSGP() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Busque por CPF, CNPJ, Nome ou ID..." 
-                className="w-full pl-12 pr-4 py-4 bg-[#0b0f19] border border-white/5 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium placeholder:text-slate-500 shadow-inner"
+                className="w-full pl-12 pr-4 py-4 bg-[#0b0f19] border border-white/5 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all font-medium placeholder:text-slate-500 "
               />
             </div>
             <button 
               type="submit"
               disabled={loading || !query.trim()}
-              className="bg-blue-700 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg shadow-blue-700/20 disabled:opacity-70 flex items-center gap-2 hover:scale-105 active:scale-95"
+              className="bg-blue-700 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold transition-all  -700/20 disabled:opacity-70 flex items-center gap-2 hover:scale-105 active:scale-95"
             >
               {loading ? <Loader2 size={20} className="animate-spin" /> : <Search size={20} />}
               Buscar
@@ -95,14 +95,14 @@ export default function ConsultaSGP() {
         {!loading && resultados && resultados.length > 0 && (
           <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4">
             {resultados.map((res: any) => (
-              <div key={res.id} className="bg-[#101726] rounded-3xl border border-white/5 shadow-lg shadow-slate-200/40 overflow-hidden">
+              <div key={res.id} className="bg-[#101726] rounded-3xl border border-white/5  -200/40 overflow-hidden">
                 
                 {/* Profile Header */}
                 <div className="p-8 border-b border-white/5 bg-gradient-to-br from-slate-900 to-slate-800 text-white relative overflow-hidden">
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                     <div className="flex items-center gap-5">
-                      <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-2xl font-bold font-outfit shadow-xl border-2 border-white/10">
+                      <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-2xl font-bold font-outfit  border-2 border-white/10">
                         {res.nome.charAt(0)}
                       </div>
                       <div>
@@ -165,7 +165,7 @@ export default function ConsultaSGP() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                       {/* Contato Info */}
                       <div className="lg:col-span-1 space-y-6">
-                        <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 shadow-inner">
+                        <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 ">
                           <h3 className="font-bold text-white font-outfit mb-4 text-sm flex items-center gap-2 border-b border-white/5 pb-2">
                             <User size={16} className="text-blue-400" /> Dados de Contato
                           </h3>
@@ -204,7 +204,7 @@ export default function ConsultaSGP() {
                                   <button
                                     type="button"
                                     onClick={() => setMapTargetCliente(res)}
-                                    className="px-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-md text-xs font-bold flex items-center gap-1 transition-colors shadow-2xs"
+                                    className="px-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-100 text-blue-400 border border-blue-500/20 rounded-md text-xs font-bold flex items-center gap-1 transition-colors "
                                   >
                                     <MapPin size={12} />
                                     <span>Mapa & Rotas GPS</span>
@@ -212,7 +212,7 @@ export default function ConsultaSGP() {
                                   <button
                                     type="button"
                                     onClick={() => setMapTargetCliente(res)}
-                                    className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-bold flex items-center gap-1 transition-colors shadow-2xs"
+                                    className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-bold flex items-center gap-1 transition-colors "
                                   >
                                     <Share2 size={12} />
                                     <span>WhatsApp Técnico</span>
@@ -226,14 +226,14 @@ export default function ConsultaSGP() {
 
                       {/* Timeline CRM */}
                       <div className="lg:col-span-2">
-                         <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none">
+                         <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 ">
                            <h3 className="font-bold text-white font-outfit mb-6 text-sm flex items-center gap-2 border-b border-slate-100 pb-3">
                              <Activity size={16} className="text-blue-400" /> Histórico de Atendimentos (Últimos 30 dias)
                            </h3>
                            
                            {res.chamados_recentes.map((chamado: any) => (
                              <div key={chamado.id} className="relative pl-6 pb-6 border-l-2 border-slate-100 last:border-0 last:pb-0">
-                               <div className="absolute -left-[9px] top-0 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white shadow-none"></div>
+                               <div className="absolute -left-[9px] top-0 w-4 h-4 bg-emerald-500 rounded-full border-4 border-white "></div>
                                <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-4">
                                  <div className="flex justify-between items-start mb-2">
                                    <div className="flex items-center gap-2">
@@ -256,12 +256,12 @@ export default function ConsultaSGP() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                       {/* Ações de Cobrança */}
                       <div className="lg:col-span-1 space-y-4">
-                        <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 shadow-inner">
+                        <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 ">
                            <h3 className="font-bold text-white font-outfit mb-4 text-sm flex items-center gap-2 border-b border-white/5 pb-2">
                              <Zap size={16} className="text-amber-500" /> Ações Financeiras
                            </h3>
                            <div className="space-y-3">
-                             <button className="w-full bg-blue-700 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all shadow-md text-sm flex items-center justify-center gap-2">
+                             <button className="w-full bg-blue-700 hover:bg-blue-600 text-white py-3 rounded-xl font-bold transition-all  text-sm flex items-center justify-center gap-2">
                                <MessageCircle size={16} /> Enviar Fatura via WhatsApp
                              </button>
                              {res.status_cliente === 'bloqueado_parcial' && (
@@ -281,10 +281,10 @@ export default function ConsultaSGP() {
                         {res.faturas.map((fatura: any) => (
                           <div key={fatura.id} className={`p-5 rounded-2xl border ${
                             fatura.status === 'atrasado' ? 'bg-red-50/30 border-red-200' : 'bg-[#101726] border-white/5'
-                          } shadow-none transition-all hover:shadow-md`}>
+                          }  transition-all hover:`}>
                             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
                               <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shadow-none ${
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border  ${
                                   fatura.status === 'pago' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 
                                   fatura.status === 'atrasado' ? 'bg-red-50 border-red-200 text-red-600' : 
                                   'bg-amber-50 border-amber-200 text-amber-600'
@@ -337,12 +337,12 @@ export default function ConsultaSGP() {
                   {/* TAB: SUPORTE & CONEXÃO (NOC) */}
                   {activeTab === 'suporte' && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 shadow-inner">
+                      <div className="bg-[#0b0f19] p-6 rounded-2xl border border-white/5 ">
                         <div className="flex justify-between items-center border-b border-white/5 pb-4 mb-4">
                           <h3 className="font-bold text-white font-outfit text-sm flex items-center gap-2 uppercase tracking-wider">
                             <Router size={16} className="text-blue-400" /> Detalhes da Conexão (Radius)
                           </h3>
-                          <div className="flex items-center gap-2 bg-[#101726] px-3 py-1 rounded-full border border-white/5 shadow-none">
+                          <div className="flex items-center gap-2 bg-[#101726] px-3 py-1 rounded-full border border-white/5 ">
                             <span className="flex h-2.5 w-2.5 relative">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -352,29 +352,29 @@ export default function ConsultaSGP() {
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4">
-                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-none">
+                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 ">
                             <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1">Plano Atual</p>
                             <p className="font-bold text-white text-sm">{res.conexao.plano}</p>
                           </div>
-                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-none">
+                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 ">
                             <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1">Uptime</p>
                             <p className="font-bold text-white text-sm">{res.conexao.uptime}</p>
                           </div>
-                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-none">
+                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 ">
                             <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1">IP Designado</p>
                             <p className="font-mono text-sm font-bold text-white">{res.conexao.ip}</p>
                           </div>
-                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 shadow-none">
+                          <div className="bg-[#101726] p-4 rounded-xl border border-white/5 ">
                             <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1">Sinal Óptico (ONU)</p>
                             <p className="font-mono text-sm font-bold text-emerald-600">{res.conexao.sinal_optico}</p>
                           </div>
                         </div>
 
                         <div className="mt-6 flex gap-3">
-                           <button className="flex-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 shadow-none">
+                           <button className="flex-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ">
                              <Zap size={16} /> Kick (Derrubar Conexão)
                            </button>
-                           <button className="flex-1 bg-[#101726] hover:bg-white/5 border border-white/5 text-slate-300 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 shadow-none">
+                           <button className="flex-1 bg-[#101726] hover:bg-white/5 border border-white/5 text-slate-300 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ">
                              <Activity size={16} /> Extrato de Navegação
                            </button>
                         </div>
@@ -394,11 +394,11 @@ export default function ConsultaSGP() {
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
                         {res.planos_disponiveis.map((plano: any) => (
-                          <div key={plano.id} className={`p-6 rounded-2xl border-2 transition-all cursor-pointer hover:shadow-lg ${
+                          <div key={plano.id} className={`p-6 rounded-2xl border-2 transition-all cursor-pointer hover: ${
                             plano.destaque ? 'border-blue-600 bg-blue-500/10/30' : 'border-white/5 bg-[#101726] hover:border-blue-300'
                           }`}>
                             {plano.destaque && (
-                              <span className="inline-block bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md mb-4 shadow-none">
+                              <span className="inline-block bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md mb-4 ">
                                 Recomendado pela IA
                               </span>
                             )}
@@ -409,8 +409,8 @@ export default function ConsultaSGP() {
                               R$ {plano.valor.toFixed(2).replace('.', ',')} <span className="text-sm font-medium text-slate-500">/mês</span>
                             </p>
                             
-                            <button className={`w-full py-3 rounded-xl font-bold transition-all shadow-none ${
-                              plano.destaque ? 'bg-blue-700 hover:bg-blue-800 text-white shadow-blue-700/20' : 'bg-white/5 hover:bg-white/10 text-slate-200 border border-white/5'
+                            <button className={`w-full py-3 rounded-xl font-bold transition-all  ${
+                              plano.destaque ? 'bg-blue-700 hover:bg-blue-800 text-white -700/20' : 'bg-white/5 hover:bg-white/10 text-slate-200 border border-white/5'
                             }`}>
                               Ofertar Upgrade
                             </button>

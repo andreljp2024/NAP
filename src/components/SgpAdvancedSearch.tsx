@@ -286,7 +286,7 @@ export default function SgpAdvancedSearch({
   };
 
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col ${className}`}>
+    <div className={`bg-white rounded-2xl border border-slate-200  overflow-hidden flex flex-col ${className}`}>
       
       {/* Header com Barra de Consulta Rápida SGP */}
       <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/80">
@@ -327,13 +327,13 @@ export default function SgpAdvancedSearch({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por ID SGP (#1001), CPF/CNPJ, Telefone ou Nome..."
-              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600 shadow-2xs font-medium"
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600  font-medium"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !searchTerm.trim()}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-xs"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 "
           >
             {loading ? <Loader2 size={15} className="animate-spin" /> : <Search size={15} />}
             <span>Consultar</span>
@@ -419,7 +419,7 @@ export default function SgpAdvancedSearch({
               </div>
 
               {/* Informações do Plano Contratado Atual */}
-              <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 flex items-center gap-4 text-xs shadow-2xs">
+              <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 flex items-center gap-4 text-xs ">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block leading-tight">
                     Plano Contratado
@@ -469,7 +469,7 @@ export default function SgpAdvancedSearch({
                 <button
                   type="button"
                   onClick={() => setMapModalOpen(true)}
-                  className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors "
                   title="Ver mapa, consultar CEP ou obter rota do técnico"
                 >
                   <MapPin size={13} />
@@ -479,7 +479,7 @@ export default function SgpAdvancedSearch({
                 <button
                   type="button"
                   onClick={() => setMapModalOpen(true)}
-                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors "
                   title="Enviar rota e localização via WhatsApp para o técnico em rota"
                 >
                   <Share2 size={13} />
@@ -619,7 +619,7 @@ export default function SgpAdvancedSearch({
                         <button
                           onClick={() => handleEnviarSegundaVia(fatura, 'whatsapp')}
                           disabled={enviandoFaturaId === fatura.id}
-                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs hover:scale-102 active:scale-98 disabled:opacity-50"
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all  hover:scale-102 active:scale-98 disabled:opacity-50"
                           title="Enviar 2ª via da fatura diretamente para o WhatsApp do cliente"
                         >
                           {enviandoFaturaId === fatura.id ? (
@@ -656,7 +656,7 @@ export default function SgpAdvancedSearch({
                       key={plano.id} 
                       className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
                         plano.destaque 
-                          ? 'bg-blue-50/40 border-blue-200 shadow-xs' 
+                          ? 'bg-blue-50/40 border-blue-200 ' 
                           : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -691,7 +691,7 @@ export default function SgpAdvancedSearch({
                       <button
                         onClick={() => handleOpenOfertaModal(plano)}
                         disabled={ofertandoPlanoId === plano.id}
-                        className="w-full py-2 px-3 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs hover:scale-101 active:scale-99 disabled:opacity-50"
+                        className="w-full py-2 px-3 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all  hover:scale-101 active:scale-99 disabled:opacity-50"
                       >
                         {ofertandoPlanoId === plano.id ? (
                           <Loader2 size={13} className="animate-spin" />
@@ -759,7 +759,7 @@ export default function SgpAdvancedSearch({
       {/* Modal para Confirmar Registro de Oferta no SGP */}
       {ofertaModalOpen && selectedPlanoParaOferta && cliente && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-5 sm:p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200  max-w-md w-full p-5 sm:p-6 space-y-4">
             
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
@@ -830,7 +830,7 @@ export default function SgpAdvancedSearch({
                 type="button"
                 onClick={handleConfirmarRegistroOferta}
                 disabled={ofertandoPlanoId === selectedPlanoParaOferta.id}
-                className="flex-1 py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50 shadow-md shadow-blue-700/20"
+                className="flex-1 py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50  -700/20"
               >
                 {ofertandoPlanoId === selectedPlanoParaOferta.id ? (
                   <Loader2 size={14} className="animate-spin" />

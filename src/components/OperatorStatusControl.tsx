@@ -93,7 +93,7 @@ export default function OperatorStatusControl() {
       {/* Botão de Controle de Estado do Operador */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all shadow-2xs ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all  ${
           activeOption.badgeBg
         } hover:opacity-95`}
         title="Alternar estado do operador (NR-17 / Pausas)"
@@ -119,7 +119,7 @@ export default function OperatorStatusControl() {
             className="fixed inset-0 z-40" 
             aria-hidden="true" 
           />
-          <div className="absolute right-0 top-11 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-2 animate-in fade-in-50 zoom-in-95">
+          <div className="absolute right-0 top-11 w-64 bg-white border border-slate-200 rounded-2xl  z-50 p-2 animate-in fade-in-50 zoom-in-95">
             <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Status do Operador</span>
               <span className="text-[10px] text-slate-400 font-mono">NR-17 Compliance</span>

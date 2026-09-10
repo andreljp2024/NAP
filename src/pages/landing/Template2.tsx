@@ -10,7 +10,7 @@ export default function Template2() {
       <header className="fixed top-0 w-full z-50 bg-[#090014]/60 backdrop-blur-xl border-b border-purple-500/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center [0_0_20px_rgba(168,85,247,0.4)]">
               <Zap size={20} className="text-white fill-white" />
             </div>
             <span className="font-bold text-2xl tracking-tight">DJD <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-black italic">Telecom</span></span>
@@ -26,7 +26,7 @@ export default function Template2() {
             <Link to="/portal" className="hidden md:flex items-center gap-2 text-sm font-bold text-purple-200 hover:text-white transition-colors">
               Central do Assinante
             </Link>
-            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full text-sm font-bold hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-2 uppercase tracking-wide">
+            <Link to="/login" className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full text-sm font-bold hover:[0_0_30px_rgba(168,85,247,0.6)] transition-all flex items-center gap-2 uppercase tracking-wide">
               Contratar
             </Link>
           </div>
@@ -129,9 +129,9 @@ export default function Template2() {
 
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl">
             {[
-              { mb: "400", name: "Start", price: "79,90", desc: "Perfeito para streaming", glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.3)]" },
-              { mb: "700", name: "Pro Gamer", price: "99,90", desc: "Ping otimizado para jogos", glow: "shadow-[0_0_40px_rgba(236,72,153,0.4)] border-pink-500/50", highlight: true },
-              { mb: "1000", name: "Extreme", price: "149,90", desc: "Upload simétrico máximo", glow: "hover:shadow-[0_0_40px_rgba(249,115,22,0.3)]" }
+              { mb: "400", name: "Start", price: "79,90", desc: "Perfeito para streaming", glow: "hover:[0_0_40px_rgba(168,85,247,0.3)]" },
+              { mb: "700", name: "Pro Gamer", price: "99,90", desc: "Ping otimizado para jogos", glow: "[0_0_40px_rgba(236,72,153,0.4)] border-pink-500/50", highlight: true },
+              { mb: "1000", name: "Extreme", price: "149,90", desc: "Upload simétrico máximo", glow: "hover:[0_0_40px_rgba(249,115,22,0.3)]" }
             ].map((plan, i) => (
               <motion.div 
                 key={i}

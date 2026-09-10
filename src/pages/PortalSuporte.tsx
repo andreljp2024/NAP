@@ -50,7 +50,7 @@ export default function PortalSuporte() {
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full pb-24">
       {/* CTI / Webphone Banner */}
       {activeCall && (
-        <div className="bg-slate-900 rounded-3xl p-6 mb-8 text-white shadow-2xl flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4">
+        <div className="bg-slate-900 rounded-3xl p-6 mb-8 text-white  flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4">
           <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center mb-4 relative">
             <div className="absolute inset-0 rounded-full border border-emerald-500 animate-ping"></div>
             <PhoneCall className="text-emerald-500" size={32} />
@@ -61,7 +61,7 @@ export default function PortalSuporte() {
           
           <button 
             onClick={handleWebphone}
-            className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-red-500/20 transition-all active:scale-95 flex items-center gap-2"
+            className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-bold  -500/20 transition-all active:scale-95 flex items-center gap-2"
           >
             <PhoneCall className="rotate-[135deg]" size={18} /> Encerrar Ligação
           </button>
@@ -77,7 +77,7 @@ export default function PortalSuporte() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {/* Card: Ligar para Suporte (WebRTC) */}
-        <div className="bg-gradient-to-br from-blue-700 to-indigo-800 p-6 rounded-3xl text-white shadow-lg relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-blue-700 to-indigo-800 p-6 rounded-3xl text-white  relative overflow-hidden group">
           <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
           <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm mb-4">
             <PhoneCall size={24} className="text-blue-100" />
@@ -87,14 +87,14 @@ export default function PortalSuporte() {
           <button 
             onClick={handleWebphone}
             disabled={activeCall}
-            className="bg-white text-blue-900 px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-blue-50 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+            className="bg-white text-blue-900 px-5 py-2.5 rounded-xl text-sm font-bold  hover:bg-blue-50 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
           >
             {activeCall ? 'Ligação em andamento...' : 'Iniciar Chamada de Voz'}
           </button>
         </div>
 
         {/* Card: Webchat / Fila */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200  relative overflow-hidden group">
           <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mb-4 border border-emerald-100">
             <MessageSquare size={24} className="text-emerald-600" />
           </div>
@@ -105,7 +105,7 @@ export default function PortalSuporte() {
               const widget = document.querySelector('.webchat-widget-toggle') as HTMLButtonElement;
               if (widget) widget.click();
             }}
-            className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-700 transition-all active:scale-95 shadow-emerald-600/20 flex items-center gap-2"
+            className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold  hover:bg-emerald-700 transition-all active:scale-95 -600/20 flex items-center gap-2"
           >
             Entrar na Fila de Chat
           </button>
@@ -124,7 +124,7 @@ export default function PortalSuporte() {
       ) : (
         <div className="grid gap-4">
           {chamados.map(chamado => (
-            <div key={chamado.id} className="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 hover:border-blue-600/50 transition-all group">
+            <div key={chamado.id} className="bg-white p-5 rounded-3xl  border border-slate-200 hover:border-blue-600/50 transition-all group">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 border border-slate-200">
@@ -150,7 +150,7 @@ export default function PortalSuporte() {
 
           {chamados.length === 0 && (
             <div className="bg-slate-50 p-8 rounded-3xl border border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 mb-3 shadow-sm">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 mb-3 ">
                 <CheckCircle2 size={24} />
               </div>
               <h3 className="text-base font-bold text-slate-900 font-outfit mb-1">Nenhum chamado aberto</h3>

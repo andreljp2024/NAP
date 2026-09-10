@@ -95,109 +95,115 @@ export default function Operadores() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white font-outfit mb-2">Gestão de Operadores</h1>
-            <p className="text-slate-400">Controle de acessos, ramais e filas de atendimento do provedor.</p>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+                <Users size={22} />
+              </span>
+              <h1 className="text-2xl font-bold text-white font-outfit">Gestão de Operadores</h1>
+            </div>
+            <p className="text-sm text-slate-500">Controle de acessos, ramais Asterisk e filas de atendimento omnichannel.</p>
           </div>
           <button 
             onClick={openNewModal}
-            className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all "
           >
             <Plus size={18} /> Novo Operador
           </button>
         </div>
 
         {/* KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-100">
-              <Users size={24} className="text-blue-400" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+              <Users size={24} />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Total de Contas</p>
-              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.total}</h3>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">Total de Contas</p>
+              <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.total}</h3>
             </div>
           </div>
-          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100">
-              <Activity size={24} className="text-emerald-600" />
+          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <Activity size={24} />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Operadores Online</p>
-              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.online}</h3>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">Operadores Online</p>
+              <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.online}</h3>
             </div>
           </div>
-          <div className="bg-[#101726] p-6 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center border border-amber-100">
-              <PauseCircle size={24} className="text-amber-600" />
+          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <PauseCircle size={24} />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Em Pausa (NR-17)</p>
-              <h3 className="text-2xl font-bold text-white font-outfit">{kpis.pausa}</h3>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">Em Pausa (NR-17)</p>
+              <h3 className="text-2xl font-bold text-white font-outfit leading-none">{kpis.pausa}</h3>
             </div>
           </div>
         </div>
 
-        {/* Toolbar */}
-        <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 shadow-none flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Buscar por nome, e-mail ou ramal..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm text-white outline-none focus:border-blue-600/50 shadow-inner"
-            />
+        {/* Table & Toolbar Container */}
+        <div className="bg-[#101726] border border-white/5 rounded-2xl overflow-hidden flex flex-col">
+          {/* Toolbar */}
+          <div className="p-5 border-b border-white/5 bg-[#0b0f19]/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="relative w-full sm:max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <input 
+                type="text" 
+                placeholder="Buscar por nome, e-mail ou ramal..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm text-white outline-none focus:border-blue-600 transition-all "
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Table */}
-        <div className="bg-[#101726] border border-white/5 rounded-2xl shadow-none overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Table */}
+          <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#0b0f19]/50 border-b border-white/5">
-                  <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Operador</th>
-                  <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Comunicações</th>
-                  <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Permissões & Filas</th>
-                  <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Status</th>
-                  <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">Ações</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Operador</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Comunicações</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Permissões & Filas</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Status</th>
+                  <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredOperadores.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500 text-sm">
+                    <td colSpan={5} className="px-5 py-12 text-center text-slate-500 text-sm">
                       Nenhum operador encontrado com estes filtros.
                     </td>
                   </tr>
                 ) : (
                   filteredOperadores.map((op) => (
-                    <tr key={op.id} className="hover:bg-[#0b0f19]/50 transition-colors group">
-                      <td className="px-6 py-4">
+                    <tr key={op.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 text-slate-500 font-bold font-outfit">
+                          <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 text-slate-400 font-bold font-outfit ">
                             {op.nome.charAt(0)}
                           </div>
                           <div>
                             <p className="font-bold text-white text-sm">{op.nome}</p>
-                            <p className="text-xs text-slate-500">{op.email}</p>
+                            <p className="text-[11px] text-slate-500">{op.email}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-4">
                         <div className="flex flex-col gap-1.5">
                           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                            <Phone size={12} className="text-emerald-600" />
-                            <span className="font-mono bg-[#0b0f19] px-1.5 py-0.5 rounded text-emerald-600 border border-emerald-200">SIP/{op.ramal}</span>
+                            <Phone size={14} className="text-emerald-500" />
+                            <span className="font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded text-emerald-400 border border-emerald-500/20 font-bold">SIP/{op.ramal}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                            <MessageCircle size={12} className="text-blue-400" />
+                            <MessageCircle size={14} className="text-blue-400" />
                             <span>WhatsApp API</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-4">
                         <div className="flex flex-col items-start gap-2">
                           <div className="flex items-center gap-1.5">
                             {op.permissao === 'Admin' ? (
@@ -205,12 +211,12 @@ export default function Operadores() {
                                 <Shield size={10} /> {op.permissao}
                               </span>
                             ) : (
-                              <span className="bg-white/5 text-slate-400 border border-white/5 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                              <span className="bg-[#0b0f19] text-slate-400 border border-white/5 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                                 <User size={10} /> {op.permissao}
                               </span>
                             )}
                           </div>
-                          <div className="flex gap-1 flex-wrap">
+                          <div className="flex gap-1 flex-wrap max-w-[200px]">
                             {op.filas.map((fila, idx) => (
                               <span key={idx} className="bg-[#0b0f19] border border-white/5 text-slate-400 px-2 py-0.5 rounded text-[10px] font-medium">
                                 {fila}
@@ -219,23 +225,23 @@ export default function Operadores() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold ${
-                          op.status === 'online' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                          op.status === 'pausa' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-white/5 text-slate-400 border border-white/5'
+                      <td className="px-5 py-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                          op.status === 'online' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                          op.status === 'pausa' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                          'bg-slate-800 text-slate-400 border-white/5'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
                             op.status === 'online' ? 'bg-emerald-400 animate-pulse' :
-                            op.status === 'pausa' ? 'bg-amber-400' : 'bg-[#0b0f19]0'
+                            op.status === 'pausa' ? 'bg-amber-400' : 'bg-slate-500'
                           }`}></span>
                           {op.status === 'online' ? 'Livre' : op.status === 'pausa' ? 'Em Pausa' : 'Deslogado'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-5 py-4 text-center">
                         <button 
                           onClick={() => openEditModal(op)}
-                          className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
+                          className="p-2 text-slate-500 hover:text-blue-400 bg-transparent hover:bg-blue-500/10 rounded-lg transition-colors border border-transparent hover:border-blue-500/20"
                         >
                           <Settings size={18} />
                         </button>
@@ -251,77 +257,77 @@ export default function Operadores() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="absolute inset-0 bg-[#0b0f19]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/5 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#0b0f19]/50">
-              <h2 className="text-xl font-bold text-white font-outfit">
+        <div className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl  w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
+              <h2 className="text-lg font-bold text-white font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
               </h2>
               <button onClick={closeModal} className="text-slate-400 hover:text-white transition-colors">
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
             
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nome Completo</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nome Completo</label>
                   <input 
                     type="text" 
                     value={formData.nome || ''}
                     onChange={(e) => setFormData({...formData, nome: e.target.value})}
                     placeholder="Ex: João Silva"
-                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">E-mail</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">E-mail</label>
                   <input 
                     type="email" 
                     value={formData.email || ''}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="joao@provedor.com.br"
-                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Ramal SIP (FreePBX)</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Ramal SIP (FreePBX)</label>
                   <input 
                     type="text" 
                     value={formData.ramal || ''}
                     onChange={(e) => setFormData({...formData, ramal: e.target.value})}
                     placeholder="Ex: 2001"
-                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm font-mono text-emerald-600 outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-emerald-400 outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Nível de Acesso</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nível de Acesso</label>
                   <select 
                     value={formData.permissao || 'Operador'}
                     onChange={(e) => setFormData({...formData, permissao: e.target.value})}
-                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   >
                     <option value="Operador">Operador (Padrão)</option>
                     <option value="Admin">Administrador</option>
                   </select>
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Filas (Separar por vírgula)</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Filas (Separar por vírgula)</label>
                   <input 
                     type="text" 
                     value={Array.isArray(formData.filas) ? formData.filas.join(', ') : formData.filas || ''}
                     onChange={(e) => setFormData({...formData, filas: e.target.value.split(',').map(s => s.trim()).filter(Boolean)})}
                     placeholder="Ex: Suporte N1, Vendas"
-                    className="w-full bg-[#101726] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 shadow-none"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-white/5 flex justify-between items-center bg-[#0b0f19]/50">
+            <div className="p-5 border-t border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
               {editingOp ? (
                 <button 
                   onClick={() => handleDelete(editingOp.id)}
-                  className="flex items-center gap-2 text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors"
+                  className="flex items-center gap-2 text-red-400 hover:bg-red-500/10 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
                 >
                   <Trash2 size={16} /> Remover
                 </button>
@@ -330,14 +336,14 @@ export default function Operadores() {
               <div className="flex gap-3">
                 <button 
                   onClick={closeModal}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   onClick={handleSave}
                   disabled={!formData.nome || !formData.email}
-                  className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 disabled:opacity-50 disabled:hover:scale-100"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all  disabled:opacity-50 active:scale-95"
                 >
                   <Save size={16} /> Salvar
                 </button>

@@ -12,7 +12,7 @@ export default function Template1() {
       <header className="fixed top-0 w-full z-50 bg-[#060b14]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center  -600/20">
               <span className="font-bold text-xl">N</span>
             </div>
             <span className="font-bold text-2xl tracking-tight">NAP <span className="text-blue-500 font-medium text-lg">Fibra</span></span>
@@ -85,7 +85,7 @@ export default function Template1() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:shadow-[0_0_60px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+            <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all [0_0_40px_rgba(37,99,235,0.4)] hover:[0_0_60px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               Ver Planos Disponíveis
             </button>
             <Link to="/portal" className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold text-lg transition-all border border-white/10 hover:border-white/20 flex items-center justify-center">

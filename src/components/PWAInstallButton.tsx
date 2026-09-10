@@ -16,7 +16,7 @@ export const PWAInstallButton: React.FC = () => {
     return (
       <button
         onClick={install}
-        className="flex items-center gap-2 rounded-xl bg-blue-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-blue-700/20 hover:bg-blue-600 transition-all active:scale-95"
+        className="flex items-center gap-2 rounded-xl bg-blue-700 px-4 py-2 text-sm font-bold text-white  -700/20 hover:bg-blue-600 transition-all active:scale-95"
       >
         <Download size={18} />
         Instalar App
@@ -38,7 +38,7 @@ export const PWAInstallButton: React.FC = () => {
 
         {showIOSGuide && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-            <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl border border-slate-200 relative">
+            <div className="w-full max-w-sm rounded-3xl bg-white p-6  border border-slate-200 relative">
               <button 
                 onClick={() => setShowIOSGuide(false)}
                 className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"

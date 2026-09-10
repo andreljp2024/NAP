@@ -21,7 +21,7 @@ export default function PortalConta() {
 
       <div className="space-y-6">
         {/* Dados Pessoais */}
-        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl  border border-slate-200 overflow-hidden relative">
           <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 flex items-center justify-center">
               <User size={20} />
@@ -35,7 +35,7 @@ export default function PortalConta() {
                 type="text" 
                 defaultValue="João Silva" 
                 disabled
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium shadow-inner"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium "
               />
               <p className="text-[10px] text-slate-500 mt-2 font-medium">Alteração de titularidade apenas via suporte.</p>
             </div>
@@ -45,7 +45,7 @@ export default function PortalConta() {
                 type="text" 
                 defaultValue="111.222.333-44" 
                 disabled
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium shadow-inner"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed font-medium "
               />
             </div>
             <div>
@@ -55,7 +55,7 @@ export default function PortalConta() {
                 <input 
                   type="email" 
                   defaultValue="joao.silva@email.com" 
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900 shadow-inner transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900  transition-all"
                 />
               </div>
             </div>
@@ -66,7 +66,7 @@ export default function PortalConta() {
                 <input 
                   type="tel" 
                   defaultValue="+55 11 99999-9999" 
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900 shadow-inner transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900  transition-all"
                 />
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function PortalConta() {
           <div className="p-5 bg-white border-t border-slate-200 flex justify-end relative z-10">
             <button 
               onClick={handleSave}
-              className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 bg-blue-700 hover:bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all  -700/20 hover:scale-105 active:scale-95"
             >
               <Save size={18} />
               {loading ? 'Salvando...' : 'Salvar Alterações'}
@@ -83,7 +83,7 @@ export default function PortalConta() {
         </div>
 
         {/* Segurança */}
-        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl  border border-slate-200 overflow-hidden relative">
           <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center">
               <Shield size={20} />
@@ -98,7 +98,7 @@ export default function PortalConta() {
                 <input 
                   type="password" 
                   placeholder="Deixe em branco para não alterar" 
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900 shadow-inner transition-all placeholder:text-slate-600"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900  transition-all placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function PortalConta() {
         </div>
 
         {/* Notificações Push & Instalação PWA */}
-        <div className="bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden relative">
+        <div className="bg-white rounded-3xl  border border-slate-200 overflow-hidden relative">
           <div className="p-5 md:p-6 border-b border-slate-200 bg-white flex items-center justify-between relative z-10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center">
@@ -132,7 +132,7 @@ export default function PortalConta() {
           <div className="p-5 md:p-6 space-y-6 relative z-10">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-blue-600 shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-blue-600 ">
                   <BellRing size={20} />
                 </div>
                 <div>
@@ -145,14 +145,14 @@ export default function PortalConta() {
                   <button
                     onClick={requestPermission}
                     disabled={loadingPush}
-                    className="px-4 py-2.5 bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                    className="px-4 py-2.5 bg-blue-700 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-all  active:scale-95 disabled:opacity-50"
                   >
                     {loadingPush ? 'Ativando...' : 'Permitir Notificações'}
                   </button>
                 ) : (
                   <button
                     onClick={() => triggerTestPush({ title: 'Portal NAP', body: 'Push de teste entregue com sucesso no seu dispositivo!' })}
-                    className="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl transition-all shadow-xs active:scale-95 flex items-center gap-1.5"
+                    className="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl transition-all  active:scale-95 flex items-center gap-1.5"
                   >
                     <CheckCircle2 size={14} className="text-emerald-600" />
                     Enviar Teste Push
@@ -163,7 +163,7 @@ export default function PortalConta() {
 
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 ">
                   <Smartphone size={20} />
                 </div>
                 <div>

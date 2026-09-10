@@ -27,7 +27,7 @@ export default function CTIReverso() {
   if (!call) return null;
 
   return (
-    <div className="fixed top-6 right-6 w-80 bg-white text-slate-900 rounded-3xl shadow-lg shadow-sm border border-slate-200 overflow-hidden animate-in slide-in-from-top-10 z-[100]">
+    <div className="fixed top-6 right-6 w-80 bg-white text-slate-900 rounded-3xl   border border-slate-200 overflow-hidden animate-in slide-in-from-top-10 z-[100]">
       <div className="bg-white border-b border-slate-200 p-5 flex items-center gap-4">
         <div className="w-12 h-12 bg-blue-600/10 border border-blue-200 rounded-2xl flex items-center justify-center animate-pulse">
           <PhoneIncoming size={22} className="text-blue-600" />
@@ -48,13 +48,13 @@ export default function CTIReverso() {
               navigate('/crm');
               setCall(null);
             }}
-            className="flex-1 bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-blue-700/20 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl text-sm transition-all  -700/20 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
             <PhoneForwarded size={18} /> Abrir Ficha
           </button>
           <button 
             onClick={() => setCall(null)}
-            className="w-12 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 rounded-xl flex items-center justify-center transition-all shadow-inner"
+            className="w-12 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 rounded-xl flex items-center justify-center transition-all "
           >
             <X size={20} />
           </button>

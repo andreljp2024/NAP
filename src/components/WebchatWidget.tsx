@@ -60,7 +60,7 @@ export default function WebchatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="webchat-widget-toggle fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#128C7E] hover:scale-105 transition-all z-50"
+          className="webchat-widget-toggle fixed bottom-20 md:bottom-6 right-4 md:right-6 w-14 h-14 bg-[#25D366] text-white rounded-full  flex items-center justify-center hover:bg-[#128C7E] hover:scale-105 transition-all z-50"
         >
           <MessageCircle size={28} />
         </button>
@@ -68,7 +68,7 @@ export default function WebchatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 w-full md:w-[380px] h-[85vh] md:h-[600px] bg-[#efeae2] md:rounded-2xl border border-slate-200 shadow-2xl flex flex-col z-50 overflow-hidden  transition-all">
+        <div className="fixed bottom-0 md:bottom-6 right-0 md:right-6 w-full md:w-[380px] h-[85vh] md:h-[600px] bg-[#efeae2] md:rounded-2xl border border-slate-200  flex flex-col z-50 overflow-hidden  transition-all">
           {/* Header */}
           <div className="bg-[#00a884] text-white p-4 flex justify-between items-center shrink-0">
             <div className="flex items-center gap-3">
@@ -88,10 +88,20 @@ export default function WebchatWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 relative z-0">
+            <div 
+              className="absolute inset-0 pointer-events-none -z-10"
+              style={{ 
+                backgroundImage: 'url("https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png")',
+                backgroundRepeat: 'repeat',
+                backgroundSize: '400px',
+                opacity: 0.08
+              }}
+            />
+            
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-lg p-2.5 text-[13.5px] shadow-sm ${
+                <div className={`max-w-[80%] rounded-lg p-2.5 text-[13.5px]  ${
                   msg.sender === 'user' 
                     ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-none' 
                     : 'bg-white text-[#111b21] rounded-tl-none'
@@ -103,7 +113,7 @@ export default function WebchatWidget() {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white rounded-lg rounded-tl-none p-3 shadow-sm flex gap-1.5 items-center">
+                <div className="bg-white rounded-lg rounded-tl-none p-3  flex gap-1.5 items-center">
                   <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
                   <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
@@ -121,12 +131,12 @@ export default function WebchatWidget() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Mensagem"
-                className="flex-1 bg-white border-none outline-none focus:ring-0 rounded-full px-4 py-3 text-[14px] text-[#111b21] shadow-sm placeholder:text-[#8696a0] transition-all"
+                className="flex-1 bg-white border-none outline-none focus:ring-0 rounded-full px-4 py-3 text-[14px] text-[#111b21]  placeholder:text-[#8696a0] transition-all"
               />
               <button 
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="w-11 h-11 bg-[#00a884] text-white rounded-full flex items-center justify-center hover:bg-[#008f6f] disabled:opacity-50 transition-all shadow-sm shrink-0"
+                className="w-11 h-11 bg-[#00a884] text-white rounded-full flex items-center justify-center hover:bg-[#008f6f] disabled:opacity-50 transition-all  shrink-0"
               >
                 <Send size={18} className="ml-0.5" />
               </button>

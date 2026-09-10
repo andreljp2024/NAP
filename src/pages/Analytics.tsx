@@ -79,7 +79,7 @@ export default function Analytics() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Chart */}
-          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl p-6 shadow-md shadow-none">
+          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl p-6  ">
             <h3 className="text-lg font-bold text-white font-outfit mb-6 flex items-center gap-2">
               <Zap size={18} className="text-blue-400" />
               Volume de Resolução: Humano vs IA
@@ -105,7 +105,7 @@ export default function Analytics() {
                     itemStyle={{ color: '#e2e8f0' }}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                  <Area type="monotone" dataKey="ia" name="IA (9router / AVA)" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorIa)" />
+                  <Area type="monotone" dataKey="ia" name="NAP IA Integrada" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorIa)" />
                   <Area type="monotone" dataKey="humano" name="Operador Humano" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorHumano)" />
                 </AreaChart>
               </ResponsiveContainer>
@@ -113,7 +113,7 @@ export default function Analytics() {
           </div>
 
           {/* Secondary Chart */}
-          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6 shadow-md shadow-none">
+          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6  ">
             <h3 className="text-lg font-bold text-white font-outfit mb-6">Tempo Médio de Resposta (s)</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -135,7 +135,7 @@ export default function Analytics() {
         {/* Live Operators & Embedded Asterisk Webphone */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Operadores Online (2 Cols) */}
-          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl shadow-md shadow-none overflow-hidden flex flex-col">
+          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl   overflow-hidden flex flex-col">
             <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#101726]">
               <div>
                 <h3 className="text-lg font-bold text-white font-outfit">Operadores Online & Filas FreePBX</h3>
@@ -219,12 +219,12 @@ export default function Analytics() {
 
 function MetricCard({ title, value, trend, trendUp, icon }: any) {
   return (
-    <div className="bg-[#101726] border border-white/5 p-6 rounded-2xl shadow-md shadow-none flex flex-col relative overflow-hidden group">
+    <div className="bg-[#101726] border border-white/5 p-6 rounded-2xl   flex flex-col relative overflow-hidden group">
       <div className="absolute -right-6 -top-6 text-slate-200/30 group-hover:text-slate-300/30 transition-colors duration-500 rotate-12 scale-150">
         {icon}
       </div>
       <div className="flex items-start justify-between mb-4 relative z-10">
-        <div className="p-3 bg-[#0b0f19] rounded-xl border border-white/5 shadow-inner">
+        <div className="p-3 bg-[#0b0f19] rounded-xl border border-white/5 ">
           {icon}
         </div>
         <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${trendUp ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>

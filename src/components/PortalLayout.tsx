@@ -11,9 +11,9 @@ export default function PortalLayout() {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-50 text-slate-700 font-sans">
       {/* Mobile Header */}
-      <div className="md:hidden bg-white/90 backdrop-blur-md border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10 sticky top-0">
+      <div className="md:hidden bg-white/90 backdrop-blur-md border-b border-slate-200 p-4 flex justify-between items-center  z-10 sticky top-0">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center ">
             <span className="text-white font-bold text-sm">P</span>
           </div>
           <span className="font-bold text-lg text-slate-900 font-outfit">Provedor</span>
@@ -37,10 +37,10 @@ export default function PortalLayout() {
       </div>
 
       {/* Sidebar Navigation */}
-      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 flex-col shadow-sm z-10">
+      <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 flex-col  z-10">
         <div className="h-20 flex items-center px-6 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center ">
               <span className="text-white font-bold text-lg">P</span>
             </div>
             <div className="flex flex-col">
@@ -86,7 +86,7 @@ export default function PortalLayout() {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200 flex justify-around p-2 pb-safe shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.1)] z-10 sticky bottom-0">
+      <nav className="md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200 flex justify-around p-2 pb-safe [0_-5px_15px_-5px_rgba(0,0,0,0.1)] z-10 sticky bottom-0">
         <MobileNavItem to="/portal" icon={<Wifi size={22} />} label="Início" exact />
         <MobileNavItem to="/portal/faturas" icon={<CreditCard size={22} />} label="Faturas" />
         <MobileNavItem to="/portal/suporte" icon={<HeadphonesIcon size={22} />} label="Suporte" />
@@ -107,7 +107,7 @@ function NavItem({ to, icon, label, exact = false }: { to: string; icon: React.R
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm group ${
           isActive 
-            ? 'bg-blue-50 text-blue-700 shadow-sm border border-blue-100' 
+            ? 'bg-blue-50 text-blue-700  border border-blue-100' 
             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
         }`
       }

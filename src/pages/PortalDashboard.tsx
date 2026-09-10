@@ -75,7 +75,7 @@ export default function PortalDashboard() {
             {permission !== 'granted' && (
               <button
                 onClick={requestPermission}
-                className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-100 transition-all shadow-xs"
+                className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-100 transition-all "
               >
                 <Bell size={14} /> Ativar Alertas
               </button>
@@ -86,12 +86,12 @@ export default function PortalDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
         {/* Status da Conexão */}
-        <div className="bg-white p-6 rounded-3xl shadow-md shadow-sm border border-slate-200 relative overflow-hidden">
+        <div className="bg-white p-6 rounded-3xl   border border-slate-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
           
           <div className="flex justify-between items-start mb-6 relative z-10">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-inner rounded-2xl flex items-center justify-center">
+              <div className="w-14 h-14 bg-emerald-50 text-emerald-700 border border-emerald-200  rounded-2xl flex items-center justify-center">
                 <Wifi size={26} />
               </div>
               <div>
@@ -123,7 +123,7 @@ export default function PortalDashboard() {
         </div>
 
         {/* Resumo Financeiro */}
-        <div className="bg-gradient-to-br from-blue-700 to-indigo-900 p-6 rounded-3xl shadow-md shadow-blue-900/20 border border-blue-600 relative overflow-hidden flex flex-col">
+        <div className="bg-gradient-to-br from-blue-700 to-indigo-900 p-6 rounded-3xl  -900/20 border border-blue-600 relative overflow-hidden flex flex-col">
           {/* Decoração de fundo */}
           <div className="absolute top-0 right-0 p-8 opacity-10">
             <QrCode size={160} className="fill-white" />
@@ -158,7 +158,7 @@ export default function PortalDashboard() {
                   <button 
                     onClick={handleCopiarPix}
                     disabled={loadingPix}
-                    className="flex-1 bg-white text-blue-900 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-slate-50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
+                    className="flex-1 bg-white text-blue-900 font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-slate-50 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 "
                   >
                     {loadingPix ? <Loader2 size={18} className="animate-spin" /> : <QrCode size={18} />}
                     {loadingPix ? 'Gerando...' : 'Copiar PIX'}
@@ -166,7 +166,7 @@ export default function PortalDashboard() {
                   <button 
                     onClick={handleVerBoleto}
                     disabled={loadingBoleto}
-                    className="flex-1 bg-blue-600/30 backdrop-blur-sm text-white font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-blue-600/50 border border-white/20 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 shadow-lg"
+                    className="flex-1 bg-blue-600/30 backdrop-blur-sm text-white font-bold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 hover:bg-blue-600/50 border border-white/20 hover:scale-105 active:scale-95 disabled:opacity-75 disabled:hover:scale-100 "
                   >
                     {loadingBoleto ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
                     {loadingBoleto ? 'Gerando...' : 'Ver Boleto'}
@@ -204,8 +204,8 @@ export default function PortalDashboard() {
 
 function QuickAction({ icon, label, onClick }: { icon: React.ReactNode, label: string, onClick?: () => void }) {
   return (
-    <button onClick={onClick} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-lg shadow-sm flex flex-col items-center justify-center gap-4 hover:border-blue-600/50 hover:bg-slate-50 hover:-translate-y-1 transition-all group">
-      <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200 shadow-inner flex items-center justify-center group-hover:bg-blue-600 group-hover:text-slate-900 group-hover:shadow-blue-600/40 transition-all">
+    <button onClick={onClick} className="bg-white p-5 rounded-2xl border border-slate-200   flex flex-col items-center justify-center gap-4 hover:border-blue-600/50 hover:bg-slate-50 hover:-translate-y-1 transition-all group">
+      <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 border border-blue-200  flex items-center justify-center group-hover:bg-blue-600 group-hover:text-slate-900 group-hover:-600/40 transition-all">
         {icon}
       </div>
       <span className="text-xs md:text-sm font-bold text-slate-600 text-center group-hover:text-slate-900 transition-colors">{label}</span>
