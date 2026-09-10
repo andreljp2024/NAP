@@ -37,20 +37,62 @@ export default function App() {
             {/* Operador / Admin Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<Layout />}>
-                <Route index element={<Inbox />} />
-                <Route path="dashboard" element={<Analytics />} />
-                <Route path="suporte" element={<Kanban type="Suporte" />} />
-                <Route path="cobranca" element={<Kanban type="Cobranca" />} />
-                <Route path="vendas" element={<Kanban type="Vendas" />} />
-                <Route path="crm" element={<CRM />} />
-                <Route path="sgp" element={<ConsultaSGP />} />
-                <Route path="genieacs" element={<GenieACSDashboard />} />
-                <Route path="campanhas" element={<Campanhas />} />
-                <Route path="operadores" element={<Operadores />} />
-                <Route path="usuarios" element={<UsuariosHierarquia />} />
-                <Route path="campo" element={<TecnicoCampo />} />
-                <Route path="automacoes" element={<Automacoes />} />
-                <Route path="configuracoes" element={<SuperAdmin />} />
+                <Route index element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />} >
+                  <Route index element={<Inbox />} />
+                </Route>
+                
+                <Route path="dashboard" element={<ProtectedRoute allowedRoles={['tecnico_noc']} />}>
+                  <Route index element={<Analytics />} />
+                </Route>
+
+                <Route path="suporte" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />}>
+                  <Route index element={<Kanban type="Suporte" />} />
+                </Route>
+
+                <Route path="cobranca" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                  <Route index element={<Kanban type="Cobranca" />} />
+                </Route>
+
+                <Route path="vendas" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                  <Route index element={<Kanban type="Vendas" />} />
+                </Route>
+
+                <Route path="crm" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc']} />}>
+                  <Route index element={<CRM />} />
+                </Route>
+
+                <Route path="sgp" element={<ProtectedRoute allowedRoles={['operador', 'tecnico_noc', 'tecnico_campo']} />}>
+                  <Route index element={<ConsultaSGP />} />
+                </Route>
+
+                <Route path="genieacs" element={<ProtectedRoute allowedRoles={['tecnico_noc']} />}>
+                  <Route index element={<GenieACSDashboard />} />
+                </Route>
+
+                <Route path="campanhas" element={<ProtectedRoute allowedRoles={['operador']} />}>
+                  <Route index element={<Campanhas />} />
+                </Route>
+
+                <Route path="operadores" element={<ProtectedRoute allowedRoles={[]} />}>
+                  <Route index element={<Operadores />} />
+                </Route>
+
+                <Route path="usuarios" element={<ProtectedRoute allowedRoles={[]} />}>
+                  <Route index element={<UsuariosHierarquia />} />
+                </Route>
+
+                <Route path="campo" element={<ProtectedRoute allowedRoles={['tecnico_campo']} />}>
+                  <Route index element={<TecnicoCampo />} />
+                </Route>
+
+                <Route path="automacoes" element={<ProtectedRoute allowedRoles={[]} />}>
+                  <Route index element={<Automacoes />} />
+                </Route>
+
+                <Route path="configuracoes" element={<ProtectedRoute allowedRoles={[]} />}>
+                  <Route index element={<SuperAdmin />} />
+                </Route>
+
                 <Route path="ajuda" element={<Helpers />} />
               </Route>
             </Route>

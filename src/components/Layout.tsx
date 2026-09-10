@@ -153,7 +153,7 @@ export default function Layout() {
             )}
             
             <nav className="flex flex-col gap-0.5 px-3">
-              {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />}
               {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin" icon={<MessageSquare size={18} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />}
               {hasAccess(['tecnico_campo']) && <NavItem to="/admin/campo" icon={<Wrench size={18} />} label="Técnico de Campo" badge="GPS" isCollapsed={isCollapsed} />}
               {hasAccess(['operador']) && <NavItem to="/admin/cobranca" icon={<CreditCard size={18} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />}
@@ -163,6 +163,7 @@ export default function Layout() {
               {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/crm" icon={<Users size={18} />} label="CRM Clientes" isCollapsed={isCollapsed} />}
               {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Consulta SGP" isCollapsed={isCollapsed} />}
               {hasAccess(['tecnico_noc']) && <NavItem to="/admin/genieacs" icon={<Router size={18} />} label="GenieACS" isCollapsed={isCollapsed} />}
+              <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
             </nav>
           </div>
 
@@ -183,20 +184,21 @@ export default function Layout() {
           )}
 
           {/* Seção: Administração */}
-          <div>
-            {!isCollapsed && (
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-5">
-                Administração
-              </p>
-            )}
+          {hasAccess([]) && (
+            <div>
+              {!isCollapsed && (
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-5">
+                  Administração
+                </p>
+              )}
 
-            <nav className="flex flex-col gap-0.5 px-3">
-              {hasAccess([]) && <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />}
-              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />}
-              {hasAccess([]) && <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />}
-              <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
-            </nav>
-          </div>
+              <nav className="flex flex-col gap-0.5 px-3">
+                <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />
+                <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />
+                <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />
+              </nav>
+            </div>
+          )}
         </div>
 
         {/* Atalho para o Portal do Cliente (PWA) no rodapé */}

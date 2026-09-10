@@ -69,3 +69,6 @@ O NAP conta com uma arquitetura de perfis baseada em RBAC (Role-Based Access Con
 - **Operador (`operador`):** Acesso central ao Inbox Unificado, CRMs, Consulta de Faturas (SGP), e Kanbans (Suporte, Vendas, Cobrança).
 - **Técnico de NOC (`tecnico_noc`):** Focado em monitoramento, possui acesso ao GenieACS, Suporte Avançado, e Gestão de Operadores.
 - **Técnico de Campo (`tecnico_campo`):** Direcionado para operações móveis, acessa seu portal PWA (Geolocalização, Ordens de Serviço), Caixa de Entrada (Comunicação interna) e Consulta SGP básica.
+
+### Atualização da Hierarquia (Operadores)
+Foi aplicada uma revisão na segurança de rotas (Route Protection) e na visibilidade dos menus. **Operadores** tiveram seus acessos estritamente limitados às rotas de Operação (Vendas, Cobrança, CRM, Inbox e Suporte). Todos os módulos de configuração e parâmetros sistêmicos (`/admin/dashboard`, `/admin/automacoes`, `/admin/configuracoes`, `/admin/usuarios` e `/admin/operadores`) agora são de acesso exclusivo de `admin` e `superadmin`.
