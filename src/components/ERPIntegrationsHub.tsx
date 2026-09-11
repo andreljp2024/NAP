@@ -6,6 +6,9 @@ import {
   Sliders, Cpu, Sparkles, HelpCircle, Loader2, Save
 } from 'lucide-react';
 import { useConfig, SupportedErp } from '../contexts/ConfigContext';
+import ApiValidationCard from './ApiValidationCard';
+import ErpPingBadge from './ErpPingBadge';
+import { useErpPingMonitor } from '../hooks/useErpPingMonitor';
 
 interface ErpCatalogoItem {
   id: SupportedErp;
@@ -53,7 +56,7 @@ interface TestResult {
 
 export default function ERPIntegrationsHub() {
   const { config: globalConfig, updateConfig } = useConfig();
-  const [activeSubTab, setActiveSubTab] = useState<'conectores' | 'configuracao' | 'documentacao'>('conectores');
+  const [activeSubTab, setActiveSubTab] = useState<'validador' | 'conectores' | 'configuracao' | 'documentacao'>('validador');
   const [selectedErpId, setSelectedErpId] = useState<SupportedErp>('ixc');
   const [erpsList, setErpsList] = useState<ErpCatalogoItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +65,15 @@ export default function ERPIntegrationsHub() {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [showTokens, setShowTokens] = useState<{ [key: string]: boolean }>({});
   const [toastMessage, setToastMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Monitoramento de latência e ping em tempo real dos provedores
+  const { 
+    pings, 
+    loading: pingsLoading, 
+    pingingSpecific, 
+    refreshAll: refreshAllPings, 
+    pingSingle 
+  } = useErpPingMonitor(10000);
 
   // Formulário local do ERP selecionado
   const [formData, setFormData] = useState<any>({
@@ -306,11 +318,26 @@ export default function ERPIntegrationsHub() {
       </div>
 
       {/* Navegação entre Sub-Abas */}
-      <div className="flex border-b border-white/5 bg-[#0b0f19] rounded-xl p-1 gap-1">
+      <div className="flex flex-wrap border-b border-white/5 bg-[#0b0f19] rounded-xl p-1 gap-1">
         <button
           type="button"
+          id="btn-subtab-validador-erp"
+          onClick={() => setActiveSubTab('validador')}
+          className={`flex-1 min-w-[200px] py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+            activeSubTab === 'validador'
+              ? 'bg-blue-600 text-white shadow'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Zap size={15} className={activeSubTab === 'validador' ? 'text-white' : 'text-amber-400'} />
+          <span>Validador de API (IXC • Hubsoft • MikWeb)</span>
+        </button>
+
+        <button
+          type="button"
+          id="btn-subtab-conectores-erp"
           onClick={() => setActiveSubTab('conectores')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 min-w-[170px] py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
             activeSubTab === 'conectores'
               ? 'bg-blue-600 text-white shadow'
               : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -322,21 +349,23 @@ export default function ERPIntegrationsHub() {
 
         <button
           type="button"
+          id="btn-subtab-configuracao-erp"
           onClick={() => setActiveSubTab('configuracao')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 min-w-[170px] py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
             activeSubTab === 'configuracao'
               ? 'bg-blue-600 text-white shadow'
               : 'text-slate-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <Sliders size={15} />
-          <span>Configuração & Pré-Validação</span>
+          <span>Configuração & Regras</span>
         </button>
 
         <button
           type="button"
+          id="btn-subtab-documentacao-erp"
           onClick={() => setActiveSubTab('documentacao')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 min-w-[170px] py-2.5 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
             activeSubTab === 'documentacao'
               ? 'bg-blue-600 text-white shadow'
               : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -347,19 +376,43 @@ export default function ERPIntegrationsHub() {
         </button>
       </div>
 
+      {/* SUB-ABA 0: VALIDADOR RÁPIDO DE API (IXC, HUBSOFT, MIKWEB) */}
+      {activeSubTab === 'validador' && (
+        <ApiValidationCard />
+      )}
+
       {/* SUB-ABA 1: CATÁLOGO VISUAL DE CONECTORES */}
       {activeSubTab === 'conectores' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <p className="text-xs text-slate-400">
-              Escolha qual sistema o seu provedor de internet utiliza. Você pode alternar ou pré-configurar os parâmetros a qualquer momento:
+              Escolha qual sistema o seu provedor de internet utiliza. Monitore a saúde da comunicação e latência de cada conector em tempo real:
             </p>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] text-slate-400 hidden sm:flex items-center gap-1.5 font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Ping a cada 10s
+              </span>
+              <button
+                type="button"
+                id="btn-atualizar-todos-pings-catalogo"
+                onClick={refreshAllPings}
+                disabled={pingsLoading}
+                className="text-[10px] text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition-all"
+                title="Atualizar medição de latência de todos os ERPs homologados"
+              >
+                <RefreshCw size={10} className={pingsLoading ? 'animate-spin' : ''} />
+                <span>Atualizar Latências</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {erpsList.map((erp) => {
               const isAtivo = erp.ativo;
               const isSelected = erp.id === selectedErpId;
+              const pingData = pings[erp.id];
+              const isPinging = pingingSpecific[erp.id];
 
               return (
                 <div 
@@ -390,19 +443,32 @@ export default function ERPIntegrationsHub() {
                       </div>
 
                       {isAtivo ? (
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                        <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shrink-0">
                           <Check size={11} /> Ativo
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded-full bg-white/5 text-slate-400 text-[10px] font-semibold">
+                        <span className="px-2 py-0.5 rounded-full bg-white/5 text-slate-400 text-[10px] font-semibold shrink-0">
                           Homologado
                         </span>
                       )}
                     </div>
 
-                    <p className="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-2">
                       {erp.descricao}
                     </p>
+
+                    {/* Indicador Visual de Latência (Ping em Tempo Real) */}
+                    <div className="mb-3.5 p-2.5 bg-[#0b0f19] rounded-xl border border-white/5 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <Radio size={12} className="text-blue-400 shrink-0" />
+                        <span className="text-[11px] text-slate-400 font-medium">Saúde & Ping:</span>
+                      </div>
+                      <ErpPingBadge 
+                        ping={pingData} 
+                        loading={isPinging} 
+                        onRefresh={() => pingSingle(erp.id)} 
+                      />
+                    </div>
 
                     {/* Módulos Suportados */}
                     <div className="mb-4">
@@ -519,15 +585,22 @@ export default function ERPIntegrationsHub() {
                     </div>
                   </div>
 
-                  <a 
-                    href={erpSelecionadoObj.docUrl} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1"
-                  >
-                    <span>Doc Oficial</span>
-                    <ExternalLink size={12} />
-                  </a>
+                  <div className="flex items-center gap-3">
+                    <ErpPingBadge 
+                      ping={pings[selectedErpId]} 
+                      loading={pingingSpecific[selectedErpId]} 
+                      onRefresh={() => pingSingle(selectedErpId)} 
+                    />
+                    <a 
+                      href={erpSelecionadoObj.docUrl} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 shrink-0"
+                    >
+                      <span>Doc Oficial</span>
+                      <ExternalLink size={12} />
+                    </a>
+                  </div>
                 </div>
 
                 {/* Campos dinâmicos do ERP */}

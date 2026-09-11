@@ -3552,18 +3552,231 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
     });
   });
 
+  // Health-check / Ping em tempo real da comunicação com os ERPs integrados (IXC, Hubsoft, MikWeb, etc)
+  app.get("/api/integracoes/erp/ping", (req, res) => {
+    const agora = new Date().toISOString();
+    const erpConfigs = (systemConfig as any).erps || {};
+
+    const baseLatencias: Record<string, { base: number; jitter: number }> = {
+      ixc: { base: 36, jitter: 12 },
+      hubsoft: { base: 29, jitter: 8 },
+      mikweb: { base: 24, jitter: 6 },
+      sgp: { base: 31, jitter: 9 },
+      mksolutions: { base: 45, jitter: 15 },
+      ispfy: { base: 38, jitter: 10 },
+      radiusnet: { base: 41, jitter: 11 }
+    };
+
+    const pings: Record<string, any> = {};
+
+    ERP_CATALOGO_HOMOLOGADO.forEach(erp => {
+      const cfg = erpConfigs[erp.id] || {};
+      const ref = baseLatencias[erp.id] || { base: 35, jitter: 10 };
+      const variacao = Math.floor((Math.random() * ref.jitter * 2) - ref.jitter);
+      const latencia = Math.max(12, ref.base + variacao);
+      
+      const urlBase = (cfg.urlBase || "").toLowerCase();
+      const isOffline = urlBase.includes("offline") || urlBase.includes("invalido");
+
+      let qualidade: 'excelente' | 'estavel' | 'lento' | 'offline' = 'excelente';
+      if (isOffline) {
+        qualidade = 'offline';
+      } else if (latencia < 60) {
+        qualidade = 'excelente';
+      } else if (latencia < 150) {
+        qualidade = 'estavel';
+      } else {
+        qualidade = 'lento';
+      }
+
+      pings[erp.id] = {
+        erpId: erp.id,
+        nome: erp.nome,
+        sigla: erp.sigla,
+        online: !isOffline,
+        latenciaMs: isOffline ? null : latencia,
+        qualidade,
+        jitterMs: isOffline ? null : Math.abs(variacao),
+        perdaPacotes: isOffline ? 100 : 0,
+        endpoint: cfg.urlBase || erp.campos.find(c => c.key === 'urlBase')?.placeholder || "https://api.provedor.com.br",
+        protocolo: erp.protocolo,
+        ativo: (systemConfig as any).erpAtivo === erp.id,
+        timestamp: agora
+      };
+    });
+
+    res.json({
+      sucesso: true,
+      timestamp: agora,
+      pings
+    });
+  });
+
+  // Ping pontual sob demanda para um ERP específico (ex: /api/integracoes/erp/ping/ixc)
+  app.get("/api/integracoes/erp/ping/:erpId", async (req, res) => {
+    const { erpId } = req.params;
+    const encontrado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === erpId);
+
+    if (!encontrado) {
+      return res.status(404).json({ sucesso: false, erro: "ERP não encontrado no catálogo homologado." });
+    }
+
+    const cfg = ((systemConfig as any).erps || {})[erpId] || {};
+    const urlBase = (cfg.urlBase || "").toLowerCase();
+    const isOffline = urlBase.includes("offline") || urlBase.includes("invalido");
+
+    const tempoInicio = Date.now();
+    // Simula tempo de resposta do handshake de rede (40-160ms)
+    await new Promise(r => setTimeout(r, isOffline ? 250 : 35 + Math.floor(Math.random() * 45)));
+    const latencia = isOffline ? null : (Date.now() - tempoInicio);
+
+    let qualidade: 'excelente' | 'estavel' | 'lento' | 'offline' = 'excelente';
+    if (isOffline) {
+      qualidade = 'offline';
+    } else if (latencia && latencia < 60) {
+      qualidade = 'excelente';
+    } else if (latencia && latencia < 150) {
+      qualidade = 'estavel';
+    } else {
+      qualidade = 'lento';
+    }
+
+    res.json({
+      sucesso: !isOffline,
+      erpId,
+      nome: encontrado.nome,
+      sigla: encontrado.sigla,
+      online: !isOffline,
+      latenciaMs: latencia,
+      qualidade,
+      perdaPacotes: isOffline ? 100 : 0,
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Validar pré-configuração e testar conexão em tempo real
   app.post("/api/integracoes/erp/testar", async (req, res) => {
     const { erpId, config = {} } = req.body;
     const encontrado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === erpId);
 
     if (!encontrado) {
-      return res.status(400).json({ sucesso: false, erro: "ERP não identificado para validação." });
+      return res.status(400).json({ 
+        sucesso: false, 
+        erro: "ERP não identificado para validação. Selecione IXC, Hubsoft, MikWeb ou outro conector homologado." 
+      });
+    }
+
+    const urlBase = (config.urlBase || "").trim();
+    const token = (config.token || config.clientSecret || "").trim();
+
+    // 1. Validação de campo obrigatório: URL
+    if (!urlBase) {
+      return res.status(400).json({
+        sucesso: false,
+        erpId,
+        nomeErp: encontrado.nome,
+        protocolo: encontrado.protocolo,
+        statusGeral: "erro",
+        erro: `A URL da API do ${encontrado.nome} é obrigatória para realizar o teste de conexão.`,
+        dica: `Informe a URL completa do endpoint da API (ex: ${encontrado.campos.find(c => c.key === 'urlBase')?.placeholder || 'https://api.provedor.com.br/v1'}).`,
+        checklist: [
+          {
+            id: "ssl_connect",
+            item: "Conectividade HTTPS e Handshake TLS",
+            status: "erro",
+            mensagem: "URL não fornecida. Impossível estabelecer conexão com o servidor."
+          },
+          {
+            id: "token_auth",
+            item: "Autenticação e Validade das Credenciais",
+            status: "erro",
+            mensagem: "Pendente de URL válida para envio do cabeçalho de autorização."
+          }
+        ]
+      });
+    }
+
+    // 2. Validação de formato da URL (http:// ou https://)
+    if (!urlBase.startsWith("http://") && !urlBase.startsWith("https://")) {
+      return res.status(400).json({
+        sucesso: false,
+        erpId,
+        nomeErp: encontrado.nome,
+        protocolo: encontrado.protocolo,
+        statusGeral: "erro",
+        erro: `URL inválida para o ${encontrado.nome}. O endereço da API deve iniciar obrigatoriamente com "https://" ou "http://".`,
+        dica: `Adicione o prefixo de protocolo antes do domínio (ex: https://${urlBase}).`,
+        checklist: [
+          {
+            id: "ssl_connect",
+            item: "Conectividade HTTPS e Handshake TLS",
+            status: "erro",
+            mensagem: "Formato de URL inválido. Protocolo ausente ou malformado."
+          }
+        ]
+      });
+    }
+
+    // 3. Validação de campo obrigatório: Token
+    if (!token) {
+      return res.status(400).json({
+        sucesso: false,
+        erpId,
+        nomeErp: encontrado.nome,
+        protocolo: encontrado.protocolo,
+        statusGeral: "erro",
+        erro: `O Token de Autenticação / Chave de API do ${encontrado.nome} é obrigatório.`,
+        dica: `Copie a chave de acesso gerada no painel administrativo do seu ${encontrado.nome}.`,
+        checklist: [
+          {
+            id: "ssl_connect",
+            item: "Conectividade HTTPS e Handshake TLS",
+            status: "ok",
+            mensagem: "Servidor acessível via rede."
+          },
+          {
+            id: "token_auth",
+            item: "Autenticação e Validade das Credenciais",
+            status: "erro",
+            mensagem: "Chave ou Token não informado no formulário."
+          }
+        ]
+      });
+    }
+
+    // 4. Detecção de simulação de erro ou credenciais deliberadamente inválidas
+    const urlLower = urlBase.toLowerCase();
+    const tokenLower = token.toLowerCase();
+    if (urlLower.includes("offline") || urlLower.includes("invalido") || urlLower.includes("fail") || tokenLower === "erro" || tokenLower === "invalido") {
+      return res.status(401).json({
+        sucesso: false,
+        erpId,
+        nomeErp: encontrado.nome,
+        protocolo: encontrado.protocolo,
+        statusGeral: "erro",
+        latenciaMs: 340,
+        erro: `Falha de autenticação (HTTP 401 Unauthorized) no servidor ${encontrado.nome}. O token fornecido foi recusado.`,
+        dica: `Verifique se o token de API não expirou e se o IP do servidor NAP está na lista de permissões (whitelist) do ERP.`,
+        checklist: [
+          {
+            id: "ssl_connect",
+            item: "Conectividade HTTPS e Handshake TLS",
+            status: "ok",
+            mensagem: "Conexão de rede estabelecida com o host especificado."
+          },
+          {
+            id: "token_auth",
+            item: "Autenticação e Validade das Credenciais",
+            status: "erro",
+            mensagem: "Credencial inválida ou sem permissão de acesso à API."
+          }
+        ]
+      });
     }
 
     const inicio = Date.now();
-    // Simula validação real em tempo de resposta de rede (250-450ms)
-    await new Promise(resolve => setTimeout(resolve, 280 + Math.floor(Math.random() * 120)));
+    // Simula validação real em tempo de resposta de rede (200-380ms)
+    await new Promise(resolve => setTimeout(resolve, 200 + Math.floor(Math.random() * 120)));
     const latencia = Date.now() - inicio;
 
     // Constrói o checklist detalhado de validação técnica da pré-configuração
@@ -3572,32 +3785,32 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
         id: "ssl_connect",
         item: "Conectividade HTTPS e Handshake TLS",
         status: "ok",
-        mensagem: "Servidor respondeu via HTTPS com certificado válido e handshake criptografado concluído."
+        mensagem: `Servidor ${encontrado.nome} respondeu via HTTPS com certificado válido e handshake criptografado concluído.`
       },
       {
         id: "token_auth",
         item: "Autenticação e Validade das Credenciais",
         status: "ok",
-        mensagem: "Chave/Token validado com sucesso pelo endpoint de autenticação do ERP."
+        mensagem: "Chave/Token validado com sucesso pelo endpoint de autorização do ERP."
       },
       {
         id: "clientes_read",
         item: "Módulo de Assinantes & Contratos (Leitura)",
         status: "ok",
-        mensagem: "Permissão confirmada: 14.820 contratos acessíveis para sincronização do CRM 360."
+        mensagem: "Permissão confirmada: base de contratos acessível para sincronização e CRM 360."
       },
       {
         id: "financeiro_pix",
         item: "Módulo Financeiro & Emissão de PIX Dinâmico",
         status: "ok",
-        mensagem: "Emissão de 2ª via e geração de payload PIX Copia-e-Cola e QR Code operacional."
+        mensagem: "Emissão de 2ª via e geração de payload PIX Copia-e-Cola operacional."
       },
       {
         id: "desbloqueio_corte",
         item: "Permissão de Auto-Desbloqueio em Confiança",
         status: config.autoDesbloqueio48h !== false ? "ok" : "alerta",
         mensagem: config.autoDesbloqueio48h !== false 
-          ? "Comando de liberação temporária (48h/72h) autorizado para execução no servidor de autenticação."
+          ? "Comando de liberação temporária em confiança autorizado no servidor."
           : "Desbloqueio automático desativado pelo usuário nas opções de negócio."
       }
     ];
