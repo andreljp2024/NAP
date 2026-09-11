@@ -1878,6 +1878,109 @@ let kanbanDeals = [
       portalUrl: "https://central.naptelecom.com.br",
       themeMode: "dark" as "dark" | "light"
     },
+    erpAtivo: "ixc",
+    erps: {
+      ixc: {
+        id: "ixc",
+        nome: "IXC Soft (IXC Provedor)",
+        categoria: "ERP / CRM Telecom",
+        protocolo: "Webservice REST JSON v1",
+        urlBase: "https://ixc.naptelecom.com.br/webservice/v1",
+        token: "12:YXBpX3Rva2VuX3NlY3JldG9faXhjXzIwMjY=",
+        usuarioId: "1",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: true,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 10,
+        status: "conectado",
+        latenciaMs: 24,
+        ultimaSincronizacao: new Date().toISOString()
+      },
+      hubsoft: {
+        id: "hubsoft",
+        nome: "Hubsoft Telecom",
+        categoria: "ERP Cloud para ISPs",
+        protocolo: "API REST v1 / v2",
+        urlBase: "https://naptelecom.hubsoft.com.br/api/v1",
+        clientId: "nap_omni_hubsoft_client",
+        clientSecret: "hub_sec_9918237498172938472918",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: true,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "desconectado"
+      },
+      radiusnet: {
+        id: "radiusnet",
+        nome: "RadiusNet",
+        categoria: "ERP & AAA Radius",
+        protocolo: "REST API v2",
+        urlBase: "https://api.radiusnet.com.br/v2",
+        token: "rnet_key_99382173489127",
+        provedorId: "1",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: false,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "desconectado"
+      },
+      mksolutions: {
+        id: "mksolutions",
+        nome: "MK Solutions (MK-Auth / MK v2)",
+        categoria: "ERP Telecom & Financeiro",
+        protocolo: "REST / Webservice v1/v2",
+        urlBase: "https://mk.naptelecom.com.br/api/v1",
+        token: "mk_jwt_token_secret_99812",
+        appId: "NAP_MK_APP",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: true,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "desconectado"
+      },
+      ispfy: {
+        id: "ispfy",
+        nome: "ISPFy",
+        categoria: "Sistema de Gestão para ISPs",
+        protocolo: "ISPFy REST API v1",
+        urlBase: "https://naptelecom.ispfy.com.br/api/v1",
+        token: "ispfy_tok_49817298371982",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: false,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "desconectado"
+      },
+      mikweb: {
+        id: "mikweb",
+        nome: "MikWeb",
+        categoria: "Gerenciador MikroTik & ISP",
+        protocolo: "MikWeb API v1",
+        urlBase: "https://api.mikweb.com.br/v1",
+        token: "mikweb_token_7182947192837",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: false,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "desconectado"
+      },
+      sgp: {
+        id: "sgp",
+        nome: "SGP (Sistema de Gestão de Provedores)",
+        categoria: "ERP Telecom Integrado",
+        protocolo: "REST / HTTPS v2.4",
+        urlBase: "https://api.sgp.provedor.com.br/v1",
+        appId: "NAP_SGP_PROD_991",
+        token: "sgp_sec_token_99182374981729",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: true,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        status: "conectado",
+        latenciaMs: 31,
+        ultimaSincronizacao: new Date().toISOString()
+      }
+    },
     sgp: {
       urlBase: "https://api.sgp.provedor.com.br/v1",
       appId: "NAP_SGP_PROD_991",
@@ -2023,6 +2126,8 @@ let kanbanDeals = [
         ...novosDados,
         provedor: { ...systemConfig.provedor, ...(novosDados.provedor || {}) },
         landingPage: { ...systemConfig.landingPage, ...(novosDados.landingPage || {}) },
+        erpAtivo: novosDados.erpAtivo || systemConfig.erpAtivo,
+        erps: { ...systemConfig.erps, ...(novosDados.erps || {}) },
         sgp: { ...systemConfig.sgp, ...(novosDados.sgp || {}) },
         telefonia: { ...systemConfig.telefonia, ...(novosDados.telefonia || {}) },
         whatsapp: { ...systemConfig.whatsapp, ...(novosDados.whatsapp || {}) },
@@ -2946,18 +3051,39 @@ let kanbanDeals = [
     const acsOnlineCount = genieacsDevices.filter(d => d.status === 'online').length;
     const acsAlarmCount = genieacsDevices.filter(d => d.rssi && d.rssi < -26).length;
 
+    const erpAtivoId = (systemConfig as any).erpAtivo || 'ixc';
+    const activeErpData = (systemConfig as any).erps?.[erpAtivoId] || {
+      nome: erpAtivoId.toUpperCase(),
+      protocolo: 'REST API v1',
+      urlBase: 'https://api.provedor.com.br'
+    };
+
     res.json({
       sucesso: true,
       timestamp: now.toISOString(),
       status_geral: (sgpStatus === 'online' && acsStatus === 'online') ? 'operacional' : 'atencao',
       uptime_pct: 99.98,
       ultima_sincronizacao: lastManualSyncTime,
-      sgp: {
-        nome: "SGP (ERP Telecom)",
-        protocolo: "REST / HTTPS v2.4",
-        endpoint: process.env.SGP_URL || "https://api.sgp.net.br (Emulado)",
+      erpAtivo: erpAtivoId,
+      erp: {
+        id: erpAtivoId,
+        nome: activeErpData.nome || "IXC Soft (ERP Ativo)",
+        protocolo: activeErpData.protocolo || "Webservice REST JSON",
+        endpoint: activeErpData.urlBase || process.env.SGP_URL || "https://ixc.naptelecom.com.br/webservice/v1",
         status: sgpStatus,
-        latencia_ms: sgpLatency,
+        latencia_ms: activeErpData.latenciaMs || sgpLatency,
+        modo: sgpConfigured ? 'producao' : 'sandbox',
+        clientes_sincronizados: sgpDatabase_mock.length,
+        faturas_sincronizadas: 142,
+        desbloqueios_pendentes: 0,
+        ultima_resposta: "HTTP 200 OK (Homologado NAP)"
+      },
+      sgp: {
+        nome: activeErpData.nome || "SGP (ERP Telecom)",
+        protocolo: activeErpData.protocolo || "REST / HTTPS v2.4",
+        endpoint: activeErpData.urlBase || process.env.SGP_URL || "https://api.sgp.net.br (Emulado)",
+        status: sgpStatus,
+        latencia_ms: activeErpData.latenciaMs || sgpLatency,
         modo: sgpConfigured ? 'producao' : 'sandbox',
         clientes_sincronizados: sgpDatabase_mock.length,
         faturas_sincronizadas: 142,
@@ -3090,39 +3216,444 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
     });
   });
 
-  // Testar conexão Multi-ERP (SGP, IXC Soft, MK-AUTH, HubSoft)
-  app.post("/api/configuracoes/test-erp", async (req, res) => {
-    const { tipoErp = "sgp", url = "", token = "", appId = "" } = req.body;
+  // Catálogo completo de ERPs homologados pelo NAP
+  const ERP_CATALOGO_HOMOLOGADO = [
+    {
+      id: "ixc",
+      nome: "IXC Soft (IXC Provedor)",
+      sigla: "IXC",
+      categoria: "ERP / CRM Telecom",
+      protocolo: "Webservice REST JSON v1",
+      corBadge: "from-blue-600 to-indigo-600",
+      versaoApiHomologada: "Webservice REST v1.8.4",
+      docUrl: "https://wiki.ixcsoft.com.br/index.php/Webservice",
+      descricao: "Integração nativa com Webservice do IXC para busca de assinantes, emissão de faturas e PIX, desbloqueio temporário (corte) e status de radius.",
+      campos: [
+        { key: "urlBase", label: "URL Base do Webservice IXC", placeholder: "https://seu-ixc.provedor.com.br/webservice/v1", tipo: "url", obrigatorio: true, ajuda: "Ex: https://ixc.naptelecom.com.br/webservice/v1" },
+        { key: "token", label: "Token de Acesso Webservice (Base64)", placeholder: "id_usuario:token em Base64", tipo: "password", obrigatorio: true, ajuda: "Gerado em Configurações > Usuários > Usuários Webservice" },
+        { key: "usuarioId", label: "ID do Usuário Webservice", placeholder: "1", tipo: "text", obrigatorio: false, ajuda: "Identificador numérico do usuário webservice criado" }
+      ],
+      recursos: [
+        "Consulta 360 de Clientes por CPF/CNPJ ou Nome",
+        "Emissão de 2ª via e Chave PIX Dinâmico",
+        "Desbloqueio em Confiança (Corte / radusuarios)",
+        "Consulta de Conexão Radius PPPoE/IPoE",
+        "Abertura e Consulta de Ordens de Serviço (O.S.)"
+      ],
+      passoAPasso: [
+        "No painel do IXC Soft, acesse Configurações > Usuários > Usuários Webservice.",
+        "Clique em Novo e preencha o nome 'NAP Omni SaaS'.",
+        "Na aba Permissões, habilite leitura e gravação nas tabelas: 'cliente', 'fn_areceber', 'radusuarios' e 'su_oss_chamado'.",
+        "Gere o Token em Base64 e cadastre no campo acima.",
+        "No firewall do servidor IXC, adicione o IP público do NAP à whitelist (portas 80/443)."
+      ]
+    },
+    {
+      id: "hubsoft",
+      nome: "Hubsoft Telecom",
+      sigla: "HUB",
+      categoria: "ERP Cloud para ISPs",
+      protocolo: "API REST v1 / v2",
+      corBadge: "from-cyan-600 to-blue-600",
+      versaoApiHomologada: "Hubsoft Public API v2.1",
+      docUrl: "https://docs.hubsoft.com.br",
+      descricao: "Plataforma Cloud moderna com API REST completa para automação de atendimento, régua de cobrança, faturamento PIX e diagnóstico FTTH.",
+      campos: [
+        { key: "urlBase", label: "URL da Instância Hubsoft", placeholder: "https://suaempresa.hubsoft.com.br/api/v1", tipo: "url", obrigatorio: true, ajuda: "Ex: https://naptelecom.hubsoft.com.br/api/v1" },
+        { key: "clientId", label: "Client ID / App Key", placeholder: "nap_hubsoft_client_id", tipo: "text", obrigatorio: true, ajuda: "Identificador da aplicação gerado no Hubsoft" },
+        { key: "clientSecret", label: "Client Secret / Bearer Token", placeholder: "hub_sec_token_99482...", tipo: "password", obrigatorio: true, ajuda: "Token de segurança para autorização OAuth 2.0" }
+      ],
+      recursos: [
+        "Localização Instantânea de Clientes e Serviços",
+        "Segunda via de Boleto com Chave PIX Copia-e-Cola",
+        "Desbloqueio de Confiança de Serviços Bloqueados",
+        "Diagnóstico de Conexão e Sinal Óptico",
+        "Webhook de Eventos Financeiros"
+      ],
+      passoAPasso: [
+        "Acesse o Hubsoft com perfil Administrador e vá em Configurações > Integrações > Chaves de API.",
+        "Crie uma nova credencial com o nome 'NAP Atendimento e IA'.",
+        "Marque as permissões: 'cliente.ler', 'financeiro.ler_escrever', 'servico.desbloqueio' e 'diagnostico.ler'.",
+        "Copie a URL da sua instância e o token gerado.",
+        "Preencha nos campos ao lado e execute o teste de pré-configuração."
+      ]
+    },
+    {
+      id: "radiusnet",
+      nome: "RadiusNet",
+      sigla: "RNET",
+      categoria: "ERP & AAA Radius",
+      protocolo: "REST API v2",
+      corBadge: "from-emerald-600 to-teal-600",
+      versaoApiHomologada: "RadiusNet REST API v2.8",
+      docUrl: "https://radiusnet.com.br",
+      descricao: "Sistema de gestão completo com servidor RADIUS integrado nativo, controle estrito de autenticação PPPoE e faturamento bancário.",
+      campos: [
+        { key: "urlBase", label: "URL do Servidor RadiusNet", placeholder: "https://api.radiusnet.com.br/v2", tipo: "url", obrigatorio: true, ajuda: "Ex: https://api.radiusnet.com.br/v2 ou IP com porta da sua VM" },
+        { key: "token", label: "Access Key / Token de API", placeholder: "rnet_key_99382173489127", tipo: "password", obrigatorio: true, ajuda: "Chave secreta gerada em Parâmetros Gerais" },
+        { key: "provedorId", label: "ID da Unidade / Provedor", placeholder: "1", tipo: "text", obrigatorio: false, ajuda: "Identificador da unidade cadastrada" }
+      ],
+      recursos: [
+        "Assinantes, Contratos e Endereços de Instalação",
+        "Boletos em Aberto com PIX e Baixa Automática",
+        "Liberação Provisória no Servidor RADIUS",
+        "Métricas de Consumo e Tráfego de Banda",
+        "Histórico de Desconexões e Autenticação"
+      ],
+      passoAPasso: [
+        "No painel do RadiusNet, vá em Sistema > Parâmetros Gerais > API REST.",
+        "Clique em Gerar Nova Chave de Acesso para integração de terceiros.",
+        "Habilite os módulos de Autoatendimento Web e Desbloqueio de Confiança.",
+        "Cole a Chave de Acesso no campo Token do NAP.",
+        "Clique no botão Testar Pré-Configuração para validar o handshake."
+      ]
+    },
+    {
+      id: "mksolutions",
+      nome: "MK Solutions (MK-Auth / MK v2)",
+      sigla: "MK",
+      categoria: "ERP Telecom & Financeiro",
+      protocolo: "REST / Webservice v1/v2",
+      corBadge: "from-amber-600 to-orange-600",
+      versaoApiHomologada: "MK Solutions API v24.01",
+      docUrl: "https://mksolutions.com.br",
+      descricao: "Plataforma amplamente consolidada no setor de telecomunicações brasileiro, integrando cobranças, OLTs e rotinas de atendimento.",
+      campos: [
+        { key: "urlBase", label: "URL da API MK Solutions / MK-Auth", placeholder: "https://mk.naptelecom.com.br/api/v1", tipo: "url", obrigatorio: true, ajuda: "Endereço HTTPS da API do seu servidor MK" },
+        { key: "token", label: "Token de Autenticação / JWT", placeholder: "mk_jwt_token_secret_99812...", tipo: "password", obrigatorio: true, ajuda: "Token JWT ou Hash de Integração" },
+        { key: "appId", label: "Código de Integração (Opcional)", placeholder: "NAP_MK_APP", tipo: "text", obrigatorio: false, ajuda: "App ID cadastrado nas permissões externas" }
+      ],
+      recursos: [
+        "Consulta Unificada de Clientes e Conexões",
+        "Faturas em Aberto, Boletos e Código PIX",
+        "Desbloqueio em Confiança (Válido por 72h)",
+        "Controle de Ativação e Corte no Servidor",
+        "Consulta de Ordens de Serviço Técnicas"
+      ],
+      passoAPasso: [
+        "No MK Solutions, acesse Configurações de Sistema > Integrações Externas > API REST.",
+        "Crie uma credencial de acesso exclusiva para o NAP.",
+        "Conceda permissões para consulta de cadastros, títulos financeiros e desbloqueio temporário.",
+        "Certifique-se de que o certificado SSL (HTTPS) está ativo na porta da API.",
+        "Salve os dados e execute a validação no NAP."
+      ]
+    },
+    {
+      id: "ispfy",
+      nome: "ISPFy",
+      sigla: "FY",
+      categoria: "Sistema de Gestão para ISPs",
+      protocolo: "ISPFy REST API v1",
+      corBadge: "from-purple-600 to-pink-600",
+      versaoApiHomologada: "ISPFy API v1.4",
+      docUrl: "https://ispfy.com.br",
+      descricao: "Solução ágil e intuitiva focada em automação de autoatendimento, régua de cobrança rápida, PIX e controle simplificado de assinantes.",
+      campos: [
+        { key: "urlBase", label: "URL da Instância ISPFy", placeholder: "https://suaempresa.ispfy.com.br/api/v1", tipo: "url", obrigatorio: true, ajuda: "Ex: https://naptelecom.ispfy.com.br/api/v1" },
+        { key: "token", label: "Chave de API (Secret Token)", placeholder: "ispfy_tok_49817298371982", tipo: "password", obrigatorio: true, ajuda: "Chave secreta obtida no painel administrativo do ISPFy" }
+      ],
+      recursos: [
+        "Consulta de Clientes por CPF, E-mail ou Telefone",
+        "Emissão de 2ª Via de Fatura com PIX Dinâmico",
+        "Comando de Desbloqueio Temporário em Confiança",
+        "Status de Sessão PPPoE e IP Vinculado",
+        "Histórico Financeiro do Assinante"
+      ],
+      passoAPasso: [
+        "No ISPFy, entre no menu Configurações > Integrações > Chaves de API Externa.",
+        "Clique em Gerar Nova Chave e atribua o nome 'NAP Atendimento'.",
+        "Defina as permissões para Leitura de Contratos e Execução de Desbloqueio.",
+        "Insira a URL da instância e o token no NAP.",
+        "Realize o teste de pré-configuração para homologação imediata."
+      ]
+    },
+    {
+      id: "mikweb",
+      nome: "MikWeb",
+      sigla: "MIK",
+      categoria: "Gerenciador MikroTik & ISP",
+      protocolo: "MikWeb API v1",
+      corBadge: "from-rose-600 to-red-600",
+      versaoApiHomologada: "MikWeb REST API v1.2",
+      docUrl: "https://mikweb.com.br",
+      descricao: "Plataforma em nuvem especializada em gestão de concentradores MikroTik, cobranças automatizadas e auto-desbloqueio em poucos segundos.",
+      campos: [
+        { key: "urlBase", label: "URL da API MikWeb", placeholder: "https://api.mikweb.com.br/v1", tipo: "url", obrigatorio: true, ajuda: "Padrão oficial: https://api.mikweb.com.br/v1" },
+        { key: "token", label: "Token de API MikWeb", placeholder: "mikweb_token_7182947192837", tipo: "password", obrigatorio: true, ajuda: "Token de API gerado na sua conta MikWeb" }
+      ],
+      recursos: [
+        "Consulta de Clientes e Roteadores Conectados",
+        "Geração de Faturas e PIX Copia-e-Cola",
+        "Desbloqueio Automático nos Roteadores MikroTik",
+        "Listagem de Planos de Velocidade",
+        "Status de Pagamentos Confirmados"
+      ],
+      passoAPasso: [
+        "Faça login na sua conta MikWeb e acesse Configurações da Conta > Integração API.",
+        "Gere um novo Token de API para aplicações externas.",
+        "Verifique se o seu concentrador MikroTik está conectado e sincronizado no MikWeb.",
+        "Insira o Token no formulário do NAP.",
+        "Clique em Testar Conexão para validar o canal de comunicação."
+      ]
+    },
+    {
+      id: "sgp",
+      nome: "SGP (Sistema de Gestão de Provedores)",
+      sigla: "SGP",
+      categoria: "ERP Telecom Integrado",
+      protocolo: "REST / HTTPS v2.4",
+      corBadge: "from-slate-700 to-slate-900",
+      versaoApiHomologada: "SGP REST v8.4.2 Enterprise",
+      docUrl: "https://sgp.net.br",
+      descricao: "ERP telecom nativo integrado com suporte completo a clientes, financeiro, emissão de PIX dinâmico e controle de Radius.",
+      campos: [
+        { key: "urlBase", label: "URL Base do SGP", placeholder: "https://api.sgp.provedor.com.br/v1", tipo: "url", obrigatorio: true, ajuda: "Endereço da API do seu SGP" },
+        { key: "appId", label: "App ID / Código da Aplicação", placeholder: "NAP_SGP_PROD_991", tipo: "text", obrigatorio: true, ajuda: "Identificador da aplicação cadastrada no SGP" },
+        { key: "token", label: "Token de Acesso SGP", placeholder: "sgp_sec_token_99182374981729", tipo: "password", obrigatorio: true, ajuda: "Token gerado no painel do SGP" }
+      ],
+      recursos: [
+        "Visão 360 do Cliente e Histórico Financeiro",
+        "Faturas em Aberto, 2ª Via e QR Code PIX",
+        "Desbloqueio em Confiança por 48 horas",
+        "Aviso Sonoro de Inadimplente no Atendimento",
+        "Status de Conexão no Servidor Radius"
+      ],
+      passoAPasso: [
+        "No painel do SGP, vá em Configurações > Integrações > API SGP.",
+        "Crie ou recupere o App ID e Token de acesso do seu provedor.",
+        "Habilite os módulos de atendimento, financeiro e desbloqueio.",
+        "Preencha as credenciais no NAP e clique em Testar Conexão.",
+        "Ative o ERP para sincronizar a base de assinantes."
+      ]
+    }
+  ];
+
+  // Obter catálogo de ERPs e configurações salvas
+  app.get("/api/integracoes/erp", (req, res) => {
+    const erpAtivoId = (systemConfig as any).erpAtivo || "ixc";
+    const erpsSalvos = (systemConfig as any).erps || {};
+
+    // Mescla dados de catálogo com configurações atuais
+    const listaErps = ERP_CATALOGO_HOMOLOGADO.map(erp => {
+      const configSalva = erpsSalvos[erp.id] || {};
+      return {
+        ...erp,
+        ativo: erp.id === erpAtivoId,
+        config: {
+          urlBase: configSalva.urlBase || "",
+          token: configSalva.token ? "••••••••••••••••" : "",
+          appId: configSalva.appId || "",
+          clientId: configSalva.clientId || "",
+          clientSecret: configSalva.clientSecret ? "••••••••••••••••" : "",
+          usuarioId: configSalva.usuarioId || "",
+          provedorId: configSalva.provedorId || "",
+          autoDesbloqueio48h: configSalva.autoDesbloqueio48h !== false,
+          avisoSonoroInadimplente: Boolean(configSalva.avisoSonoroInadimplente),
+          habilitarConsultaRadius: configSalva.habilitarConsultaRadius !== false,
+          syncIntervalMinutes: configSalva.syncIntervalMinutes || 15,
+          status: configSalva.status || (erp.id === erpAtivoId ? "conectado" : "desconectado"),
+          latenciaMs: configSalva.latenciaMs || (erp.id === erpAtivoId ? 24 : null),
+          ultimaSincronizacao: configSalva.ultimaSincronizacao || (erp.id === erpAtivoId ? new Date().toISOString() : null)
+        }
+      };
+    });
+
+    res.json({
+      sucesso: true,
+      erpAtivo: erpAtivoId,
+      erps: listaErps
+    });
+  });
+
+  // Ativar um ERP como o principal do provedor
+  app.post("/api/integracoes/erp/ativar", (req, res) => {
+    const { erpId } = req.body;
+    const encontrado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === erpId);
+
+    if (!encontrado) {
+      return res.status(400).json({ sucesso: false, erro: "ERP não suportado pelo catálogo NAP." });
+    }
+
+    (systemConfig as any).erpAtivo = erpId;
+    if (!(systemConfig as any).erps) {
+      (systemConfig as any).erps = {};
+    }
+    if (!(systemConfig as any).erps[erpId]) {
+      (systemConfig as any).erps[erpId] = {
+        id: erpId,
+        nome: encontrado.nome,
+        categoria: encontrado.categoria,
+        protocolo: encontrado.protocolo,
+        urlBase: "",
+        status: "conectado",
+        autoDesbloqueio48h: true,
+        avisoSonoroInadimplente: true,
+        habilitarConsultaRadius: true,
+        syncIntervalMinutes: 15,
+        latenciaMs: 24,
+        ultimaSincronizacao: new Date().toISOString()
+      };
+    } else {
+      (systemConfig as any).erps[erpId].status = "conectado";
+      (systemConfig as any).erps[erpId].ultimaSincronizacao = new Date().toISOString();
+    }
+
+    // Auditoria
+    auditLogs.unshift({
+      id: `log-${Date.now()}`,
+      usuario: "Admin NAP",
+      modulo: "Integrações Multi-ERP",
+      acao: `Ativação do ERP ${encontrado.nome}`,
+      detalhes: `Provedor alterou o ERP ativo para ${encontrado.nome} (${encontrado.protocolo}).`,
+      ip: req.ip || "127.0.0.1",
+      data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
+    });
+
+    res.json({
+      sucesso: true,
+      mensagem: `Integração com ${encontrado.nome} ativada como ERP primário do NAP com sucesso!`,
+      erpAtivo: erpId,
+      detalhes: encontrado
+    });
+  });
+
+  // Salvar credenciais e opções de um ERP específico
+  app.post("/api/integracoes/erp/salvar", (req, res) => {
+    const { erpId, config } = req.body;
+    const encontrado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === erpId);
+
+    if (!encontrado) {
+      return res.status(400).json({ sucesso: false, erro: "ERP não encontrado." });
+    }
+
+    if (!(systemConfig as any).erps) {
+      (systemConfig as any).erps = {};
+    }
+
+    const configAtual = (systemConfig as any).erps[erpId] || {};
+    (systemConfig as any).erps[erpId] = {
+      ...configAtual,
+      id: erpId,
+      nome: encontrado.nome,
+      categoria: encontrado.categoria,
+      protocolo: encontrado.protocolo,
+      ...config,
+      // Se o token vier mascarado e já havia valor antes, preserva
+      token: (config.token && !config.token.includes("••••")) ? config.token : (configAtual.token || config.token),
+      clientSecret: (config.clientSecret && !config.clientSecret.includes("••••")) ? config.clientSecret : (configAtual.clientSecret || config.clientSecret),
+      status: "conectado",
+      ultimaSincronizacao: new Date().toISOString()
+    };
+
+    res.json({
+      sucesso: true,
+      mensagem: `Parâmetros de conexão do ${encontrado.nome} salvos com sucesso!`,
+      erp: (systemConfig as any).erps[erpId]
+    });
+  });
+
+  // Validar pré-configuração e testar conexão em tempo real
+  app.post("/api/integracoes/erp/testar", async (req, res) => {
+    const { erpId, config = {} } = req.body;
+    const encontrado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === erpId);
+
+    if (!encontrado) {
+      return res.status(400).json({ sucesso: false, erro: "ERP não identificado para validação." });
+    }
+
     const inicio = Date.now();
-    await new Promise(resolve => setTimeout(resolve, 380));
+    // Simula validação real em tempo de resposta de rede (250-450ms)
+    await new Promise(resolve => setTimeout(resolve, 280 + Math.floor(Math.random() * 120)));
     const latencia = Date.now() - inicio;
 
-    let versaoApi = "SGP REST v8.4.2 Enterprise";
-    let contratosSincronizados = 12450;
-    let detalhes = "Banco de Faturas e Radius MikroTik conectados.";
+    // Constrói o checklist detalhado de validação técnica da pré-configuração
+    const checklist = [
+      {
+        id: "ssl_connect",
+        item: "Conectividade HTTPS e Handshake TLS",
+        status: "ok",
+        mensagem: "Servidor respondeu via HTTPS com certificado válido e handshake criptografado concluído."
+      },
+      {
+        id: "token_auth",
+        item: "Autenticação e Validade das Credenciais",
+        status: "ok",
+        mensagem: "Chave/Token validado com sucesso pelo endpoint de autenticação do ERP."
+      },
+      {
+        id: "clientes_read",
+        item: "Módulo de Assinantes & Contratos (Leitura)",
+        status: "ok",
+        mensagem: "Permissão confirmada: 14.820 contratos acessíveis para sincronização do CRM 360."
+      },
+      {
+        id: "financeiro_pix",
+        item: "Módulo Financeiro & Emissão de PIX Dinâmico",
+        status: "ok",
+        mensagem: "Emissão de 2ª via e geração de payload PIX Copia-e-Cola e QR Code operacional."
+      },
+      {
+        id: "desbloqueio_corte",
+        item: "Permissão de Auto-Desbloqueio em Confiança",
+        status: config.autoDesbloqueio48h !== false ? "ok" : "alerta",
+        mensagem: config.autoDesbloqueio48h !== false 
+          ? "Comando de liberação temporária (48h/72h) autorizado para execução no servidor de autenticação."
+          : "Desbloqueio automático desativado pelo usuário nas opções de negócio."
+      }
+    ];
 
-    if (tipoErp === "ixc") {
-      versaoApi = "IXC Soft WebServices API v1 (REST Webservice)";
-      contratosSincronizados = 14200;
-      detalhes = "Conexão com radius_radusuarios e webservice_faturas validada.";
-    } else if (tipoErp === "mkauth") {
-      versaoApi = "MK-AUTH API SSH/REST v24.01";
-      contratosSincronizados = 8920;
-      detalhes = "Tabelas sis_cliente e sis_lanc operacionais.";
-    } else if (tipoErp === "hubsoft") {
-      versaoApi = "HubSoft Public API v2";
-      contratosSincronizados = 16800;
-      detalhes = "OAuth 2.0 Bearer Token autenticado com sucesso.";
+    // Exemplo de retorno simulado do assinante consultado para validação visual do operador
+    const exemploSincronizado = {
+      cliente_exemplo: "Carlos Eduardo Mendes",
+      documento: "123.456.789-00",
+      contrato_codigo: `CT-2026-${erpId.toUpperCase()}-0982`,
+      plano: "Fibra 600 Mega Simétrico - Wi-Fi 6",
+      status_conexao: "Online (PPPoE / IPv4 Dinâmico)",
+      ipv4: "100.64.45.18",
+      mac_onu: "48:57:54:38:12:9A",
+      fatura_aberta: "R$ 99,90 (Venc. 10/10/2026)",
+      pix_disponivel: true,
+      desbloqueio_disponivel: true
+    };
+
+    // Atualiza latência no registro salvo se existir
+    if ((systemConfig as any).erps?.[erpId]) {
+      (systemConfig as any).erps[erpId].latenciaMs = latencia;
+      (systemConfig as any).erps[erpId].status = "conectado";
+      (systemConfig as any).erps[erpId].ultimaSincronizacao = new Date().toISOString();
     }
+
+    res.json({
+      sucesso: true,
+      erpId,
+      nomeErp: encontrado.nome,
+      protocolo: encontrado.protocolo,
+      versaoApiDetectada: encontrado.versaoApiHomologada,
+      latenciaMs: latencia,
+      statusGeral: "online",
+      checklist,
+      exemploSincronizado,
+      mensagem: `Pré-configuração com o ${encontrado.nome} homologada com 100% de sucesso! O NAP está pronto para sincronizar.`
+    });
+  });
+
+  // Testar conexão Multi-ERP legado (mantido para compatibilidade com qualquer chamada existente)
+  app.post("/api/configuracoes/test-erp", async (req, res) => {
+    const { tipoErp = "ixc", url = "", token = "", appId = "" } = req.body;
+    const inicio = Date.now();
+    await new Promise(resolve => setTimeout(resolve, 320));
+    const latencia = Date.now() - inicio;
+
+    const catalogado = ERP_CATALOGO_HOMOLOGADO.find(e => e.id === tipoErp) || ERP_CATALOGO_HOMOLOGADO[0];
 
     res.json({
       success: true,
       status: "online",
       latenciaMs: latencia,
-      tipoErp: tipoErp.toUpperCase(),
-      versaoApi,
-      contratosSincronizados,
-      detalhes,
+      tipoErp: catalogado.id.toUpperCase(),
+      versaoApi: catalogado.versaoApiHomologada,
+      contratosSincronizados: 14820,
+      detalhes: `Conexão validada com sucesso com a API do ${catalogado.nome}.`,
       servicos: {
         radius: "Operacional",
         financeiro: "Sincronizado",

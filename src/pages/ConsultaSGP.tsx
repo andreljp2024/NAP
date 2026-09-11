@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { Search, Server, Wifi, Activity, CreditCard, ShieldCheck, FileText, Router, CheckCircle2, XCircle, Loader2, Zap, User, Phone, MapPin, AlertTriangle, MessageCircle, HeartHandshake, ArrowUpRight, Copy, Check, Share2, Navigation } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Server, Wifi, Activity, CreditCard, ShieldCheck, FileText, Router, CheckCircle2, XCircle, Loader2, Zap, User, Phone, MapPin, AlertTriangle, MessageCircle, HeartHandshake, ArrowUpRight, Copy, Check, Share2, Navigation, Sliders } from 'lucide-react';
 import AddressMapModal from '../components/AddressMapModal';
+import { useConfig } from '../contexts/ConfigContext';
 
 export default function ConsultaSGP() {
+  const { config } = useConfig();
+  const erpAtivoId = config.erpAtivo || 'ixc';
+  const erpAtivoObj = config.erps?.[erpAtivoId];
+  const erpNome = erpAtivoObj?.nome || erpAtivoId.toUpperCase();
+
   const [query, setQuery] = useState('Maria');
   const [loading, setLoading] = useState(false);
   const [resultados, setResultados] = useState<any[] | null>(null);
@@ -48,14 +55,24 @@ export default function ConsultaSGP() {
   return (
     <div className="flex-1 flex flex-col h-full bg-[#0b0f19] overflow-hidden relative">
       {/* Header */}
-      <div className="p-6 border-b border-white/5 bg-[#101726] z-10  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="p-6 border-b border-white/5 bg-[#101726] z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
             <Server className="text-blue-400" size={24} />
-            Workspace ERP (Integração SGP)
+            Workspace CRM & ERP Telecom
           </h1>
-          <p className="text-sm text-slate-400 mt-1">Visão 360 do assinante: Suporte, Financeiro e Vendas num único painel.</p>
+          <p className="text-sm text-slate-400 mt-1">
+            Conectado ao <strong className="text-blue-400">{erpNome}</strong> • Visão 360 do assinante, faturas, PIX e telecom.
+          </p>
         </div>
+
+        <Link
+          to="/admin/configuracoes"
+          className="px-4 py-2 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/10 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0"
+        >
+          <Sliders size={14} className="text-blue-400" />
+          <span>Configurações ERP ({erpAtivoId.toUpperCase()})</span>
+        </Link>
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 md:p-8">
@@ -87,7 +104,7 @@ export default function ConsultaSGP() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20 text-blue-400">
             <Loader2 size={40} className="animate-spin mb-4" />
-            <p className="font-bold text-slate-400">Sincronizando com SGP...</p>
+            <p className="font-bold text-slate-400">Sincronizando com {erpNome}...</p>
           </div>
         )}
 

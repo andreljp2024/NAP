@@ -32,6 +32,29 @@ export interface LandingPageConfig {
   plano3: PlanoLanding;
 }
 
+export type SupportedErp = 'ixc' | 'hubsoft' | 'radiusnet' | 'mksolutions' | 'ispfy' | 'mikweb' | 'sgp';
+
+export interface ErpItemConfig {
+  id: SupportedErp;
+  nome: string;
+  categoria: string;
+  protocolo: string;
+  urlBase: string;
+  token?: string;
+  appId?: string;
+  clientId?: string;
+  clientSecret?: string;
+  usuarioId?: string;
+  provedorId?: string;
+  autoDesbloqueio48h: boolean;
+  avisoSonoroInadimplente: boolean;
+  habilitarConsultaRadius: boolean;
+  syncIntervalMinutes: number;
+  status: 'conectado' | 'desconectado' | 'alerta';
+  ultimaSincronizacao?: string;
+  latenciaMs?: number;
+}
+
 export interface SystemConfig {
   provedor: {
     nomeFantasia: string;
@@ -49,6 +72,8 @@ export interface SystemConfig {
     themeMode: 'dark' | 'light';
   };
   landingPage: LandingPageConfig;
+  erpAtivo: SupportedErp;
+  erps: Record<SupportedErp, ErpItemConfig>;
   sgp: {
     urlBase: string;
     appId: string;
@@ -144,6 +169,109 @@ export const DEFAULT_CONFIG: SystemConfig = {
     plano1: { nome: "Fibra 400 Mega", velocidade: "400", preco: "89,90", tag: "Essencial", wifi: "Wi-Fi 5 Dual-Band Incluso", streaming: "Paramount+ Incluso" },
     plano2: { nome: "Fibra 700 Mega", velocidade: "700", preco: "119,90", tag: "Mais Popular", wifi: "Roteador Wi-Fi 6 Mesh Gigagold", streaming: "Paramount+ & Max Inclusos" },
     plano3: { nome: "Fibra 1 Giga Gamer", velocidade: "1000", preco: "159,90", tag: "Gamer / Pro", wifi: "2x Nós Mesh Wi-Fi 6 Mesh", streaming: "IP Fixo + Rota Baixa Latência" }
+  },
+  erpAtivo: 'ixc' as SupportedErp,
+  erps: {
+    ixc: {
+      id: 'ixc',
+      nome: 'IXC Soft (IXC Provedor)',
+      categoria: 'ERP / CRM Telecom',
+      protocolo: 'Webservice REST JSON v1',
+      urlBase: 'https://ixc.naptelecom.com.br/webservice/v1',
+      token: '12:YXBpX3Rva2VuX3NlY3JldG9faXhjXzIwMjY=',
+      usuarioId: '1',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: true,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 10,
+      status: 'conectado',
+      latenciaMs: 24,
+      ultimaSincronizacao: new Date().toISOString()
+    },
+    hubsoft: {
+      id: 'hubsoft',
+      nome: 'Hubsoft Telecom',
+      categoria: 'ERP Cloud para ISPs',
+      protocolo: 'API REST v1 / v2',
+      urlBase: 'https://naptelecom.hubsoft.com.br/api/v1',
+      clientId: 'nap_omni_hubsoft_client',
+      clientSecret: 'hub_sec_9918237498172938472918',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: true,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'desconectado'
+    },
+    radiusnet: {
+      id: 'radiusnet',
+      nome: 'RadiusNet',
+      categoria: 'ERP & AAA Radius',
+      protocolo: 'REST API v2',
+      urlBase: 'https://api.radiusnet.com.br/v2',
+      token: 'rnet_key_99382173489127',
+      provedorId: '1',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: false,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'desconectado'
+    },
+    mksolutions: {
+      id: 'mksolutions',
+      nome: 'MK Solutions (MK-Auth / MK v2)',
+      categoria: 'ERP Telecom & Financeiro',
+      protocolo: 'REST / Webservice v1/v2',
+      urlBase: 'https://mk.naptelecom.com.br/api/v1',
+      token: 'mk_jwt_token_secret_99812',
+      appId: 'NAP_MK_APP',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: true,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'desconectado'
+    },
+    ispfy: {
+      id: 'ispfy',
+      nome: 'ISPFy',
+      categoria: 'Sistema de Gestão para ISPs',
+      protocolo: 'ISPFy REST API v1',
+      urlBase: 'https://naptelecom.ispfy.com.br/api/v1',
+      token: 'ispfy_tok_49817298371982',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: false,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'desconectado'
+    },
+    mikweb: {
+      id: 'mikweb',
+      nome: 'MikWeb',
+      categoria: 'Gerenciador MikroTik & ISP',
+      protocolo: 'MikWeb API v1',
+      urlBase: 'https://api.mikweb.com.br/v1',
+      token: 'mikweb_token_7182947192837',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: false,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'desconectado'
+    },
+    sgp: {
+      id: 'sgp',
+      nome: 'SGP (Sistema de Gestão de Provedores)',
+      categoria: 'ERP Telecom Integrado',
+      protocolo: 'REST / HTTPS v2.4',
+      urlBase: 'https://api.sgp.provedor.com.br/v1',
+      appId: 'NAP_SGP_PROD_991',
+      token: 'sgp_sec_token_99182374981729',
+      autoDesbloqueio48h: true,
+      avisoSonoroInadimplente: true,
+      habilitarConsultaRadius: true,
+      syncIntervalMinutes: 15,
+      status: 'conectado',
+      latenciaMs: 31,
+      ultimaSincronizacao: new Date().toISOString()
+    }
   },
   sgp: {
     urlBase: "https://api.sgp.provedor.com.br/v1",

@@ -15,11 +15,15 @@ import OperatorStatusControl from './OperatorStatusControl';
 import OperatorPwaControls from './OperatorPwaControls';
 import SyncStatusMonitor from './SyncStatusMonitor';
 import { useGeolocationTracker } from '../hooks/useGeolocationTracker';
+import { useConfig } from '../contexts/ConfigContext';
 
 export default function Layout() {
   const { logout, user } = useAuth();
+  const { config } = useConfig();
   const location = useLocation();
   const { geoData } = useGeolocationTracker();
+
+  const erpAtivo = config.erpAtivo || 'ixc';
 
   // Estado de recolhimento no Desktop com persistência local
   const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
@@ -70,7 +74,7 @@ export default function Layout() {
     if (path.startsWith('/admin/vendas')) return { title: 'Kanban de Vendas', category: 'Novos Assinantes & Upgrades', icon: <ShoppingCart size={18} className="text-emerald-600" /> };
     if (path.startsWith('/admin/campanhas')) return { title: 'Operação Ativa', category: 'Campanhas HSM & URA Reversa', icon: <Megaphone size={18} className="text-indigo-600" /> };
     if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-400" /> };
-    if (path.startsWith('/admin/sgp')) return { title: 'Workspace SGP (ERP)', category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/sgp')) return { title: `Workspace ERP (${erpAtivo.toUpperCase()})`, category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
     if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-400" /> };
@@ -162,7 +166,7 @@ export default function Layout() {
               {hasAccess(['operador']) && <NavItem to="/admin/vendas" icon={<ShoppingCart size={18} />} label="Vendas & Leads" isCollapsed={isCollapsed} />}
               {hasAccess(['operador']) && <NavItem to="/admin/campanhas" icon={<Megaphone size={18} />} label="Ativo (Campanhas)" isCollapsed={isCollapsed} />}
               {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/crm" icon={<Users size={18} />} label="CRM Clientes" isCollapsed={isCollapsed} />}
-              {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Consulta SGP" isCollapsed={isCollapsed} />}
+              {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Workspace ERP" badge={erpAtivo.toUpperCase()} isCollapsed={isCollapsed} />}
               {hasAccess(['tecnico_noc']) && <NavItem to="/admin/genieacs" icon={<Router size={18} />} label="GenieACS" isCollapsed={isCollapsed} />}
               <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Base de Conhecimento" isCollapsed={isCollapsed} />
             </nav>

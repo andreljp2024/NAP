@@ -8,6 +8,7 @@ import {
   LayoutTemplate, Monitor, ExternalLink, CheckSquare
 } from 'lucide-react';
 import LogoUploader from '../components/LogoUploader';
+import ERPIntegrationsHub from '../components/ERPIntegrationsHub';
 import { useConfig, SystemConfig, DEFAULT_CONFIG, MacroItem } from '../contexts/ConfigContext';
 
 type TabType = 'identidade' | 'landingpage' | 'sgp' | 'telefonia' | 'whatsapp' | 'ia' | 'atendimento' | 'macros' | 'seguranca';
@@ -382,7 +383,7 @@ export default function SuperAdmin() {
               active={activeTab === 'sgp'} 
               onClick={() => setActiveTab('sgp')} 
               icon={<Database size={16} />} 
-              label="ERP SGP (Billing)" 
+              label="ERP & Gestão (Multi-ERP)" 
             />
             <TabButton 
               active={activeTab === 'telefonia'} 
@@ -1209,143 +1210,9 @@ export default function SuperAdmin() {
               </div>
             )}
 
-            {/* ABA 3: ERP SGP BILLING */}
+            {/* ABA 3: MULTI-ERP INTEGRATIONS (IXC, HUBSOFT, RADIUSNET, MK, ISPFY, MIKWEB, SGP) */}
             {activeTab === 'sgp' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
-                    <Database className="text-emerald-600" size={18} />
-                    Conexão com Sistema de Gestão SGP
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    Configuração da API REST do SGP para leitura de faturas, desbloqueio em confiança, contratos e telemetria de OLT.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">URL Base da API do SGP</label>
-                    <input 
-                      type="text" 
-                      value={config.sgp.urlBase} 
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, urlBase: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">SGP App ID</label>
-                    <input 
-                      type="text" 
-                      value={config.sgp.appId} 
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, appId: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Token Secreto de API</label>
-                    <div className="relative">
-                      <input 
-                        type={showSgpToken ? 'text' : 'password'} 
-                        value={config.sgp.token} 
-                        onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, token: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={() => setShowSgpToken(!showSgpToken)} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-400"
-                      >
-                        {showSgpToken ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Intervalo de Sincronização Automática</label>
-                    <select
-                      value={config.sgp.syncIntervalMinutes}
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, syncIntervalMinutes: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600"
-                    >
-                      <option value={5}>A cada 5 minutos (Alta rotatividade)</option>
-                      <option value={15}>A cada 15 minutos (Recomendado)</option>
-                      <option value={30}>A cada 30 minutos</option>
-                      <option value={60}>A cada 1 hora</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Regras de Negócio & Cobrança Automática</span>
-                  
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={config.sgp.autoDesbloqueio48h} 
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, autoDesbloqueio48h: e.target.checked } })}
-                      className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div>
-                      <span className="text-xs font-bold text-white block">Habilitar Desbloqueio 48h em Confiança Automático</span>
-                      <span className="text-[11px] text-slate-500">Permite que assinantes inadimplentes reativem o sinal provisoriamente via Portal ou WhatsApp sem intervenção humana.</span>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={config.sgp.avisoSonoroInadimplente} 
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, avisoSonoroInadimplente: e.target.checked } })}
-                      className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div>
-                      <span className="text-xs font-bold text-white block">Alerta Visual e Sonoro de Fatura em Atraso para Operadores</span>
-                      <span className="text-[11px] text-slate-500">Destaca em vermelho no atendimento quando o cliente que está chamando possui fatura vencida há mais de 5 dias.</span>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={config.sgp.habilitarConsultaRadius} 
-                      onChange={(e) => setConfig({ ...config, sgp: { ...config.sgp, habilitarConsultaRadius: e.target.checked } })}
-                      className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div>
-                      <span className="text-xs font-bold text-white block">Consulta Instantânea de Sessão RADIUS (PPPoE / IP)</span>
-                      <span className="text-[11px] text-slate-500">Lê o IP atribuído, MAC Address da ONU e tempo de conexão diretamente do servidor de acesso MikroTik/Huawei.</span>
-                    </div>
-                  </label>
-                </div>
-
-                {/* Card de Teste SGP */}
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 mb-1">
-                      <Database size={14} className="text-emerald-400" /> Teste de Conectividade do SGP
-                    </h4>
-                    <p className="text-xs text-slate-400">
-                      Executa verificação da API REST, banco de faturas e servidores de autenticação RADIUS.
-                    </p>
-                    {testResults.sgp && (
-                      <p className="text-xs font-mono text-emerald-400 mt-2 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg inline-block">
-                        ✓ Status: {testResults.sgp.status.toUpperCase()} • Latência: {testResults.sgp.latenciaMs}ms • Versão: {testResults.sgp.versaoApi}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => runTest('sgp')}
-                    disabled={testing.sgp}
-                    type="button"
-                    className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-emerald-500/20 shrink-0"
-                  >
-                    {testing.sgp ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                    <span>{testing.sgp ? 'Testando...' : 'Testar Conexão SGP'}</span>
-                  </button>
-                </div>
-              </div>
+              <ERPIntegrationsHub />
             )}
 
             {/* ABA 3: TELEFONIA ASTERISK & FREEPBX */}
