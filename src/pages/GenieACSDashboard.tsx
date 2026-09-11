@@ -4,6 +4,7 @@ import {
   Signal, RefreshCw, Smartphone, Wrench, BarChart3, Radio, ShieldAlert, 
   Plus, Send, Clock, MapPin, Users, Zap, Check, X, Lock, KeyRound, Cpu, Gauge 
 } from 'lucide-react';
+import { useGenieACSMonitor } from '../hooks/useGenieACSMonitor';
 
 interface DeviceInfo {
   _id: string;
@@ -49,6 +50,9 @@ export default function GenieACSDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
   const [syncing, setSyncing] = useState(false);
+
+  // Hook de serviço para validação periódica da conexão GenieACS
+  const acsMonitor = useGenieACSMonitor({ intervalMs: 15000 });
 
   // Ações TR-069
   const [feedbackTr069, setFeedbackTr069] = useState<string | null>(null);
@@ -176,13 +180,17 @@ export default function GenieACSDashboard() {
     fetchDevices();
   }, []);
 
-  const handleSync = () => {
+  const handleSync = async () => {
     setSyncing(true);
-    setTimeout(() => {
+    try {
+      await Promise.all([
+        fetchIncidentes(),
+        fetchDevices(),
+        acsMonitor.revalidate()
+      ]);
+    } finally {
       setSyncing(false);
-      fetchIncidentes();
-      fetchDevices();
-    }, 1200);
+    }
   };
 
   const handleRebootDevice = async (device: DeviceInfo) => {
@@ -344,9 +352,29 @@ export default function GenieACSDashboard() {
               <h1 className="text-2xl font-bold text-white font-outfit tracking-tight">NOC & Telemetria FTTH</h1>
               <div className="flex items-center gap-2 mt-0.5">
                 <p className="text-sm text-slate-400">GenieACS TR-069 e Gestão Proativa de Incidentes Massivos</p>
-                <span className="bg-emerald-500/20 text-emerald-400 text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> NBI CONECTADO
-                </span>
+                <button 
+                  onClick={() => acsMonitor.revalidate()}
+                  disabled={acsMonitor.validating}
+                  title={`Endpoint: ${acsMonitor.endpoint} • Clique para revalidar agora`}
+                  className={`text-[9px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 transition-all cursor-pointer ${
+                    acsMonitor.status === 'online'
+                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30'
+                      : acsMonitor.status === 'degradado'
+                      ? 'bg-amber-500/20 text-amber-400 border-amber-500/30 hover:bg-amber-500/30'
+                      : 'bg-rose-500/20 text-rose-400 border-rose-500/30 hover:bg-rose-500/30'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    acsMonitor.status === 'online' ? 'bg-emerald-400 animate-pulse' : (acsMonitor.status === 'degradado' ? 'bg-amber-400' : 'bg-rose-400')
+                  }`}></span>
+                  <span>{acsMonitor.status === 'online' ? 'NBI CONECTADO' : (acsMonitor.status === 'degradado' ? 'NBI INSTÁVEL' : 'NBI OFFLINE')}</span>
+                  {acsMonitor.latency ? (
+                    <span className="font-mono text-[8px] opacity-80">({acsMonitor.latency}ms)</span>
+                  ) : null}
+                  {acsMonitor.validating && (
+                    <RefreshCw size={9} className="animate-spin text-blue-400 ml-0.5" />
+                  )}
+                </button>
               </div>
             </div>
           </div>

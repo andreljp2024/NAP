@@ -9,6 +9,7 @@ import {
   Star, HeartHandshake, Smile, Meh, Frown, ThumbsUp, Send, Filter, Sparkles, RefreshCw
 } from 'lucide-react';
 import Webphone from '../components/Webphone';
+import SyncStatusMonitor from '../components/SyncStatusMonitor';
 
 const dataResolucao = [
   { name: 'Seg', humano: 120, ia: 250 },
@@ -133,6 +134,9 @@ export default function Analytics() {
 
         {abaAtiva === 'operacao' ? (
           <>
+            {/* Monitor de Conectividade em Tempo Real (SGP & GenieACS) */}
+            <SyncStatusMonitor variant="card" />
+
             {/* Top KPIs */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <MetricCard 

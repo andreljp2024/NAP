@@ -13,6 +13,7 @@ import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
 import OperatorStatusControl from './OperatorStatusControl';
 import OperatorPwaControls from './OperatorPwaControls';
+import SyncStatusMonitor from './SyncStatusMonitor';
 import { useGeolocationTracker } from '../hooks/useGeolocationTracker';
 
 export default function Layout() {
@@ -334,11 +335,8 @@ export default function Layout() {
             {/* Notificações Push & PWA do Operador */}
             <OperatorPwaControls />
 
-            {/* Status Telecom & SGP */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#101726]/5 border border-white/5 text-[11px] font-medium text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>FreePBX & SGP Online</span>
-            </div>
+            {/* Monitor de Sincronização SGP & GenieACS em Tempo Real */}
+            <SyncStatusMonitor variant="topbar" className="hidden lg:flex" />
 
             {/* Webphone / Ramal SIP */}
             <div className="relative">
