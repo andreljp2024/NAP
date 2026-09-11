@@ -1,77 +1,83 @@
 # NAP - Núcleo de Atendimento ao Provedor
 
-Uma plataforma Full-Stack de CRM e Omnichannel desenvolvida sob medida para **Provedores de Internet (ISP)**. Foco absoluto em centralização de suporte, faturamento, operações de campo NOC/CPE e agilidade extrema no Atendimento N1.
+Uma plataforma Full-Stack SaaS Omnichannel desenvolvida sob medida para **Provedores de Internet (ISPs)**. Foco absoluto em centralização de suporte N1/N2, multi-ERP com monitor de latência (ping), telefonia Asterisk com IA em tempo real, telemetria de rede TR-069 (GenieACS), autoatendimento via PWA do assinante e operação de campo com rastreamento GPS.
 
-*(Nota: O aplicativo foi desenhado para ser full-stack e seguro. Todas as chaves e requisições para LLMs, ERP e Asterisk devem ser efetuadas via API Server-Side, o sistema aciona automaticamente uma **Mock Session** local (Spoofing) para não bloquear a experiência do desenvolvedor/operador).*
+*(Nota: O aplicativo opera com arquitetura full-stack segura. Todas as chaves e requisições para LLMs Google GenAI, ERPs e Asterisk são intermediadas exclusivamente pelo servidor Node.js (`server.ts`). Caso a rede externa ou ERP caia, o sistema aciona automaticamente uma **Mock Session** e banco in-memory para manter 100% da experiência funcional).*
+
+---
 
 ## 📄 Documentação Oficial
+- 📚 [Manual e Base de Conhecimento Interativa (`/admin/ajuda`)](./src/pages/Helpers.tsx)
+- 🏗️ [Arquitetura do Ecossistema](./ARCHITECTURE.md)
+- 📖 [PRD - Requisitos e Arquitetura do Produto](./docs/PRD.md)
 - 📱 [Guia de Compilação APK (Android)](./PWA_TO_APK.md)
-- 📖 [PRD - Requisitos e Arquitetura do Produto](./PRD.md)
 - 🚀 [Manual de Deploy em Produção](./MANUAL_DEPLOY.md)
 
+---
+
 ## 📡 Roteamento Principal
-- `/` - Landing Page de Aquisição (Para novos clientes contratarem planos, com seletor flutuante de temas)
-- `/login` - Tela de autenticação unificada (com suporte a Mock Session para desenvolvimento)
-- `/admin` - Painel Operacional SaaS (SuperAdmin com visão de KPIs, configurações gerais e Disaster Recovery)
+- `/` - Landing Page de Aquisição (Planos de internet fibra óptica com seletor de temas)
+- `/login` - Autenticação com controle de acesso RBAC e fallback de Mock Session
+- `/admin` - Painel Operacional Unificado (Inbox Omnichannel, KPIs, CRM 360 e Kanban)
 - `/admin/analytics` - Painel de BI & Analytics com métricas operacionais, TMR e dados em tempo real
 - `/admin/campo` - PWA Mobile-First do Técnico de Campo (Ordens de Serviço, GPS, Diagnóstico Óptico, Foto e Assinatura)
-- `/portal` - Área do Assinante PWA (Visão do cliente: 2ª via, Pix, Suporte, Webphone e Webchat IA)
+- `/admin/genieacs` - Telemetria de CPEs e monitoramento de potência óptica RX/TX (-18 a -24 dBm)
+- `/admin/usuarios` - Gestão de Equipe e Hierarquia de Acesso (4 níveis RBAC)
+- `/admin/configuracoes` - Painel SuperAdmin com Catálogo Multi-ERP, Validador de API e Disaster Recovery
+- `/admin/ajuda` - Base de Ajuda e Documentação Técnica interativa com pesquisa rápida
+- `/portal` - Área do Assinante PWA (2ª via, PIX, gestão de senha Wi-Fi, Webphone e Webchat IA)
 
-## 💡 Princípios de Design (Regras de Ouro)
-1. **Sem interfaces clichês ("AI Slop"):** Nada de gradientes purpúreos arbitrários, bordas brilhantes excessivas ou textos ilegíveis.
-2. **Contraste Máximo:** Textos sobre fundos escuros (`#0b0f19`) utilizam tons opacos refinados e padding calculado. O PWA de clientes usa um tema claro acessível.
-3. **Segurança Full-Stack:** Todas as integrações externas (Gemini, ERP, VoIP, etc.) são roteadas obrigatoriamente pelo `server.ts`, mantendo as chaves privadas totalmente ocultas do navegador (Client-Side).
+---
 
-## 🧱 Arquitetura e Módulos Entregues
+## 💡 Princípios de Design & Arquitetura
+1. **Sem "AI Slop":** Interface profissional, sem gradientes purpúreos arbitrários, bordas brilhantes excessivas ou textos ilegíveis.
+2. **Contraste & Tipografia:** Modo escuro de alto contraste (`#0b0f19`, `#06080e`) com espaçamentos milimétricos no painel de gestão; tema claro, acessível e mobile-first no Portal do Assinante.
+3. **Segurança Full-Stack:** Todas as integrações externas (Gemini, ERPs, VoIP, GenieACS) são roteadas obrigatoriamente pelo backend `server.ts`, mantendo as chaves privadas totalmente ocultas do navegador.
+4. **Isolamento por Tenant:** Uma VPS Debian 12 dedicada por provedor para máxima segurança e conformidade de dados.
 
-### Banco de Dados: Integração e Modelagem Base (Drizzle ORM)
-O backend Node.js (`server.ts`) opera com PostgreSQL e Drizzle ORM:
-- **Drizzle ORM** (`drizzle-orm` e `drizzle-kit`) configurado.
-- Os schemas primários (Usuários, Clientes, Atendimentos, Faturas, Conversas, Mensagens) foram mapeados em `/src/db/schema.ts` para espelhar as regras de negócio de telecom.
-- Comandos de migração (`npm run db:generate` e `npm run db:push`) disponíveis.
-- **Mock Fallback Resiliente:** Se o banco de dados Postgres estiver offline ou em ambiente de desenvolvimento isolado, o backend intercepta a conexão e ativa o fallback de "Mock" transparente em memória para não travar a aplicação.
+---
 
-### Kanban e Atendimentos (CRM 360)
-- Módulo de Kanban (Painéis de Suporte, Vendas e Cobrança) lê e grava os cards (`atendimentos`) diretamente na base via PostgreSQL.
-- O endpoint `/api/deals` (GET, POST, PATCH) gerencia todo o ciclo de vida dos atendimentos.
+## 🧱 Módulos do Sistema
 
-### Sincronização Automática SGP (ERP) -> PostgreSQL
-- **Webhook de Sync:** Endpoint `/api/webhooks/n8n/sgp-sync` para receber os eventos (criação, edição, bloqueio de clientes) do SGP via *n8n* ou diretamente, executando o `UPSERT` de clientes na base local.
-- **Leitura Híbrida (Contatos):** Rota `/api/contatos` prioriza leitura do PostgreSQL local. Se indisponível, busca na API do ERP; em último caso, lê do cache em memória.
+### 1. Hub Multi-ERP com Monitor de Ping & Latência em Tempo Real
+- **Conectores Homologados:** Suporte nativo a **IXC Soft (IXC Provedor)**, **Hubsoft Telecom**, **MikWeb**, **SGP**, **MK Solutions**, **ISPFy** e **RadiusNet**.
+- **Validador de API:** Bateria de testes em tempo real (Handshake TLS, Autenticação, Leitura de Contratos, Emissão de PIX e Auto-desbloqueio 48h).
+- **Indicador Visual de Latência (`ErpPingBadge`):** Monitoramento contínuo de ping (`ms`), cálculo de jitter, barras de intensidade de sinal e categorização semântica (Excelente `<60ms`, Estável `<150ms`, Lento `>150ms`).
+- **Alternância Dinâmica:** Troca do ERP ativo com 1 clique no painel administrativo.
 
-### WhatsApp Cloud API (WABA) & Copiloto Gemini
-- Webhook `/api/webhooks/waba/incoming` para receber os eventos oficiais de mensagens da API da Meta.
-- **Triagem IA**: Quando uma mensagem entra na `fila = triagem_ia`, o backend intercepta, cruza os dados com o SGP (status do cliente, telemetria da ONU via GenieACS) e gera automaticamente o texto de resposta através da API nativa do Gemini 2.5 (`@google/genai`).
-- A API `/api/conversas` expõe esses chats em formato unificado para o layout Omnichannel com filtros por status e atendente.
+### 2. Inbox Omnichannel & Triagem IA (Cérebro Gemini 2.5 Flash)
+- **WhatsApp Cloud API (WABA) & Webchat:** Recepção unificada de conversas da Meta e do Portal do Assinante.
+- **Triagem Automatizada:** Cruzamento instantâneo da mensagem com dados do ERP e telemetria da ONU para autoatendimento.
+- **Análise de Sentimento em Tempo Real:** Medição contínua do humor do cliente (Positivo, Neutro ou Frustrado).
+- **Ações Rápidas no Chat:** Emissão de código PIX Copia-e-Cola e Desbloqueio em Confiança (48h) com 1 clique direto na conversa.
+- **Handoff Inteligente:** Transferência suave para atendente humano quando identificada complexidade ou solicitação explícita.
 
-### PWA do Cliente & Webchat IA (Omnichannel)
-- **Webchat IA** diretamente no Portal do Assinante (`/portal/suporte`).
-- Rota segura `/api/webchat/send`, onde o backend Node.js compõe o prompt validando o status da conexão da ONU (GenieACS) antes de repassar ao **Gemini 2.5 Flash**.
-- **Unificação Omnichannel:** As conversas originadas no Webchat são inseridas no mesmo schema de banco de dados do WABA (`conversas` e `mensagens`), permitindo que o operador atenda clientes do Portal e do WhatsApp na mesma fila.
+### 3. Portal do Assinante PWA (`/portal`)
+- **Autoatendimento Financeiro:** Histórico de faturas, código de barras e QR Code PIX com baixa em tempo real.
+- **Autoatendimento Wi-Fi (TR-069):** Alteração de nome de rede (SSID) e senha, medidor de segurança de senha, QR Code para conexão de visitas e reinicialização remota de ONU.
+- **Webphone WebRTC:** Ligação gratuita pelo próprio navegador até a central de suporte do provedor.
+- **Webchat com Suporte IA:** Resolução autônoma de dúvidas frequentes.
 
-### PWA do Técnico de Campo (`/admin/campo`) & Telemetria GPS
-- **Mobile-First Responsivo:** Interface otimizada para smartphones e tablets de técnicos em campo.
-- **Telemetria GPS em Tempo Real:** Rastreamento contínuo de coordenadas, velocidade (km/h), bateria e status de sinal satélite transmitido ao backend via `/api/usuarios/localizacao`.
-- **Trilha Tática de Atendimento:** Botões de ação integrados com notificações:
-  - `1. Iniciar Rota` (notifica NOC e cliente, ativa pulso GPS)
-  - `2. Cheguei` (registra horário de chegada no local)
-  - `3. Executando` (inicia a intervenção técnica)
-- **Diagnóstico Óptico TR-069 in loco:** Medição em tempo real da potência óptica RX da ONU via GenieACS com faixas de referência ideais (-18 a -24 dBm).
-- **Comprovação Digital de OS:**
-  - **Foto da Instalação:** Captura nativa da câmera do dispositivo (`capture="environment"`) para foto da CTO no poste ou ONU ligada.
-  - **Assinatura Digital no Canvas:** Campo tátil de assinatura onde o cliente assina diretamente na tela com o dedo ou stylus antes da baixa da OS.
-  - **Conclusão com Sincronização:** Validação do checklist e baixa automática no ERP SGP.
+### 4. PWA do Técnico de Campo (`/admin/campo`) & Rastreamento GPS
+- **Mobile-First para Rua:** Otimizado para smartphones de técnicos em campo.
+- **Telemetria GPS em Tempo Real:** Envio contínuo de coordenadas para o Radar do NOC (`/api/usuarios/localizacao`).
+- **Diagnóstico Óptico TR-069:** Leitura de potência óptica RX da ONU in loco com alertas de faixa recomendada (-18 a -24 dBm).
+- **Evidências Digitais:** Captura de fotos da instalação/CTO via câmera e assinatura digital do cliente na tela do celular (Canvas tátil).
 
-### Módulo de Backup & Restauração (Disaster Recovery)
-- **Exportação Completa (`GET /api/backup`):** Gera um arquivo JSON unificado contendo o snapshot de todas as tabelas (Usuários, Clientes, Atendimentos, Conversas e Mensagens).
-- **Restauração de Base (`POST /api/restore`):** Interface no SuperAdmin (`/admin`) para upload de arquivo `.json` com validação de integridade e recarga automática do estado.
-- **Resiliência em Cache:** Mecanismo automático de fallback para backups em memória caso a conexão com o banco esteja indisponível.
+### 5. Telefonia VoIP Asterisk/FreePBX & Webphone com IA de Voz
+- **Webphone WebRTC no Navegador:** Chamadas SIP diretas sem softphone externo.
+- **CTI Reverso:** Abertura automática da Ficha 360 do cliente assim que o ramal toca via eventos AMI do Asterisk.
+- **IA de Escuta Ativa:** Transcrição Speech-to-Text ao vivo, análise de sentimento da voz e sugestão de scripts dinâmicos na tela do operador.
 
-### BI & Analytics Operacional
-- Rota `/api/dashboard/stats` para consolidação em tempo real das métricas da operação: total de usuários, atendimentos por pipeline, volume de conversas e taxas de resolução automatizada por IA.
-- Dashboards com gráficos Recharts para TMR (Tempo Médio de Resposta), resolução Humano vs. IA e NPS.
+### 6. GenieACS & Telemetria Óptica de CPEs (TR-069)
+- **Comunicação CWMP / NBI (Porta 7557):** Diagnóstico de potência óptica RX/TX dBm, temperatura do laser, tempo de atividade (uptime) e reinicialização remota (`Reboot`).
 
-### Hierarquia de Acesso (RBAC) e PWA
-- Restrição de visibilidade para os 4 papéis base (`admin`, `operador`, `tecnico_noc`, `tecnico_campo`).
-- Portal do cliente protegido por Login/Token (CPF do SGP).
-- PWA configurado com `manifest.json`, Service Workers e suporte a empacotamento nativo Android via APK ([ver guia](./PWA_TO_APK.md)).
+### 7. Hierarquia de Acesso (RBAC) em 4 Níveis
+1. **Admin Geral (Super Admin):** Acesso total a configurações, Disaster Recovery, ERPs e gestão de equipe.
+2. **Operador de Atendimento:** Acesso ao Inbox Omnichannel, CRM 360, Kanban e Webphone.
+3. **Técnico NOC (N1/N2):** Acesso a telemetria GenieACS, dashboard de rede e diagnóstico técnico.
+4. **Técnico de Campo:** Acesso exclusivo ao PWA mobile de ordens de serviço (`/admin/campo`).
+
+### 8. Disaster Recovery & Manutenção
+- **Exportação de Snapshot (`GET /api/backup`):** Download de arquivo `.json` unificado com todas as tabelas e dados operacionais.
+- **Restauração de Base (`POST /api/restore`):** Upload e validação de integridade para restauração imediata.

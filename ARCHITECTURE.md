@@ -1,39 +1,70 @@
 # Arquitetura do Ecossistema NAP (Núcleo de Atendimento ao Provedor)
 
-O NAP é um orquestrador central e painel de controle (CRM/Kanban/Omnichannel) desenvolvido em React + Node.js (Express), construído para unificar as principais ferramentas open-source e comerciais de um Provedor de Internet (ISP).
-
-## Componentes do Ecossistema
-
-O NAP atua como o cérebro que interliga os seguintes módulos e repositórios:
-
-### 1. FreePBX & Asterisk (Telefonia Core)
-- **Repositório Base:** [FreePBX](https://github.com/freepbx)
-- **Papel no NAP:** Motor principal de telefonia IP (VoIP), filas de atendimento e rotas de entrada/saída do provedor.
-- **Integração:** Envia eventos via Webhook ou AMI (Asterisk Manager Interface) para o nosso backend, disparando os pop-ups de **CTI Reverso** no painel do atendente no exato momento em que o telefone toca.
-
-### 2. AVA - AI Voice Agent for Asterisk
-- **Repositório Base:** [AVA-AI-Voice-Agent-for-Asterisk](https://github.com/hkjarral/AVA-AI-Voice-Agent-for-Asterisk)
-- **Papel no NAP:** URA Cognitiva (Atendimento de Voz com IA). 
-- **Integração:** Em vez de menus de "Disque 1, Disque 2", a AVA atende o cliente, converte a voz em texto (STT) e consome nossa API intermediária (Gateway 9router) que, por sua vez, consulta o **SGP** (via `/api/sgp/ura/cliente`). A IA avalia o status do cliente (ex: "Bloqueado") e gera uma resposta de voz humanizada (TTS) orientando o cliente, antes mesmo de transbordar para o humano.
-
-### 3. WACRM (WhatsApp CRM)
-- **Repositório Base:** [WACRM](https://github.com/ArnasDon/wacrm)
-- **Papel no NAP:** Motor de gestão de conversas do WhatsApp.
-- **Integração:** Fornece a base estrutural para o nosso **Inbox Unificado**, permitindo a distribuição de conversas do WhatsApp Oficial para as colunas do Kanban (Suporte / Vendas), com injeção de IA para sugestões automáticas de respostas.
-
-### 4. SGP (Sistema de Gestão de Provedores)
-- **Papel no NAP:** Fonte da verdade (Source of Truth) dos dados cadastrais, financeiros e contratos.
-- **Integração:** Conectado via API REST oficial do SGP (usando headers `app` e `token`). O NAP faz proxy das requisições para listar clientes (Ficha 360), gerar PIX de 2ª via e baixar PDFs de boletos, garantindo que o WACRM, a URA (AVA) e o Portal do Cliente tenham os dados atualizados em tempo real.
+O NAP é um orquestrador central e painel de controle (CRM/Kanban/Omnichannel) desenvolvido em React 18 + Node.js (Express), construído especificamente para unificar as principais ferramentas operacionais e comerciais de um **Provedor de Internet (ISP)**.
 
 ---
 
-## Fluxo de Dados (Exemplo de Chamada Receptiva)
+## 🏛️ Componentes do Ecossistema
 
-1. Cliente liga para o Provedor.
-2. **FreePBX** recebe a ligação e direciona para a URA Cognitiva (**AVA**).
-3. A **AVA** faz uma requisição HTTP para o backend do **NAP**.
-4. O **NAP** consulta a API do **SGP** informando o telefone do cliente.
-5. O SGP retorna: "Cliente João Silva, Fatura Atrasada 15 dias".
-6. O **Gateway 9router (IA)** do NAP formula a frase: *"Olá João, vi que sua internet está lenta por conta de uma fatura pendente, quer que eu te envie o PIX pro seu WhatsApp?"*
-7. A **AVA** fala isso para o cliente. Se o cliente aceitar, o NAP dispara a integração com o **WACRM** que envia o código PIX no WhatsApp do cliente.
-8. Se o cliente pedir para falar com humano, o **FreePBX** transfere a ligação. O **NAP** detecta a transferência e exibe um pop-up de CTI Reverso na tela do operador com a Ficha 360 do João Silva aberta.
+O NAP atua como o cérebro que interliga os seguintes módulos e serviços:
+
+```
+                  +---------------------------------------------------+
+                  |                 NAP Core Platform                 |
+                  |     (React 18 + Node.js / Express + Drizzle)      |
+                  +---------+--------------------+--------------------+
+                            |                    |
+        +-------------------+                    +--------------------+
+        |                                                             |
+        v                                                             v
++------------------+   +-------------------+   +------------------+   +------------------+
+|  Asterisk/VoIP   |   |   Gemini 2.5 IA   |   |  Multi-ERP Hub   |   |  GenieACS TR-069 |
+| (SIP/WSS/WebRTC) |   | (Triagem & Voz)   |   | (IXC, HUB, MIK)  |   | (ONU / Roteador) |
++------------------+   +-------------------+   +------------------+   +------------------+
+        |                                              |                       |
+        v                                              v                       v
+Ramais / Operadores                             Faturas / PIX /             Sinal RX/TX
+& Assinantes Webphone                           Desbloqueio 48h             Wi-Fi & Reboot
+```
+
+---
+
+### 1. FreePBX & Asterisk (Telefonia Core & WebRTC)
+- **Papel no NAP:** Motor principal de telefonia IP (VoIP), filas de atendimento, gravação de chamadas e rotas de entrada/saída.
+- **Integração:** Conexão via WebSockets seguros (WSS) para Webphone WebRTC no navegador e eventos AMI (Asterisk Manager Interface), disparando o **CTI Reverso** (pop-up instantâneo da Ficha 360 do cliente antes de o operador atender o ramal).
+
+### 2. Cérebro de Inteligência Artificial (Google Gemini 2.5 Flash)
+- **Papel no NAP:** URA Cognitiva, Triagem Autônoma de Mensagens e Copiloto do Atendente.
+- **Integração:** Invocado exclusivamente no backend (`server.ts`) via SDK `@google/genai`. Analisa sentimento (Positivo, Neutro, Frustrado), transcreve áudio em tempo real (Speech-to-Text) durante chamadas telefônicas e gera sugestões dinâmicas de resposta e resumos operacionais.
+
+### 3. Hub Multi-ERP (IXC Soft, Hubsoft, MikWeb, SGP, MK Solutions, ISPFy, RadiusNet)
+- **Papel no NAP:** Fonte da verdade (Source of Truth) dos dados cadastrais, contratos e status financeiro dos clientes.
+- **Integração:** Camada de adaptadores REST/HTTPS com suporte a alternância instantânea. Permite emissão de faturas e chave PIX Copia-e-Cola, Desbloqueio em Confiança (48h) e monitoramento de latência e ping em tempo real (`ErpPingBadge`).
+
+### 4. GenieACS (TR-069 / CWMP - Telemetria de Redes & Wi-Fi)
+- **Papel no NAP:** Gerenciamento remoto de ONUs e roteadores Wi-Fi dos assinantes.
+- **Integração:** Comunica-se na porta `7557` (NBI API). Possibilita a leitura de potência óptica RX/TX (-18 a -24 dBm), alteração remota de SSID e senha do Wi-Fi pelo próprio cliente no Portal PWA e comandos de reinicialização (`Reboot`).
+
+### 5. PWA do Técnico de Campo (`/admin/campo`) & Radar NOC
+- **Papel no NAP:** Interface mobile-first para técnicos de rua executarem ordens de serviço (OS).
+- **Integração:** Transmite telemetria GPS contínua para o painel administrativo, permite consulta do sinal óptico da ONU in loco, registro de foto da instalação e coleta de assinatura digital do cliente na tela do celular (Canvas tátil).
+
+---
+
+## 🔄 Fluxos de Atendimento
+
+### Fluxo 1: Chamada Telefônica Receptiva com IA e CTI
+1. Assinante liga para o provedor.
+2. O **Asterisk** notifica o NAP via AMI com o número do telefone (CallerID).
+3. O NAP consulta o **ERP Ativo** e localiza o cadastro do assinante.
+4. Abre instantaneamente na tela do operador a **Ficha CRM 360** (contrato, sinal óptico da ONU e faturas abertas).
+5. O operador atende via **Webphone WebRTC** no navegador.
+6. A chamada é processada pelo Gemini para transcrição Speech-to-Text ao vivo e sugestão de scripts na tela.
+
+### Fluxo 2: Mensagem no WhatsApp com Triagem IA e PIX
+1. O cliente envia: *"Gostaria da minha fatura para pagar"*.
+2. O webhook do **WhatsApp Cloud API (WABA)** despacha para `/api/webhooks/waba/incoming`.
+3. A IA na fila `triagem_ia` identifica a intenção financeira.
+4. O NAP consulta a API do ERP, gera o código PIX Copia-e-Cola dinâmico com vencimento e valor.
+5. A IA envia o PIX com mensagem humanizada para o cliente no WhatsApp.
+6. O pagamento é compensado e o cliente recebe a confirmação imediata.
