@@ -348,10 +348,10 @@ let kanbanDeals = [
       }
       res.json(formatted);
     } catch (e) {
-      if (e && (e.code === 'ECONNREFUSED' || e.message?.includes('ECONNREFUSED'))) {
+      if (e && (e.code === 'ECONNREFUSED' || e.message?.includes('ECONNREFUSED') || e.message?.includes('Failed query'))) {
         console.warn("[Mock] Banco de dados offline. Usando fallback no /api/deals");
       } else {
-        console.error("Erro DB Deals GET", e?.message || e);
+        console.warn("[Mock] Banco de dados indisponível (Deals).", e?.message || e);
       }
       res.json(kanbanDeals);
     }
@@ -406,10 +406,10 @@ let kanbanDeals = [
         status: user[0].ativo ? 'ativo' : 'inativo'
       });
     } catch (error) {
-      if (error && (error.code === 'ECONNREFUSED' || error.message?.includes('ECONNREFUSED'))) {
+      if (error && (error.code === 'ECONNREFUSED' || error.message?.includes('ECONNREFUSED') || error.message?.includes('Failed query'))) {
         console.warn("[Mock] Banco de dados offline. Usando fallback no /api/login");
       } else {
-        console.error("DB Login error:", error?.message || error);
+        console.warn("[Mock] Banco de dados indisponível (Login).", error?.message || error);
       }
       res.status(500).json({ error: "Database offline ou erro interno." });
     }

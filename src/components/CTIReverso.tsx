@@ -15,7 +15,7 @@ export default function CTIReverso() {
     };
 
     eventSource.onerror = (error) => {
-      console.error("Erro no SSE do FreePBX:", error);
+      // Silenciar log de erro para não poluir o console quando houver reconexão ou encerramento
       eventSource.close();
     };
 
