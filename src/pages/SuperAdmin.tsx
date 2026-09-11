@@ -5,8 +5,9 @@ import {
   AlertTriangle, RefreshCw, Download, Upload, Copy, Check, Eye, 
   EyeOff, Clock, Sparkles, Globe, Lock, Sliders, Radio, 
   Terminal, ShieldCheck, ChevronRight, Zap, Plus, Trash2, Edit3, X,
-  LayoutTemplate, Monitor, ExternalLink, CheckSquare
+  LayoutTemplate, Monitor, ExternalLink, CheckSquare, ClipboardCheck
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import LogoUploader from '../components/LogoUploader';
 import ERPIntegrationsHub from '../components/ERPIntegrationsHub';
 import { useConfig, SystemConfig, DEFAULT_CONFIG, MacroItem } from '../contexts/ConfigContext';
@@ -289,6 +290,15 @@ export default function SuperAdmin() {
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0">
+            <Link
+              to="/admin/ajuda"
+              className="px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
+              title="Acessar Checklist Consolidado de Homologação & Go-Live"
+            >
+              <ClipboardCheck size={14} />
+              <span>Checklist Homologação</span>
+            </Link>
+
             <button
               onClick={handleExportBackup}
               type="button"

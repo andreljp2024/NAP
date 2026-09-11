@@ -5,12 +5,15 @@ import {
   Wifi, Smartphone, Radio, Search, Check, Copy, 
   AlertTriangle, ExternalLink, Activity, Users, 
   MapPin, HardDrive, RefreshCw, FileText, ChevronRight, 
-  HelpCircle, Wrench, Shield, CheckCircle2
+  HelpCircle, Wrench, Shield, CheckCircle2, ClipboardCheck,
+  CheckSquare, ArrowRight, ShieldAlert, PieChart, Terminal, Globe, Lock,
+  ListChecks, Clock, KeyRound, Filter, Megaphone
 } from 'lucide-react';
+import ChecklistHomologacao from '../components/ChecklistHomologacao';
 
 interface HelpSection {
   id: string;
-  category: 'core' | 'erp' | 'atendimento' | 'portal' | 'rede' | 'campo' | 'seguranca';
+  category: 'core' | 'erp' | 'atendimento' | 'portal' | 'rede' | 'campo' | 'seguranca' | 'homologacao';
   title: string;
   badge: string;
   icon: React.ReactNode;
@@ -20,7 +23,7 @@ interface HelpSection {
 }
 
 export default function Helpers() {
-  const [activeSectionId, setActiveSectionId] = useState<string>('visao-geral');
+  const [activeSectionId, setActiveSectionId] = useState<string>('pendencias-homologacao');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -33,16 +36,27 @@ export default function Helpers() {
 
   const categories = [
     { id: 'todos', label: 'Todos os Módulos' },
+    { id: 'homologacao', label: 'Pendências & Homologação' },
     { id: 'core', label: 'Visão & Core' },
     { id: 'erp', label: 'Multi-ERP & APIs' },
     { id: 'atendimento', label: 'Inbox & IA' },
     { id: 'portal', label: 'Portal do Assinante' },
     { id: 'rede', label: 'TR-069 & Wi-Fi' },
     { id: 'campo', label: 'Técnico de Campo' },
-    { id: 'seguranca', label: 'Acessos & Backup' }
+    { id: 'seguranca', label: 'Auditoria & LGPD' }
   ];
 
   const sections: HelpSection[] = useMemo(() => [
+    {
+      id: 'pendencias-homologacao',
+      category: 'homologacao',
+      title: 'Checklist & Pendências de Homologação (Staging / UAT)',
+      badge: 'Roteiro de Homologação',
+      icon: <ClipboardCheck size={18} className="text-emerald-400" />,
+      tags: ['homologacao', 'staging', 'uat', 'pendencias', 'checklist', 'producao', 'testes', 'deploy', 'provedor', 'vps'],
+      summary: 'Matriz técnica consolidada de pendências técnicas, de segurança e de documentação com progresso visual para o lançamento oficial.',
+      content: <ChecklistHomologacao />
+    },
     {
       id: 'visao-geral',
       category: 'core',
@@ -535,6 +549,104 @@ export default function Helpers() {
       )
     },
     {
+      id: 'auditoria-lgpd',
+      category: 'seguranca',
+      title: 'Auditoria Forense, Gráfico de Rosca & LGPD',
+      badge: 'Conformidade & LGPD Art. 37',
+      icon: <ShieldCheck size={18} className="text-emerald-400" />,
+      tags: ['auditoria', 'lgpd', 'art37', 'anatel', 'marcocivil', 'sha256', 'grafico', 'rosca', 'forense', 'seguranca', 'exportar'],
+      summary: 'Rastreabilidade inalterável com SHA-256, gráfico de rosca analítico por tipo e exportação forense para LGPD e Anatel.',
+      content: (
+        <div className="space-y-6">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+              Padrão Regulatório: LGPD Art. 37 & Marco Civil da Internet Art. 15
+            </span>
+            <h2 className="text-xl font-bold text-white mt-2 mb-2">Trilha Forense e Auditoria de Ações dos Operadores</h2>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              O NAP implementa uma cadeia de custódia inalterável (<strong>Append-Only Audit Log</strong>) que registra detalhadamente todas as operações realizadas pelos operadores no painel, garantindo não-repúdio, rastreabilidade forense e cumprimento integral da legislação brasileira de telecomunicações e proteção de dados.
+            </p>
+          </div>
+
+          {/* Os 4 Eixos Monitorados */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+              <div className="flex items-center gap-2 text-sky-400 font-bold">
+                <Users size={16} /> 1. Acessos & Sessões Autenticadas
+              </div>
+              <p className="text-slate-400 leading-relaxed">
+                Registra todos os logins e encerramentos de sessão dos operadores, gravando o endereço IP de origem, data/hora precisa UTC e agente de navegação.
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+              <div className="flex items-center gap-2 text-purple-400 font-bold">
+                <Server size={16} /> 2. Alterações no SGP & Multi-ERP
+              </div>
+              <p className="text-slate-400 leading-relaxed">
+                Rastreia modificações em credenciais de API, tokens, URLs de webhook e parâmetros de timeout dos ERPs (MikWeb, IXC, Hubsoft e SGP) com comparativo antes/depois.
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold">
+                <Radio size={16} /> 3. Comandos GenieACS (TR-069)
+              </div>
+              <p className="text-slate-400 leading-relaxed">
+                Registra comandos CWMP disparados contra CPEs de clientes (reboots remotos de ONUs, alterações de SSID e senhas Wi-Fi), prevenindo abusos operacionais.
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+              <div className="flex items-center gap-2 text-amber-400 font-bold">
+                <Megaphone size={16} /> 4. Disparos em Massa & Campanhas
+              </div>
+              <p className="text-slate-400 leading-relaxed">
+                Audita campanhas de aviso preventivo de rompimento de fibra, lembretes automáticos de vencimento e réguas de cobrança enviadas via WhatsApp WABA.
+              </p>
+            </div>
+          </div>
+
+          {/* Gráfico de Rosca Analítico */}
+          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+              <PieChart size={16} /> Gráfico de Rosca: Visão Rápida de Conformidade
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              No topo da tela de Auditoria (`/admin/auditoria`), o sistema exibe um <strong>gráfico de rosca dinâmico (Donut Chart)</strong> renderizado com Recharts. Ele totaliza as ações por categoria e fornece:
+            </p>
+            <ul className="text-xs text-slate-400 space-y-1.5 list-disc pl-5">
+              <li><strong>Proporção Percentual</strong> de cada categoria sobre o volume total de eventos.</li>
+              <li><strong>Contador Central Integrado</strong> com o total consolidado de ações registradas na cadeia forense.</li>
+              <li><strong>Filtro Rápido Interativo</strong>: ao clicar em qualquer cartão de categoria, a tabela de auditoria abaixo filtra instantaneamente as ações selecionadas.</li>
+            </ul>
+          </div>
+
+          {/* Integridade Criptográfica SHA-256 e Exportação Oficial */}
+          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
+              <Lock size={16} /> Assinatura SHA-256 e Exportação Legal (CSV / JSON)
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Cada log gerado no NAP possui um identificador único com hash criptográfico SHA-256 que atesta a inviolabilidade do registro perante perícias de segurança ou auditorias do Encarregado de Dados (DPO):
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+              <div className="p-3 bg-[#06080e] rounded-xl border border-white/5">
+                <span className="text-slate-500 block text-[10px]">Exportação CSV</span>
+                <span className="text-white font-bold">GET /api/auditoria/exportar?formato=csv</span>
+                <p className="text-[10px] text-slate-400 mt-1">Compatível com Excel, PowerBI e relatórios de auditoria interna.</p>
+              </div>
+              <div className="p-3 bg-[#06080e] rounded-xl border border-white/5">
+                <span className="text-slate-500 block text-[10px]">Exportação JSON Forense</span>
+                <span className="text-white font-bold">GET /api/auditoria/exportar?formato=json</span>
+                <p className="text-[10px] text-slate-400 mt-1">Exportação bruta com metadados e certificado de conformidade.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
       id: 'faq-procedimentos',
       category: 'core',
       title: 'Perguntas Frequentes & Resolução de Problemas',
@@ -626,13 +738,13 @@ export default function Helpers() {
           <div>
             <h1 className="text-lg font-bold text-white flex items-center gap-2">
               <BookOpen size={20} className="text-blue-500" />
-              Base de Conhecimento & Manual do Sistema
+              Ajuda, Documentação & Roteiro de Homologação
               <span className="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                 NAP v2.6
               </span>
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
-              Documentação técnica, procedimentos operacionais e guias de integração para provedores de internet.
+              Documentação técnica, procedimentos operacionais, trilha de conformidade LGPD e checklist de homologação para ISPs.
             </p>
           </div>
 
