@@ -124,3 +124,39 @@ export async function saveProvedorConfig(provedorId: string = 'nap-default', con
     throw error;
   }
 }
+
+export async function logAuditEventToFirestore(entry: {
+  id?: string;
+  provedorId?: string;
+  usuario: string;
+  modulo: string;
+  acao: string;
+  detalhes: string;
+  categoria?: string;
+  severidade?: string;
+  ip?: string;
+  status?: string;
+  payloadAntes?: any;
+  payloadDepois?: any;
+}): Promise<void> {
+  const provId = entry.provedorId || 'nap-default';
+  try {
+    await addDoc(collection(db, 'provedores', provId, 'auditLogs'), {
+      id: entry.id || `audit-${Date.now()}`,
+      provedorId: provId,
+      usuario: entry.usuario,
+      modulo: entry.modulo,
+      acao: entry.acao,
+      detalhes: entry.detalhes,
+      categoria: entry.categoria || 'geral',
+      severidade: entry.severidade || 'info',
+      ip: entry.ip || '127.0.0.1',
+      status: entry.status || 'sucesso',
+      criadoEm: new Date().toISOString()
+    });
+  } catch (err) {
+    // Falha silenciosa caso Firestore offline ou não autenticado
+    console.warn('Registro de auditoria local armazenado (Firestore offline ou mock):', err);
+  }
+}
+

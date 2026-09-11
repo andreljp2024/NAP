@@ -6,6 +6,7 @@ import {
   RefreshCw, AlertTriangle, X, Settings, Sliders, Eye, Copy, Check, 
   Filter, ExternalLink, MessageSquare, PhoneCall
 } from 'lucide-react';
+import { registrarAcaoAuditoria } from '../lib/audit';
 
 export default function Campanhas() {
   const [activeTab, setActiveTab] = useState<'whatsapp' | 'voz' | 'push' | 'regua'>('regua');
@@ -228,6 +229,14 @@ export default function Campanhas() {
       const data = await res.json();
       if (data.sucesso) {
         setFeedbackCampanha(data.mensagem);
+        registrarAcaoAuditoria({
+          modulo: 'Campanhas',
+          acao: `Criação e Disparo de Campanha: ${formCampanha.nome}`,
+          detalhes: `Campanha '${formCampanha.nome}' iniciada no canal ${formCampanha.canal.toUpperCase()} para ${formCampanha.leads} destinatários`,
+          categoria: 'disparo',
+          severidade: 'info',
+          payloadDepois: { nome: formCampanha.nome, canal: formCampanha.canal, leads: formCampanha.leads }
+        });
         fetchCampanhas();
         setIsModalNovaCampanhaOpen(false);
         setFormCampanha({

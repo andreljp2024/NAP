@@ -70,3 +70,23 @@ export interface Deal {
   criado_em?: string;
   contexto_ia?: string;
 }
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  usuario: string;
+  usuarioEmail?: string;
+  usuarioRole?: string;
+  modulo: 'Acessos' | 'SGP / ERP' | 'GenieACS (TR-069)' | 'Campanhas' | 'Segurança' | 'Configurações' | 'Sistema';
+  acao: string;
+  detalhes: string;
+  categoria?: 'acesso' | 'configuracao' | 'disparo' | 'comando' | 'seguranca';
+  severidade: 'info' | 'atencao' | 'critico';
+  ip: string;
+  userAgent?: string;
+  payloadAntes?: any;
+  payloadDepois?: any;
+  status: 'sucesso' | 'falha';
+  data?: string;
+}
+

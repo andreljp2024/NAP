@@ -5,6 +5,7 @@ import {
   Plus, Send, Clock, MapPin, Users, Zap, Check, X, Lock, KeyRound, Cpu, Gauge 
 } from 'lucide-react';
 import { useGenieACSMonitor } from '../hooks/useGenieACSMonitor';
+import { registrarAcaoAuditoria } from '../lib/audit';
 
 interface DeviceInfo {
   _id: string;
@@ -204,6 +205,14 @@ export default function GenieACSDashboard() {
       if (data.sucesso) {
         setFeedbackTr069(data.mensagem);
         fetchDevices();
+        registrarAcaoAuditoria({
+          modulo: 'GenieACS (TR-069)',
+          acao: 'Reboot Remoto de CPE',
+          detalhes: `Comando Reboot CWMP disparado para ${device.manufacturer} ${device.productClass} (${device.serialNumber})`,
+          categoria: 'comando',
+          severidade: 'atencao',
+          payloadDepois: { serialNumber: device.serialNumber, mac: device.mac }
+        });
       } else {
         setFeedbackTr069(data.erro || "Erro ao reiniciar CPE.");
       }
@@ -237,6 +246,14 @@ export default function GenieACSDashboard() {
       const data = await res.json();
       if (data.sucesso) {
         setFeedbackTr069(data.mensagem);
+        registrarAcaoAuditoria({
+          modulo: 'GenieACS (TR-069)',
+          acao: 'Alteração de Wi-Fi Remoto',
+          detalhes: `SSID alterado para '${wifiFormData.ssid}' (canal ${wifiFormData.wifiChannel}) na CPE ${modalWifiDevice.serialNumber}`,
+          categoria: 'configuracao',
+          severidade: 'atencao',
+          payloadDepois: { ssid: wifiFormData.ssid, canal: wifiFormData.wifiChannel }
+        });
         setModalWifiDevice(null);
         fetchDevices();
       } else {

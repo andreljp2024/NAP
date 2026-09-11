@@ -25,6 +25,7 @@ import PortalLogin from "./pages/PortalLogin";
 import ConsultaSGP from "./pages/ConsultaSGP";
 import UsuariosHierarquia from "./pages/UsuariosHierarquia";
 import TecnicoCampo from "./pages/TecnicoCampo";
+import Auditoria from "./pages/Auditoria";
 
 export default function App() {
   return (
@@ -154,6 +155,13 @@ export default function App() {
                   element={<ProtectedRoute allowedRoles={[]} />}
                 >
                   <Route index element={<Automacoes />} />
+                </Route>
+
+                <Route
+                  path="auditoria"
+                  element={<ProtectedRoute allowedRoles={[]} />}
+                >
+                  <Route index element={<Auditoria />} />
                 </Route>
 
                 <Route

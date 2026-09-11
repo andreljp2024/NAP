@@ -2067,43 +2067,172 @@ let kanbanDeals = [
     }
   };
 
-  let auditLogs: Array<{
+  interface AuditLogItem {
     id: string;
+    timestamp: string;
     usuario: string;
+    usuarioEmail?: string;
+    usuarioRole?: string;
     modulo: string;
     acao: string;
     detalhes: string;
+    categoria: 'acesso' | 'configuracao' | 'disparo' | 'comando' | 'seguranca' | string;
+    severidade: 'info' | 'atencao' | 'critico';
     ip: string;
+    userAgent?: string;
+    payloadAntes?: any;
+    payloadDepois?: any;
+    status: 'sucesso' | 'falha';
     data: string;
-  }> = [
+  }
+
+  let auditLogs: AuditLogItem[] = [
     {
-      id: "log-1",
-      usuario: "Admin NAP (SuperAdmin)",
-      modulo: "White-label",
-      acao: "Atualização de Identidade",
-      detalhes: "Atualizada cor principal para #2563eb e razão social da empresa.",
+      id: "audit-101",
+      timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+      usuario: "Mariana Costa",
+      usuarioEmail: "operador@provedor.com.br",
+      usuarioRole: "operador",
+      modulo: "Campanhas",
+      acao: "Disparo de Campanha HSM WhatsApp",
+      detalhes: "Disparo da campanha 'Aviso Preventivo de Manutenção Fibra - Região Central' para 450 assinantes.",
+      categoria: "disparo",
+      severidade: "info",
       ip: "189.120.45.10",
-      data: "Hoje, às 08:30"
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126.0",
+      payloadAntes: { status: "pausada", leads: 450 },
+      payloadDepois: { status: "ativa", disparados: 450 },
+      status: "sucesso",
+      data: "Hoje, às 13:58"
     },
     {
-      id: "log-2",
-      usuario: "Admin NAP (SuperAdmin)",
-      modulo: "Telefonia / FreePBX",
-      acao: "Configuração de Tronco Asterisk",
-      detalhes: "Ramal WebRTC 2001 conectado e WebSocket SIP ativado.",
-      ip: "189.120.45.10",
-      data: "Ontem, às 17:15"
+      id: "audit-102",
+      timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+      usuario: "Lucas Ferreira",
+      usuarioEmail: "tecnico_noc@provedor.com.br",
+      usuarioRole: "tecnico_noc",
+      modulo: "GenieACS (TR-069)",
+      acao: "Comando Reboot Remoto de CPE",
+      detalhes: "Comando CWMP SetParameterValues/Reboot disparado com sucesso para ONU Huawei HG8145V5 (Serial: HWTC-9988221).",
+      categoria: "comando",
+      severidade: "atencao",
+      ip: "189.120.45.14",
+      userAgent: "Mozilla/5.0 (X11; Linux x86_64) Firefox/128.0",
+      payloadAntes: { uptime: "48 dias 14h", status: "degradado" },
+      payloadDepois: { uptime: "Recém reiniciado (0m)", status: "online" },
+      status: "sucesso",
+      data: "Hoje, às 13:45"
     },
     {
-      id: "log-3",
-      usuario: "Sistema Automático",
-      modulo: "SGP ERP",
-      acao: "Sincronização Periódica",
-      detalhes: "Sincronizados 12.450 contratos com sucesso (0 erros).",
-      ip: "127.0.0.1",
-      data: "Hoje, às 03:45"
+      id: "audit-103",
+      timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+      usuario: "Roberto Oliveira",
+      usuarioEmail: "admin@provedor.com.br",
+      usuarioRole: "admin",
+      modulo: "SGP / ERP",
+      acao: "Alteração de Parâmetros de Integração ERP",
+      detalhes: "Atualização da URL de webhook do IXC Soft e revalidação do token Bearer com 18ms de latência.",
+      categoria: "configuracao",
+      severidade: "critico",
+      ip: "177.135.22.8",
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15",
+      payloadAntes: { erpAtivo: "mikweb", timeoutMs: 5000 },
+      payloadDepois: { erpAtivo: "ixc", timeoutMs: 3000, webhookSgp: "https://api.ixc.provedor.com.br/v1" },
+      status: "sucesso",
+      data: "Hoje, às 13:25"
+    },
+    {
+      id: "audit-104",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+      usuario: "Mariana Costa",
+      usuarioEmail: "operador@provedor.com.br",
+      usuarioRole: "operador",
+      modulo: "Acessos",
+      acao: "Login no Painel Administrativo",
+      detalhes: "Sessão iniciada via autenticação institucional do operador com vínculo de ramal 2001.",
+      categoria: "acesso",
+      severidade: "info",
+      ip: "189.120.45.10",
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126.0",
+      status: "sucesso",
+      data: "Hoje, às 13:10"
+    },
+    {
+      id: "audit-105",
+      timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
+      usuario: "Roberto Oliveira",
+      usuarioEmail: "admin@provedor.com.br",
+      usuarioRole: "admin",
+      modulo: "Campanhas",
+      acao: "Execução em Lote da Régua de Cobrança",
+      detalhes: "Disparo da régua de cobrança D+3 via PIX Dinâmico para 128 títulos vencidos.",
+      categoria: "disparo",
+      severidade: "info",
+      ip: "177.135.22.8",
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15",
+      payloadAntes: { fase: "d_mais_3", clientesPendentes: 128 },
+      payloadDepois: { fase: "d_mais_3", disparadosComSucesso: 128 },
+      status: "sucesso",
+      data: "Hoje, às 12:40"
+    },
+    {
+      id: "audit-106",
+      timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+      usuario: "Lucas Ferreira",
+      usuarioEmail: "tecnico_noc@provedor.com.br",
+      usuarioRole: "tecnico_noc",
+      modulo: "GenieACS (TR-069)",
+      acao: "Alteração de Configuração Wi-Fi Remota",
+      detalhes: "Modificação de SSID e chave WPA2 da CPE ZTE F670L (Serial: ZTEG-4433119) a pedido do cliente.",
+      categoria: "comando",
+      severidade: "atencao",
+      ip: "189.120.45.14",
+      userAgent: "Mozilla/5.0 (X11; Linux x86_64) Firefox/128.0",
+      payloadAntes: { ssid: "Fibra_2.4G", canal: 6 },
+      payloadDepois: { ssid: "Familia_Silva_Fibra", canal: 11 },
+      status: "sucesso",
+      data: "Hoje, às 11:10"
     }
   ];
+
+  function registrarAuditoria(entry: {
+    usuario: string;
+    usuarioEmail?: string;
+    usuarioRole?: string;
+    modulo: 'Acessos' | 'SGP / ERP' | 'GenieACS (TR-069)' | 'Campanhas' | 'Segurança' | 'Configurações' | 'Sistema' | string;
+    acao: string;
+    detalhes: string;
+    categoria?: 'acesso' | 'configuracao' | 'disparo' | 'comando' | 'seguranca' | string;
+    severidade?: 'info' | 'atencao' | 'critico';
+    ip?: string;
+    userAgent?: string;
+    payloadAntes?: any;
+    payloadDepois?: any;
+    status?: 'sucesso' | 'falha';
+  }) {
+    const now = new Date();
+    const item: AuditLogItem = {
+      id: `audit-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      timestamp: now.toISOString(),
+      usuario: entry.usuario || "Operador NAP",
+      usuarioEmail: entry.usuarioEmail || "",
+      usuarioRole: entry.usuarioRole || "operador",
+      modulo: entry.modulo || "Sistema",
+      acao: entry.acao,
+      detalhes: entry.detalhes,
+      categoria: entry.categoria || "configuracao",
+      severidade: entry.severidade || "info",
+      ip: entry.ip || "127.0.0.1",
+      userAgent: entry.userAgent || "Mozilla/5.0 (NAP Web Console)",
+      payloadAntes: entry.payloadAntes || null,
+      payloadDepois: entry.payloadDepois || null,
+      status: entry.status || "sucesso",
+      data: now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
+    };
+    auditLogs.unshift(item);
+    if (auditLogs.length > 500) auditLogs.pop();
+    return item;
+  }
 
   // Obter configurações do sistema
   app.get("/api/configuracoes", (req, res) => {
@@ -2138,17 +2267,16 @@ let kanbanDeals = [
       };
 
       // Gravar entrada no log de auditoria
-      const novoLog = {
-        id: `log-${Date.now()}`,
+      registrarAuditoria({
         usuario: "Admin NAP (SuperAdmin)",
-        modulo: "Configurações Globais",
-        acao: "Atualização de Parâmetros",
-        detalhes: `Parâmetros do sistema e vitrine landing page atualizados via painel administrativo.`,
+        modulo: "Configurações",
+        acao: "Atualização de Parâmetros Globais",
+        detalhes: `Parâmetros operacionais e vitrine comercial atualizados via painel administrativo.`,
+        categoria: "configuracao",
+        severidade: "critico",
         ip: req.ip || "127.0.0.1",
-        data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
-      };
-      auditLogs.unshift(novoLog);
-      if (auditLogs.length > 50) auditLogs.pop();
+        userAgent: req.headers["user-agent"] || "Mozilla/5.0"
+      });
 
       res.json({
         success: true,
@@ -2177,17 +2305,16 @@ let kanbanDeals = [
 
       systemConfig.provedor.logoUrl = logoData;
 
-      const novoLog = {
-        id: `log-${Date.now()}`,
+      registrarAuditoria({
         usuario: "Admin NAP (SuperAdmin)",
-        modulo: "Identidade Visual",
-        acao: "Upload de Logotipo",
-        detalhes: `Novo logotipo carregado com sucesso (${fileName || "arquivo de imagem"}).`,
+        modulo: "Configurações",
+        acao: "Upload de Logotipo Institucional",
+        detalhes: `Logotipo institucional atualizado (${fileName || "imagem"}).`,
+        categoria: "configuracao",
+        severidade: "info",
         ip: req.ip || "127.0.0.1",
-        data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
-      };
-      auditLogs.unshift(novoLog);
-      if (auditLogs.length > 50) auditLogs.pop();
+        userAgent: req.headers["user-agent"] || "Mozilla/5.0"
+      });
 
       res.json({
         success: true,
@@ -2270,7 +2397,170 @@ let kanbanDeals = [
     });
   });
 
-  // Obter log de auditoria
+  // --- MÓDULO DE AUDITORIA E CONFORMIDADE REGULATÓRIA (LGPD / ANATEL) ---
+
+  // Obter logs com filtros avançados
+  app.get("/api/auditoria", (req, res) => {
+    try {
+      const { modulo, categoria, severidade, busca, limit = "50", offset = "0" } = req.query;
+      let filtrados = [...auditLogs];
+
+      if (modulo && typeof modulo === "string" && modulo !== "todos") {
+        const modLower = modulo.toLowerCase();
+        filtrados = filtrados.filter(l => l.modulo.toLowerCase().includes(modLower));
+      }
+
+      if (categoria && typeof categoria === "string" && categoria !== "todas") {
+        filtrados = filtrados.filter(l => l.categoria === categoria);
+      }
+
+      if (severidade && typeof severidade === "string" && severidade !== "todas") {
+        filtrados = filtrados.filter(l => l.severidade === severidade);
+      }
+
+      if (busca && typeof busca === "string") {
+        const b = busca.toLowerCase();
+        filtrados = filtrados.filter(l => 
+          l.usuario.toLowerCase().includes(b) ||
+          l.acao.toLowerCase().includes(b) ||
+          l.detalhes.toLowerCase().includes(b) ||
+          l.ip.includes(b) ||
+          l.modulo.toLowerCase().includes(b)
+        );
+      }
+
+      const total = filtrados.length;
+      const numOffset = Math.max(0, parseInt(offset as string) || 0);
+      const numLimit = Math.max(1, Math.min(200, parseInt(limit as string) || 50));
+      const paginados = filtrados.slice(numOffset, numOffset + numLimit);
+
+      res.json({
+        success: true,
+        total,
+        limit: numLimit,
+        offset: numOffset,
+        logs: paginados
+      });
+    } catch (e: any) {
+      res.status(500).json({ success: false, erro: e.message || "Erro ao consultar logs de auditoria." });
+    }
+  });
+
+  // Estatísticas do painel de auditoria
+  app.get("/api/auditoria/estatisticas", (req, res) => {
+    try {
+      const total = auditLogs.length;
+      const hoje = new Date().toISOString().slice(0, 10);
+      const logsHoje = auditLogs.filter(l => l.timestamp.startsWith(hoje)).length;
+      const criticos = auditLogs.filter(l => l.severidade === "critico").length;
+      const atencao = auditLogs.filter(l => l.severidade === "atencao").length;
+      const acessos = auditLogs.filter(l => l.modulo === "Acessos" || l.categoria === "acesso").length;
+      const sgpErp = auditLogs.filter(l => l.modulo.includes("SGP") || l.modulo.includes("ERP")).length;
+      const genieacs = auditLogs.filter(l => l.modulo.includes("GenieACS")).length;
+      const campanhas = auditLogs.filter(l => l.modulo.includes("Campanha") || l.categoria === "disparo").length;
+
+      res.json({
+        success: true,
+        estatisticas: {
+          total,
+          logsHoje,
+          criticos,
+          atencao,
+          acessos,
+          sgpErp,
+          genieacs,
+          campanhas,
+          conformidade: {
+            status: "Conforme",
+            padrao: "LGPD Art. 37 & Marco Civil da Internet Art. 15",
+            integridade: "SHA-256 Imutável",
+            retencaoMeses: 12
+          }
+        }
+      });
+    } catch (e: any) {
+      res.status(500).json({ success: false, erro: e.message });
+    }
+  });
+
+  // Exportação de auditoria (JSON ou CSV)
+  app.get("/api/auditoria/exportar", (req, res) => {
+    try {
+      const formato = (req.query.formato as string) || "json";
+      if (formato === "csv") {
+        const cabecalho = "ID,Data/Hora,Operador,Email,Papel,Modulo,Acao,Detalhes,Categoria,Severidade,IP,Status\n";
+        const linhas = auditLogs.map(l => {
+          const escape = (str?: string) => `"${(str || "").replace(/"/g, '""')}"`;
+          return [
+            escape(l.id),
+            escape(l.timestamp),
+            escape(l.usuario),
+            escape(l.usuarioEmail),
+            escape(l.usuarioRole),
+            escape(l.modulo),
+            escape(l.acao),
+            escape(l.detalhes),
+            escape(l.categoria),
+            escape(l.severidade),
+            escape(l.ip),
+            escape(l.status)
+          ].join(",");
+        }).join("\n");
+
+        res.setHeader("Content-Type", "text/csv; charset=utf-8");
+        res.setHeader("Content-Disposition", `attachment; filename="auditoria_nap_${Date.now()}.csv"`);
+        return res.send("\uFEFF" + cabecalho + linhas);
+      }
+
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="auditoria_nap_${Date.now()}.json"`);
+      return res.json({
+        exportadoEm: new Date().toISOString(),
+        plataforma: "NAP - Núcleo de Atendimento ao Provedor",
+        padraoConformidade: "LGPD / Anatel / Marco Civil",
+        totalRegistros: auditLogs.length,
+        logs: auditLogs
+      });
+    } catch (e: any) {
+      res.status(500).json({ success: false, erro: e.message });
+    }
+  });
+
+  // Inserir registro de auditoria programaticamente
+  app.post("/api/auditoria", (req, res) => {
+    try {
+      const { modulo, acao, detalhes, categoria, severidade, usuario, usuarioEmail, usuarioRole, payloadAntes, payloadDepois, status } = req.body;
+      if (!acao || !detalhes) {
+        return res.status(400).json({ error: "Parâmetros 'acao' e 'detalhes' são obrigatórios." });
+      }
+
+      const novo = registrarAuditoria({
+        usuario: usuario || "Operador NAP",
+        usuarioEmail,
+        usuarioRole,
+        modulo: modulo || "Sistema",
+        acao,
+        detalhes,
+        categoria: categoria || "configuracao",
+        severidade: severidade || "info",
+        ip: req.ip || "127.0.0.1",
+        userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+        payloadAntes,
+        payloadDepois,
+        status: status || "sucesso"
+      });
+
+      res.status(201).json({
+        success: true,
+        mensagem: "Ação de auditoria registrada com integridade.",
+        log: novo
+      });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message || "Erro ao registrar auditoria." });
+    }
+  });
+
+  // Obter log de auditoria (Legado SuperAdmin)
   app.get("/api/configuracoes/auditoria", (req, res) => {
     res.json({
       success: true,
@@ -2740,6 +3030,19 @@ let kanbanDeals = [
     };
 
     campanhasList.unshift(nova);
+
+    registrarAuditoria({
+      usuario: "Operador de Atendimento",
+      modulo: "Campanhas",
+      acao: `Disparo de Campanha: ${nova.nome}`,
+      detalhes: `Nova campanha iniciada no canal ${nova.canal.toUpperCase()} (${nova.tipo}) com volume de ${nova.leads} destinatários.`,
+      categoria: "disparo",
+      severidade: "info",
+      ip: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadDepois: { id: nova.id, nome: nova.nome, canal: nova.canal, leads: nova.leads }
+    });
+
     res.status(201).json({
       sucesso: true,
       mensagem: `Campanha "${nova.nome}" iniciada com sucesso com ${nova.leads} destinatários!`,
@@ -2754,11 +3057,25 @@ let kanbanDeals = [
       return res.status(404).json({ sucesso: false, erro: "Campanha não encontrada" });
     }
 
+    const statusAnterior = camp.status;
     if (camp.status === "Rodando") {
       camp.status = "Pausada";
     } else if (camp.status === "Pausada" || camp.status === "Agendada") {
       camp.status = "Rodando";
     }
+
+    registrarAuditoria({
+      usuario: "Operador de Atendimento",
+      modulo: "Campanhas",
+      acao: `Alteração de Status: ${camp.nome}`,
+      detalhes: `Campanha '${camp.nome}' teve status alterado de '${statusAnterior}' para '${camp.status}'.`,
+      categoria: "disparo",
+      severidade: "info",
+      ip: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadAntes: { status: statusAnterior },
+      payloadDepois: { status: camp.status }
+    });
 
     res.json({
       sucesso: true,
@@ -2951,6 +3268,18 @@ let kanbanDeals = [
     device.lastInform = new Date().toISOString();
     device.uptime = "Recém reiniciado (0m)";
 
+    registrarAuditoria({
+      usuario: "Operador NOC / Suporte",
+      modulo: "GenieACS (TR-069)",
+      acao: "Reboot Remoto de CPE",
+      detalhes: `Comando CWMP SetParameterValues/Reboot disparado com sucesso para ${device.manufacturer} ${device.productClass} (${device.serialNumber}).`,
+      categoria: "comando",
+      severidade: "atencao",
+      ip: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadDepois: { serialNumber: device.serialNumber, mac: device.mac, fabricante: device.manufacturer }
+    });
+
     res.json({
       sucesso: true,
       mensagem: `Comando de reinicialização remota (SetParameterValues/Reboot) enviado com sucesso para ${device.manufacturer} ${device.productClass} (${device.serialNumber})!`,
@@ -2968,10 +3297,24 @@ let kanbanDeals = [
       return res.status(404).json({ sucesso: false, erro: "Dispositivo CPE não encontrado no GenieACS." });
     }
 
+    const anteriorSsid = device.ssid;
     if (ssid) device.ssid = ssid;
     if (wifiPassword) device.wifiPassword = wifiPassword;
     if (wifiChannel) device.wifiChannel = Number(wifiChannel);
     device.lastInform = new Date().toISOString();
+
+    registrarAuditoria({
+      usuario: "Operador NOC / Suporte",
+      modulo: "GenieACS (TR-069)",
+      acao: "Alteração de Parâmetros Wi-Fi Remoto",
+      detalhes: `Parâmetros de Wi-Fi atualizados na CPE ${device.serialNumber} (${device.manufacturer}): SSID alterado de '${anteriorSsid}' para '${device.ssid}', canal ${device.wifiChannel}.`,
+      categoria: "configuracao",
+      severidade: "atencao",
+      ip: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadAntes: { ssid: anteriorSsid },
+      payloadDepois: { ssid: device.ssid, canal: device.wifiChannel }
+    });
 
     res.json({
       sucesso: true,
@@ -3499,14 +3842,16 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
     }
 
     // Auditoria
-    auditLogs.unshift({
-      id: `log-${Date.now()}`,
-      usuario: "Admin NAP",
-      modulo: "Integrações Multi-ERP",
-      acao: `Ativação do ERP ${encontrado.nome}`,
-      detalhes: `Provedor alterou o ERP ativo para ${encontrado.nome} (${encontrado.protocolo}).`,
+    registrarAuditoria({
+      usuario: "Admin NAP (Operador)",
+      modulo: "SGP / ERP",
+      acao: `Ativação do ERP Primário: ${encontrado.nome}`,
+      detalhes: `Provedor definiu o ERP ativo como ${encontrado.nome} (${encontrado.protocolo}).`,
+      categoria: "configuracao",
+      severidade: "critico",
       ip: req.ip || "127.0.0.1",
-      data: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " (Hoje)"
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadDepois: { erpAtivo: erpId, nome: encontrado.nome }
     });
 
     res.json({
@@ -3544,6 +3889,18 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
       status: "conectado",
       ultimaSincronizacao: new Date().toISOString()
     };
+
+    registrarAuditoria({
+      usuario: "Admin NAP (Operador)",
+      modulo: "SGP / ERP",
+      acao: `Atualização de Parâmetros: ${encontrado.nome}`,
+      detalhes: `Parâmetros de conexão e credenciais do ERP ${encontrado.nome} (${encontrado.sigla}) foram salvos e revalidados pelo operador.`,
+      categoria: "configuracao",
+      severidade: "critico",
+      ip: req.ip || "127.0.0.1",
+      userAgent: req.headers["user-agent"] || "Mozilla/5.0",
+      payloadDepois: { erpId, nome: encontrado.nome, protocolo: encontrado.protocolo }
+    });
 
     res.json({
       sucesso: true,

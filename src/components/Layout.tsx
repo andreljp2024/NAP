@@ -7,7 +7,8 @@ import {
   ShieldUser, Megaphone, Workflow, Server, LogOut, 
   ChevronLeft, ChevronRight, Menu, X, ExternalLink,
   PhoneCall, Activity, Sparkles, PanelLeftClose, PanelLeftOpen,
-  CreditCard, Headphones, ShoppingCart, Router, Wrench, MapPin, Navigation, Compass
+  CreditCard, Headphones, ShoppingCart, Router, Wrench, MapPin, Navigation, Compass,
+  ShieldCheck
 } from 'lucide-react';
 import CTIReverso from './CTIReverso';
 import Webphone from './Webphone';
@@ -78,6 +79,7 @@ export default function Layout() {
     if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
     if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/auditoria')) return { title: 'Logs de Auditoria & Conformidade', category: 'LGPD Art. 37, ANATEL & Segurança', icon: <ShieldCheck size={18} className="text-emerald-400" /> };
     if (path.startsWith('/admin/configuracoes')) return { title: 'Super Admin', category: 'Multi-Tenant & Telecom', icon: <Settings size={18} className="text-slate-400" /> };
     return { title: 'NAP Omni', category: 'Telecom Suite', icon: <Activity size={18} className="text-blue-400" /> };
   };
@@ -200,6 +202,7 @@ export default function Layout() {
               <nav className="flex flex-col gap-0.5 px-3">
                 <NavItem to="/admin/usuarios" icon={<Users size={18} />} label="Usuários & Hierarquia" badge="4" isCollapsed={isCollapsed} />
                 <NavItem to="/admin/operadores" icon={<ShieldUser size={18} />} label="Operadores" isCollapsed={isCollapsed} />
+                <NavItem to="/admin/auditoria" icon={<ShieldCheck size={18} />} label="Logs de Auditoria" isCollapsed={isCollapsed} />
                 <NavItem to="/admin/configuracoes" icon={<Settings size={18} />} label="Super Admin" isCollapsed={isCollapsed} />
               </nav>
             </div>
