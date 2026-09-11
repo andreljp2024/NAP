@@ -59,8 +59,46 @@ async function fetchSGP(endpoint, method = "GET", body = null) {
   // In-Memory Kanban Deals (Support & Sales para Provedores ISP)
   
 const sgpDatabase_mock: any[] = [
-  { id: 101, nome: "João Silva", status: "ativo", cpf_cnpj: "111.222.333-44", contato: { telefone: "(11) 98765-4321" }, financeiro: { valor: 99.9, status: "em_atraso" } },
-  { id: 102, nome: "Carlos Eduardo Santos", status: "ativo", cpf_cnpj: "555.666.777-88", contato: { telefone: "(11) 97123-8899" }, financeiro: { valor: 119.9, status: "em_dia" } }
+  { 
+    id: 101, 
+    nome: "João Silva", 
+    status: "ativo", 
+    status_cliente: "ativo",
+    cpf_cnpj: "111.222.333-44", 
+    contato: { telefone: "(11) 98765-4321" }, 
+    plano_atual: { nome: "Fibra 500MB Simétrico" },
+    financeiro: { valor: 99.9, status: "em_atraso" } 
+  },
+  { 
+    id: 102, 
+    nome: "Rafael Medeiros de Albuquerque", 
+    status: "ativo", 
+    status_cliente: "ativo",
+    cpf_cnpj: "384.921.750-42", 
+    contato: { telefone: "(11) 98765-4321" }, 
+    plano_atual: { nome: "600 Mega Fibra Turbo + Wi-Fi 6 Mesh" },
+    financeiro: { valor: 119.9, status: "em_dia" } 
+  },
+  { 
+    id: 103, 
+    nome: "Sérgio Ramos da Silva", 
+    status: "bloqueado", 
+    status_cliente: "bloqueado_parcial",
+    cpf_cnpj: "966.559.988-21", 
+    contato: { telefone: "(11) 96655-9988" }, 
+    plano_atual: { nome: "Fibra 700MB Gamer Pro" },
+    financeiro: { valor: 139.9, status: "em_atraso" } 
+  },
+  { 
+    id: 104, 
+    nome: "Carlos Eduardo Santos", 
+    status: "ativo", 
+    status_cliente: "ativo",
+    cpf_cnpj: "555.666.777-88", 
+    contato: { telefone: "(11) 97123-8899" }, 
+    plano_atual: { nome: "Fibra 400MB" },
+    financeiro: { valor: 119.9, status: "em_dia" } 
+  }
 ];
 
 let kanbanDeals = [
@@ -576,6 +614,25 @@ let kanbanDeals = [
     // Simula alteração no ERP e liberação no Radius
     await new Promise(r => setTimeout(r, 600));
     res.json({ success: true, message: `Cliente ${id} desbloqueado por 48 horas.` });
+  });
+
+  // Endpoint de Clientes de Teste do Portal para Homologação
+  app.get("/api/portal/clientes-teste", (req, res) => {
+    res.json(sgpDatabase_mock);
+  });
+
+  // Busca de cliente específico no SGP por CPF ou termo
+  app.get("/api/sgp/busca", (req, res) => {
+    const { cpf, q } = req.query;
+    const queryLimpa = String(cpf || q || '').replace(/\D/g, '');
+    const found = sgpDatabase_mock.find(c => 
+      (queryLimpa && c.cpf_cnpj?.replace(/\D/g, '').includes(queryLimpa)) ||
+      (q && c.nome?.toLowerCase().includes(String(q).toLowerCase()))
+    );
+    if (found) {
+      return res.json(found);
+    }
+    res.json(sgpDatabase_mock[1] || sgpDatabase_mock[0]);
   });
 
   // --- Módulo TR-069 / GenieACS: Gestão de Wi-Fi Residencial pelo Cliente (Portal PWA) ---

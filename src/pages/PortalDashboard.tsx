@@ -48,10 +48,10 @@ export default function PortalDashboard() {
   const [incidenteAtivo, setIncidenteAtivo] = useState<any | null>(null);
   const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
 
-  const clienteBairro = "Centro Histórico";
   const authData = localStorage.getItem('@nap_client_auth');
-  const clientData = authData ? JSON.parse(authData) : { nome: 'João', plano: '600 Mega Fibra' };
-  const firstName = clientData.nome.split(' ')[0];
+  const clientData = authData ? JSON.parse(authData) : { nome: 'Rafael Medeiros', plano: '600 Mega Fibra Turbo + Wi-Fi 6', contrato: 'CTR-2026-8894', bairro: 'Centro Histórico' };
+  const clienteBairro = clientData.bairro || "Centro Histórico";
+  const firstName = clientData.nome ? clientData.nome.split(' ')[0] : 'Assinante';
 
   useEffect(() => {
     fetch('/api/sgp/faturas')
@@ -129,7 +129,9 @@ export default function PortalDashboard() {
       <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-1">Olá, {firstName}!</h1>
-          <p className="text-slate-600 text-sm md:text-base">Contrato: {clientData.plano} • Ativo</p>
+          <p className="text-slate-600 text-sm md:text-base">
+            Contrato <strong className="text-slate-800 font-mono">{clientData.contrato || 'CTR-2026-8894'}</strong> • {clientData.plano} • <span className="inline-flex items-center text-emerald-600 font-bold">Online</span>
+          </p>
         </div>
         {(!isInstalled || permission !== 'granted') && (
           <div className="flex items-center gap-2">

@@ -20,7 +20,11 @@ export default function PortalLayout() {
   }
 
   const clientData = JSON.parse(authData);
-  const clientInitials = clientData.nome ? clientData.nome.charAt(0).toUpperCase() : 'C';
+  const clientInitials = clientData.nome 
+    ? clientData.nome.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() 
+    : 'RM';
+  const clientName = clientData.nome || 'Rafael Medeiros';
+  const clientContrato = clientData.contrato || 'CTR-2026-8894';
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-50 text-slate-700 font-sans">
@@ -83,14 +87,26 @@ export default function PortalLayout() {
           <NavItem to="/portal/conta" icon={<Settings size={20} />} label="Minha Conta" />
         </nav>
         
-        <div className="p-5 border-t border-slate-200 bg-slate-50 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
-            JS
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs border border-blue-200 shrink-0">
+              {clientInitials}
+            </div>
+            <div className="min-w-0">
+              <p className="text-slate-900 font-bold text-xs truncate" title={clientName}>{clientName}</p>
+              <p className="text-[10px] text-slate-500 font-mono truncate">{clientContrato}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-slate-900 font-bold text-sm">João Silva</p>
-            <p className="text-[11px] text-slate-500 font-mono mt-0.5 bg-white px-1.5 py-0.5 rounded inline-block border border-slate-200">#1001</p>
-          </div>
+          <button
+            onClick={() => {
+              localStorage.removeItem('@nap_client_auth');
+              window.location.href = '/portal/login';
+            }}
+            className="text-[10px] font-bold text-slate-400 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-50 shrink-0"
+            title="Sair / Trocar de Cliente de Teste"
+          >
+            Sair
+          </button>
         </div>
       </aside>
 

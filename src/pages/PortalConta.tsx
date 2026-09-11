@@ -47,8 +47,18 @@ export default function PortalConta() {
   };
 
   const authData = localStorage.getItem('@nap_client_auth');
-  const clientData = authData ? JSON.parse(authData) : { nome: 'João Silva', cpf: '***.456.789-**' };
-  const clientInitials = clientData.nome ? clientData.nome.charAt(0).toUpperCase() : 'C';
+  const clientData = authData ? JSON.parse(authData) : { 
+    nome: 'Rafael Medeiros de Albuquerque', 
+    cpf: '384.921.750-42', 
+    email: 'rafael.medeiros@napfibra.com.br', 
+    telefone: '(11) 98765-4321', 
+    endereco: 'Rua das Acácias, 412, Apto 82 - Centro Histórico, São Paulo - SP', 
+    contrato: 'CTR-2026-8894',
+    plano: '600 Mega Fibra Turbo + Wi-Fi 6'
+  };
+  const clientInitials = clientData.nome 
+    ? clientData.nome.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() 
+    : 'RM';
 
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto w-full">
@@ -98,8 +108,8 @@ export default function PortalConta() {
                 <Mail className="absolute left-4 top-3.5 text-slate-500 group-focus-within:text-blue-600 transition-colors" size={18} />
                 <input 
                   type="email" 
-                  defaultValue="joao.silva@email.com" 
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900  transition-all"
+                  defaultValue={clientData.email || "rafael.medeiros@napfibra.com.br"} 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900 transition-all"
                 />
               </div>
             </div>
@@ -109,10 +119,19 @@ export default function PortalConta() {
                 <Phone className="absolute left-4 top-3.5 text-slate-500 group-focus-within:text-blue-600 transition-colors" size={18} />
                 <input 
                   type="tel" 
-                  defaultValue="+55 11 99999-9999" 
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900  transition-all"
+                  defaultValue={clientData.telefone || "(11) 98765-4321"} 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 outline-none text-slate-900 transition-all"
                 />
               </div>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Endereço de Instalação</label>
+              <input 
+                type="text" 
+                defaultValue={clientData.endereco ? `${clientData.endereco} - ${clientData.bairro || 'Centro Histórico'}, ${clientData.cidade || 'São Paulo'} - ${clientData.uf || 'SP'}` : 'Rua das Acácias, 412, Apto 82 - Centro Histórico, São Paulo - SP'} 
+                disabled
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 cursor-not-allowed font-medium text-sm"
+              />
             </div>
           </div>
           <div className="p-5 bg-white border-t border-slate-200 flex justify-end relative z-10">

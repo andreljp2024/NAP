@@ -13,12 +13,40 @@ export default function PortalFaturas() {
   const [actionStates, setActionStates] = useState<Record<number, { type: 'pix' | 'boleto', status: 'loading' | 'success', data?: string }>>({});
 
   useEffect(() => {
-    fetch('/api/sgp/faturas')
-      .then(res => res.json())
-      .then(data => {
-        setFaturas(data);
-        setLoading(false);
-      });
+    const authData = localStorage.getItem('@nap_client_auth');
+    if (authData) {
+      try {
+        const client = JSON.parse(authData);
+        if (client.faturas && Array.isArray(client.faturas) && client.faturas.length > 0) {
+          setFaturas(client.faturas);
+          setLoading(false);
+        } else {
+          fetch('/api/sgp/faturas')
+            .then(res => res.json())
+            .then(data => {
+              setFaturas(data);
+              setLoading(false);
+            })
+            .catch(() => setLoading(false));
+        }
+      } catch (e) {
+        fetch('/api/sgp/faturas')
+          .then(res => res.json())
+          .then(data => {
+            setFaturas(data);
+            setLoading(false);
+          })
+          .catch(() => setLoading(false));
+      }
+    } else {
+      fetch('/api/sgp/faturas')
+        .then(res => res.json())
+        .then(data => {
+          setFaturas(data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
 
     // Checar se já há desbloqueio ativo salvo na sessão
     const salvo = localStorage.getItem('nap_desbloqueio_48h');

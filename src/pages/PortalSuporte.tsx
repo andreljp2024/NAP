@@ -8,6 +8,9 @@ import type { Deal } from '../types';
 import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
 
 export default function PortalSuporte() {
+  const authData = localStorage.getItem('@nap_client_auth');
+  const clientData = authData ? JSON.parse(authData) : { nome: 'Rafael Medeiros', telefone: '(11) 98765-4321' };
+
   const [chamados, setChamados] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCall, setActiveCall] = useState(false);
@@ -58,8 +61,8 @@ export default function PortalSuporte() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          telefone: '5511999999999', // Mock CPF do cliente
-          nome: 'João Silva',
+          telefone: clientData.telefone ? clientData.telefone.replace(/\D/g, '') : '5511987654321',
+          nome: clientData.nome || 'Rafael Medeiros',
           texto: texto
         })
       });
