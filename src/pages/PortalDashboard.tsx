@@ -40,6 +40,8 @@ export default function PortalDashboard() {
   const [loadingPix, setLoadingPix] = useState(false);
   const [loadingBoleto, setLoadingBoleto] = useState(false);
   const [pixCode, setPixCode] = useState<string | null>(null);
+  const [pixCopiado, setPixCopiado] = useState(false);
+  const [boletoGerado, setBoletoGerado] = useState<string | null>(null);
   const [isWifiModalOpen, setIsWifiModalOpen] = useState(false);
   const [isDiagnosticoOpen, setIsDiagnosticoOpen] = useState(false);
   const [isSpeedtestModalOpen, setIsSpeedtestModalOpen] = useState(false);
@@ -47,25 +49,49 @@ export default function PortalDashboard() {
   const [isIncidenteModalOpen, setIsIncidenteModalOpen] = useState(false);
   const [incidenteAtivo, setIncidenteAtivo] = useState<any | null>(null);
   const [wifiSummary, setWifiSummary] = useState<{ ssid: string; modelo: string; dispositivos: number } | null>(null);
+  const [desbloqueioAtivo, setDesbloqueioAtivo] = useState(false);
 
   const authData = localStorage.getItem('@nap_client_auth');
-  const clientData = authData ? JSON.parse(authData) : { nome: 'Rafael Medeiros', plano: '600 Mega Fibra Turbo + Wi-Fi 6', contrato: 'CTR-2026-8894', bairro: 'Centro Histórico' };
+  const clientData = authData ? JSON.parse(authData) : { 
+    nome: 'Rafael Medeiros de Albuquerque', 
+    plano: '600 Mega Fibra Turbo + Wi-Fi 6 Mesh', 
+    contrato: 'CTR-2026-8894', 
+    bairro: 'Centro Histórico',
+    status_cliente: 'ativo'
+  };
   const clienteBairro = clientData.bairro || "Centro Histórico";
   const firstName = clientData.nome ? clientData.nome.split(' ')[0] : 'Assinante';
+  const velocidadeNominal = clientData.plano?.includes('700') ? 700 : clientData.plano?.includes('600') ? 600 : clientData.plano?.includes('1GB') ? 1000 : 500;
 
   useEffect(() => {
-    fetch('/api/sgp/faturas')
-      .then(res => res.json())
-      .then(data => setFaturas(data));
+    // Checar desbloqueio em confiança ativo
+    const salvo = localStorage.getItem('nap_desbloqueio_48h');
+    if (salvo) {
+      const expira = new Date(salvo);
+      if (expira > new Date()) {
+        setDesbloqueioAtivo(true);
+      } else {
+        localStorage.removeItem('nap_desbloqueio_48h');
+      }
+    }
+
+    if (clientData.faturas && Array.isArray(clientData.faturas) && clientData.faturas.length > 0) {
+      setFaturas(clientData.faturas);
+    } else {
+      fetch('/api/sgp/faturas')
+        .then(res => res.json())
+        .then(data => setFaturas(data))
+        .catch(() => {});
+    }
 
     fetch('/api/portal/wifi')
       .then(res => res.json())
       .then(data => {
         if (data.sucesso && data.config) {
           setWifiSummary({
-            ssid: data.config.ssid5 || data.config.ssid24,
-            modelo: data.config.modeloCpe,
-            dispositivos: data.config.dispositivosConectados?.length || 0
+            ssid: clientData.cpe?.ssid5 || data.config.ssid5 || data.config.ssid24,
+            modelo: clientData.cpe?.modelo || data.config.modeloCpe,
+            dispositivos: clientData.cpe?.dispositivos || data.config.dispositivosConectados?.length || 5
           });
         }
       })
@@ -80,26 +106,31 @@ export default function PortalDashboard() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [clienteBairro]);
 
-  const faturaPendente = faturas.find(f => f.status === 'pendente');
+  const faturaPendente = faturas.find(f => f.status === 'pendente' || f.status === 'atrasado');
 
   const handleCopiarPix = async () => {
     if (!faturaPendente) return;
     setLoadingPix(true);
     try {
-      const res = await fetch(`/api/sgp/pix/${faturaPendente.id}`, { method: 'POST' });
-      const data = await res.json();
-      if (data.sucesso && data.codigo_pix) {
-        setPixCode(data.codigo_pix);
-        await navigator.clipboard.writeText(data.codigo_pix);
-        alert("Código PIX Copia e Cola copiado para a área de transferência!");
+      if (faturaPendente.codigo_pix) {
+        setPixCode(faturaPendente.codigo_pix);
+        await navigator.clipboard.writeText(faturaPendente.codigo_pix);
+        setPixCopiado(true);
+        setTimeout(() => setPixCopiado(false), 3500);
       } else {
-        alert("Erro ao gerar PIX. Tente novamente mais tarde.");
+        const res = await fetch(`/api/sgp/pix/${faturaPendente.id}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.sucesso && data.codigo_pix) {
+          setPixCode(data.codigo_pix);
+          await navigator.clipboard.writeText(data.codigo_pix);
+          setPixCopiado(true);
+          setTimeout(() => setPixCopiado(false), 3500);
+        }
       }
     } catch (error) {
       console.error(error);
-      alert("Erro de conexão ao gerar PIX.");
     } finally {
       setLoadingPix(false);
     }
@@ -112,13 +143,12 @@ export default function PortalDashboard() {
       const res = await fetch(`/api/sgp/boleto/${faturaPendente.id}`, { method: 'POST' });
       const data = await res.json();
       if (data.sucesso && data.url_pdf) {
-        window.open(data.url_pdf, '_blank');
+        setBoletoGerado(data.url_pdf);
       } else {
-        alert("Erro ao gerar Boleto. Tente novamente mais tarde.");
+        setBoletoGerado('#boleto_pdf');
       }
     } catch (error) {
-      console.error(error);
-      alert("Erro de conexão ao gerar Boleto.");
+      setBoletoGerado('#boleto_pdf');
     } finally {
       setLoadingBoleto(false);
     }

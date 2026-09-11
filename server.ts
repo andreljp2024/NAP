@@ -155,6 +155,45 @@ let kanbanDeals = [
       contexto_ia: "Fonte de alimentação de 12V trocada na visita técnica. Conexão estável há 24 horas."
     },
     { 
+      id: 105, 
+      titulo: "Otimização de Rota Gamer / IPv6", 
+      estagio: "Resolvido", 
+      pipeline: "Suporte", 
+      contato: "Rafael Medeiros de Albuquerque", 
+      telefone: "(11) 98765-4321",
+      endereco: "Rua das Acácias, 412, Apto 82 - Centro Histórico",
+      plano: "600 Mega Fibra Turbo + Wi-Fi 6 Mesh",
+      prioridade: 3,
+      criado_em: "Há 3 dias",
+      contexto_ia: "Ativação de prefixo IPv6 /56 e liberação de portas UPnP para console de jogos no roteador Wi-Fi 6 Huawei HG8145V5."
+    },
+    { 
+      id: 106, 
+      titulo: "Verificação Preventiva de Atenuação Óptica", 
+      estagio: "Resolvido", 
+      pipeline: "Suporte", 
+      contato: "Rafael Medeiros de Albuquerque", 
+      telefone: "(11) 98765-4321",
+      endereco: "Rua das Acácias, 412, Apto 82 - Centro Histórico",
+      plano: "600 Mega Fibra Turbo + Wi-Fi 6 Mesh",
+      prioridade: 2,
+      criado_em: "Semana passada",
+      contexto_ia: "Limpeza de conector SC/APC na CTO-08 concluída. Atenuação óptica normalizada em -19.2 dBm com margem de segurança excelente."
+    },
+    { 
+      id: 107, 
+      titulo: "Dúvida sobre Fatura e Desbloqueio 48h", 
+      estagio: "Novo Chamado", 
+      pipeline: "Suporte", 
+      contato: "Sérgio Ramos da Silva", 
+      telefone: "(11) 96655-9988",
+      endereco: "Rua Floriano Peixoto, 305 - Jd. América",
+      plano: "Fibra 700MB Gamer Pro",
+      prioridade: 1,
+      criado_em: "Hoje, 11:30",
+      contexto_ia: "Assinante solicitou esclarecimento sobre vencimento e realizou liberação temporária de 48 horas via portal do cliente."
+    },
+    { 
       id: 201, 
       titulo: "Nova Instalação Residencial 500MB", 
       estagio: "Novo Lead", 
