@@ -30,6 +30,48 @@ export default function PortalSuporte() {
   const [npsComentario, setNpsComentario] = useState('');
   const [npsEnviando, setNpsEnviando] = useState(false);
   const [npsEnviado, setNpsEnviado] = useState(false);
+  
+  // Webchat State
+  const [webchatAberto, setWebchatAberto] = useState(false);
+  const [chatMessages, setChatMessages] = useState<{remetente:'cliente'|'ia', texto:string}[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatEnviando, setChatEnviando] = useState(false);
+  const chatBottomRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages]);
+
+  const handleSendWebchat = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!chatInput.trim()) return;
+    
+    const texto = chatInput;
+    setChatInput('');
+    setChatMessages(prev => [...prev, {remetente: 'cliente', texto}]);
+    setChatEnviando(true);
+    
+    try {
+      const res = await fetch('/api/webchat/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telefone: '5511999999999', // Mock CPF do cliente
+          nome: 'João Silva',
+          texto: texto
+        })
+      });
+      const data = await res.json();
+      if(data.sucesso) {
+        setChatMessages(prev => [...prev, {remetente: 'ia', texto: data.resposta}]);
+      }
+    } catch(err) {
+      setChatMessages(prev => [...prev, {remetente: 'ia', texto: 'Ops, erro de conexão com a IA.'}]);
+    }
+    setChatEnviando(false);
+  };
 
   useEffect(() => {
     // Busca chamados de suporte

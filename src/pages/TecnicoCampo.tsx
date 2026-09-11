@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Navigation, MapPin, CheckCircle2, Clock, AlertTriangle, 
-  Wrench, Activity, Radio, Phone, Shield, ArrowRight, 
+  Wrench, Camera, PenTool, X, Activity, Radio, Phone, Shield, ArrowRight, 
   RefreshCw, Check, Sparkles, Smartphone, Battery, Compass,
   ExternalLink, FileText, UploadCloud
 } from 'lucide-react';
@@ -46,6 +46,13 @@ export default function TecnicoCampo() {
     assinaturaCliente: false
   });
   const [conclusaoMsg, setConclusaoMsg] = useState<string | null>(null);
+
+  const [showAssinaturaModal, setShowAssinaturaModal] = React.useState(false);
+  const [assinaturaData, setAssinaturaData] = React.useState<string | null>(null);
+  const [fotoInstalacao, setFotoInstalacao] = React.useState<string | null>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = React.useState(false);
+
 
   // Carregar OSs de campo do servidor
   const carregarOrdens = async () => {
@@ -123,6 +130,67 @@ export default function TecnicoCampo() {
   };
 
   // Concluir Atendimento
+  
+  // Funções do Canvas de Assinatura
+  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsDrawing(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    ctx.beginPath();
+    ctx.moveTo(clientX - rect.left, clientY - rect.top);
+  };
+
+  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    ctx.lineTo(clientX - rect.left, clientY - rect.top);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const clearSignature = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setAssinaturaData(null);
+  };
+
+  const saveSignature = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    setAssinaturaData(canvas.toDataURL());
+  };
+  
+  const handleCapturePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => setFotoInstalacao(e.target?.result as string);
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
   const handleConcluirAtendimento = async (osId: string) => {
     await handleUpdateStatus(osId, 'concluida');
     setConclusaoMsg("Ordem de serviço finalizada e sincronizada com o ERP!");
@@ -160,7 +228,7 @@ export default function TecnicoCampo() {
             <div>
               <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GPS Ativo (Backgr.)</div>
               <div className="font-mono text-emerald-400 font-bold text-xs">
-                {geoData.statusRastreamento === 'ativo' ? 'Sinal Satélite OK' : 'Rastreamento Contínuo'}
+                {geoData.statusRastreamento === 'ativo' ? 'Satélite OK / Transmitindo' : 'Rastreamento Background'}
               </div>
             </div>
           </div>
@@ -295,38 +363,46 @@ export default function TecnicoCampo() {
                 </div>
 
                 {/* Botões de Transição de Status em Campo */}
+                
                 <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
                   <button
-                    onClick={() => handleUpdateStatus(selectedOS.id, 'em_deslocamento')}
-                    className={`py-2 rounded-xl text-xs font-bold transition-all ${
+                    onClick={() => {
+                      handleUpdateStatus(selectedOS.id, 'em_deslocamento');
+                      showNotification('Deslocamento Iniciado', { body: 'O NOC e o cliente foram notificados. Acompanhamento GPS em tempo real ativado.', tag: 'gps_start' }, 'noc');
+                    }}
+                    className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
                       selectedOS.status === 'em_deslocamento'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                        : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5 hover:border-white/20'
                     }`}
                   >
-                    1. A Caminho
+                    <Navigation size={14} className={selectedOS.status === 'em_deslocamento' ? 'animate-pulse' : ''} /> 1. Iniciar Rota
                   </button>
                   <button
-                    onClick={() => handleUpdateStatus(selectedOS.id, 'no_local')}
-                    className={`py-2 rounded-xl text-xs font-bold transition-all ${
+                    onClick={() => {
+                      handleUpdateStatus(selectedOS.id, 'no_local');
+                      showNotification('Chegada Confirmada', { body: 'Horário de chegada registrado no SGP.', tag: 'gps_arrive' }, 'noc');
+                    }}
+                    className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
                       selectedOS.status === 'no_local'
-                        ? 'bg-amber-600 text-white'
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                        ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20'
+                        : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5 hover:border-white/20'
                     }`}
                   >
-                    2. No Local
+                    <MapPin size={14} /> 2. Cheguei
                   </button>
                   <button
                     onClick={() => handleUpdateStatus(selectedOS.id, 'executando')}
-                    className={`py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
                       selectedOS.status === 'executando'
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                        : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5 hover:border-white/20'
                     }`}
                   >
-                    3. Executando
+                    <Wrench size={14} /> 3. Executando
                   </button>
                 </div>
+
               </div>
 
               {/* Ferramenta TR-069: Diagnóstico Óptico in loco */}
@@ -408,7 +484,7 @@ export default function TecnicoCampo() {
 
               {/* Botão Final de Concluir OS */}
               <button
-                onClick={() => handleConcluirAtendimento(selectedOS.id)}
+                onClick={() => setShowAssinaturaModal(true)}
                 disabled={selectedOS.status === 'concluida'}
                 className="w-full py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.99] disabled:opacity-50"
               >
@@ -423,6 +499,83 @@ export default function TecnicoCampo() {
           )}
         </div>
       </div>
+
+      {/* Modal de Assinatura e Foto (Comprovação) */}
+      {showAssinaturaModal && selectedOS && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#0b0f19]">
+              <h3 className="font-bold text-white flex items-center gap-2">
+                <PenTool size={18} className="text-emerald-400" />
+                Comprovação de OS
+              </h3>
+              <button onClick={() => setShowAssinaturaModal(false)} className="text-slate-400 hover:text-white p-1">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-4 overflow-y-auto space-y-5">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-300 uppercase">1. Foto da Instalação (CTO/ONU)</label>
+                {!fotoInstalacao ? (
+                  <label className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-white/10 rounded-xl bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                    <Camera size={32} className="text-slate-400 mb-2" />
+                    <span className="text-sm font-bold text-slate-300">Tirar Foto</span>
+                    <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleCapturePhoto} />
+                  </label>
+                ) : (
+                  <div className="relative h-32 rounded-xl overflow-hidden border border-white/10">
+                    <img src={fotoInstalacao} alt="Instalação" className="w-full h-full object-cover" />
+                    <button onClick={() => setFotoInstalacao(null)} className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg shadow-lg">
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-300 uppercase">2. Assinatura do Cliente</label>
+                  <button onClick={clearSignature} className="text-xs text-slate-400 hover:text-white">Limpar</button>
+                </div>
+                <div className="bg-[#0b0f19] border border-white/10 rounded-xl overflow-hidden relative touch-none">
+                  <canvas 
+                    ref={canvasRef}
+                    width={400}
+                    height={150}
+                    className="w-full h-[150px] cursor-crosshair touch-none"
+                    onMouseDown={startDrawing}
+                    onMouseMove={draw}
+                    onMouseUp={stopDrawing}
+                    onMouseOut={stopDrawing}
+                    onTouchStart={startDrawing}
+                    onTouchMove={draw}
+                    onTouchEnd={stopDrawing}
+                  />
+                  <div className="absolute bottom-2 left-2 pointer-events-none">
+                    <span className="text-[10px] text-slate-500 font-mono">Assine acima</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-white/10 bg-[#0b0f19]">
+              <button
+                onClick={() => {
+                  saveSignature();
+                  setShowAssinaturaModal(false);
+                  handleConcluirAtendimento(selectedOS.id);
+                }}
+                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg transition-all active:scale-[0.99] flex justify-center items-center gap-2"
+              >
+                <CheckCircle2 size={18} />
+                Validar e Encerrar OS
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
+
 }

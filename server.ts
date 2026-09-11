@@ -938,6 +938,75 @@ let kanbanDeals = [
     }
   });
 
+  
+  // --- Webchat PWA (Cliente -> IA) ---
+  app.post("/api/webchat/send", async (req, res) => {
+    const { telefone, nome, texto } = req.body;
+    
+    try {
+      let chatId = null;
+      let chat = await db.select().from(conversas).where(eq(conversas.telefone, telefone)).limit(1);
+      
+      if (chat.length === 0) {
+        const newChat = await db.insert(conversas).values({
+          telefone,
+          nomeCliente: nome || "Cliente Webchat",
+          fila: 'triagem_ia',
+          statusConexao: '{"uptime":"2 dias", "sinal_onu":"-19.5 dBm", "status":"conectado"}'
+        }).returning();
+        chatId = newChat[0].id;
+      } else {
+        chatId = chat[0].id;
+        await db.update(conversas).set({ updatedAt: new Date() }).where(eq(conversas.id, chatId));
+      }
+      
+      // Salva mensagem do cliente
+      await db.insert(mensagens).values({
+        conversaId: chatId,
+        remetente: 'cliente',
+        conteudo: texto,
+        tipo: 'texto'
+      });
+      
+      // Resposta IA
+      const { GoogleGenAI } = require("@google/genai");
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const prompt = `Você é a assistente de suporte virtual do provedor NAP. O cliente ${nome} (${telefone}) enviou no Webchat: "${texto}". O sinal da ONU dele está normal (-19.5 dBm). Responda de forma curta, prestativa e em português.`;
+      
+      const geminiResponse = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt
+      });
+      const resposta_ia = geminiResponse.text;
+      
+      // Salva resposta IA
+      await db.insert(mensagens).values({
+        conversaId: chatId,
+        remetente: 'ia',
+        conteudo: resposta_ia,
+        tipo: 'texto'
+      });
+      
+      res.json({ sucesso: true, resposta: resposta_ia });
+      
+    } catch (dbErr) {
+      console.warn("[Mock] Erro Webchat (DB/IA offline), usando memória", dbErr?.message);
+      
+      // Fallback em memória
+      let chat = mockWabaChats.find(c => c.telefone === telefone);
+      if(!chat) {
+         chat = { id: Date.now(), telefone, nomeCliente: nome, fila: 'triagem_ia' };
+         mockWabaChats.push(chat);
+      }
+      mockWabaMessages.push({ conversaId: chat.id, remetente: 'cliente', conteudo: texto, createdAt: new Date() });
+      
+      const resposta_mock = "🤖 [IA Simulada] Olá! Entendi sua mensagem: " + texto + ". Em breve um humano vai te ajudar.";
+      mockWabaMessages.push({ conversaId: chat.id, remetente: 'ia', conteudo: resposta_mock, createdAt: new Date() });
+      
+      res.json({ sucesso: true, resposta: resposta_mock });
+    }
+  });
+
   // 3. API do Front para Listar Conversas e Mensagens
   app.get("/api/conversas", async (req, res) => {
     try {

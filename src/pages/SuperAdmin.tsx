@@ -131,15 +131,24 @@ export default function SuperAdmin() {
   };
 
   // Exportar backup
-  const handleExportBackup = () => {
-    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(config, null, 2))}`;
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', jsonString);
-    downloadAnchor.setAttribute('download', `nap_config_backup_${new Date().toISOString().slice(0,10)}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showToast('success', 'Arquivo de backup exportado com sucesso.');
+  
+  const handleExportBackup = async () => {
+    try {
+      showToast('success', 'Gerando backup do banco de dados...');
+      const res = await fetch('/api/backup');
+      const data = await res.json();
+      
+      const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', jsonString);
+      downloadAnchor.setAttribute('download', `nap_full_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('success', 'Backup completo exportado com sucesso.');
+    } catch (e) {
+      showToast('error', 'Erro ao gerar backup completo.');
+    }
   };
 
   // Importar backup
@@ -147,21 +156,39 @@ export default function SuperAdmin() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (parsed.provedor && parsed.sgp) {
+        
+        // Verifica se é um backup do banco de dados (que criamos) ou o config legado
+        if (parsed.versao && parsed.dados) {
+          showToast('success', 'Restaurando banco de dados, aguarde...');
+          const res = await fetch('/api/restore', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(parsed)
+          });
+          const result = await res.json();
+          if (result.sucesso) {
+             showToast('success', 'Banco de dados restaurado com sucesso! Atualize a página.');
+          } else {
+             showToast('error', 'Erro ao restaurar banco: ' + result.erro);
+          }
+        } else if (parsed.provedor && parsed.sgp) {
+          // Fallback legacy (config)
           setConfig(parsed);
-          showToast('success', 'Backup importado! Clique em Salvar para aplicar.');
+          showToast('success', 'Configurações importadas (Legacy). Clique em salvar.');
         } else {
-          showToast('error', 'Arquivo de backup com formato inválido.');
+          showToast('error', 'Arquivo de backup inválido.');
         }
       } catch (err) {
-        showToast('error', 'Erro ao ler arquivo JSON.');
+        showToast('error', 'Falha ao ler o arquivo JSON.');
       }
     };
     reader.readAsText(file);
+    e.target.value = ''; // Reset
   };
+
 
   // Funções de Gestão de Macros
   const handleOpenNewMacro = () => {

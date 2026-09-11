@@ -29,6 +29,9 @@ O sistema é projetado para máxima velocidade (Vite + React) e retaguarda em um
 2. **WhatsApp Cloud API (WABA):** Envio e recebimento nativo de mensagens sem uso de celular físico (QR Code). Totalmente espelhado no banco.
 3. **GenieACS / TR-069:** Telemetria da ONU do cliente (Verificação de perda de sinal óptico - LOS Vermelho, Uptime do Roteador, Nível de RX/TX).
 4. **FreePBX 17 / Asterisk:** VoIP. Integração via AMI/ARI para disparar ligações ou receber chamadas direto no Webphone do operador.
+5. **PWA Customer Portal & Webchat IA:** Módulo mobile-first para o cliente final. Contém rota nativa segura para um Chat integrado à IA (`/api/webchat/send`), que divide as mesmas tabelas de Omnichannel do WhatsApp, permitindo transição contínua entre autoatendimento e atendimento humano.
+6. **PWA Técnico de Campo & Comprovação Digital:** Ordem de Serviço mobile-first com telemetria GPS, diagnóstico de sinal óptico in loco, captura de fotos de instalação (câmera) e assinatura digital do assinante na tela.
+7. **Disaster Recovery (Backup & Restore):** Exportação e importação completa em JSON (`/api/backup` e `/api/restore`) do banco de dados relacional com fallback resiliente para continuidade operacional.
 
 ### 6. Fluxos Automatizados (Copiloto IA)
 O NAP processa eventos em tempo real. 
