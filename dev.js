@@ -1,8 +1,11 @@
-import express from "express";
-import app from "./server.js";
-import { createServer as createViteServer } from "vite";
+// Remove tsx-injected relative __dirname/__filename so packages like vite-plugin-pwa resolve correctly
+delete globalThis.__dirname;
+delete globalThis.__filename;
 
 async function startDevServer() {
+  const { default: app } = await import("./server.ts");
+  const { createServer: createViteServer } = await import("vite");
+
   const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "spa",
@@ -14,3 +17,4 @@ async function startDevServer() {
   });
 }
 startDevServer();
+

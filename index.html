@@ -3,9 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <script>
-      // Suprime avisos benignos de websocket do Vite em ambientes com DISABLE_HMR ativo
       (function() {
-        const isViteNotice = (arg) => typeof arg === 'string' && (arg.includes('[vite]') || arg.includes('failed to connect to websocket'));
+        // Intercepta conexões vite-hmr quando HMR está desabilitado na plataforma
+        const OrigWebSocket = window.WebSocket;
+        if (OrigWebSocket) {
+          window.WebSocket = function(url, protocols) {
+            const isViteHmr = protocols === 'vite-hmr' || (Array.isArray(protocols) && protocols.includes('vite-hmr'));
+            if (isViteHmr) {
+              const listeners = {};
+              const dummyWs = {
+                readyState: 1,
+                OPEN: 1,
+                CONNECTING: 0,
+                CLOSING: 2,
+                CLOSED: 3,
+                url: String(url),
+                protocol: 'vite-hmr',
+                extensions: '',
+                bufferedAmount: 0,
+                send: function() {},
+                close: function() {
+                  this.readyState = 3;
+                  if (typeof this.onclose === 'function') this.onclose({ wasClean: true });
+                },
+                addEventListener: function(type, fn) {
+                  listeners[type] = listeners[type] || [];
+                  listeners[type].push(fn);
+                  if (type === 'open') {
+                    setTimeout(() => { try { fn({ type: 'open' }); } catch (e) {} }, 0);
+                  }
+                },
+                removeEventListener: function(type, fn) {
+                  if (listeners[type]) {
+                    listeners[type] = listeners[type].filter(f => f !== fn);
+                  }
+                },
+                dispatchEvent: function() { return true; }
+              };
+              setTimeout(() => {
+                if (typeof dummyWs.onopen === 'function') {
+                  try { dummyWs.onopen({ type: 'open' }); } catch (e) {}
+                }
+              }, 0);
+              return dummyWs;
+            }
+            return new OrigWebSocket(url, protocols);
+          };
+          window.WebSocket.prototype = OrigWebSocket.prototype;
+          window.WebSocket.CONNECTING = 0;
+          window.WebSocket.OPEN = 1;
+          window.WebSocket.CLOSING = 2;
+          window.WebSocket.CLOSED = 3;
+        }
+
+        // Suprime avisos benignos do Vite em ambientes de desenvolvimento
+        const isViteNotice = (arg) => {
+          if (!arg) return false;
+          if (typeof arg === 'string') {
+            return arg.includes('[vite]') || arg.includes('failed to connect to websocket');
+          }
+          if (typeof arg === 'object') {
+            const text = (arg.message || '') + ' ' + (arg.stack || '') + ' ' + String(arg);
+            return text.includes('[vite]') || text.includes('failed to connect to websocket');
+          }
+          return false;
+        };
+
         const _err = console.error;
         const _warn = console.warn;
         console.error = function(...args) {
@@ -16,6 +79,20 @@
           if (args.some(isViteNotice)) return;
           _warn.apply(console, args);
         };
+
+        window.addEventListener('error', function(e) {
+          if (isViteNotice(e.message) || isViteNotice(e.error)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(e) {
+          if (isViteNotice(e.reason)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        }, true);
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
