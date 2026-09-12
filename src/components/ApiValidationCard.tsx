@@ -281,7 +281,7 @@ export default function ApiValidationCard() {
   const isAtivoGlobalmente = globalConfig.erpAtivo === selectedErp;
 
   return (
-    <div id="card-utilitario-validacao-erp" className="p-6 md:p-7 rounded-2xl bg-[#101726] border border-white/10 shadow-xl space-y-6">
+    <div id="card-utilitario-validacao-erp" className="p-6 md:p-7 rounded-2xl bg-slate-900 border border-white/10 shadow-xl space-y-6">
       
       {/* Header do Card Utilitário */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/5">
@@ -350,8 +350,8 @@ export default function ApiValidationCard() {
                 onClick={() => setSelectedErp(t.id)}
                 className={`p-3.5 rounded-xl border text-left transition-all relative flex flex-col justify-between gap-3 ${
                   isSelected
-                    ? 'bg-[#0b0f19] border-blue-500 shadow-lg shadow-blue-500/5 ring-1 ring-blue-500/30'
-                    : 'bg-[#0b0f19]/60 border-white/5 hover:border-white/20 text-slate-400 hover:text-white'
+                    ? 'bg-slate-950 border-blue-500 shadow-lg shadow-blue-500/5 ring-1 ring-blue-500/30'
+                    : 'bg-slate-950/60 border-white/5 hover:border-white/20 text-slate-400 hover:text-white'
                 }`}
               >
                 {/* Linha superior: Ícone, Nome e Badge Ativo */}
@@ -394,7 +394,7 @@ export default function ApiValidationCard() {
       </div>
 
       {/* Descrição & Documentação do ERP Escolhido */}
-      <div className="p-3.5 bg-[#0b0f19] rounded-xl border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
+      <div className="p-3.5 bg-slate-950 rounded-xl border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
         <div className="flex items-center gap-2 flex-wrap">
           <Server size={14} className="text-blue-400 shrink-0" />
           <span>{target.descricao}</span>
@@ -446,7 +446,7 @@ export default function ApiValidationCard() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder={target.defaultUrl}
-              className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
+              className="w-full p-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
             />
           </div>
           <span className="text-[11px] text-slate-500 mt-1 block">
@@ -470,7 +470,7 @@ export default function ApiValidationCard() {
               value={token}
               onChange={(e) => setToken(e.target.value)}
               placeholder={target.tokenPlaceholder}
-              className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
+              className="w-full p-2.5 pr-10 bg-slate-950 border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
             />
             <button
               type="button"
@@ -502,13 +502,13 @@ export default function ApiValidationCard() {
               value={appId}
               onChange={(e) => setAppId(e.target.value)}
               placeholder={target.appIdPlaceholder}
-              className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
+              className="w-full p-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
             />
           </div>
         )}
 
         {/* Opção Rápida de Desbloqueio 48h */}
-        <div className="p-3 bg-[#0b0f19] rounded-xl border border-white/5 flex items-center justify-between">
+        <div className="p-3 bg-slate-950 rounded-xl border border-white/5 flex items-center justify-between">
           <div>
             <span className="text-xs font-bold text-white block">Testar Permissão de Desbloqueio em Confiança (48h)</span>
             <span className="text-[11px] text-slate-500">Verifica se a API autoriza o comando de reativação temporária para o assinante.</span>
@@ -692,19 +692,19 @@ export default function ApiValidationCard() {
                 <span className="text-[10px] text-emerald-400 font-mono">Payload JSON Validado</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-                <div className="p-2 bg-[#0b0f19] rounded-lg border border-white/5">
+                <div className="p-2 bg-slate-950 rounded-lg border border-white/5">
                   <span className="text-[10px] text-slate-500 block">Assinante Teste</span>
                   <span className="text-white truncate block font-sans">{feedback.exemplo.cliente_exemplo}</span>
                 </div>
-                <div className="p-2 bg-[#0b0f19] rounded-lg border border-white/5">
+                <div className="p-2 bg-slate-950 rounded-lg border border-white/5">
                   <span className="text-[10px] text-slate-500 block">Contrato</span>
                   <span className="text-blue-400 truncate block">{feedback.exemplo.contrato_codigo}</span>
                 </div>
-                <div className="p-2 bg-[#0b0f19] rounded-lg border border-white/5">
+                <div className="p-2 bg-slate-950 rounded-lg border border-white/5">
                   <span className="text-[10px] text-slate-500 block">Sessão PPPoE / IP</span>
                   <span className="text-emerald-400 truncate block">{feedback.exemplo.ipv4}</span>
                 </div>
-                <div className="p-2 bg-[#0b0f19] rounded-lg border border-white/5">
+                <div className="p-2 bg-slate-950 rounded-lg border border-white/5">
                   <span className="text-[10px] text-slate-500 block">Fatura Aberta</span>
                   <span className="text-amber-400 truncate block">{feedback.exemplo.fatura_aberta}</span>
                 </div>

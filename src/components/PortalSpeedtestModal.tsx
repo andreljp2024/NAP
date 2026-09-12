@@ -127,7 +127,7 @@ export default function PortalSpeedtestModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden flex flex-col">
+      <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden flex flex-col">
         {/* Glow de fundo */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
 
@@ -236,7 +236,7 @@ export default function PortalSpeedtestModal({
         {/* Métricas Principais em Grade */}
         <div className="grid grid-cols-4 gap-2 mb-4 relative z-10">
           {/* Download */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3 text-center">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-3 text-center">
             <div className="flex items-center justify-center gap-1 text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">
               <ArrowDown size={11} /> Down
             </div>
@@ -247,7 +247,7 @@ export default function PortalSpeedtestModal({
           </div>
 
           {/* Upload */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3 text-center">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-3 text-center">
             <div className="flex items-center justify-center gap-1 text-[10px] font-bold text-purple-400 uppercase tracking-wider mb-1">
               <ArrowUp size={11} /> Up
             </div>
@@ -258,7 +258,7 @@ export default function PortalSpeedtestModal({
           </div>
 
           {/* Ping */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3 text-center">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-3 text-center">
             <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
               Ping
             </div>
@@ -269,7 +269,7 @@ export default function PortalSpeedtestModal({
           </div>
 
           {/* Jitter */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3 text-center">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-3 text-center">
             <div className="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-1">
               Jitter
             </div>

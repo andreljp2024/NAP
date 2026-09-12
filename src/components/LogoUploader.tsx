@@ -128,7 +128,7 @@ export default function LogoUploader({ currentLogoUrl, onLogoChange, onFileUploa
         className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
           isDragging 
             ? 'border-blue-500 bg-blue-500/10 scale-[1.01]' 
-            : 'border-white/10 hover:border-blue-500/50 bg-[#070b14]/60 hover:bg-[#070b14]'
+            : 'border-white/10 hover:border-blue-500/50 bg-slate-950/60 hover:bg-slate-950'
         }`}
       >
         <input 
@@ -171,7 +171,7 @@ export default function LogoUploader({ currentLogoUrl, onLogoChange, onFileUploa
 
       {/* Pré-visualização Dupla e Controles */}
       {currentLogoUrl && (
-        <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-4 space-y-3">
+        <div className="bg-slate-950 border border-white/5 rounded-2xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Sparkles size={14} className="text-amber-400" /> Pré-visualização do Logotipo Aplicado
@@ -235,7 +235,7 @@ export default function LogoUploader({ currentLogoUrl, onLogoChange, onFileUploa
             onChange={(e) => setCustomUrlInput(e.target.value)}
             onBlur={handleUrlBlur}
             placeholder="https://meuprovedor.com.br/logo.png"
-            className="flex-1 p-2 bg-[#0b0f19] border border-white/5 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+            className="flex-1 p-2 bg-slate-950 border border-white/5 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
           />
           <button
             type="button"
@@ -258,7 +258,7 @@ export default function LogoUploader({ currentLogoUrl, onLogoChange, onFileUploa
                   onLogoChange(preset.url);
                   setCustomUrlInput(preset.url);
                 }}
-                className="text-[10px] bg-[#0b0f19] hover:bg-blue-600/20 hover:text-blue-300 text-slate-400 border border-white/5 px-2 py-0.5 rounded-md transition-colors"
+                className="text-[10px] bg-slate-950 hover:bg-blue-600/20 hover:text-blue-300 text-slate-400 border border-white/5 px-2 py-0.5 rounded-md transition-colors"
               >
                 {preset.nome}
               </button>

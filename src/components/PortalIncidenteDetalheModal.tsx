@@ -39,7 +39,7 @@ export default function PortalIncidenteDetalheModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-[#101726] border border-amber-500/20 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden flex flex-col">
+      <div className="bg-slate-900 border border-amber-500/20 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative overflow-hidden flex flex-col">
         {/* Glow de aviso */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
 
@@ -82,7 +82,7 @@ export default function PortalIncidenteDetalheModal({
           </div>
 
           {/* Descrição Técnica para o Assinante */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-4 space-y-2.5">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-4 space-y-2.5">
             <div className="flex items-center justify-between text-[11px] text-slate-400">
               <span className="flex items-center gap-1.5">
                 <MapPin size={13} className="text-blue-400" />
@@ -126,7 +126,7 @@ export default function PortalIncidenteDetalheModal({
           </div>
 
           {/* Linha do Tempo de Atendimento */}
-          <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-4">
+          <div className="bg-slate-950 border border-white/5 rounded-2xl p-4">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-3">
               Linha do Tempo das Equipes de Campo
             </span>

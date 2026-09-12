@@ -142,9 +142,9 @@ export default function UsuariosHierarquia() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 p-4 md:p-6 space-y-6 pb-24">
+    <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-6 space-y-6 pb-24">
       {/* Header do Módulo de Usuários & Hierarquia */}
-      <div className="bg-[#101726] border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-slate-900 border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0">
@@ -160,7 +160,7 @@ export default function UsuariosHierarquia() {
         </div>
 
         {/* Alternador de Perfis em Tempo Real para Demonstração */}
-        <div className="flex flex-wrap items-center gap-2 bg-[#0b0f19] border border-white/10 p-1.5 rounded-xl">
+        <div className="flex flex-wrap items-center gap-2 bg-slate-950 border border-white/10 p-1.5 rounded-xl">
           <span className="text-[10px] text-slate-400 font-bold uppercase px-2">Trocar Sessão:</span>
           <button
             onClick={() => switchMockUser('admin')}
@@ -251,7 +251,7 @@ export default function UsuariosHierarquia() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Bloco Nível 1: Admin */}
-            <div className="bg-[#101726] border border-purple-500/30 rounded-2xl p-5 space-y-4">
+            <div className="bg-slate-900 border border-purple-500/30 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full">
                   Nível 1 • Diretoria
@@ -260,7 +260,7 @@ export default function UsuariosHierarquia() {
               </div>
 
               {usuarios.filter(u => u.cargo === 'admin').map(admin => (
-                <div key={admin.id} className="bg-[#0b0f19] border border-white/5 rounded-xl p-4 space-y-3">
+                <div key={admin.id} className="bg-slate-950 border border-white/5 rounded-xl p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-bold text-white text-base">{admin.nome}</h3>
@@ -286,7 +286,7 @@ export default function UsuariosHierarquia() {
             </div>
 
             {/* Bloco Nível 2: Operador de Atendimento */}
-            <div className="bg-[#101726] border border-blue-500/30 rounded-2xl p-5 space-y-4">
+            <div className="bg-slate-900 border border-blue-500/30 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full">
                   Nível 2 • Atendimento & Suporte
@@ -295,7 +295,7 @@ export default function UsuariosHierarquia() {
               </div>
 
               {usuarios.filter(u => u.cargo === 'operador').map(op => (
-                <div key={op.id} className="bg-[#0b0f19] border border-white/5 rounded-xl p-4 space-y-3">
+                <div key={op.id} className="bg-slate-950 border border-white/5 rounded-xl p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-bold text-white text-base">{op.nome}</h3>
@@ -329,7 +329,7 @@ export default function UsuariosHierarquia() {
             </div>
 
             {/* Bloco Nível 3: Técnicos de Campo */}
-            <div className="bg-[#101726] border border-emerald-500/30 rounded-2xl p-5 space-y-4">
+            <div className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                   Nível 3 • Operações de Campo
@@ -338,7 +338,7 @@ export default function UsuariosHierarquia() {
               </div>
 
               {usuarios.filter(u => u.cargo === 'tecnico_campo' || u.cargo === 'tecnico_noc').map(tec => (
-                <div key={tec.id} className="bg-[#0b0f19] border border-white/5 rounded-xl p-4 space-y-3">
+                <div key={tec.id} className="bg-slate-950 border border-white/5 rounded-xl p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-bold text-white text-base">{tec.nome}</h3>
@@ -380,7 +380,7 @@ export default function UsuariosHierarquia() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Visualizador de Coordenadas e Radar dos Técnicos */}
-            <div className="lg:col-span-8 bg-[#101726] border border-white/10 rounded-2xl p-5 space-y-4">
+            <div className="lg:col-span-8 bg-slate-900 border border-white/10 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Navigation size={18} className="text-emerald-400" />
@@ -405,7 +405,7 @@ export default function UsuariosHierarquia() {
                   <div className="w-8 h-8 rounded-full bg-blue-600 border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold">
                     ISP
                   </div>
-                  <span className="text-[10px] font-bold bg-[#101726] px-2 py-0.5 rounded border border-white/10 mt-1 text-slate-300">
+                  <span className="text-[10px] font-bold bg-slate-900 px-2 py-0.5 rounded border border-white/10 mt-1 text-slate-300">
                     Sede Central (Admin & Operador)
                   </span>
                 </div>
@@ -413,7 +413,7 @@ export default function UsuariosHierarquia() {
                 {/* Marcadores dos Técnicos em Campo */}
                 <div className="relative z-10 grid grid-cols-2 gap-4">
                   {mapa?.tecnicos.map((tec, idx) => (
-                    <div key={tec.id} className="bg-[#101726]/90 backdrop-blur border border-emerald-500/40 p-3 rounded-xl shadow-lg">
+                    <div key={tec.id} className="bg-slate-900/90 backdrop-blur border border-emerald-500/40 p-3 rounded-xl shadow-lg">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-1.5">
                           <Truck size={14} className="text-emerald-400" />
@@ -444,7 +444,7 @@ export default function UsuariosHierarquia() {
             </div>
 
             {/* Coluna Direita: Ordens de Serviço Georreferenciadas */}
-            <div className="lg:col-span-4 bg-[#101726] border border-white/10 rounded-2xl p-5 space-y-4">
+            <div className="lg:col-span-4 bg-slate-900 border border-white/10 rounded-2xl p-5 space-y-4">
               <h3 className="font-bold text-white text-base flex items-center gap-2">
                 <MapPin size={18} className="text-red-400" />
                 OSs Ativas no Mapa
@@ -452,7 +452,7 @@ export default function UsuariosHierarquia() {
 
               <div className="space-y-3">
                 {mapa?.ordens_servico.map(os => (
-                  <div key={os.id} className="p-3 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1.5">
+                  <div key={os.id} className="p-3 bg-slate-950 border border-white/5 rounded-xl space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-blue-400">{os.numero}</span>
                       <span className="text-[10px] uppercase font-bold bg-white/5 text-slate-300 px-2 py-0.5 rounded">
@@ -478,7 +478,7 @@ export default function UsuariosHierarquia() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Status PWA Global */}
-            <div className="bg-[#101726] border border-white/10 rounded-2xl p-5 space-y-4">
+            <div className="bg-slate-900 border border-white/10 rounded-2xl p-5 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
                   <Smartphone size={20} />
@@ -491,7 +491,7 @@ export default function UsuariosHierarquia() {
 
               <div className="space-y-2">
                 {usuarios.map(u => (
-                  <div key={u.id} className="flex items-center justify-between p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs">
+                  <div key={u.id} className="flex items-center justify-between p-3 bg-slate-950 border border-white/5 rounded-xl text-xs">
                     <div>
                       <strong className="text-white block">{u.nome} ({u.cargo_label})</strong>
                       <span className="text-slate-400 text-[11px]">{u.pwa.dispositivo}</span>
@@ -507,7 +507,7 @@ export default function UsuariosHierarquia() {
             </div>
 
             {/* Notificações Push & VAPID */}
-            <div className="bg-[#101726] border border-white/10 rounded-2xl p-5 space-y-4">
+            <div className="bg-slate-900 border border-white/10 rounded-2xl p-5 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center">
                   <Bell size={20} />
@@ -518,7 +518,7 @@ export default function UsuariosHierarquia() {
                 </div>
               </div>
 
-              <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-xl space-y-3 text-xs">
+              <div className="p-4 bg-slate-950 border border-white/5 rounded-xl space-y-3 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Permissão do Navegador:</span>
                   <span className="font-bold text-emerald-400 uppercase">{permission}</span>

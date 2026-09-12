@@ -209,7 +209,7 @@ export default function Operadores() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0b0f19] relative">
+    <div className="flex-1 overflow-y-auto bg-slate-950 relative">
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
@@ -241,7 +241,7 @@ export default function Operadores() {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+          <div className="bg-slate-900 p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
               <Users size={24} />
             </div>
@@ -251,7 +251,7 @@ export default function Operadores() {
             </div>
           </div>
 
-          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+          <div className="bg-slate-900 p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
               <Activity size={24} />
             </div>
@@ -261,7 +261,7 @@ export default function Operadores() {
             </div>
           </div>
 
-          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+          <div className="bg-slate-900 p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <PauseCircle size={24} />
             </div>
@@ -271,7 +271,7 @@ export default function Operadores() {
             </div>
           </div>
 
-          <div className="bg-[#101726] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+          <div className="bg-slate-900 p-5 rounded-2xl border border-white/5 flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
               <BellRing size={24} />
             </div>
@@ -285,9 +285,9 @@ export default function Operadores() {
         </div>
 
         {/* Table & Toolbar Container */}
-        <div className="bg-[#101726] border border-white/5 rounded-2xl overflow-hidden flex flex-col">
+        <div className="bg-slate-900 border border-white/5 rounded-2xl overflow-hidden flex flex-col">
           {/* Toolbar */}
-          <div className="p-5 border-b border-white/5 bg-[#0b0f19]/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-5 border-b border-white/5 bg-slate-950/30 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="relative w-full sm:max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <input 
@@ -295,7 +295,7 @@ export default function Operadores() {
                 placeholder="Buscar por nome, e-mail ou ramal..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm text-white outline-none focus:border-blue-600 transition-all "
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-blue-600 transition-all "
               />
             </div>
 
@@ -309,7 +309,7 @@ export default function Operadores() {
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#0b0f19]/50 border-b border-white/5">
+                <tr className="bg-slate-950/50 border-b border-white/5">
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Operador</th>
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Comunicações</th>
                   <th className="px-5 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">Filas de Atendimento</th>
@@ -361,14 +361,14 @@ export default function Operadores() {
                                 <Shield size={10} /> {op.permissao}
                               </span>
                             ) : (
-                              <span className="bg-[#0b0f19] text-slate-400 border border-white/5 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
+                              <span className="bg-slate-950 text-slate-400 border border-white/5 px-2 py-0.5 rounded text-[10px] uppercase font-bold flex items-center gap-1">
                                 <User size={10} /> {op.permissao}
                               </span>
                             )}
                           </div>
                           <div className="flex gap-1 flex-wrap max-w-[200px]">
                             {op.filas.map((fila, idx) => (
-                              <span key={idx} className="bg-[#0b0f19] border border-white/5 text-slate-400 px-2 py-0.5 rounded text-[10px] font-medium">
+                              <span key={idx} className="bg-slate-950 border border-white/5 text-slate-400 px-2 py-0.5 rounded text-[10px] font-medium">
                                 {fila}
                               </span>
                             ))}
@@ -450,9 +450,9 @@ export default function Operadores() {
 
       {/* Modal de Disparo Push Broadcast para Operadores */}
       {isBroadcastOpen && (
-        <div className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-slate-950/30">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
                   <Send size={16} />
@@ -484,7 +484,7 @@ export default function Operadores() {
                       className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
                         broadcastData.tipo === t.id 
                           ? 'bg-indigo-600 border-indigo-500 text-white' 
-                          : 'bg-[#0b0f19] border-white/5 text-slate-400 hover:text-white'
+                          : 'bg-slate-950 border-white/5 text-slate-400 hover:text-white'
                       }`}
                     >
                       {t.label}
@@ -500,7 +500,7 @@ export default function Operadores() {
                   value={broadcastData.titulo}
                   onChange={(e) => setBroadcastData({ ...broadcastData, titulo: e.target.value })}
                   placeholder="Ex: Alerta de Fila / Manutenção"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
                 />
               </div>
 
@@ -511,7 +511,7 @@ export default function Operadores() {
                   value={broadcastData.mensagem}
                   onChange={(e) => setBroadcastData({ ...broadcastData, mensagem: e.target.value })}
                   placeholder="Descreva o comunicado ou instrução para a equipe..."
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 resize-none"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 resize-none"
                 />
               </div>
 
@@ -520,7 +520,7 @@ export default function Operadores() {
                 <select
                   value={broadcastData.fila}
                   onChange={(e) => setBroadcastData({ ...broadcastData, fila: e.target.value })}
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500"
                 >
                   <option value="">Todos os Operadores ({operadores.length})</option>
                   <option value="Suporte N1">Apenas Fila Suporte N1</option>
@@ -538,7 +538,7 @@ export default function Operadores() {
               )}
             </div>
 
-            <div className="p-5 border-t border-white/10 flex justify-end gap-3 bg-[#0b0f19]/30">
+            <div className="p-5 border-t border-white/10 flex justify-end gap-3 bg-slate-950/30">
               <button 
                 onClick={() => setIsBroadcastOpen(false)}
                 className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors"
@@ -559,9 +559,9 @@ export default function Operadores() {
 
       {/* Modal de Edição / Criação */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-slate-950/30">
               <h2 className="text-lg font-bold text-white font-outfit">
                 {editingOp ? 'Editar Operador' : 'Novo Operador'}
               </h2>
@@ -579,7 +579,7 @@ export default function Operadores() {
                     value={formData.nome || ''}
                     onChange={(e) => setFormData({...formData, nome: e.target.value})}
                     placeholder="Ex: João Silva"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -589,7 +589,7 @@ export default function Operadores() {
                     value={formData.email || ''}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="joao@provedor.com.br"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -599,7 +599,7 @@ export default function Operadores() {
                     value={formData.ramal || ''}
                     onChange={(e) => setFormData({...formData, ramal: e.target.value})}
                     placeholder="Ex: 2001"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-emerald-400 outline-none focus:border-blue-600 "
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-emerald-400 outline-none focus:border-blue-600 "
                   />
                 </div>
                 <div className="col-span-2 md:col-span-1">
@@ -607,7 +607,7 @@ export default function Operadores() {
                   <select 
                     value={formData.permissao || 'Operador'}
                     onChange={(e) => setFormData({...formData, permissao: e.target.value})}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   >
                     <option value="Operador">Operador (Padrão)</option>
                     <option value="Admin">Administrador</option>
@@ -620,12 +620,12 @@ export default function Operadores() {
                     value={Array.isArray(formData.filas) ? formData.filas.join(', ') : formData.filas || ''}
                     onChange={(e) => setFormData({...formData, filas: e.target.value.split(',').map(s => s.trim()).filter(Boolean)})}
                     placeholder="Ex: Suporte N1, Vendas"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-600 "
                   />
                 </div>
               </div>
             </div>
-            <div className="p-5 border-t border-white/10 flex justify-between items-center bg-[#0b0f19]/30">
+            <div className="p-5 border-t border-white/10 flex justify-between items-center bg-slate-950/30">
               {editingOp ? (
                 <button 
                   onClick={() => handleDelete(editingOp.id)}

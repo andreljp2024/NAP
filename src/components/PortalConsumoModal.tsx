@@ -63,7 +63,7 @@ export default function PortalConsumoModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-xl p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-xl p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ export default function PortalConsumoModal({
             {/* Cards de Resumo Geral */}
             <div className="grid grid-cols-3 gap-3">
               {/* Total Geral */}
-              <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3.5">
+              <div className="bg-slate-950 border border-white/5 rounded-2xl p-3.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
                   Tráfego Total
                 </span>
@@ -108,7 +108,7 @@ export default function PortalConsumoModal({
               </div>
 
               {/* Download */}
-              <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3.5">
+              <div className="bg-slate-950 border border-white/5 rounded-2xl p-3.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1 mb-1">
                   <ArrowDown size={11} /> Download
                 </span>
@@ -119,7 +119,7 @@ export default function PortalConsumoModal({
               </div>
 
               {/* Upload */}
-              <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3.5">
+              <div className="bg-slate-950 border border-white/5 rounded-2xl p-3.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1 mb-1">
                   <ArrowUp size={11} /> Upload
                 </span>
@@ -131,7 +131,7 @@ export default function PortalConsumoModal({
             </div>
 
             {/* Gráfico Semanal dos Últimos 7 Dias */}
-            <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-4">
+            <div className="bg-slate-950 border border-white/5 rounded-2xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                   <Calendar size={13} className="text-indigo-400" />
@@ -166,7 +166,7 @@ export default function PortalConsumoModal({
             </div>
 
             {/* Dispositivos com Maior Consumo */}
-            <div className="bg-[#0b0f19] border border-white/5 rounded-2xl p-4">
+            <div className="bg-slate-950 border border-white/5 rounded-2xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                   Consumo por Aparelho na Residência

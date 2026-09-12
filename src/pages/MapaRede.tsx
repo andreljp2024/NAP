@@ -122,9 +122,9 @@ export default function MapaRede() {
   }, [onts]);
 
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19] relative">
+    <div className="flex flex-col h-full bg-slate-950 relative">
       {/* HEADER DE CONTROLE */}
-      <div className="p-6 border-b border-white/5 bg-[#101726]/90 backdrop-blur-md z-20 shadow-md">
+      <div className="p-6 border-b border-white/5 bg-slate-900/90 backdrop-blur-md z-20 shadow-md">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function MapaRede() {
           </div>
           
           <div className="flex flex-wrap gap-3">
-            <div className="bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px]">
+            <div className="bg-slate-950 border border-white/10 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px]">
               <span className="text-xl font-bold text-white">{stats.total}</span>
               <span className="text-[10px] text-slate-400 uppercase tracking-wider">Total Ativos</span>
             </div>
@@ -163,7 +163,7 @@ export default function MapaRede() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por Nome do Cliente, MAC ou ID da ONT..."
-              className="w-full pl-10 pr-4 py-2.5 bg-[#0b0f19] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
             />
             {searchTerm && (
               <button 
@@ -180,7 +180,7 @@ export default function MapaRede() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 flex-1 sm:w-48 appearance-none"
+              className="bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 flex-1 sm:w-48 appearance-none"
             >
               <option value="todos">Todos os Status</option>
               <option value="online">Somente Online</option>
@@ -194,14 +194,14 @@ export default function MapaRede() {
       {/* ÁREA DO MAPA */}
       <div className="flex-1 relative z-10 bg-slate-900">
         {loading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0b0f19]/80 backdrop-blur-sm z-50">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
             <RefreshCw size={32} className="text-blue-500 animate-spin mb-4" />
             <p className="text-slate-300 font-medium">Carregando dados geolocalizados do GenieACS...</p>
           </div>
         ) : null}
 
         {/* Legenda Interativa Flutuante */}
-        <div className="absolute bottom-6 right-6 z-[400] bg-[#101726]/90 backdrop-blur-md border border-white/10 p-4 rounded-xl shadow-2xl flex flex-col gap-3 min-w-[200px]">
+        <div className="absolute bottom-6 right-6 z-[400] bg-slate-900/90 backdrop-blur-md border border-white/10 p-4 rounded-xl shadow-2xl flex flex-col gap-3 min-w-[200px]">
           <h3 className="text-sm font-bold text-white mb-1">Legenda (Status TR-069)</h3>
           
           <div 

@@ -76,7 +76,7 @@ export default function Helpers() {
 
           {/* Grid de Pilares */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-blue-400 font-bold text-xs">
                 <Server size={16} /> Soberania & Isolamento
               </div>
@@ -85,7 +85,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs">
                 <Sparkles size={16} /> Cérebro Gemini 2.5
               </div>
@@ -94,7 +94,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
                 <ShieldCheck size={16} /> Fallback Mock Resiliente
               </div>
@@ -105,7 +105,7 @@ export default function Helpers() {
           </div>
 
           {/* Especificações de Portas e Infraestrutura */}
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
               <Activity size={14} className="text-blue-400" /> Mapa de Portas e Serviços
             </h3>
@@ -154,7 +154,7 @@ export default function Helpers() {
 
           {/* Cards dos 3 Principais ERPs Homologados */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-[#0b0f19] border border-blue-500/20 rounded-2xl space-y-2.5">
+            <div className="p-4 bg-slate-950 border border-blue-500/20 rounded-2xl space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="px-2 py-0.5 rounded-lg bg-blue-600/20 text-blue-400 font-black text-xs font-mono">IXC</span>
                 <span className="text-[10px] text-emerald-400 font-mono">REST v1</span>
@@ -168,7 +168,7 @@ export default function Helpers() {
               </div>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-cyan-500/20 rounded-2xl space-y-2.5">
+            <div className="p-4 bg-slate-950 border border-cyan-500/20 rounded-2xl space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="px-2 py-0.5 rounded-lg bg-cyan-600/20 text-cyan-400 font-black text-xs font-mono">HUB</span>
                 <span className="text-[10px] text-emerald-400 font-mono">REST v1/v2</span>
@@ -182,7 +182,7 @@ export default function Helpers() {
               </div>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-rose-500/20 rounded-2xl space-y-2.5">
+            <div className="p-4 bg-slate-950 border border-rose-500/20 rounded-2xl space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="px-2 py-0.5 rounded-lg bg-rose-600/20 text-rose-400 font-black text-xs font-mono">MIK</span>
                 <span className="text-[10px] text-emerald-400 font-mono">API v1.2</span>
@@ -198,7 +198,7 @@ export default function Helpers() {
           </div>
 
           {/* Validador de API & Indicador de Ping */}
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-4">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
               <Zap size={16} className="text-amber-400" /> Como Utilizar o Validador de API e Indicador de Latência (Ping)
             </h3>
@@ -235,7 +235,7 @@ export default function Helpers() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <Sparkles size={14} /> Modo Triagem IA & Copiloto
               </h3>
@@ -249,7 +249,7 @@ export default function Helpers() {
               </ul>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
                 <Zap size={14} /> Ações Rápidas no Atendimento
               </h3>
@@ -305,7 +305,7 @@ export default function Helpers() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <Zap size={14} /> 2ª Via de Fatura & PIX Dinâmico
               </h3>
@@ -314,7 +314,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
                 <Wifi size={14} /> Gestão da Rede Wi-Fi (TR-069)
               </h3>
@@ -323,7 +323,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
                 <PhoneCall size={14} /> Webphone WebRTC Direto no App
               </h3>
@@ -332,7 +332,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                 <RefreshCw size={14} /> Reinício Remoto de Roteador
               </h3>
@@ -361,7 +361,7 @@ export default function Helpers() {
             </p>
           </div>
 
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
               <Sparkles size={16} /> Como Funciona a Inteligência na Ligação (Audio Streaming)
             </h3>
@@ -379,7 +379,7 @@ export default function Helpers() {
           </div>
 
           {/* CTI Reverso */}
-          <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+          <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
               <Activity size={16} /> Pop-up de CTI Reverso
             </h3>
@@ -408,7 +408,7 @@ export default function Helpers() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-rose-400 font-bold text-xs">
                 <MapPin size={16} /> Telemetria GPS em Tempo Real
               </div>
@@ -417,7 +417,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-blue-400 font-bold text-xs">
                 <Activity size={16} /> Diagnóstico Óptico TR-069 in loco
               </div>
@@ -426,7 +426,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs">
                 <Smartphone size={16} /> Foto da Instalação & CTO
               </div>
@@ -435,7 +435,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-2">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
                 <CheckCircle2 size={16} /> Assinatura Digital no Canvas
               </div>
@@ -464,7 +464,7 @@ export default function Helpers() {
             </p>
           </div>
 
-          <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">Parâmetros Monitorados em Tempo Real:</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
               <div className="p-3 bg-[#06080e] rounded-xl border border-white/5">
@@ -507,19 +507,19 @@ export default function Helpers() {
           <div className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Níveis de Acesso:</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+              <div className="p-3.5 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                 <span className="text-indigo-400 font-bold font-mono">1. Admin Geral (Super Admin)</span>
                 <p className="text-slate-400">Acesso irrestrito a configurações, parametrização de ERP, Disaster Recovery, gestão de planos e usuários.</p>
               </div>
-              <div className="p-3.5 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+              <div className="p-3.5 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                 <span className="text-blue-400 font-bold font-mono">2. Operador de Atendimento</span>
                 <p className="text-slate-400">Acesso ao Inbox Omnichannel, Kanban de Suporte/Vendas/Cobrança, Webphone e consulta à Ficha 360 do assinante.</p>
               </div>
-              <div className="p-3.5 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+              <div className="p-3.5 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                 <span className="text-emerald-400 font-bold font-mono">3. Técnico NOC (N1/N2)</span>
                 <p className="text-slate-400">Acesso a telemetria GenieACS, dashboard de rede, ferramentas de ping/tracert e suporte técnico avançado.</p>
               </div>
-              <div className="p-3.5 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+              <div className="p-3.5 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                 <span className="text-amber-400 font-bold font-mono">4. Técnico de Campo</span>
                 <p className="text-slate-400">Acesso exclusivo ao módulo mobile-first de Ordens de Serviço (`/admin/campo`) com rastreamento GPS.</p>
               </div>
@@ -527,7 +527,7 @@ export default function Helpers() {
           </div>
 
           {/* Backup e Restauração */}
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
               <HardDrive size={16} /> Rotinas de Backup (Disaster Recovery)
             </h3>
@@ -570,7 +570,7 @@ export default function Helpers() {
 
           {/* Os 4 Eixos Monitorados */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <div className="flex items-center gap-2 text-sky-400 font-bold">
                 <Users size={16} /> 1. Acessos & Sessões Autenticadas
               </div>
@@ -579,7 +579,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <div className="flex items-center gap-2 text-purple-400 font-bold">
                 <Server size={16} /> 2. Alterações no SGP & Multi-ERP
               </div>
@@ -588,7 +588,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <div className="flex items-center gap-2 text-emerald-400 font-bold">
                 <Radio size={16} /> 3. Comandos GenieACS (TR-069)
               </div>
@@ -597,7 +597,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <div className="flex items-center gap-2 text-amber-400 font-bold">
                 <Megaphone size={16} /> 4. Disparos em Massa & Campanhas
               </div>
@@ -608,7 +608,7 @@ export default function Helpers() {
           </div>
 
           {/* Gráfico de Rosca Analítico */}
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
               <PieChart size={16} /> Gráfico de Rosca: Visão Rápida de Conformidade
             </h3>
@@ -623,7 +623,7 @@ export default function Helpers() {
           </div>
 
           {/* Integridade Criptográfica SHA-256 e Exportação Oficial */}
-          <div className="p-5 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-3">
+          <div className="p-5 bg-slate-950 border border-white/5 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
               <Lock size={16} /> Assinatura SHA-256 e Exportação Legal (CSV / JSON)
             </h3>
@@ -664,7 +664,7 @@ export default function Helpers() {
           </div>
 
           <div className="space-y-3">
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
                 <HelpCircle size={14} className="text-blue-400" />
                 Como alterar o ERP ativo do provedor?
@@ -674,7 +674,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
                 <HelpCircle size={14} className="text-emerald-400" />
                 O que fazer se o Ping do ERP estiver alto ou acusando Offline?
@@ -686,7 +686,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
                 <HelpCircle size={14} className="text-amber-400" />
                 Como funciona o Desbloqueio em Confiança (48h)?
@@ -696,7 +696,7 @@ export default function Helpers() {
               </p>
             </div>
 
-            <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl space-y-1.5">
+            <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl space-y-1.5">
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
                 <HelpCircle size={14} className="text-indigo-400" />
                 O cliente precisa baixar o app pela Play Store ou App Store?
@@ -733,7 +733,7 @@ export default function Helpers() {
     <div id="pagina-base-de-ajuda" className="h-[calc(100vh-64px)] flex flex-col bg-[#06080e] overflow-hidden text-slate-200">
       
       {/* Topo do Módulo de Ajuda: Título, Busca & Filtros Rápidos */}
-      <div className="p-5 border-b border-white/5 bg-[#0b0f19]/80 backdrop-blur-md shrink-0 space-y-3">
+      <div className="p-5 border-b border-white/5 bg-slate-950/80 backdrop-blur-md shrink-0 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-bold text-white flex items-center gap-2">
@@ -818,8 +818,8 @@ export default function Helpers() {
                   onClick={() => setActiveSectionId(sec.id)}
                   className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 ${
                     isSelected
-                      ? 'bg-[#101726] border-blue-500 shadow-md shadow-blue-500/5 ring-1 ring-blue-500/30'
-                      : 'bg-[#0b0f19]/70 border-white/5 hover:border-white/15 text-slate-400 hover:text-slate-200'
+                      ? 'bg-slate-900 border-blue-500 shadow-md shadow-blue-500/5 ring-1 ring-blue-500/30'
+                      : 'bg-slate-950/70 border-white/5 hover:border-white/15 text-slate-400 hover:text-slate-200'
                   }`}
                 >
                   <div className={`mt-0.5 p-2 rounded-xl shrink-0 transition-colors ${
@@ -850,7 +850,7 @@ export default function Helpers() {
             })}
 
             {filteredSections.length === 0 && (
-              <div className="p-6 text-center text-slate-500 bg-[#0b0f19] rounded-2xl border border-white/5">
+              <div className="p-6 text-center text-slate-500 bg-slate-950 rounded-2xl border border-white/5">
                 <HelpCircle size={24} className="mx-auto mb-2 text-slate-600" />
                 <p className="text-xs">Nenhum tópico encontrado para a busca informada.</p>
               </div>
@@ -859,7 +859,7 @@ export default function Helpers() {
         </div>
 
         {/* Área Central: Visualizador de Artigo / Documentação */}
-        <div className="flex-1 bg-[#101726] border border-white/5 rounded-3xl overflow-y-auto p-6 md:p-8 relative">
+        <div className="flex-1 bg-slate-900 border border-white/5 rounded-3xl overflow-y-auto p-6 md:p-8 relative">
           {/* Header do Artigo */}
           <div className="pb-6 mb-6 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">

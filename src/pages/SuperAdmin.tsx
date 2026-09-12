@@ -269,7 +269,7 @@ export default function SuperAdmin() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#0b0f19]">
+      <div className="flex-1 flex items-center justify-center bg-slate-950">
         <div className="flex flex-col items-center gap-3">
           <Loader2 size={32} className="animate-spin text-blue-400" />
           <p className="text-sm font-bold text-slate-400">Carregando parâmetros do sistema...</p>
@@ -279,11 +279,11 @@ export default function SuperAdmin() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0b0f19] p-6 lg:p-8">
+    <div className="flex-1 overflow-y-auto bg-slate-950 p-6 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#101726] p-6 rounded-2xl border border-white/5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-slate-900 p-6 rounded-2xl border border-white/5">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <span className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
@@ -312,14 +312,14 @@ export default function SuperAdmin() {
             <button
               onClick={handleExportBackup}
               type="button"
-              className="px-4 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-slate-950 hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
               title="Exportar arquivo JSON com todas as configurações"
             >
               <Download size={14} />
               <span className="hidden sm:inline">Exportar Backup</span>
             </button>
 
-            <label className="cursor-pointer px-4 py-2.5 bg-[#0b0f19] hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5">
+            <label className="cursor-pointer px-4 py-2.5 bg-slate-950 hover:bg-white/5 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5">
               <Upload size={14} />
               <span className="hidden sm:inline">Restaurar</span>
               <input type="file" accept=".json" onChange={handleImportBackup} className="hidden" />
@@ -385,8 +385,8 @@ export default function SuperAdmin() {
         </div>
 
         {/* Abas de Navegação Principal */}
-        <div className="bg-[#101726] rounded-2xl border border-white/5 overflow-hidden">
-          <div className="flex border-b border-white/5 overflow-x-auto bg-[#0b0f19]">
+        <div className="bg-slate-900 rounded-2xl border border-white/5 overflow-hidden">
+          <div className="flex border-b border-white/5 overflow-x-auto bg-slate-950">
             <TabButton 
               active={activeTab === 'identidade'} 
               onClick={() => setActiveTab('identidade')} 
@@ -464,7 +464,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.nomeFantasia} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, nomeFantasia: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -474,7 +474,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.razaoSocial} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, razaoSocial: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -484,7 +484,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.cnpj} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, cnpj: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -494,7 +494,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.inscricaoEstadual} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, inscricaoEstadual: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -504,7 +504,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.telefoneSuporte} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, telefoneSuporte: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -514,7 +514,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.telefoneWhatsapp} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, telefoneWhatsapp: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -524,7 +524,7 @@ export default function SuperAdmin() {
                       type="email" 
                       value={config.provedor.emailAtendimento} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, emailAtendimento: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
 
@@ -534,7 +534,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.provedor.cidadeUf} 
                       onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, cidadeUf: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                     />
                   </div>
                 </div>
@@ -556,13 +556,13 @@ export default function SuperAdmin() {
                           type="color" 
                           value={config.provedor.corPrincipal} 
                           onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: e.target.value } })}
-                          className="w-11 h-11 p-1 rounded-xl border border-white/5 cursor-pointer bg-[#101726]"
+                          className="w-11 h-11 p-1 rounded-xl border border-white/5 cursor-pointer bg-slate-900"
                         />
                         <input 
                           type="text" 
                           value={config.provedor.corPrincipal} 
                           onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, corPrincipal: e.target.value } })}
-                          className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 uppercase"
+                          className="flex-1 p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 uppercase"
                         />
                       </div>
                       <div className="flex gap-2 mt-2">
@@ -585,7 +585,7 @@ export default function SuperAdmin() {
                         type="text" 
                         value={config.provedor.portalUrl} 
                         onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, portalUrl: e.target.value } })}
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                         placeholder="https://central.meuprovedor.com.br"
                       />
                     </div>
@@ -595,7 +595,7 @@ export default function SuperAdmin() {
                       <select
                         value={config.provedor.themeMode}
                         onChange={(e) => setConfig({ ...config, provedor: { ...config.provedor, themeMode: e.target.value as any } })}
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       >
                         <option value="dark">Tema Escuro Premium (Padrão NOC / Suporte)</option>
                         <option value="light">Tema Claro Corporativo</option>
@@ -666,7 +666,7 @@ export default function SuperAdmin() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                         config.landingPage?.templatePadrao === 1 
                           ? 'bg-blue-950/40 border-blue-500 shadow-lg shadow-blue-500/10 scale-[1.01]' 
-                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                          : 'bg-slate-950 border-white/5 hover:border-white/20'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -696,7 +696,7 @@ export default function SuperAdmin() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                         config.landingPage?.templatePadrao === 2 
                           ? 'bg-purple-950/40 border-purple-500 shadow-lg shadow-purple-500/10 scale-[1.01]' 
-                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                          : 'bg-slate-950 border-white/5 hover:border-white/20'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -726,7 +726,7 @@ export default function SuperAdmin() {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                         config.landingPage?.templatePadrao === 3 
                           ? 'bg-emerald-950/40 border-emerald-500 shadow-lg shadow-emerald-500/10 scale-[1.01]' 
-                          : 'bg-[#070b14] border-white/5 hover:border-white/20'
+                          : 'bg-slate-950 border-white/5 hover:border-white/20'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -750,7 +750,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* 2. BUSCAR ARQUIVO DE LOGOTIPO DA LANDING PAGE */}
-                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-3">
+                <div className="p-6 rounded-2xl bg-slate-950 border border-white/5 space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-bold text-white mb-0.5 flex items-center gap-2">
@@ -772,7 +772,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* 3. TEXTOS DO HERO DA LANDING PAGE */}
-                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                <div className="p-6 rounded-2xl bg-slate-950 border border-white/5 space-y-4">
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
                     <Sparkles size={16} className="text-amber-400" />
                     3. Textos Principais de Destaque (Hero)
@@ -791,7 +791,7 @@ export default function SuperAdmin() {
                           landingPage: { ...config.landingPage, tituloPrincipal: e.target.value }
                         })}
                         placeholder="Conexão Ultrarrápida em Fibra Óptica para Sua Casa ou Empresa"
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
 
@@ -807,7 +807,7 @@ export default function SuperAdmin() {
                           landingPage: { ...config.landingPage, subtitulo: e.target.value }
                         })}
                         placeholder="Internet 100% fibra simétrica com Wi-Fi 6 de alta performance, baixa latência e suporte 24h."
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
 
@@ -823,7 +823,7 @@ export default function SuperAdmin() {
                           landingPage: { ...config.landingPage, textoBotaoCta: e.target.value }
                         })}
                         placeholder="Ver Planos Disponíveis"
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
 
@@ -839,14 +839,14 @@ export default function SuperAdmin() {
                           provedor: { ...config.provedor, nomeFantasia: e.target.value }
                         })}
                         placeholder="NAP Telecom Fibra"
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* 4. CANAIS DE CONTATO DE VENDAS */}
-                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                <div className="p-6 rounded-2xl bg-slate-950 border border-white/5 space-y-4">
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
                     <PhoneCall size={16} className="text-emerald-400" />
                     4. Contatos de Vendas na Vitrine
@@ -865,7 +865,7 @@ export default function SuperAdmin() {
                           landingPage: { ...config.landingPage, whatsappVendas: e.target.value }
                         })}
                         placeholder="(11) 98765-4321"
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
 
@@ -881,21 +881,21 @@ export default function SuperAdmin() {
                           landingPage: { ...config.landingPage, telefoneVendas: e.target.value }
                         })}
                         placeholder="0800 591 0000"
-                        className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                        className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* 5. OPÇÕES DE NAVEGAÇÃO & ACESSO */}
-                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-3">
+                <div className="p-6 rounded-2xl bg-slate-950 border border-white/5 space-y-3">
                   <h4 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
                     <Globe size={16} className="text-indigo-400" />
                     5. Elementos de Navegação e Atalhos Rápidos
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
                       <input 
                         type="checkbox"
                         checked={config.landingPage?.mostrarBotaoPortal ?? true}
@@ -903,14 +903,14 @@ export default function SuperAdmin() {
                           ...config,
                           landingPage: { ...config.landingPage, mostrarBotaoPortal: e.target.checked }
                         })}
-                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                        className="w-4 h-4 rounded text-blue-600 bg-slate-900 border-white/10"
                       />
                       <span className="text-xs font-semibold text-slate-200">
                         Botão "Portal do Cliente"
                       </span>
                     </label>
 
-                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
                       <input 
                         type="checkbox"
                         checked={config.landingPage?.mostrarBotaoAdmin ?? true}
@@ -918,14 +918,14 @@ export default function SuperAdmin() {
                           ...config,
                           landingPage: { ...config.landingPage, mostrarBotaoAdmin: e.target.checked }
                         })}
-                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                        className="w-4 h-4 rounded text-blue-600 bg-slate-900 border-white/10"
                       />
                       <span className="text-xs font-semibold text-slate-200">
                         Botão "Login Admin"
                       </span>
                     </label>
 
-                    <label className="flex items-center gap-3 p-3 rounded-xl bg-[#0b0f19] border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-white/5 cursor-pointer hover:bg-white/5 transition-colors">
                       <input 
                         type="checkbox"
                         checked={config.landingPage?.mostrarBarraFlutuante ?? true}
@@ -933,7 +933,7 @@ export default function SuperAdmin() {
                           ...config,
                           landingPage: { ...config.landingPage, mostrarBarraFlutuante: e.target.checked }
                         })}
-                        className="w-4 h-4 rounded text-blue-600 bg-[#101726] border-white/10"
+                        className="w-4 h-4 rounded text-blue-600 bg-slate-900 border-white/10"
                       />
                       <span className="text-xs font-semibold text-slate-200">
                         Barra Flutuante de Atalhos
@@ -943,7 +943,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* 6. GESTÃO DOS 3 PLANOS EM DESTAQUE */}
-                <div className="p-6 rounded-2xl bg-[#070b14] border border-white/5 space-y-4">
+                <div className="p-6 rounded-2xl bg-slate-950 border border-white/5 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -958,7 +958,7 @@ export default function SuperAdmin() {
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {/* Plano 1 */}
-                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 space-y-3">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-3">
                       <div className="flex items-center justify-between pb-2 border-b border-white/5">
                         <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">Plano 1 (Básico)</span>
                         <input 
@@ -987,7 +987,7 @@ export default function SuperAdmin() {
                               plano1: { ...config.landingPage.plano1, nome: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1003,7 +1003,7 @@ export default function SuperAdmin() {
                                 plano1: { ...config.landingPage.plano1, velocidade: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                         <div>
@@ -1018,7 +1018,7 @@ export default function SuperAdmin() {
                                 plano1: { ...config.landingPage.plano1, preco: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                       </div>
@@ -1034,13 +1034,13 @@ export default function SuperAdmin() {
                               plano1: { ...config.landingPage.plano1, wifi: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
                         />
                       </div>
                     </div>
 
                     {/* Plano 2 */}
-                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-blue-500/30 space-y-3 relative">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-blue-500/30 space-y-3 relative">
                       <div className="flex items-center justify-between pb-2 border-b border-white/5">
                         <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Plano 2 (Destaque)</span>
                         <input 
@@ -1069,7 +1069,7 @@ export default function SuperAdmin() {
                               plano2: { ...config.landingPage.plano2, nome: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1085,7 +1085,7 @@ export default function SuperAdmin() {
                                 plano2: { ...config.landingPage.plano2, velocidade: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                         <div>
@@ -1100,7 +1100,7 @@ export default function SuperAdmin() {
                                 plano2: { ...config.landingPage.plano2, preco: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                       </div>
@@ -1116,13 +1116,13 @@ export default function SuperAdmin() {
                               plano2: { ...config.landingPage.plano2, wifi: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
                         />
                       </div>
                     </div>
 
                     {/* Plano 3 */}
-                    <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 space-y-3">
+                    <div className="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-3">
                       <div className="flex items-center justify-between pb-2 border-b border-white/5">
                         <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Plano 3 (Ultra / Gamer)</span>
                         <input 
@@ -1151,7 +1151,7 @@ export default function SuperAdmin() {
                               plano3: { ...config.landingPage.plano3, nome: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1167,7 +1167,7 @@ export default function SuperAdmin() {
                                 plano3: { ...config.landingPage.plano3, velocidade: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                         <div>
@@ -1182,7 +1182,7 @@ export default function SuperAdmin() {
                                 plano3: { ...config.landingPage.plano3, preco: e.target.value }
                               }
                             })}
-                            className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
+                            className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs font-bold text-white outline-none"
                           />
                         </div>
                       </div>
@@ -1198,7 +1198,7 @@ export default function SuperAdmin() {
                               plano3: { ...config.landingPage.plano3, wifi: e.target.value }
                             }
                           })}
-                          className="w-full p-2 bg-[#070b14] border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
+                          className="w-full p-2 bg-slate-950 border border-white/5 rounded-lg text-xs text-slate-300 outline-none"
                         />
                       </div>
                     </div>
@@ -1255,7 +1255,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.telefonia.ariHost || ''} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariHost: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
@@ -1265,7 +1265,7 @@ export default function SuperAdmin() {
                       type="number" 
                       value={config.telefonia.ariPort || 8088} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariPort: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
@@ -1275,7 +1275,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.telefonia.ariUser || ''} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariUser: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
@@ -1286,7 +1286,7 @@ export default function SuperAdmin() {
                         type={showAmiSecret ? 'text' : 'password'} 
                         value={config.telefonia.ariSecret || ''} 
                         onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariSecret: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                        className="w-full p-2.5 pr-10 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       />
                       <button 
                         type="button" 
@@ -1304,7 +1304,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.telefonia.ramalWebRTC} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ramalWebRTC: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
@@ -1314,13 +1314,13 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.telefonia.websocketUrl} 
                       onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, websocketUrl: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="wss://pbx.provedor.com.br:8089/ws"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 space-y-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Gravação e Inteligência de Voz</span>
                   
                   <label className="flex items-center gap-3 cursor-pointer">
@@ -1351,7 +1351,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste Asterisk ARI */}
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5 mb-1">
                       <Server size={14} className="text-blue-400" /> Diagnóstico de Conexão Asterisk 20+ (Nativa)
@@ -1407,7 +1407,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.whatsapp.phoneNumberId} 
                       onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, phoneNumberId: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
@@ -1417,7 +1417,7 @@ export default function SuperAdmin() {
                       type="text" 
                       value={config.whatsapp.businessAccountId} 
                       onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, businessAccountId: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                     />
                   </div>
 
@@ -1428,7 +1428,7 @@ export default function SuperAdmin() {
                         type={showWabaToken ? 'text' : 'password'} 
                         value={config.whatsapp.tokenAcesso} 
                         onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, tokenAcesso: e.target.value } })}
-                        className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                        className="w-full p-2.5 pr-10 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                       />
                       <button 
                         type="button" 
@@ -1467,7 +1467,7 @@ export default function SuperAdmin() {
                         type="text" 
                         value={config.whatsapp.verifyToken} 
                         onChange={(e) => setConfig({ ...config, whatsapp: { ...config.whatsapp, verifyToken: e.target.value } })}
-                        className="flex-1 p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
+                        className="flex-1 p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono"
                       />
                       <button
                         type="button"
@@ -1482,7 +1482,7 @@ export default function SuperAdmin() {
 
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Regra de Envio Financeiro Automático</label>
-                    <label className="flex items-center gap-3 p-3 bg-[#0b0f19] border border-white/5 rounded-xl cursor-pointer">
+                    <label className="flex items-center gap-3 p-3 bg-slate-950 border border-white/5 rounded-xl cursor-pointer">
                       <input 
                         type="checkbox" 
                         checked={config.whatsapp.envioAutomaticoPix} 
@@ -1495,7 +1495,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste WABA */}
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 mb-1">
                       <MessageCircle size={14} className="text-emerald-400" /> Diagnóstico WhatsApp Business Cloud API
@@ -1541,7 +1541,7 @@ export default function SuperAdmin() {
                     <select
                       value={config.ia.modeloPrimario}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, modeloPrimario: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                     >
                       <option value="gemini-2.5-flash">gemini-2.5-flash (Recomendado - Ultra Rápido & Menor Custo)</option>
                       <option value="gemini-3.5-pro">gemini-3.5-pro (Raciocínio Técnico Profundo)</option>
@@ -1554,7 +1554,7 @@ export default function SuperAdmin() {
                     <select
                       value={config.ia.provedorGateway}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, provedorGateway: e.target.value } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                     >
                       <option value="9router">9router (Failover Automático & Rate-Limit)</option>
                       <option value="direct">Google AI Studio Direto (Server-Side)</option>
@@ -1592,7 +1592,7 @@ export default function SuperAdmin() {
                       rows={3}
                       value={config.ia.promptSuporte}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptSuporte: e.target.value } })}
-                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
 
@@ -1605,7 +1605,7 @@ export default function SuperAdmin() {
                       rows={3}
                       value={config.ia.promptVendas}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptVendas: e.target.value } })}
-                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
 
@@ -1618,19 +1618,19 @@ export default function SuperAdmin() {
                       rows={3}
                       value={config.ia.promptCobranca}
                       onChange={(e) => setConfig({ ...config, ia: { ...config.ia, promptCobranca: e.target.value } })}
-                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 leading-relaxed resize-none"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 space-y-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block">Gatilhos de Transbordo Humano</span>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'solicitacao_cliente' 
                         ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
-                        : 'bg-[#101726] border-white/5 text-slate-400'
+                        : 'bg-slate-900 border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1647,7 +1647,7 @@ export default function SuperAdmin() {
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'apos_3_falhas' 
                         ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
-                        : 'bg-[#101726] border-white/5 text-slate-400'
+                        : 'bg-slate-900 border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1664,7 +1664,7 @@ export default function SuperAdmin() {
                     <label className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       config.ia.gatilhoTransbordo === 'imediato' 
                         ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
-                        : 'bg-[#101726] border-white/5 text-slate-400'
+                        : 'bg-slate-900 border-white/5 text-slate-400'
                     }`}>
                       <input 
                         type="radio" 
@@ -1681,7 +1681,7 @@ export default function SuperAdmin() {
                 </div>
 
                 {/* Card de Teste IA */}
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5 mb-1">
                       <Sparkles size={14} className="text-indigo-400" /> Diagnóstico de Latência do Gateway Gemini
@@ -1728,7 +1728,7 @@ export default function SuperAdmin() {
                       type="number" 
                       value={config.seguranca.sessaoTimeoutMinutos} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, sessaoTimeoutMinutos: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
@@ -1738,7 +1738,7 @@ export default function SuperAdmin() {
                       type="number" 
                       value={config.seguranca.limiteTentativasLogin} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, limiteTentativasLogin: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
@@ -1748,7 +1748,7 @@ export default function SuperAdmin() {
                       type="number" 
                       value={config.seguranca.armazenamentoLogsDias} 
                       onChange={(e) => setConfig({ ...config, seguranca: { ...config.seguranca, armazenamentoLogsDias: Number(e.target.value) } })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-600"
                     />
                   </div>
 
@@ -1784,9 +1784,9 @@ export default function SuperAdmin() {
                     <span className="text-[11px] text-slate-400">Imutável • Protegido contra exclusão</span>
                   </div>
 
-                  <div className="border border-white/5 rounded-xl overflow-hidden bg-[#101726]">
+                  <div className="border border-white/5 rounded-xl overflow-hidden bg-slate-900">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-[#0b0f19] border-b border-white/5 text-slate-400 font-bold">
+                      <thead className="bg-slate-950 border-b border-white/5 text-slate-400 font-bold">
                         <tr>
                           <th className="py-2.5 px-4">Usuário</th>
                           <th className="py-2.5 px-4">Módulo</th>
@@ -1797,7 +1797,7 @@ export default function SuperAdmin() {
                       </thead>
                       <tbody className="divide-y divide-white/5 font-medium text-slate-300">
                         {auditLogs.map((log) => (
-                          <tr key={log.id} className="hover:bg-[#0b0f19]/70">
+                          <tr key={log.id} className="hover:bg-slate-950/70">
                             <td className="py-2.5 px-4 font-bold text-white">{log.usuario}</td>
                             <td className="py-2.5 px-4">
                               <span className="px-2 py-0.5 bg-white/5 rounded text-[10px] font-bold text-slate-400">{log.modulo}</span>
@@ -1837,7 +1837,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioSemana: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="08:00 - 20:00"
                     />
                   </div>
@@ -1851,7 +1851,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioSabado: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="08:00 - 14:00"
                     />
                   </div>
@@ -1865,7 +1865,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), horarioDomingoFeriado: e.target.value } 
                       })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       placeholder="Plantão NOC Emergencial"
                     />
                   </div>
@@ -1885,7 +1885,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), slaRespostaMinutos: Number(e.target.value) } 
                       })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                     <span className="text-[11px] text-slate-400 mt-1 block">Tempo limite para o primeiro atendente responder no Inbox.</span>
                   </div>
@@ -1903,7 +1903,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), slaResolucaoHoras: Number(e.target.value) } 
                       })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                     <span className="text-[11px] text-slate-400 mt-1 block">Meta para tabulação ou fechamento de chamado técnico no CRM.</span>
                   </div>
@@ -1922,7 +1922,7 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), mensagemBoasVindas: e.target.value } 
                       })}
-                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                     />
                   </div>
 
@@ -1938,12 +1938,12 @@ export default function SuperAdmin() {
                         ...config, 
                         atendimento: { ...(config.atendimento || DEFAULT_CONFIG.atendimento), mensagemForaHorario: e.target.value } 
                       })}
-                      className="w-full p-3 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                      className="w-full p-3 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5">
+                <div className="p-4 bg-slate-950 rounded-2xl border border-white/5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
                       type="checkbox" 
@@ -2013,7 +2013,7 @@ export default function SuperAdmin() {
                   {(config.respostasRapidas || [])
                     .filter(m => macroFilterCategory === 'todos' || m.categoria === macroFilterCategory)
                     .map((macro) => (
-                      <div key={macro.id} className="p-4 bg-[#101726] rounded-2xl border border-white/5 hover:border-blue-500/20 transition-all  flex flex-col justify-between group">
+                      <div key={macro.id} className="p-4 bg-slate-900 rounded-2xl border border-white/5 hover:border-blue-500/20 transition-all  flex flex-col justify-between group">
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -2031,7 +2031,7 @@ export default function SuperAdmin() {
                               {macro.categoria}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed bg-[#0b0f19]/70 p-2.5 rounded-xl border border-slate-100 font-sans">
+                          <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed bg-slate-950/70 p-2.5 rounded-xl border border-slate-100 font-sans">
                             {macro.conteudo}
                           </p>
                         </div>
@@ -2065,11 +2065,11 @@ export default function SuperAdmin() {
                 <div className="p-4 bg-blue-500/10/50 rounded-2xl border border-blue-500/20 text-xs space-y-1.5">
                   <span className="font-bold text-blue-900 block">Variáveis dinâmicas aceitas nas mensagens:</span>
                   <div className="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
-                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{nome_cliente}'}</span>
-                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{chave_pix}'}</span>
-                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{protocolo}'}</span>
-                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{nome_provedor}'}</span>
-                    <span className="px-2 py-0.5 bg-[#101726] border border-blue-500/20 text-blue-800 rounded">{'{sinal_optico}'}</span>
+                    <span className="px-2 py-0.5 bg-slate-900 border border-blue-500/20 text-blue-800 rounded">{'{nome_cliente}'}</span>
+                    <span className="px-2 py-0.5 bg-slate-900 border border-blue-500/20 text-blue-800 rounded">{'{chave_pix}'}</span>
+                    <span className="px-2 py-0.5 bg-slate-900 border border-blue-500/20 text-blue-800 rounded">{'{protocolo}'}</span>
+                    <span className="px-2 py-0.5 bg-slate-900 border border-blue-500/20 text-blue-800 rounded">{'{nome_provedor}'}</span>
+                    <span className="px-2 py-0.5 bg-slate-900 border border-blue-500/20 text-blue-800 rounded">{'{sinal_optico}'}</span>
                   </div>
                 </div>
               </div>
@@ -2079,8 +2079,8 @@ export default function SuperAdmin() {
 
         {/* MODAL DE ADICIONAR / EDITAR MACRO */}
         {macroModalOpen && (
-          <div className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
-            <div className="bg-[#101726] rounded-3xl p-6 w-full max-w-lg  border border-white/5 animate-in zoom-in-95">
+          <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-2xs z-50 flex items-center justify-center p-4">
+            <div className="bg-slate-900 rounded-3xl p-6 w-full max-w-lg  border border-white/5 animate-in zoom-in-95">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="p-2 bg-amber-50 text-amber-600 rounded-xl">
@@ -2111,7 +2111,7 @@ export default function SuperAdmin() {
                       value={formMacro.atalho} 
                       onChange={(e) => setFormMacro({ ...formMacro, atalho: e.target.value })}
                       placeholder="/pix"
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-mono font-bold text-blue-400 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-xs font-mono font-bold text-blue-400 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     />
                   </div>
                   <div>
@@ -2119,7 +2119,7 @@ export default function SuperAdmin() {
                     <select
                       value={formMacro.categoria}
                       onChange={(e) => setFormMacro({ ...formMacro, categoria: e.target.value as any })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                     >
                       <option value="Geral">Geral</option>
                       <option value="Financeiro">Financeiro</option>
@@ -2136,7 +2136,7 @@ export default function SuperAdmin() {
                     value={formMacro.titulo} 
                     onChange={(e) => setFormMacro({ ...formMacro, titulo: e.target.value })}
                     placeholder="Ex: Instruções de Pagamento PIX"
-                    className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                    className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                   />
                 </div>
 
@@ -2162,7 +2162,7 @@ export default function SuperAdmin() {
                     value={formMacro.conteudo}
                     onChange={(e) => setFormMacro({ ...formMacro, conteudo: e.target.value })}
                     placeholder="Escreva a resposta pré-definida..."
-                    className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
+                    className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-xs font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 leading-relaxed resize-none"
                   />
                 </div>
 
@@ -2199,7 +2199,7 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
       type="button"
       className={`px-5 py-3.5 text-xs font-bold flex items-center gap-2 transition-colors border-b-2 whitespace-nowrap ${
         active 
-          ? 'border-blue-500 text-blue-400 bg-[#101726]' 
+          ? 'border-blue-500 text-blue-400 bg-slate-900' 
           : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
       }`}
     >
@@ -2211,9 +2211,9 @@ function TabButton({ active, onClick, icon, label }: { active: boolean; onClick:
 
 function IntegrationStatusBadge({ title, sub, status, icon, latency }: { title: string; sub: string; status: 'online' | 'alerta'; icon: React.ReactNode; latency: number }) {
   return (
-    <div className="bg-[#101726] p-4 rounded-xl border border-white/5 flex items-center justify-between">
+    <div className="bg-slate-900 p-4 rounded-xl border border-white/5 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-[#0b0f19] rounded-lg border border-white/10">
+        <div className="p-2.5 bg-slate-950 rounded-lg border border-white/10">
           {icon}
         </div>
         <div>

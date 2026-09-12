@@ -325,9 +325,9 @@ export default function Campanhas() {
     : defaultVoz;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0b0f19]">
+    <div className="flex-1 flex flex-col h-full bg-slate-950">
       {/* Header */}
-      <header className="p-6 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 z-10">
+      <header className="p-6 border-b border-white/5 bg-slate-900/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0 z-10">
         <div>
           <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
             <Megaphone className="text-blue-400" size={24} />
@@ -399,7 +399,7 @@ export default function Campanhas() {
 
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+            <div className="bg-slate-900 border border-white/5 p-5 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-600/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
                 <Users size={24} />
               </div>
@@ -412,7 +412,7 @@ export default function Campanhas() {
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+            <div className="bg-slate-900 border border-white/5 p-5 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400">
                 <DollarSign size={24} />
               </div>
@@ -425,7 +425,7 @@ export default function Campanhas() {
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+            <div className="bg-slate-900 border border-white/5 p-5 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-amber-400">
                 <Zap size={24} />
               </div>
@@ -438,7 +438,7 @@ export default function Campanhas() {
                 </p>
               </div>
             </div>
-            <div className="bg-[#101726] border border-white/5 p-5 rounded-2xl flex items-center gap-4">
+            <div className="bg-slate-900 border border-white/5 p-5 rounded-2xl flex items-center gap-4">
               <div className="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400">
                 <ShieldCheck size={24} />
               </div>
@@ -457,7 +457,7 @@ export default function Campanhas() {
             /* Régua Inteligente de Cobrança com IA */
             <div className="space-y-6">
               {/* Header do Módulo */}
-              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6">
+              <div className="bg-slate-900 rounded-3xl border border-white/5 p-6">
                 <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-6 border-b border-white/5">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
@@ -525,7 +525,7 @@ export default function Campanhas() {
                 {/* As 4 Fases da Régua Visual */}
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Fase 1: D-3 */}
-                  <div className="bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                  <div className="bg-slate-950 border border-white/5 hover:border-blue-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">FASE 1 • D-3</span>
@@ -552,7 +552,7 @@ export default function Campanhas() {
                   </div>
 
                   {/* Fase 2: D0 */}
-                  <div className="bg-[#0b0f19] border border-white/5 hover:border-amber-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                  <div className="bg-slate-950 border border-white/5 hover:border-amber-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">FASE 2 • D0</span>
@@ -579,7 +579,7 @@ export default function Campanhas() {
                   </div>
 
                   {/* Fase 3: D+3 */}
-                  <div className="bg-[#0b0f19] border border-white/5 hover:border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                  <div className="bg-slate-950 border border-white/5 hover:border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">FASE 3 • D+3</span>
@@ -606,7 +606,7 @@ export default function Campanhas() {
                   </div>
 
                   {/* Fase 4: D+7 */}
-                  <div className="bg-[#0b0f19] border border-white/5 hover:border-red-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
+                  <div className="bg-slate-950 border border-white/5 hover:border-red-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all group">
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">FASE 4 • D+7</span>
@@ -634,7 +634,7 @@ export default function Campanhas() {
                 </div>
 
                 {/* FILA DE ASSINANTES NA RÉGUA HOJE */}
-                <div className="mt-8 bg-[#0b0f19] border border-white/5 rounded-2xl p-5">
+                <div className="mt-8 bg-slate-950 border border-white/5 rounded-2xl p-5">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/5">
                     <div>
                       <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -651,7 +651,7 @@ export default function Campanhas() {
 
                     {/* Filtros da Fila */}
                     <div className="flex flex-wrap items-center gap-2">
-                      <div className="flex items-center gap-1 bg-[#101726] p-1 rounded-xl border border-white/5">
+                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-white/5">
                         <button 
                           onClick={() => setFiltroFaseFila('todas')}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${filtroFaseFila === 'todas' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
@@ -687,7 +687,7 @@ export default function Campanhas() {
                       <select 
                         value={filtroStatusEnvio}
                         onChange={(e) => setFiltroStatusEnvio(e.target.value)}
-                        className="bg-[#101726] border border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-300 outline-none"
+                        className="bg-slate-900 border border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-300 outline-none"
                       >
                         <option value="todos">Status: Todos</option>
                         <option value="pendente">Apenas Pendentes</option>
@@ -816,7 +816,7 @@ export default function Campanhas() {
                   </h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border border-white/5 rounded-xl overflow-hidden">
-                      <thead className="bg-[#0b0f19] text-slate-400 border-b border-white/5">
+                      <thead className="bg-slate-950 text-slate-400 border-b border-white/5">
                         <tr>
                           <th className="px-4 py-3">Fase da Régua</th>
                           <th className="px-4 py-3">Disparados</th>
@@ -856,7 +856,7 @@ export default function Campanhas() {
             /* Push Notifications Management */
             <div className="space-y-6">
               {/* Form de Disparo Push */}
-              <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
+              <div className="bg-slate-900 rounded-3xl border border-white/5 p-6  ">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center">
@@ -889,7 +889,7 @@ export default function Campanhas() {
                         value={novoPushTitulo} 
                         onChange={(e) => setNovoPushTitulo(e.target.value)}
                         placeholder="Ex: Fatura Pronta para Pagamento ou Aviso de Manutenção" 
-                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600 "
+                        className="w-full bg-slate-950 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600 "
                         required
                       />
                     </div>
@@ -898,7 +898,7 @@ export default function Campanhas() {
                       <select 
                         value={novoPushCategoria} 
                         onChange={(e: any) => setNovoPushCategoria(e.target.value)}
-                        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600"
+                        className="w-full bg-slate-950 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-600"
                       >
                         <option value="cobranca">Cobrança (SGP)</option>
                         <option value="suporte">Suporte Técnico</option>
@@ -916,7 +916,7 @@ export default function Campanhas() {
                       onChange={(e) => setNovoPushMensagem(e.target.value)}
                       rows={2} 
                       placeholder="Ex: Olá! Sua fatura do plano Fibra 500MB vence amanhã. Clique para pagar via PIX sem juros." 
-                      className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-3 text-sm text-white outline-none focus:border-indigo-600 "
+                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-sm text-white outline-none focus:border-indigo-600 "
                       required
                     />
                   </div>
@@ -940,13 +940,13 @@ export default function Campanhas() {
 
               {/* Histórico e Dispositivos */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
+                <div className="bg-slate-900 rounded-3xl border border-white/5 p-6  ">
                   <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Smartphone size={18} className="text-slate-500" /> Dispositivos Inscritos
                   </h4>
                   <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                     {(pushStatus?.inscricoes || []).map((sub: any, idx: number) => (
-                      <div key={idx} className="p-3 bg-[#0b0f19] rounded-2xl border border-white/5 flex items-center justify-between">
+                      <div key={idx} className="p-3 bg-slate-950 rounded-2xl border border-white/5 flex items-center justify-between">
                         <div>
                           <p className="text-sm font-bold text-white">{sub.cliente_nome}</p>
                           <p className="text-xs text-slate-500">{sub.dispositivo} • ID: {sub.cliente_id}</p>
@@ -959,13 +959,13 @@ export default function Campanhas() {
                   </div>
                 </div>
 
-                <div className="bg-[#101726] rounded-3xl border border-white/5 p-6  ">
+                <div className="bg-slate-900 rounded-3xl border border-white/5 p-6  ">
                   <h4 className="font-bold text-white font-outfit mb-4 flex items-center gap-2">
                     <Bell size={18} className="text-slate-500" /> Histórico de Envios
                   </h4>
                   <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                     {(pushStatus?.historico_recente || []).map((item: any, idx: number) => (
-                      <div key={idx} className="p-3 bg-[#0b0f19] rounded-2xl border border-white/5">
+                      <div key={idx} className="p-3 bg-slate-950 rounded-2xl border border-white/5">
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-bold text-white">{item.titulo}</span>
                           <span className="text-[10px] text-slate-500">{item.enviado_em}</span>
@@ -979,21 +979,21 @@ export default function Campanhas() {
             </div>
           ) : (
             /* List */
-            <div className="bg-[#101726] rounded-3xl border border-white/5 overflow-hidden  ">
-              <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#101726]">
+            <div className="bg-slate-900 rounded-3xl border border-white/5 overflow-hidden  ">
+              <div className="p-4 border-b border-white/5 flex justify-between items-center bg-slate-900">
                 <div className="relative w-72">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                   <input 
                     type="text" 
                     placeholder="Buscar campanha..." 
-                    className="w-full bg-[#0b0f19] border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white outline-none focus:border-blue-600/50 "
+                    className="w-full bg-slate-950 border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white outline-none focus:border-blue-600/50 "
                   />
                 </div>
               </div>
               
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#101726] border-b border-white/5">
+                  <tr className="bg-slate-900 border-b border-white/5">
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Campanha</th>
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Progresso</th>
                     <th className="px-6 py-4 text-[10px] uppercase tracking-wider font-bold text-slate-500">Métricas</th>
@@ -1005,7 +1005,7 @@ export default function Campanhas() {
                   {(activeTab === 'whatsapp' ? campanhasWhatsapp : campanhasVoz).map((camp, i) => {
                     const percent = (camp.processados / camp.leads) * 100;
                     return (
-                      <tr key={i} className="hover:bg-[#0b0f19]/50 transition-colors group">
+                      <tr key={i} className="hover:bg-slate-950/50 transition-colors group">
                         <td className="px-6 py-4">
                           <p className="font-bold text-white text-sm group-hover:text-blue-400 transition-colors">{camp.nome}</p>
                           <p className="text-xs text-slate-500 font-mono mt-0.5">ID: CMP-{(1000 + camp.id).toString()}</p>
@@ -1015,7 +1015,7 @@ export default function Campanhas() {
                             <span className="text-slate-400">{camp.processados} / {camp.leads}</span>
                             <span className="font-bold text-slate-400">{Math.round(percent)}%</span>
                           </div>
-                          <div className="w-full bg-[#0b0f19] border border-white/5 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-slate-950 border border-white/5 rounded-full h-1.5 overflow-hidden">
                             <div 
                               className={`h-full rounded-full ${camp.status === 'Concluída' ? 'bg-emerald-500' : 'bg-blue-600'}`} 
                               style={{ width: `${percent}%` }}
@@ -1077,7 +1077,7 @@ export default function Campanhas() {
       {/* Modal Nova Campanha */}
       {isModalNovaCampanhaOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
             <div className="p-6 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
@@ -1106,7 +1106,7 @@ export default function Campanhas() {
                   value={formCampanha.nome}
                   onChange={e => setFormCampanha({ ...formCampanha, nome: e.target.value })}
                   placeholder="Ex: Campanha Retenção - Bairro Morumbi"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
                   required
                 />
               </div>
@@ -1126,7 +1126,7 @@ export default function Campanhas() {
                         tipo: canal === 'voz' ? 'URA Reversa' : 'HSM Template'
                       });
                     }}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
                   >
                     <option value="whatsapp">WhatsApp WABA</option>
                     <option value="voz">Discador FreePBX (Voz)</option>
@@ -1140,7 +1140,7 @@ export default function Campanhas() {
                   <select 
                     value={formCampanha.tipo}
                     onChange={e => setFormCampanha({ ...formCampanha, tipo: e.target.value })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-blue-500 transition-colors"
                   >
                     {formCampanha.canal === 'whatsapp' ? (
                       <>
@@ -1168,7 +1168,7 @@ export default function Campanhas() {
                   min={1}
                   value={formCampanha.leads}
                   onChange={e => setFormCampanha({ ...formCampanha, leads: Number(e.target.value) })}
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
                   required
                 />
               </div>
@@ -1184,7 +1184,7 @@ export default function Campanhas() {
                   placeholder={formCampanha.canal === 'whatsapp' 
                     ? "Olá {{1}}, temos uma condição especial para seu plano de {{2}} Mega..." 
                     : "Olá, aqui é do suporte técnico do provedor. Identificamos que você avaliou seu serviço recentemente..."}
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500 transition-colors resize-none"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-xs text-white outline-none focus:border-blue-500 transition-colors resize-none"
                 />
               </div>
 
@@ -1213,7 +1213,7 @@ export default function Campanhas() {
       {/* MODAL 1: CONFIGURAÇÃO DE PARÂMETROS & HORÁRIOS DA RÉGUA */}
       {modalConfigRegua && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-xl p-6 shadow-2xl overflow-hidden">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-xl p-6 shadow-2xl overflow-hidden">
             <div className="flex items-center justify-between pb-4 border-b border-white/5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
@@ -1259,7 +1259,7 @@ export default function Campanhas() {
                       type="time"
                       value={configLocal.horarioInicio || "08:30"}
                       onChange={e => setConfigLocal({ ...configLocal, horarioInicio: e.target.value })}
-                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                      className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
                     />
                   </div>
                   <div>
@@ -1268,7 +1268,7 @@ export default function Campanhas() {
                       type="time"
                       value={configLocal.horarioFim || "19:30"}
                       onChange={e => setConfigLocal({ ...configLocal, horarioFim: e.target.value })}
-                      className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                      className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
                     />
                   </div>
                 </div>
@@ -1286,7 +1286,7 @@ export default function Campanhas() {
                     min="0"
                     value={configLocal.descontoPontualidade || 10}
                     onChange={e => setConfigLocal({ ...configLocal, descontoPontualidade: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
                   />
                 </div>
                 <div>
@@ -1299,7 +1299,7 @@ export default function Campanhas() {
                     max="15"
                     value={configLocal.diasAposVencimentoTolerancia || 3}
                     onChange={e => setConfigLocal({ ...configLocal, diasAposVencimentoTolerancia: parseInt(e.target.value) || 3 })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -1389,7 +1389,7 @@ export default function Campanhas() {
       {/* MODAL 2: EDITOR DE TEMPLATES & PREVIEW COM SIMULADOR DE ENVIO */}
       {modalTemplatesRegua && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-[#101726] border border-white/10 rounded-3xl w-full max-w-4xl p-6 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-4xl p-6 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between pb-4 border-b border-white/5 shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
@@ -1456,7 +1456,7 @@ export default function Campanhas() {
                       ...templatesLocais,
                       [templateFaseAtiva]: e.target.value
                     })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-2xl p-3.5 text-xs text-white outline-none focus:border-blue-500 transition-colors font-mono leading-relaxed resize-none"
+                    className="w-full bg-slate-950 border border-white/10 rounded-2xl p-3.5 text-xs text-white outline-none focus:border-blue-500 transition-colors font-mono leading-relaxed resize-none"
                     placeholder="Digite a mensagem do template..."
                   />
                 </div>
@@ -1521,7 +1521,7 @@ export default function Campanhas() {
                 </div>
 
                 {/* Simulador de Envio para Teste */}
-                <form onSubmit={handleSimularTesteEnvio} className="bg-[#0b0f19] border border-white/5 rounded-2xl p-3.5 space-y-2.5">
+                <form onSubmit={handleSimularTesteEnvio} className="bg-slate-950 border border-white/5 rounded-2xl p-3.5 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-white flex items-center gap-1.5">
                       <Smartphone size={14} className="text-emerald-400" />
@@ -1536,7 +1536,7 @@ export default function Campanhas() {
                       value={telefoneTeste}
                       onChange={e => setTelefoneTeste(e.target.value)}
                       placeholder="(11) 99999-9999"
-                      className="w-full bg-[#101726] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-emerald-500"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-emerald-500"
                     />
                     <button
                       type="submit"

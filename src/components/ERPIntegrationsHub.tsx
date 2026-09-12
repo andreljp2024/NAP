@@ -302,7 +302,7 @@ export default function ERPIntegrationsHub() {
 
         {/* Badge do ERP Ativo */}
         {erpAtivoAtual && (
-          <div className="flex items-center gap-3 bg-[#0b0f19] px-4 py-2.5 rounded-xl border border-white/10 shrink-0">
+          <div className="flex items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-xl border border-white/10 shrink-0">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ERP Ativo no NAP</span>
@@ -318,7 +318,7 @@ export default function ERPIntegrationsHub() {
       </div>
 
       {/* Navegação entre Sub-Abas */}
-      <div className="flex flex-wrap border-b border-white/5 bg-[#0b0f19] rounded-xl p-1 gap-1">
+      <div className="flex flex-wrap border-b border-white/5 bg-slate-950 rounded-xl p-1 gap-1">
         <button
           type="button"
           id="btn-subtab-validador-erp"
@@ -419,10 +419,10 @@ export default function ERPIntegrationsHub() {
                   key={erp.id}
                   className={`p-5 rounded-2xl border transition-all relative flex flex-col justify-between ${
                     isAtivo 
-                      ? 'bg-[#101726] border-emerald-500/40 shadow-lg shadow-emerald-500/5 ring-1 ring-emerald-500/20' 
+                      ? 'bg-slate-900 border-emerald-500/40 shadow-lg shadow-emerald-500/5 ring-1 ring-emerald-500/20' 
                       : isSelected
-                        ? 'bg-[#101726] border-blue-500/40 shadow'
-                        : 'bg-[#0b0f19] border-white/5 hover:border-white/20'
+                        ? 'bg-slate-900 border-blue-500/40 shadow'
+                        : 'bg-slate-950 border-white/5 hover:border-white/20'
                   }`}
                 >
                   <div>
@@ -458,7 +458,7 @@ export default function ERPIntegrationsHub() {
                     </p>
 
                     {/* Indicador Visual de Latência (Ping em Tempo Real) */}
-                    <div className="mb-3.5 p-2.5 bg-[#0b0f19] rounded-xl border border-white/5 flex items-center justify-between">
+                    <div className="mb-3.5 p-2.5 bg-slate-950 rounded-xl border border-white/5 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs text-slate-400">
                         <Radio size={12} className="text-blue-400 shrink-0" />
                         <span className="text-[11px] text-slate-400 font-medium">Saúde & Ping:</span>
@@ -533,7 +533,7 @@ export default function ERPIntegrationsHub() {
       {activeSubTab === 'configuracao' && (
         <div className="space-y-6">
           {/* Seletor de ERP no Topo da Configuração */}
-          <div className="p-4 rounded-2xl bg-[#101726] border border-white/5">
+          <div className="p-4 rounded-2xl bg-slate-900 border border-white/5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
               Selecione o Sistema para Parametrizar:
             </span>
@@ -546,7 +546,7 @@ export default function ERPIntegrationsHub() {
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                     selectedErpId === e.id
                       ? 'bg-blue-600 text-white shadow'
-                      : 'bg-[#0b0f19] text-slate-400 hover:text-white border border-white/5'
+                      : 'bg-slate-950 text-slate-400 hover:text-white border border-white/5'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded-md bg-gradient-to-tr ${e.corBadge} flex items-center justify-center text-[9px] text-white font-black`}>
@@ -566,7 +566,7 @@ export default function ERPIntegrationsHub() {
             
             {/* Coluna 1 e 2: Formulário de Credenciais */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="p-6 rounded-2xl bg-[#101726] border border-white/5 space-y-5">
+              <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 space-y-5">
                 <div className="flex items-center justify-between pb-4 border-b border-white/5">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${erpSelecionadoObj.corBadge} flex items-center justify-center text-white font-black text-sm`}>
@@ -625,7 +625,7 @@ export default function ERPIntegrationsHub() {
                             value={formData[campo.key] || ''}
                             onChange={(e) => setFormData({ ...formData, [campo.key]: e.target.value })}
                             placeholder={campo.placeholder}
-                            className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
+                            className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition-all"
                           />
 
                           {isPassword && (
@@ -650,7 +650,7 @@ export default function ERPIntegrationsHub() {
                     <select
                       value={formData.syncIntervalMinutes}
                       onChange={(e) => setFormData({ ...formData, syncIntervalMinutes: Number(e.target.value) })}
-                      className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                      className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     >
                       <option value={5}>A cada 5 minutos (Alta rotatividade)</option>
                       <option value={10}>A cada 10 minutos (Recomendado para ISPs)</option>
@@ -662,7 +662,7 @@ export default function ERPIntegrationsHub() {
                 </div>
 
                 {/* Opções de Negócio Telecom */}
-                <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 space-y-3">
+                <div className="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-3">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">
                     Regras de Negócio & Cobrança Automática
                   </span>
@@ -747,7 +747,7 @@ export default function ERPIntegrationsHub() {
 
             {/* Coluna 3: Painel de Diagnóstico em Tempo Real */}
             <div className="space-y-5">
-              <div className="p-5 rounded-2xl bg-[#101726] border border-white/5 space-y-4">
+              <div className="p-5 rounded-2xl bg-slate-900 border border-white/5 space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                     <Activity size={14} className="text-emerald-400" />
@@ -773,7 +773,7 @@ export default function ERPIntegrationsHub() {
                         Checklist de Pré-Configuração
                       </span>
                       {testResult.checklist.map((c) => (
-                        <div key={c.id} className="p-2.5 rounded-xl bg-[#0b0f19] border border-white/5 space-y-1">
+                        <div key={c.id} className="p-2.5 rounded-xl bg-slate-950 border border-white/5 space-y-1">
                           <div className="flex items-center justify-between text-xs font-bold">
                             <span className="text-slate-200">{c.item}</span>
                             {c.status === 'ok' ? (
@@ -795,7 +795,7 @@ export default function ERPIntegrationsHub() {
 
                     {/* Amostra Retornada */}
                     {testResult.exemploSincronizado && (
-                      <div className="p-3 rounded-xl bg-[#0b0f19] border border-white/5 space-y-2">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-white/5 space-y-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 block flex items-center gap-1">
                           <FileText size={12} /> Amostra de Assinante Teste
                         </span>
@@ -862,7 +862,7 @@ export default function ERPIntegrationsHub() {
                   className={`w-full p-3 rounded-xl text-xs font-bold transition-all flex items-center justify-between ${
                     selectedErpId === e.id
                       ? 'bg-blue-600 text-white'
-                      : 'bg-[#101726] text-slate-300 hover:bg-white/5 border border-white/5'
+                      : 'bg-slate-900 text-slate-300 hover:bg-white/5 border border-white/5'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -878,7 +878,7 @@ export default function ERPIntegrationsHub() {
 
             {/* Conteúdo do Guia do ERP Selecionado */}
             <div className="md:col-span-3 space-y-5">
-              <div className="p-6 rounded-2xl bg-[#101726] border border-white/5 space-y-6">
+              <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-white/5">
                   <div>
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -907,7 +907,7 @@ export default function ERPIntegrationsHub() {
                   </h4>
                   <div className="space-y-2.5">
                     {erpSelecionadoObj.passoAPasso.map((passo, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3.5 rounded-xl bg-[#0b0f19] border border-white/5">
+                      <div key={idx} className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-950 border border-white/5">
                         <div className="w-6 h-6 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 font-bold text-xs flex items-center justify-center shrink-0">
                           {idx + 1}
                         </div>
@@ -926,7 +926,7 @@ export default function ERPIntegrationsHub() {
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {erpSelecionadoObj.recursos.map((rec, idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-[#0b0f19] border border-white/5 flex items-center gap-2.5 text-xs text-slate-300">
+                      <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-white/5 flex items-center gap-2.5 text-xs text-slate-300">
                         <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
                         <span>{rec}</span>
                       </div>

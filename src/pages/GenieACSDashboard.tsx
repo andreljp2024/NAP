@@ -357,9 +357,9 @@ export default function GenieACSDashboard() {
   const totalAfetados = incidentesAtivos.reduce((acc, curr) => acc + curr.clientesAfetadosAprox, 0);
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] text-slate-300 overflow-hidden font-sans">
+    <div className="flex-1 flex flex-col h-full bg-slate-950 text-slate-300 overflow-hidden font-sans">
       {/* HEADER DA PÁGINA */}
-      <div className="px-6 py-5 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 z-10">
+      <div className="px-6 py-5 border-b border-white/5 bg-slate-900/80 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 z-10">
         <div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
@@ -406,7 +406,7 @@ export default function GenieACSDashboard() {
                 placeholder="Buscar Serial, MAC ou IP..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm w-full sm:w-64 transition-all bg-[#0b0f19] text-white placeholder:text-slate-500 outline-none"
+                className="pl-9 pr-4 py-2 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm w-full sm:w-64 transition-all bg-slate-950 text-white placeholder:text-slate-500 outline-none"
               />
             </div>
           ) : (
@@ -421,7 +421,7 @@ export default function GenieACSDashboard() {
           <button 
             onClick={handleSync}
             disabled={syncing}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0b0f19] border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-950 border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
             title="Sincronizar Dispositivos e Incidentes"
           >
             <RefreshCw size={18} className={syncing ? "animate-spin text-blue-400" : ""} />
@@ -430,7 +430,7 @@ export default function GenieACSDashboard() {
       </div>
 
       {/* ABAS DO MÓDULO */}
-      <div className="px-6 pt-4 flex gap-4 border-b border-white/5 bg-[#101726]/40 shrink-0">
+      <div className="px-6 pt-4 flex gap-4 border-b border-white/5 bg-slate-900/40 shrink-0">
         <button
           onClick={() => setActiveTab('incidentes')}
           className={`flex items-center gap-2 pb-3 text-sm font-bold border-b-2 transition-colors ${activeTab === 'incidentes' ? 'border-red-500 text-red-400' : 'border-transparent text-slate-500 hover:text-slate-400'}`}
@@ -474,7 +474,7 @@ export default function GenieACSDashboard() {
           <div className="space-y-6 max-w-7xl mx-auto">
             {/* KPI Cards do NOC */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center shrink-0">
                   <ShieldAlert size={24} />
                 </div>
@@ -484,7 +484,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center shrink-0">
                   <Users size={24} />
                 </div>
@@ -494,7 +494,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center shrink-0">
                   <Zap size={24} />
                 </div>
@@ -504,7 +504,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center shrink-0">
                   <Send size={24} />
                 </div>
@@ -542,14 +542,14 @@ export default function GenieACSDashboard() {
               </h3>
 
               {incidentes.length === 0 ? (
-                <div className="p-8 bg-[#101726] rounded-2xl border border-white/5 text-center text-slate-500 text-sm">
+                <div className="p-8 bg-slate-900 rounded-2xl border border-white/5 text-center text-slate-500 text-sm">
                   Nenhum incidente ativo no momento. Toda a malha FTTH está operando normalmente.
                 </div>
               ) : (
                 incidentes.map(inc => (
                   <div 
                     key={inc.id}
-                    className={`bg-[#101726] rounded-2xl border p-6 transition-all ${
+                    className={`bg-slate-900 rounded-2xl border p-6 transition-all ${
                       inc.status === 'normalizado' ? 'border-white/5 opacity-70' : 'border-red-500/30 shadow-lg shadow-red-950/20'
                     }`}
                   >
@@ -648,7 +648,7 @@ export default function GenieACSDashboard() {
 
             {/* MÉTRICAS TOP TR-069 */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center shrink-0">
                   <Router size={24} />
                 </div>
@@ -658,7 +658,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
               
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center shrink-0">
                   <CheckCircle2 size={24} />
                 </div>
@@ -668,7 +668,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center shrink-0">
                   <XCircle size={24} />
                 </div>
@@ -678,7 +678,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] p-4 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="bg-slate-900 p-4 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center shrink-0">
                   <AlertCircle size={24} />
                 </div>
@@ -690,11 +690,11 @@ export default function GenieACSDashboard() {
             </div>
 
             {/* TABELA DE DISPOSITIVOS */}
-            <div className="bg-[#101726] rounded-2xl border border-white/5 overflow-hidden">
+            <div className="bg-slate-900 rounded-2xl border border-white/5 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-white/5 bg-[#0b0f19]/60 text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                    <tr className="border-b border-white/5 bg-slate-950/60 text-[11px] uppercase tracking-wider font-bold text-slate-500">
                       <th className="p-4">Dispositivo / Modelo</th>
                       <th className="p-4">Serial / MAC</th>
                       <th className="p-4">IP WAN</th>
@@ -721,7 +721,7 @@ export default function GenieACSDashboard() {
                         <tr key={device._id} className="hover:bg-white/[0.02] transition-colors group">
                           <td className="p-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-[#0b0f19] border border-white/5 flex items-center justify-center text-slate-400 group-hover:text-blue-400 transition-colors">
+                              <div className="w-9 h-9 rounded-lg bg-slate-950 border border-white/5 flex items-center justify-center text-slate-400 group-hover:text-blue-400 transition-colors">
                                 <Router size={18} />
                               </div>
                               <div>
@@ -735,7 +735,7 @@ export default function GenieACSDashboard() {
                             <p className="font-mono text-[11px] text-slate-500">{device.mac}</p>
                           </td>
                           <td className="p-4">
-                            <span className="bg-[#0b0f19] border border-white/5 px-2.5 py-1 rounded-lg text-xs text-blue-400 font-mono font-bold">
+                            <span className="bg-slate-950 border border-white/5 px-2.5 py-1 rounded-lg text-xs text-blue-400 font-mono font-bold">
                               {device.ip}
                             </span>
                           </td>
@@ -759,7 +759,7 @@ export default function GenieACSDashboard() {
                                 </div>
                                 <div className="flex flex-col gap-1">
                                   <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Tx Power</span>
-                                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md border bg-[#0b0f19] border-white/5 text-slate-300">
+                                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md border bg-slate-950 border-white/5 text-slate-300">
                                     <Radio size={12} />
                                     <span className="text-xs font-mono font-bold">2.4 dBm</span>
                                   </div>
@@ -775,7 +775,7 @@ export default function GenieACSDashboard() {
                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button 
                                 onClick={() => setModalDiagDevice(device)}
-                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-blue-500/30 text-slate-400 hover:text-blue-400 rounded-lg transition-colors" 
+                                className="p-2 bg-slate-950 border border-white/5 hover:border-blue-500/30 text-slate-400 hover:text-blue-400 rounded-lg transition-colors" 
                                 title="Visualizar Diagnóstico Completo"
                               >
                                 <BarChart3 size={16} />
@@ -783,14 +783,14 @@ export default function GenieACSDashboard() {
                               <button 
                                 onClick={() => handleRebootDevice(device)}
                                 disabled={rebootingId === device._id}
-                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-amber-500/30 text-slate-400 hover:text-amber-400 rounded-lg transition-colors disabled:opacity-50" 
+                                className="p-2 bg-slate-950 border border-white/5 hover:border-amber-500/30 text-slate-400 hover:text-amber-400 rounded-lg transition-colors disabled:opacity-50" 
                                 title="Reboot Remoto (TR-069)"
                               >
                                 <RefreshCw size={16} className={rebootingId === device._id ? "animate-spin text-amber-400" : ""} />
                               </button>
                               <button 
                                 onClick={() => handleOpenWifiModal(device)}
-                                className="p-2 bg-[#0b0f19] border border-white/5 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors" 
+                                className="p-2 bg-slate-950 border border-white/5 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-400 rounded-lg transition-colors" 
                                 title="Configurações Wi-Fi"
                               >
                                 <Wrench size={16} />
@@ -811,7 +811,7 @@ export default function GenieACSDashboard() {
       {/* MODAL CONFIGURAÇÃO WI-FI TR-069 */}
       {modalWifiDevice && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-white/5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -838,7 +838,7 @@ export default function GenieACSDashboard() {
                     onChange={(e) => setWifiFormData({ ...wifiFormData, ssid: e.target.value })}
                     required
                     placeholder="Ex: NAP_Fibra_Casa_5G"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-medium"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-medium"
                   />
                 </div>
               </div>
@@ -853,7 +853,7 @@ export default function GenieACSDashboard() {
                     onChange={(e) => setWifiFormData({ ...wifiFormData, wifiPassword: e.target.value })}
                     required
                     placeholder="Mínimo 8 caracteres"
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-mono font-medium"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white outline-none focus:border-emerald-500 font-mono font-medium"
                   />
                 </div>
               </div>
@@ -864,7 +864,7 @@ export default function GenieACSDashboard() {
                   <select 
                     value={wifiFormData.wifiChannel}
                     onChange={(e) => setWifiFormData({ ...wifiFormData, wifiChannel: Number(e.target.value) })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500"
                   >
                     <option value="1">Canal 1 (2.4GHz Auto)</option>
                     <option value="6">Canal 6 (2.4GHz)</option>
@@ -876,7 +876,7 @@ export default function GenieACSDashboard() {
                 </div>
                 <div>
                   <label className="block text-slate-400 font-bold mb-1">Clientes Conectados</label>
-                  <div className="w-full bg-[#0b0f19] border border-white/5 rounded-xl px-3 py-2 text-slate-300 font-bold flex items-center justify-between">
+                  <div className="w-full bg-slate-950 border border-white/5 rounded-xl px-3 py-2 text-slate-300 font-bold flex items-center justify-between">
                     <span>{modalWifiDevice.lanClients || 0} dispositivos</span>
                     <Users size={14} className="text-emerald-400" />
                   </div>
@@ -913,7 +913,7 @@ export default function GenieACSDashboard() {
       {/* MODAL DIAGNÓSTICO COMPLETO TR-069 */}
       {modalDiagDevice && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-xl p-6 space-y-4 shadow-2xl">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-xl p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-white/5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
@@ -931,21 +931,21 @@ export default function GenieACSDashboard() {
 
             <div className="space-y-4 text-xs">
               <div className="grid grid-cols-3 gap-3">
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Potência Óptica RX</span>
                   <p className={`text-base font-mono font-bold ${getRssiColor(modalDiagDevice.rssi)}`}>
                     {modalDiagDevice.rssi ? `${modalDiagDevice.rssi} dBm` : "N/A"}
                   </p>
                   <span className="text-[10px] text-slate-500">Faixa ideal: -15 a -25 dBm</span>
                 </div>
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Temperatura Laser</span>
                   <p className="text-base font-mono font-bold text-white">
                     {modalDiagDevice.tempLaser || "41.2 °C"}
                   </p>
                   <span className="text-[10px] text-emerald-400">Normal (&lt; 65 °C)</span>
                 </div>
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-slate-500 uppercase font-bold text-[10px] block mb-1">Tensão Vcc</span>
                   <p className="text-base font-mono font-bold text-white">
                     {modalDiagDevice.vccVolts || "3.30 V"}
@@ -954,7 +954,7 @@ export default function GenieACSDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#0b0f19] p-4 rounded-xl border border-white/5 space-y-2">
+              <div className="bg-slate-950 p-4 rounded-xl border border-white/5 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Histórico de Variação Óptica (Últimas 24h)</span>
                   <span className="text-emerald-400 font-bold text-[10px]">Sinal Estável</span>
@@ -979,12 +979,12 @@ export default function GenieACSDashboard() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5 space-y-1">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5 space-y-1">
                   <span className="text-slate-500 uppercase font-bold text-[10px] block">Endereço IP & MAC</span>
                   <p className="font-mono text-white font-bold">{modalDiagDevice.ip}</p>
                   <p className="font-mono text-[11px] text-slate-500">{modalDiagDevice.mac}</p>
                 </div>
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5 space-y-1">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5 space-y-1">
                   <span className="text-slate-500 uppercase font-bold text-[10px] block">Tempo Conectado (Uptime)</span>
                   <p className="font-bold text-white">{modalDiagDevice.uptime || "12 dias, 6 horas"}</p>
                   <p className="text-[11px] text-slate-500">Último Inform CWMP: {new Date(modalDiagDevice.lastInform).toLocaleTimeString('pt-BR')}</p>
@@ -1007,7 +1007,7 @@ export default function GenieACSDashboard() {
       {/* MODAL DE NOVO INCIDENTE */}
       {modalNovoIncidente && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-white/5">
               <h3 className="font-bold text-white text-base flex items-center gap-2">
                 <ShieldAlert className="text-red-400" size={20} /> Abertura de Incidente de Rede (NOC)
@@ -1024,7 +1024,7 @@ export default function GenieACSDashboard() {
                   onChange={(e) => setNovoTitulo(e.target.value)}
                   placeholder="Ex: Rompimento de Fibra Troncal - Av. Principal"
                   required
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-red-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-red-500"
                 />
               </div>
 
@@ -1036,7 +1036,7 @@ export default function GenieACSDashboard() {
                   onChange={(e) => setNovoBairros(e.target.value)}
                   placeholder="Ex: Centro Histórico, Bela Vista, Jardim Primavera"
                   required
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-red-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none focus:border-red-500"
                 />
               </div>
 
@@ -1047,7 +1047,7 @@ export default function GenieACSDashboard() {
                     type="text" 
                     value={novoOlt}
                     onChange={(e) => setNovoOlt(e.target.value)}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
                   />
                 </div>
                 <div>
@@ -1056,7 +1056,7 @@ export default function GenieACSDashboard() {
                     type="number" 
                     value={novoClientes}
                     onChange={(e) => setNovoClientes(e.target.value)}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
                   />
                 </div>
               </div>
@@ -1068,7 +1068,7 @@ export default function GenieACSDashboard() {
                   value={novoPrevisao}
                   onChange={(e) => setNovoPrevisao(e.target.value)}
                   placeholder="Ex: 16:30 (Hoje)"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white outline-none"
                 />
               </div>
 
@@ -1079,7 +1079,7 @@ export default function GenieACSDashboard() {
                   onChange={(e) => setNovoDescricao(e.target.value)}
                   placeholder="Ex: Caminhão colidiu com poste de distribuição. Equipe de fusão 02 no local."
                   rows={3}
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-xl p-3 text-white outline-none focus:border-red-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-red-500"
                 />
               </div>
 

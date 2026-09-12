@@ -78,7 +78,7 @@ export default function OperatorPwaControls() {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
           <div 
-            className="bg-[#101726] border border-white/10 w-full max-w-lg rounded-3xl p-6 shadow-2xl text-slate-200 relative overflow-hidden"
+            className="bg-slate-900 border border-white/10 w-full max-w-lg rounded-3xl p-6 shadow-2xl text-slate-200 relative overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -102,7 +102,7 @@ export default function OperatorPwaControls() {
 
             <div className="space-y-5">
               {/* Status da Permissão Web Push */}
-              <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full shrink-0 ${
                     permission === 'granted' ? 'bg-emerald-500 ring-4 ring-emerald-500/20' : 'bg-amber-500 ring-4 ring-amber-500/20'
@@ -173,7 +173,7 @@ export default function OperatorPwaControls() {
               </div>
 
               {/* Simulação de Teste de Push */}
-              <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 space-y-3">
+              <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
                     <Volume2 size={15} className="text-blue-400" />
@@ -283,7 +283,7 @@ function CategoryToggle({ icon, title, description, active, onToggle }: Category
       className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between ${
         active 
           ? 'bg-blue-600/10 border-blue-500/30 text-white' 
-          : 'bg-[#0b0f19] border-white/5 text-slate-400 hover:border-white/10'
+          : 'bg-slate-950 border-white/5 text-slate-400 hover:border-white/10'
       }`}
     >
       <div className="flex items-center gap-2.5 overflow-hidden">

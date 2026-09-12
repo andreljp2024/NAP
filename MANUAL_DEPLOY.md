@@ -1,136 +1,167 @@
-# Manual de Implantação e Deploy
-## NAP - Instalação Single-Tenant (Isolada)
+# Manual de Configuração de Ambiente e Deploy (Homologação e Produção)
 
-Este manual descreve o passo a passo para colocar a aplicação NAP (Núcleo de Atendimento ao Provedor) em produção. O projeto foi desenhado para rodar isoladamente em uma VPS para cada Provedor de Internet (ISP), garantindo segurança total dos dados (LGPD) e isolamento da rede de telefonia VoIP.
+## NAP - Núcleo de Atendimento ao Provedor
 
-### 1. Requisitos de Infraestrutura
-- **Servidor:** VPS/VM Dedicada (Recomendado: 4 vCPUs, 8GB RAM).
-- **Sistema Operacional:** Debian 12 (Bookworm) ou Ubuntu 22.04 LTS.
-- **Node.js:** Versão 20.x ou superior.
-- **Banco de Dados:** PostgreSQL 15 ou superior.
-- **Domínio:** Um domínio/subdomínio apontado para a VPS (ex: `nap.meuprovedor.com.br`) para geração de SSL (Certbot).
+Este manual descreve a topologia recomendada e o passo a passo de configuração para implantar o NAP (aplicação Single-Tenant, rodando isolada por provedor/ISP) em ambientes de **Homologação** e **Produção**, garantindo a segurança de dados (LGPD), suporte WebRTC e isolamento da rede de telefonia VoIP.
 
-### 2. Instalação de Dependências Base
-Logado via SSH no servidor, execute:
+---
+
+### 1. Requisitos de Infraestrutura (Self-Hosted)
+
+Recomendamos a segregação dos serviços para maior escalabilidade e estabilidade do fluxo de áudio, dividindo a infraestrutura em pelo menos duas VMs (ou instâncias Bare Metal).
+
+*   **VM 1: Aplicação NAP (Node.js + Nginx)**
+    *   **SO:** Debian 12 (Bookworm)
+    *   **Hardware:** 4 vCPUs, 8GB RAM, 50GB SSD
+    *   **Node.js:** Versão 20.x ou 22.x
+*   **VM 2: Telefonia (Asterisk 20) & Banco de Dados**
+    *   **SO:** Debian 12 (Bookworm)
+    *   **Hardware:** 4 vCPUs, 8GB RAM, 100GB SSD
+    *   **DB:** PostgreSQL 15+
+    *   **VoIP:** Asterisk 20 (compilado via código-fonte com suporte a `res_srtp` e `pjproject` habilitados).
+
+> *Dica de Tuning PostgreSQL:* Caso a operação exceda 100 atendentes concorrentes no Inbox, recomenda-se o uso do `PgBouncer` como pool de conexões à frente do Postgres, e otimização do `postgresql.conf` ajustando `shared_buffers` para 25% da RAM total da máquina.
+
+---
+
+### 2. Setup do Banco de Dados (PostgreSQL)
+
+Na máquina dedicada ao banco de dados:
+
 ```bash
-# Atualizar sistema
-sudo apt update && sudo apt upgrade -y
+# 1. Instalar o PostgreSQL
+sudo apt update && sudo apt install -y postgresql postgresql-contrib
 
-# Instalar Node.js 20.x
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# Instalar PM2 para gerenciamento do processo
-sudo npm install -g pm2
-
-# Instalar Nginx e PostgreSQL
-sudo apt install -y nginx postgresql postgresql-contrib
-```
-
-### 3. Configuração do PostgreSQL
-Crie o banco de dados e o usuário que o NAP utilizará:
-```bash
+# 2. Acessar o console do Postgres
 sudo -u postgres psql
 ```
-No console do PostgreSQL:
+
+Crie o banco e o usuário restrito:
+
 ```sql
 CREATE DATABASE nap_crm;
-CREATE USER nap_user WITH ENCRYPTED PASSWORD 'senha_super_segura';
+CREATE USER nap_user WITH ENCRYPTED PASSWORD 'senha_forte_do_provedor';
 GRANT ALL PRIVILEGES ON DATABASE nap_crm TO nap_user;
 ALTER DATABASE nap_crm OWNER TO nap_user;
 \q
 ```
 
-### 4. Deploy da Aplicação
-Faça o clone do repositório da aplicação na pasta desejada (ex: `/var/www/nap`):
-```bash
-# Baixar código e instalar pacotes NPM
-git clone https://github.com/SeuUsuario/nap.git /var/www/nap
-cd /var/www/nap
-npm install
+*Lembre-se de alterar o arquivo `pg_hba.conf` caso a aplicação rode em uma VM separada, liberando o IP da VM1 para conectar no Postgres.*
+
+---
+
+### 3. Integração Asterisk 20 (Telefonia & IA de Voz)
+
+O NAP exige o **Asterisk 20** para suportar de forma nativa o tráfego WebRTC no Webphone do operador e possibilitar a inteligência artificial (Gemini) na ura de atendimento.
+
+#### 3.1. Configuração do WebRTC (WSS) no `http.conf`
+O Webphone embutido no NAP exige que o Asterisk forneça sockets seguros (WSS).
+```ini
+[general]
+enabled=yes
+bindaddr=0.0.0.0
+bindport=8088
+tlsenable=yes
+tlsbindaddr=0.0.0.0:8089
+tlscertfile=/etc/letsencrypt/live/pabx.meuprovedor.com.br/fullchain.pem
+tlsprivatekey=/etc/letsencrypt/live/pabx.meuprovedor.com.br/privkey.pem
 ```
 
-#### 4.1. Configurar Variáveis de Ambiente (.env)
-Crie o arquivo `.env` na raiz do projeto:
+#### 3.2. Configuração do PJSIP (Endpoints)
+Os ramais do sistema NAP usam transporte WSS. No `pjsip.conf`:
+```ini
+[transport-wss]
+type=transport
+protocol=wss
+bind=0.0.0.0
+
+[1000] ; Exemplo Ramal PWA
+type=endpoint
+transport=transport-wss
+aors=1000
+auth=auth1000
+webrtc=yes
+dtls_auto_generate_cert=yes
+```
+
+#### 3.3. Configuração AMI & ARI
+O `server.ts` monitora chamadas (CTI Reverso) e atua como URA Inteligente:
+*   **AMI (`manager.conf`):** Crie um usuário de leitura e escrita (`read = system,call,log,verbose,command,agent,user` / `write = system,call,log,verbose,command,agent,user`).
+*   **ARI (`ari.conf`):** Ative a API RESTful e crie um usuário para o NAP injetar scripts de áudio da LLM na ligação (`allowed_origins = *`).
+
+---
+
+### 4. Configuração das Variáveis de Ambiente (Homologação)
+
+No diretório raiz do projeto na VM1, crie seu `.env`:
+
 ```env
 # Banco de Dados
-DATABASE_URL="postgres://nap_user:senha_super_segura@localhost:5432/nap_crm"
+DATABASE_URL="postgresql://nap_user:senha_forte_do_provedor@<IP_VM2>:5432/nap_crm"
 
-# SGP (ERP)
+# SGP (ERP Principal)
 SGP_URL="https://api.sgp.net.br"
 SGP_APP="SUA_CHAVE_APP_SGP"
 SGP_TOKEN="SEU_TOKEN_SGP"
 
+# GenieACS NBI (Telemetria TR-069)
+GENIEACS_URL="http://10.0.0.1:7557"
+GENIEACS_USER="api_user"
+GENIEACS_PASSWORD="api_password"
+
 # IA Gemini
 GEMINI_API_KEY="AIzaSy_Sua_Chave_Gemini_Aqui"
 
-# WABA (WhatsApp)
-WABA_VERIFY_TOKEN="meu_provedor_waba_secret"
-WABA_ACCESS_TOKEN="EAA_TOKEN_DO_FACEBOOK"
+# Asterisk (AMI/ARI)
+ASTERISK_HOST="<IP_VM2>"
+ASTERISK_AMI_USER="nap_ami"
+ASTERISK_AMI_SECRET="senha_ami"
 
-# Outros
+# Ambiente
 NODE_ENV="production"
 PORT=3000
 ```
 
-#### 4.2. Geração das Tabelas e Build
-Execute a migração do Drizzle para construir as tabelas (`users`, `clientes`, `atendimentos`, `conversas`, etc) no Postgres:
+---
+
+### 5. Passos para a Build Final de Homologação
+
+Antes de virar a chave para produção efetiva, recomenda-se construir a versão de homologação para certificar que o *frontend* e *backend* conversam corretamente usando os recursos de hardware definitivos.
+
+#### Passo 1: Instalação Limpa
+```bash
+cd /var/www/nap
+rm -rf node_modules package-lock.json dist/
+npm install
+```
+
+#### Passo 2: Sincronização do Banco de Dados
+Empurre os schemas do ORM para o banco PostgreSQL recém-criado:
 ```bash
 npm run db:push
 ```
 
-Faça a build de Produção (que unifica o React SPA e o Node Backend via esbuild):
+#### Passo 3: Processo de Build (Vite + esbuild)
+Esta etapa minifica o React PWA (cliente) e agrupa o Express Server (`server.ts`) em um único binário CommonJS.
 ```bash
 npm run build
 ```
-Isto gerará a pasta `dist/` com o frontend e o arquivo `dist/server.cjs` (backend).
+*Verifique se a pasta `dist/` foi gerada e se o arquivo `dist/server.cjs` existe.*
 
-### 5. Execução (PM2)
-Inicie o servidor com o PM2 para que ele rode em background e reinicie automaticamente:
+#### Passo 4: Teste de Execução (Homologação)
+Inicialize o servidor manualmente para ler os logs em tempo real e confirmar a conexão com Asterisk, GenieACS e Banco de Dados:
 ```bash
-pm2 start dist/server.cjs --name "nap-backend"
+NODE_ENV=production node dist/server.cjs
+```
+Acesse a plataforma via IP ou DNS provisório. Valide se a API Validation (Handshake) aponta verde para todos os subsistemas.
+
+#### Passo 5: Configuração de Daemon (PM2) e Nginx Reverso
+Após a homologação ser aprovada, coloque o sistema sob custódia do PM2 para inicialização automática com o servidor:
+```bash
+sudo npm install -g pm2
+pm2 start dist/server.cjs --name "nap-backend" --env production
 pm2 save
 pm2 startup
 ```
 
-### 6. Configuração do Proxy Reverso (Nginx + SSL)
-Crie a configuração do site no Nginx para repassar as requisições para a porta `3000`:
-```bash
-sudo nano /etc/nginx/sites-available/nap
-```
-
-Cole a configuração:
-```nginx
-server {
-    listen 80;
-    server_name nap.meuprovedor.com.br;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        
-        # Repasse do IP Real
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_addrs;
-    }
-}
-```
-Ative o site e reinicie o Nginx:
-```bash
-sudo ln -s /etc/nginx/sites-available/nap /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-### 7. Certificado SSL (Certbot)
-Gere o certificado HTTPS gratuito:
-```bash
-sudo apt install certbot python3-certbot-nginx
-sudo certbot --nginx -d nap.meuprovedor.com.br
-```
-
-**Pronto!** O seu NAP está rodando em produção, de forma isolada, escalável e segura. O painel deve estar acessível via `https://nap.meuprovedor.com.br`.
+Por fim, configure o proxy reverso no **Nginx** (com suporte a *WebSocket Upgrade* para não quebrar o Webphone) e aplique o certificado SSL utilizando o `certbot`.

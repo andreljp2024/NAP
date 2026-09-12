@@ -187,7 +187,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-label="Status de Sincronização SGP e GenieACS"
-          className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#101726]/80 hover:bg-[#101726] border border-white/10 hover:border-white/20 transition-all text-xs font-medium text-slate-300 active:scale-95"
+          className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-white/10 hover:border-white/20 transition-all text-xs font-medium text-slate-300 active:scale-95"
           title="Clique para abrir detalhes da sincronização SGP e GenieACS"
         >
           {/* SGP LED */}
@@ -250,7 +250,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
             )}
 
             {/* Painel do SGP */}
-            <div className="mt-3.5 p-3 rounded-xl bg-[#070b14] border border-white/5 space-y-2">
+            <div className="mt-3.5 p-3 rounded-xl bg-slate-950 border border-white/5 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Server size={15} className="text-blue-400" />
@@ -285,7 +285,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
             </div>
 
             {/* Painel do GenieACS (Validado em Tempo Real via Hook) */}
-            <div className="mt-3 p-3 rounded-xl bg-[#070b14] border border-white/5 space-y-2">
+            <div className="mt-3 p-3 rounded-xl bg-slate-950 border border-white/5 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Router size={15} className="text-purple-400" />
@@ -361,7 +361,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
   // VARIANTE: CARD DEDICADO (Para Dashboards e Painel Analytics)
   // -------------------------------------------------------------
   return (
-    <div className={`bg-[#101726] border border-white/10 rounded-2xl p-5 space-y-4 ${className}`}>
+    <div className={`bg-slate-900 border border-white/10 rounded-2xl p-5 space-y-4 ${className}`}>
       {/* Header do Card */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
         <div className="flex items-center gap-3">
@@ -403,7 +403,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
       {/* Grid de Serviços Integrados */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card SGP */}
-        <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 hover:border-white/10 transition-colors space-y-3">
+        <div className="p-4 rounded-xl bg-slate-950 border border-white/5 hover:border-white/10 transition-colors space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
@@ -447,7 +447,7 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
         </div>
 
         {/* Card GenieACS */}
-        <div className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 hover:border-white/10 transition-colors space-y-3">
+        <div className="p-4 rounded-xl bg-slate-950 border border-white/5 hover:border-white/10 transition-colors space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">

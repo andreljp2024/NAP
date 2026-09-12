@@ -89,7 +89,7 @@ export default function Analytics() {
   });
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-[#0b0f19]">
+    <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-slate-950">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header com Switcher de Abas */}
@@ -100,7 +100,7 @@ export default function Analytics() {
           </div>
           
           <div className="flex items-center gap-3">
-            <div className="bg-[#101726] p-1 rounded-2xl border border-white/10 flex items-center gap-1">
+            <div className="bg-slate-900 p-1 rounded-2xl border border-white/10 flex items-center gap-1">
               <button
                 onClick={() => setAbaAtiva('operacao')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
@@ -183,7 +183,7 @@ export default function Analytics() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Financial Chart */}
-          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl p-6">
+          <div className="lg:col-span-2 bg-slate-900 border border-white/5 rounded-2xl p-6">
             <h3 className="text-lg font-bold text-white font-outfit mb-6 flex items-center gap-2">
               <DollarSign size={18} className="text-emerald-400" />
               MRR & Recuperação Automática (PIX)
@@ -214,7 +214,7 @@ export default function Analytics() {
           </div>
 
           {/* Secondary Chart */}
-          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+          <div className="bg-slate-900 border border-white/5 rounded-2xl p-6">
             <h3 className="text-lg font-bold text-white font-outfit mb-6">Tempo Médio de Resposta (s)</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -234,13 +234,13 @@ export default function Analytics() {
         </div>
 
         {/* Volume de Atendimentos Area */}
-        <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+        <div className="bg-slate-900 border border-white/5 rounded-2xl p-6">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-lg font-bold text-white font-outfit">Volume de Resolução: Humano vs IA</h3>
               <p className="text-xs text-slate-500 mt-1">Comparativo de tickets encerrados sem intervenção humana na última semana.</p>
             </div>
-            <button className="text-xs bg-[#0b0f19] border border-white/5 text-slate-300 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">
+            <button className="text-xs bg-slate-950 border border-white/5 text-slate-300 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">
               Exportar CSV
             </button>
           </div>
@@ -275,8 +275,8 @@ export default function Analytics() {
         {/* Live Operators & Embedded Asterisk Webphone */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Operadores Online (2 Cols) */}
-          <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl   overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#101726]">
+          <div className="lg:col-span-2 bg-slate-900 border border-white/5 rounded-2xl   overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900">
               <div>
                 <h3 className="text-lg font-bold text-white font-outfit">Operadores Online & Filas FreePBX</h3>
                 <p className="text-xs text-slate-500 mt-0.5">Ramais SIP ativos no Asterisk 21 e distribuição de canais</p>
@@ -292,7 +292,7 @@ export default function Analytics() {
                 { nome: 'João Dev (Você)', status: 'Disponível', canal: 'WebRTC Telephony', fila: 'Suporte N2', ramal: '2001' },
                 { nome: 'Mariana Lima', status: 'Pausa (Lanche)', canal: 'Telefonia', fila: 'Cobrança', ramal: '2003' },
               ].map((op, i) => (
-                <div key={i} className="p-4 flex items-center justify-between hover:bg-[#0b0f19] transition-colors">
+                <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-950 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-300 font-bold border border-white/5">
                       {op.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
@@ -325,7 +325,7 @@ export default function Analytics() {
             </div>
 
             {/* Rodapé de Status do Servidor de Telefonia */}
-            <div className="p-4 bg-[#0b0f19] border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 font-mono">
+            <div className="p-4 bg-slate-950 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 font-mono">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span>Asterisk PBX: v21.4.1 (Debian 12)</span>
@@ -359,7 +359,7 @@ export default function Analytics() {
           
           {/* Banner de Status Global e KPIs */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-[#101726] border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden group">
+            <div className="bg-slate-900 border border-emerald-500/20 p-6 rounded-2xl relative overflow-hidden group">
               <div className="flex items-start justify-between mb-3">
                 <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
                   <HeartHandshake size={24} />
@@ -404,7 +404,7 @@ export default function Analytics() {
           </div>
 
           {/* Distribuição de Notas NPS */}
-          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+          <div className="bg-slate-900 border border-white/5 rounded-2xl p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
               <div>
                 <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2">
@@ -492,7 +492,7 @@ export default function Analytics() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Gráfico de Evolução Semanal */}
-            <div className="lg:col-span-2 bg-[#101726] border border-white/5 rounded-2xl p-6">
+            <div className="lg:col-span-2 bg-slate-900 border border-white/5 rounded-2xl p-6">
               <h3 className="text-base font-bold text-white font-outfit mb-4 flex items-center gap-2">
                 <TrendingUp size={18} className="text-blue-400" />
                 Evolução Semanal do NPS vs CSAT
@@ -516,7 +516,7 @@ export default function Analytics() {
             </div>
 
             {/* Card de Configuração do Gatilho */}
-            <div className="bg-[#101726] border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
+            <div className="bg-slate-900 border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
               <div>
                 <h3 className="text-base font-bold text-white font-outfit mb-2 flex items-center gap-2">
                   <Zap size={18} className="text-amber-400" />
@@ -562,7 +562,7 @@ export default function Analytics() {
           </div>
 
           {/* Feed de Avaliações em Tempo Real */}
-          <div className="bg-[#101726] border border-white/5 rounded-2xl p-6">
+          <div className="bg-slate-900 border border-white/5 rounded-2xl p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2">
@@ -573,7 +573,7 @@ export default function Analytics() {
               </div>
 
               {/* Filtro por classificação */}
-              <div className="flex items-center gap-1.5 bg-[#0b0f19] p-1 rounded-xl border border-white/5">
+              <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-white/5">
                 <button
                   onClick={() => setFiltroNps('todos')}
                   className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${filtroNps === 'todos' ? 'bg-white/10 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
@@ -605,7 +605,7 @@ export default function Analytics() {
               {feedFiltrado.map(item => (
                 <div 
                   key={item.id}
-                  className="p-4 rounded-xl bg-[#0b0f19] border border-white/5 hover:border-white/10 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
+                  className="p-4 rounded-xl bg-slate-950 border border-white/5 hover:border-white/10 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
                 >
                   <div className="flex items-start gap-3.5 flex-1">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold font-outfit shrink-0 border ${
@@ -653,13 +653,13 @@ export default function Analytics() {
 
       {abaAtiva === 'radar' && (
          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-            <div className="bg-[#101726] border border-white/5 p-6 rounded-2xl">
+            <div className="bg-slate-900 border border-white/5 p-6 rounded-2xl">
               <h2 className="text-xl font-bold text-white font-outfit mb-4 flex items-center gap-2"><Radio className="text-purple-500 animate-pulse" /> Radar NOC (C.C.O)</h2>
               <p className="text-slate-400 text-sm mb-6">Acompanhamento em tempo real das viaturas em campo via GPS (PWA Técnico), status do Asterisk PABX e contenção da IA Gemini.</p>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                  {/* COL 1: Grid Map */}
-                 <div className="lg:col-span-2 bg-[#0b0f19] border border-white/5 rounded-xl p-4 relative overflow-hidden">
+                 <div className="lg:col-span-2 bg-slate-950 border border-white/5 rounded-xl p-4 relative overflow-hidden">
                     <div className="flex justify-between items-center mb-4 relative z-10">
                        <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2"><MapPin size={16} className="text-emerald-400" /> Viaturas em Campo (GPS)</h3>
                        <span className="flex items-center gap-1 text-xs text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full"><Signal size={12}/> Transmitindo ao vivo</span>
@@ -675,7 +675,7 @@ export default function Analytics() {
                            <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)] animate-pulse">
                               <MapPin size={14} className="text-emerald-400" />
                            </div>
-                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                           <div className="absolute top-10 -left-10 w-40 bg-slate-900 border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
                               <p className="text-xs text-emerald-400 font-bold mb-1">Téc. Marcos (Carro 01)</p>
                               <p className="text-[10px] text-slate-400 mb-1">Em deslocamento (OS 8841)</p>
                               <div className="w-full bg-slate-800 rounded-full h-1"><div className="bg-emerald-500 h-1 rounded-full" style={{width: '60%'}}></div></div>
@@ -687,7 +687,7 @@ export default function Analytics() {
                            <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
                               <Wrench size={14} className="text-blue-400" />
                            </div>
-                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                           <div className="absolute top-10 -left-10 w-40 bg-slate-900 border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
                               <p className="text-xs text-blue-400 font-bold mb-1">Téc. Lucas (Carro 03)</p>
                               <p className="text-[10px] text-slate-400">No Local (Instalação OS 8842)</p>
                               <p className="text-[9px] text-slate-500 mt-1">Sinal ONU: -19.4 dBm</p>
@@ -698,7 +698,7 @@ export default function Analytics() {
                            <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-bounce">
                               <AlertCircle size={14} className="text-red-400" />
                            </div>
-                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                           <div className="absolute top-10 -left-10 w-40 bg-slate-900 border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
                               <p className="text-xs text-red-400 font-bold mb-1">Téc. Rafael (Carro 05)</p>
                               <p className="text-[10px] text-slate-400">Pausa / Atraso Crítico (&gt; 30m)</p>
                            </div>
@@ -708,7 +708,7 @@ export default function Analytics() {
 
                  {/* COL 2: Status Live */}
                  <div className="space-y-6">
-                    <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                    <div className="bg-slate-950 border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-4 opacity-5"><Phone size={64}/></div>
                        <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"><Phone size={16} className="text-blue-400" /> PABX (Asterisk/WebRTC)</h3>
                        <div className="space-y-3 relative z-10">
@@ -727,7 +727,7 @@ export default function Analytics() {
                        </div>
                     </div>
 
-                    <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                    <div className="bg-slate-950 border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
                        <div className="absolute top-0 right-0 p-4 opacity-5"><Bot size={64}/></div>
                        <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"><Bot size={16} className="text-indigo-400" /> Cérebro IA (Gemini)</h3>
                        <div className="space-y-3 relative z-10">
@@ -757,12 +757,12 @@ export default function Analytics() {
 
 function MetricCard({ title, value, trend, trendUp, icon }: any) {
   return (
-    <div className="bg-[#101726] border border-white/5 p-6 rounded-2xl   flex flex-col relative overflow-hidden group">
+    <div className="bg-slate-900 border border-white/5 p-6 rounded-2xl   flex flex-col relative overflow-hidden group">
       <div className="absolute -right-6 -top-6 text-slate-200/30 group-hover:text-slate-300/30 transition-colors duration-500 rotate-12 scale-150">
         {icon}
       </div>
       <div className="flex items-start justify-between mb-4 relative z-10">
-        <div className="p-3 bg-[#0b0f19] rounded-xl border border-white/5 ">
+        <div className="p-3 bg-slate-950 rounded-xl border border-white/5 ">
           {icon}
         </div>
         <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${trendUp ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>

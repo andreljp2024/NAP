@@ -226,9 +226,9 @@ export default function Auditoria() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] text-slate-200 overflow-y-auto">
+    <div className="flex-1 flex flex-col h-full bg-slate-950 text-slate-200 overflow-y-auto">
       {/* Header Principal */}
-      <div className="border-b border-white/5 bg-[#101726]/80 backdrop-blur-md px-6 py-5 shrink-0">
+      <div className="border-b border-white/5 bg-slate-900/80 backdrop-blur-md px-6 py-5 shrink-0">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
@@ -287,7 +287,7 @@ export default function Auditoria() {
       <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
         {/* Painel de Métricas de Auditoria */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="bg-[#101726] border border-white/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-white/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
               <span>Total Registros</span>
               <Database size={15} className="text-blue-400" />
@@ -296,7 +296,7 @@ export default function Auditoria() {
             <span className="text-[10px] text-slate-500 mt-1 block">Trilha imutável</span>
           </div>
 
-          <div className="bg-[#101726] border border-white/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-white/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
               <span>Acessos & Logins</span>
               <UserCheck size={15} className="text-cyan-400" />
@@ -305,7 +305,7 @@ export default function Auditoria() {
             <span className="text-[10px] text-slate-500 mt-1 block">Sessões autenticadas</span>
           </div>
 
-          <div className="bg-[#101726] border border-white/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-white/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
               <span>Alterações ERP</span>
               <Server size={15} className="text-purple-400" />
@@ -314,7 +314,7 @@ export default function Auditoria() {
             <span className="text-[10px] text-slate-500 mt-1 block">SGP / IXC / Hubsoft</span>
           </div>
 
-          <div className="bg-[#101726] border border-white/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-white/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
               <span>Comandos TR-069</span>
               <Radio size={15} className="text-indigo-400" />
@@ -323,7 +323,7 @@ export default function Auditoria() {
             <span className="text-[10px] text-slate-500 mt-1 block">Reboots / Wi-Fi CPE</span>
           </div>
 
-          <div className="bg-[#101726] border border-white/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-white/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
               <span>Disparos Ativos</span>
               <Megaphone size={15} className="text-amber-400" />
@@ -332,7 +332,7 @@ export default function Auditoria() {
             <span className="text-[10px] text-slate-500 mt-1 block">Campanhas & Régua</span>
           </div>
 
-          <div className="bg-[#101726] border border-rose-500/20 bg-rose-500/5 rounded-xl p-3.5">
+          <div className="bg-slate-900 border border-rose-500/20 bg-rose-500/5 rounded-xl p-3.5">
             <div className="flex items-center justify-between text-rose-400 text-xs font-medium">
               <span>Ações Críticas</span>
               <AlertTriangle size={15} className="text-rose-400" />
@@ -343,7 +343,7 @@ export default function Auditoria() {
         </div>
 
         {/* Gráfico de Rosca: Distribuição de Ações por Tipo (Visão Rápida de Conformidade) */}
-        <div className="bg-[#101726] border border-white/5 rounded-2xl p-5 shadow-xl">
+        <div className="bg-slate-900 border border-white/5 rounded-2xl p-5 shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/5">
             <div>
               <h2 className="text-sm font-bold text-white flex items-center gap-2">
@@ -375,7 +375,7 @@ export default function Auditoria() {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-[#101726]/95 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-2xl text-xs">
+                            <div className="bg-slate-900/95 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-2xl text-xs">
                               <div className="flex items-center gap-2 mb-1">
                                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: data.color }} />
                                 <span className="font-bold text-white">{data.name}</span>
@@ -438,7 +438,7 @@ export default function Auditoria() {
                     className={`text-left p-3.5 rounded-xl border transition-all duration-200 group relative ${
                       estaAtivo 
                         ? 'bg-white/10 border-white/30 ring-1 ring-white/20 shadow-md' 
-                        : 'bg-[#0b0f19] border-white/5 hover:border-white/15 hover:bg-[#0b0f19]/80'
+                        : 'bg-slate-950 border-white/5 hover:border-white/15 hover:bg-slate-950/80'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -480,7 +480,7 @@ export default function Auditoria() {
         </div>
 
         {/* Barra de Filtros e Busca */}
-        <div className="bg-[#101726] border border-white/5 rounded-xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
+        <div className="bg-slate-900 border border-white/5 rounded-xl p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -488,56 +488,56 @@ export default function Auditoria() {
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
               placeholder="Buscar por operador, IP, ação ou detalhe..."
-              className="w-full bg-[#0b0f19] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-slate-950 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
             {/* Filtro por Módulo */}
-            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-white/10 rounded-lg px-2.5 py-1.5">
+            <div className="flex items-center gap-1.5 bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5">
               <Filter size={13} className="text-slate-400" />
               <select
                 value={moduloFiltro}
                 onChange={(e) => setModuloFiltro(e.target.value)}
                 className="bg-transparent text-xs text-slate-300 font-medium focus:outline-none cursor-pointer"
               >
-                <option value="todos" className="bg-[#101726]">Todos os Módulos</option>
-                <option value="Acesso" className="bg-[#101726]">Acessos & Logins</option>
-                <option value="SGP" className="bg-[#101726]">SGP / ERP</option>
-                <option value="GenieACS" className="bg-[#101726]">GenieACS (TR-069)</option>
-                <option value="Campanha" className="bg-[#101726]">Campanhas</option>
-                <option value="Configura" className="bg-[#101726]">Configurações Globais</option>
+                <option value="todos" className="bg-slate-900">Todos os Módulos</option>
+                <option value="Acesso" className="bg-slate-900">Acessos & Logins</option>
+                <option value="SGP" className="bg-slate-900">SGP / ERP</option>
+                <option value="GenieACS" className="bg-slate-900">GenieACS (TR-069)</option>
+                <option value="Campanha" className="bg-slate-900">Campanhas</option>
+                <option value="Configura" className="bg-slate-900">Configurações Globais</option>
               </select>
             </div>
 
             {/* Filtro por Severidade */}
-            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-white/10 rounded-lg px-2.5 py-1.5">
+            <div className="flex items-center gap-1.5 bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5">
               <AlertTriangle size={13} className="text-slate-400" />
               <select
                 value={severidadeFiltro}
                 onChange={(e) => setSeveridadeFiltro(e.target.value)}
                 className="bg-transparent text-xs text-slate-300 font-medium focus:outline-none cursor-pointer"
               >
-                <option value="todas" className="bg-[#101726]">Todas Severidades</option>
-                <option value="info" className="bg-[#101726]">Informativo</option>
-                <option value="atencao" className="bg-[#101726]">Atenção</option>
-                <option value="critico" className="bg-[#101726]">Crítico</option>
+                <option value="todas" className="bg-slate-900">Todas Severidades</option>
+                <option value="info" className="bg-slate-900">Informativo</option>
+                <option value="atencao" className="bg-slate-900">Atenção</option>
+                <option value="critico" className="bg-slate-900">Crítico</option>
               </select>
             </div>
 
             {/* Filtro por Categoria */}
-            <div className="flex items-center gap-1.5 bg-[#0b0f19] border border-white/10 rounded-lg px-2.5 py-1.5">
+            <div className="flex items-center gap-1.5 bg-slate-950 border border-white/10 rounded-lg px-2.5 py-1.5">
               <span className="text-xs text-slate-400">Tipo:</span>
               <select
                 value={categoriaFiltro}
                 onChange={(e) => setCategoriaFiltro(e.target.value)}
                 className="bg-transparent text-xs text-slate-300 font-medium focus:outline-none cursor-pointer"
               >
-                <option value="todas" className="bg-[#101726]">Todos os Tipos</option>
-                <option value="acesso" className="bg-[#101726]">Acessos</option>
-                <option value="configuracao" className="bg-[#101726]">Configurações</option>
-                <option value="comando" className="bg-[#101726]">Comandos</option>
-                <option value="disparo" className="bg-[#101726]">Disparos</option>
+                <option value="todas" className="bg-slate-900">Todos os Tipos</option>
+                <option value="acesso" className="bg-slate-900">Acessos</option>
+                <option value="configuracao" className="bg-slate-900">Configurações</option>
+                <option value="comando" className="bg-slate-900">Comandos</option>
+                <option value="disparo" className="bg-slate-900">Disparos</option>
               </select>
             </div>
 
@@ -559,7 +559,7 @@ export default function Auditoria() {
         </div>
 
         {/* Tabela de Logs */}
-        <div className="bg-[#101726] border border-white/5 rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-slate-900 border border-white/5 rounded-xl overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
@@ -634,7 +634,7 @@ export default function Auditoria() {
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-mono text-[11px] text-slate-400 bg-[#0b0f19] px-2 py-0.5 rounded border border-white/5">
+                        <span className="font-mono text-[11px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-white/5">
                           {log.ip}
                         </span>
                       </td>
@@ -668,9 +668,9 @@ export default function Auditoria() {
       {/* Modal de Detalhe Forense do Log de Auditoria */}
       {selectedLog && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
             {/* Modal Header */}
-            <div className="p-5 border-b border-white/10 flex items-center justify-between sticky top-0 bg-[#101726] z-10">
+            <div className="p-5 border-b border-white/10 flex items-center justify-between sticky top-0 bg-slate-900 z-10">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
                   <ShieldCheck size={20} />
@@ -691,26 +691,26 @@ export default function Auditoria() {
             {/* Modal Body */}
             <div className="p-6 space-y-5">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">Data / Hora</span>
                   <span className="text-xs font-semibold text-white mt-1 block font-mono">
                     {selectedLog.timestamp ? new Date(selectedLog.timestamp).toLocaleString('pt-BR') : selectedLog.data}
                   </span>
                 </div>
 
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">Severidade</span>
                   <div className="mt-1">{getSeveridadeBadge(selectedLog.severidade)}</div>
                 </div>
 
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">Módulo</span>
                   <span className="text-xs font-semibold text-white mt-1 block">
                     {selectedLog.modulo}
                   </span>
                 </div>
 
-                <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">IP de Origem</span>
                   <span className="text-xs font-mono font-semibold text-slate-300 mt-1 block">
                     {selectedLog.ip}
@@ -719,7 +719,7 @@ export default function Auditoria() {
               </div>
 
               {/* Informações do Operador */}
-              <div className="bg-[#0b0f19] p-4 rounded-xl border border-white/5">
+              <div className="bg-slate-950 p-4 rounded-xl border border-white/5">
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
                   Identificação do Operador
                 </h4>
@@ -738,12 +738,12 @@ export default function Auditoria() {
               </div>
 
               {/* Ação e Descrição */}
-              <div className="bg-[#0b0f19] p-4 rounded-xl border border-white/5">
+              <div className="bg-slate-950 p-4 rounded-xl border border-white/5">
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                   Ação Executada
                 </h4>
                 <p className="text-sm font-semibold text-white">{selectedLog.acao}</p>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed bg-[#101726] p-3 rounded-lg border border-white/5">
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed bg-slate-900 p-3 rounded-lg border border-white/5">
                   {selectedLog.detalhes}
                 </p>
               </div>
@@ -752,22 +752,22 @@ export default function Auditoria() {
               {(selectedLog.payloadAntes || selectedLog.payloadDepois) && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedLog.payloadAntes && (
-                    <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                       <span className="text-[10px] uppercase font-bold text-amber-400 block mb-1.5">
                         Estado Anterior (Snapshot)
                       </span>
-                      <pre className="text-[11px] font-mono text-slate-300 bg-[#101726] p-2.5 rounded-lg border border-white/5 overflow-x-auto max-h-40">
+                      <pre className="text-[11px] font-mono text-slate-300 bg-slate-900 p-2.5 rounded-lg border border-white/5 overflow-x-auto max-h-40">
                         {JSON.stringify(selectedLog.payloadAntes, null, 2)}
                       </pre>
                     </div>
                   )}
 
                   {selectedLog.payloadDepois && (
-                    <div className="bg-[#0b0f19] p-3 rounded-xl border border-white/5">
+                    <div className="bg-slate-950 p-3 rounded-xl border border-white/5">
                       <span className="text-[10px] uppercase font-bold text-emerald-400 block mb-1.5">
                         Estado Aplicado (Snapshot)
                       </span>
-                      <pre className="text-[11px] font-mono text-slate-300 bg-[#101726] p-2.5 rounded-lg border border-white/5 overflow-x-auto max-h-40">
+                      <pre className="text-[11px] font-mono text-slate-300 bg-slate-900 p-2.5 rounded-lg border border-white/5 overflow-x-auto max-h-40">
                         {JSON.stringify(selectedLog.payloadDepois, null, 2)}
                       </pre>
                     </div>
@@ -804,7 +804,7 @@ export default function Auditoria() {
       {/* Modal de Simulação / Registro de Evento Manual */}
       {modalSimularAberto && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl max-w-md w-full p-6 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2">
                 <ShieldCheck size={18} className="text-blue-400" />
@@ -824,7 +824,7 @@ export default function Auditoria() {
                 <select
                   value={novoEvento.modulo}
                   onChange={(e) => setNovoEvento({ ...novoEvento, modulo: e.target.value as any })}
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
                 >
                   <option value="SGP / ERP">SGP / ERP (MikWeb, IXC, Hubsoft)</option>
                   <option value="GenieACS (TR-069)">GenieACS (TR-069 CWMP)</option>
@@ -841,7 +841,7 @@ export default function Auditoria() {
                   value={novoEvento.acao}
                   onChange={(e) => setNovoEvento({ ...novoEvento, acao: e.target.value })}
                   placeholder="Ex: Atualização de Parâmetros de Conexão"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
                   required
                 />
               </div>
@@ -852,7 +852,7 @@ export default function Auditoria() {
                   value={novoEvento.detalhes}
                   onChange={(e) => setNovoEvento({ ...novoEvento, detalhes: e.target.value })}
                   placeholder="Descreva a alteração ou comando disparado..."
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500 h-20 resize-none"
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500 h-20 resize-none"
                   required
                 />
               </div>
@@ -863,7 +863,7 @@ export default function Auditoria() {
                   <select
                     value={novoEvento.severidade}
                     onChange={(e) => setNovoEvento({ ...novoEvento, severidade: e.target.value as any })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="info">Informativo</option>
                     <option value="atencao">Atenção</option>
@@ -877,7 +877,7 @@ export default function Auditoria() {
                     type="text"
                     value={novoEvento.usuario}
                     onChange={(e) => setNovoEvento({ ...novoEvento, usuario: e.target.value })}
-                    className="w-full bg-[#0b0f19] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>

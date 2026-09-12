@@ -640,23 +640,23 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
   };
 
   return (
-    <div className="flex-1 flex h-full bg-[#0b0f19] overflow-hidden relative font-sans">
+    <div className="flex-1 flex h-full bg-slate-950 overflow-hidden relative font-sans">
       
       {/* Toast Notifier */}
       {toastMessage && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#101726] text-white text-xs font-semibold px-4 py-2.5 rounded-xl  flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl  flex items-center gap-2 animate-in fade-in-50 zoom-in-95">
           <CheckCircle size={14} className="text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* COLUNA 1: Fila & Lista de Conversas Omnichannel */}
-      <aside className={`w-full md:w-80 lg:w-96 border-r border-white/10 bg-[#101726] flex flex-col z-10 shrink-0 ${
+      <aside className={`w-full md:w-80 lg:w-96 border-r border-white/10 bg-slate-900 flex flex-col z-10 shrink-0 ${
         activeChatId ? 'hidden md:flex' : 'flex'
       }`}>
         
         {/* Header de Filas com Filtros */}
-        <div className="p-4 border-b border-white/10 bg-[#101726]">
+        <div className="p-4 border-b border-white/10 bg-slate-900">
           <div className="flex items-center justify-between mb-3">
             <div>
               <h1 className="font-extrabold text-lg text-white font-outfit tracking-tight">
@@ -675,7 +675,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('meus')}
               className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'meus' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
+                filterQueue === 'meus' ? 'bg-slate-900 text-white font-bold' : 'hover:text-white'
               }`}
             >
               <span>Meus</span>
@@ -684,7 +684,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('fila_geral')}
               className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'fila_geral' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
+                filterQueue === 'fila_geral' ? 'bg-slate-900 text-white font-bold' : 'hover:text-white'
               }`}
             >
               <span>Espera</span>
@@ -693,7 +693,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('triagem_ia')}
               className={`flex-1 min-w-[80px] py-1.5 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-                filterQueue === 'triagem_ia' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
+                filterQueue === 'triagem_ia' ? 'bg-slate-900 text-white font-bold' : 'hover:text-white'
               }`}
             >
               <Sparkles size={12} className={filterQueue === 'triagem_ia' ? 'text-indigo-400' : 'text-slate-500'} />
@@ -703,7 +703,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             <button
               onClick={() => setFilterQueue('finalizados')}
               className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all ${
-                filterQueue === 'finalizados' ? 'bg-[#101726] text-white font-bold' : 'hover:text-white'
+                filterQueue === 'finalizados' ? 'bg-slate-900 text-white font-bold' : 'hover:text-white'
               }`}
             >
               <span>Fechados</span>
@@ -718,7 +718,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por cliente, CPF ou protocolo..." 
-              className="w-full pl-9 pr-4 py-2 bg-[#0b0f19] border border-white/10 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600 transition-all placeholder:text-slate-500"
+              className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-blue-600/40 focus:border-blue-600 transition-all placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -742,7 +742,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   className={`p-3.5 cursor-pointer transition-all border-l-4 ${
                     isSelected 
                       ? 'bg-blue-500/10/70 border-l-blue-600 ' 
-                      : 'hover:bg-[#0b0f19] border-l-transparent'
+                      : 'hover:bg-slate-950 border-l-transparent'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -796,7 +796,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
       {/* COLUNA 2: Janela Central de Conversa e Composer */}
       {activeChat ? (
-        <div className={`flex-1 flex-col bg-[#0b0f19] relative ${activeChatId ? 'flex' : 'hidden md:flex'} overflow-hidden`}>
+        <div className={`flex-1 flex-col bg-slate-950 relative ${activeChatId ? 'flex' : 'hidden md:flex'} overflow-hidden`}>
           
           {/* Header Superior do Atendimento */}
           <header className="h-16 border-b border-[#202c33] bg-[#202c33] px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 ">
@@ -867,7 +867,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all ${
                       isSgpDrawerOpen 
                         ? 'bg-blue-500/10 border-blue-300 text-blue-400' 
-                        : 'bg-[#101726] hover:bg-white/[0.02] border-white/10 text-slate-300'
+                        : 'bg-slate-900 hover:bg-white/[0.02] border-white/10 text-slate-300'
                     }`}
                     title="Painel 360 do Assinante no ERP SGP"
                   >
@@ -969,7 +969,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
             {/* COLUNA 3: Contexto 360 do Assinante & Ações SGP (Drawer Direito) */}
             {isSgpDrawerOpen && (
-              <aside className="w-80 lg:w-96 border-l border-white/10 bg-[#101726] overflow-y-auto p-4 space-y-4 shrink-0  animate-in slide-in-from-right-3 duration-200">
+              <aside className="w-80 lg:w-96 border-l border-white/10 bg-slate-900 overflow-y-auto p-4 space-y-4 shrink-0  animate-in slide-in-from-right-3 duration-200">
                 
                 {/* Header do Drawer */}
                 <div className="flex items-center justify-between pb-2 border-b border-white/10">
@@ -989,7 +989,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 1: Conexão & ONU ao Vivo */}
-                <div className="p-3.5 rounded-2xl bg-[#0b0f19] border border-white/10 space-y-2.5">
+                <div className="p-3.5 rounded-2xl bg-slate-950 border border-white/10 space-y-2.5">
                   <div className="flex justify-between items-center">
                     <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1">
                       <Wifi size={13} className="text-blue-400" /> Rede & Sinal Óptico
@@ -1000,11 +1000,11 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="p-2 bg-[#101726] rounded-xl border border-white/10">
+                    <div className="p-2 bg-slate-900 rounded-xl border border-white/10">
                       <span className="text-[10px] text-slate-400 block">Sinal ONU</span>
                       <span className="font-bold text-emerald-800 font-mono text-xs">{activeChat.status_conexao.sinal_onu}</span>
                     </div>
-                    <div className="p-2 bg-[#101726] rounded-xl border border-white/10">
+                    <div className="p-2 bg-slate-900 rounded-xl border border-white/10">
                       <span className="text-[10px] text-slate-400 block">Uptime</span>
                       <span className="font-bold text-slate-200 font-mono text-xs">{activeChat.status_conexao.uptime}</span>
                     </div>
@@ -1023,7 +1023,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
 
                   <button 
                     onClick={handleKickRadius}
-                    className="w-full py-1.5 bg-[#101726] hover:bg-white/[0.02] border border-white/10 text-slate-300 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
+                    className="w-full py-1.5 bg-slate-900 hover:bg-white/[0.02] border border-white/10 text-slate-300 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5 "
                   >
                     <RefreshCw size={12} className="text-slate-500" />
                     <span>Reautenticar Sessão (Kick)</span>
@@ -1031,7 +1031,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 2: Financeiro & PIX Instantâneo */}
-                <div className="p-3.5 rounded-2xl bg-[#0b0f19] border border-white/10 space-y-2.5">
+                <div className="p-3.5 rounded-2xl bg-slate-950 border border-white/10 space-y-2.5">
                   <div className="flex justify-between items-center">
                     <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1">
                       <CreditCard size={13} className="text-indigo-600" /> Financeiro / Mensalidade
@@ -1043,7 +1043,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-[#101726] rounded-xl border border-white/10 flex justify-between items-center">
+                  <div className="p-2.5 bg-slate-900 rounded-xl border border-white/10 flex justify-between items-center">
                     <div>
                       <span className="text-[10px] text-slate-400 block">Vencimento {activeChat.financeiro.vencimento}</span>
                       <span className="text-base font-extrabold text-white font-mono">
@@ -1074,7 +1074,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 3: Dados Cadastrais */}
-                <div className="p-3 bg-[#101726] rounded-2xl border border-white/10 text-xs space-y-1.5">
+                <div className="p-3 bg-slate-900 rounded-2xl border border-white/10 text-xs space-y-1.5">
                   <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wide block mb-1">
                     Dados do Contrato
                   </span>
@@ -1093,7 +1093,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 </div>
 
                 {/* Bloco 4: Endereço de Instalação & Rota Técnica */}
-                <div className="p-3 bg-[#101726] rounded-2xl border border-white/10 text-xs space-y-2.5">
+                <div className="p-3 bg-slate-900 rounded-2xl border border-white/10 text-xs space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wide flex items-center gap-1">
                       <MapPin size={12} className="text-blue-400" /> Endereço & Rota
@@ -1207,7 +1207,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
             {/* Caixa de Entrada e Envio */}
             <div className={`flex items-end gap-2 p-1.5 rounded-2xl border transition-all ${
               activeChat.status === 'triagem_ia'
-                ? 'bg-[#101726] border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.1)]'
+                ? 'bg-slate-900 border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.1)]'
                 : isInternalNote 
                   ? 'bg-[#3b2d13] border-amber-300' 
                   : 'bg-[#2a3942] border-transparent'
@@ -1253,8 +1253,8 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         </div>
       ) : (
         /* Estado Vazio */
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#0b0f19] text-slate-500 p-8 text-center">
-          <div className="w-16 h-16 bg-[#101726] rounded-2xl flex items-center justify-center mb-4 border border-white/10 ">
+        <div className="flex-1 flex flex-col items-center justify-center bg-slate-950 text-slate-500 p-8 text-center">
+          <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mb-4 border border-white/10 ">
             <MessageCircle size={28} className="text-slate-400" />
           </div>
           <h3 className="font-outfit text-lg text-slate-200 font-bold mb-1">
@@ -1271,10 +1271,10 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
         <>
           <div 
             onClick={() => setIsTabulating(false)} 
-            className="fixed inset-0 bg-[#0b0f19]/60 backdrop-blur-2xs z-50 animate-in fade-in-50"
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-2xs z-50 animate-in fade-in-50"
             aria-hidden="true"
           />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#101726] rounded-3xl p-6  border border-white/10 z-50 animate-in zoom-in-95 duration-150">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-slate-900 rounded-3xl p-6  border border-white/10 z-50 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div>
                 <h3 className="font-bold text-base text-white font-outfit">
@@ -1326,7 +1326,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                 <select 
                   value={tabulationData.categoria}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, categoria: e.target.value }))}
-                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="w-full p-2.5 bg-slate-950 border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
                 >
                   <option value="Suporte Técnico">Suporte Técnico N1</option>
                   <option value="Suporte Avançado N2">Suporte Avançado N2 (Fibra/NOC)</option>
@@ -1342,7 +1342,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   type="text"
                   value={tabulationData.motivo}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, motivo: e.target.value }))}
-                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="w-full p-2.5 bg-slate-950 border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30"
                 />
               </div>
 
@@ -1352,7 +1352,7 @@ RESOLUCAO: [resumo da solução dada em 1 ou 2 frases]`
                   rows={3}
                   value={tabulationData.resolucao}
                   onChange={(e) => setTabulationData(prev => ({ ...prev, resolucao: e.target.value }))}
-                  className="w-full p-2.5 bg-[#0b0f19] border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
+                  className="w-full p-2.5 bg-slate-950 border border-white/10 rounded-xl font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/30 resize-none"
                 />
               </div>
 

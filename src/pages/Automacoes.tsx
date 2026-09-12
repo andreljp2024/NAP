@@ -211,10 +211,10 @@ export default function Automacoes() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] text-slate-300 overflow-hidden font-sans">
+    <div className="flex-1 flex flex-col h-full bg-slate-950 text-slate-300 overflow-hidden font-sans">
       
       {/* HEADER DA PÁGINA */}
-      <div className="px-6 py-5 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 z-10">
+      <div className="px-6 py-5 border-b border-white/5 bg-slate-900/80 backdrop-blur-md flex flex-wrap justify-between items-center gap-4 z-10">
         <div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 ">
@@ -230,7 +230,7 @@ export default function Automacoes() {
           </div>
         </div>
         
-        <div className="flex items-center gap-2 bg-[#0b0f19] border border-white/5 p-1 rounded-xl ">
+        <div className="flex items-center gap-2 bg-slate-950 border border-white/5 p-1 rounded-xl ">
           <button 
             onClick={() => setActiveTab('playground')}
             className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
@@ -267,26 +267,26 @@ export default function Automacoes() {
       </div>
 
       {/* MÉTRICAS TOP */}
-      <div className="px-6 py-3 bg-[#0b0f19]/50 border-b border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs z-10">
-        <div className="flex items-center justify-between bg-[#101726] px-4 py-2.5 rounded-xl border border-white/5 ">
+      <div className="px-6 py-3 bg-slate-950/50 border-b border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs z-10">
+        <div className="flex items-center justify-between bg-slate-900 px-4 py-2.5 rounded-xl border border-white/5 ">
           <div className="flex items-center gap-2 text-slate-400">
             <Zap size={14} className="text-amber-400" /> Requisições Hoje
           </div>
           <span className="font-mono font-bold text-white">{metrics.requests_today} / {metrics.daily_limit}</span>
         </div>
-        <div className="flex items-center justify-between bg-[#101726] px-4 py-2.5 rounded-xl border border-white/5 ">
+        <div className="flex items-center justify-between bg-slate-900 px-4 py-2.5 rounded-xl border border-white/5 ">
           <div className="flex items-center gap-2 text-slate-400">
             <BarChart3 size={14} className="text-emerald-400" /> Tokens (Total)
           </div>
           <span className="font-mono font-bold text-white">{(metrics.total_tokens / 1000).toFixed(1)}k</span>
         </div>
-        <div className="flex items-center justify-between bg-[#101726] px-4 py-2.5 rounded-xl border border-white/5 ">
+        <div className="flex items-center justify-between bg-slate-900 px-4 py-2.5 rounded-xl border border-white/5 ">
           <div className="flex items-center gap-2 text-slate-400">
             <Cpu size={14} className="text-blue-400" /> RPM (Rate Limit)
           </div>
           <span className="font-mono font-bold text-white">{metrics.rpm_current} / {metrics.rpm_limit}</span>
         </div>
-        <div className="flex items-center justify-between bg-[#101726] px-4 py-2.5 rounded-xl border border-white/5 ">
+        <div className="flex items-center justify-between bg-slate-900 px-4 py-2.5 rounded-xl border border-white/5 ">
           <div className="flex items-center gap-2 text-slate-400">
             <CheckCircle2 size={14} className="text-emerald-400" /> Custo Mensal
           </div>
@@ -305,8 +305,8 @@ export default function Automacoes() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-220px)] min-h-[500px]">
               
               {/* Painel de Chat */}
-              <div className="lg:col-span-2 flex flex-col bg-[#101726] border border-white/5 rounded-3xl overflow-hidden ">
-                <div className="px-5 py-4 border-b border-white/5 bg-[#101726] flex items-center justify-between">
+              <div className="lg:col-span-2 flex flex-col bg-slate-900 border border-white/5 rounded-3xl overflow-hidden ">
+                <div className="px-5 py-4 border-b border-white/5 bg-slate-900 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-400 border border-indigo-500/20">
                       <Terminal size={16} />
@@ -321,13 +321,13 @@ export default function Automacoes() {
                   </button>
                 </div>
 
-                <div className="flex-1 p-5 overflow-y-auto space-y-5 bg-[#0b0f19]/30">
+                <div className="flex-1 p-5 overflow-y-auto space-y-5 bg-slate-950/30">
                   {chatHistory.map((msg, i) => (
                     <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                       <div className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed  ${
                         msg.role === 'user' 
                           ? 'bg-blue-600 text-white rounded-br-sm' 
-                          : 'bg-[#101726] border border-white/5 text-slate-300 rounded-bl-sm'
+                          : 'bg-slate-900 border border-white/5 text-slate-300 rounded-bl-sm'
                       }`}>
                         {msg.content}
                         
@@ -368,14 +368,14 @@ export default function Automacoes() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <div className="p-4 border-t border-white/5 bg-[#101726]">
+                <div className="p-4 border-t border-white/5 bg-slate-900">
                   <form onSubmit={handleRunAgent} className="flex gap-2">
                     <input 
                       type="text" 
                       value={promptInput}
                       onChange={e => setPromptInput(e.target.value)}
                       placeholder="Simule a mensagem de um cliente (ex: 'Minha internet caiu' ou 'Quero a fatura de agosto')"
-                      className="flex-1 px-4 py-3 bg-[#0b0f19] border border-white/10 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-white placeholder:text-slate-500 "
+                      className="flex-1 px-4 py-3 bg-slate-950 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-white placeholder:text-slate-500 "
                     />
                     <button 
                       type="submit"
@@ -390,7 +390,7 @@ export default function Automacoes() {
 
               {/* Dicas e Exemplos */}
               <div className="flex flex-col gap-6">
-                <div className="bg-[#101726] border border-white/5 rounded-3xl p-6  relative overflow-hidden">
+                <div className="bg-slate-900 border border-white/5 rounded-3xl p-6  relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-6 opacity-5">
                     <BrainCircuit size={100} />
                   </div>
@@ -400,13 +400,13 @@ export default function Automacoes() {
                   </p>
                   
                   <div className="space-y-2.5 relative z-10">
-                    <button onClick={() => setPromptInput("Minha internet tá muito lenta hoje")} className="w-full text-left text-xs bg-[#0b0f19] border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
+                    <button onClick={() => setPromptInput("Minha internet tá muito lenta hoje")} className="w-full text-left text-xs bg-slate-950 border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
                       <Wifi size={14} className="shrink-0" /> "Minha internet tá muito lenta hoje"
                     </button>
-                    <button onClick={() => setPromptInput("Preciso do PIX da fatura que venceu ontem")} className="w-full text-left text-xs bg-[#0b0f19] border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
+                    <button onClick={() => setPromptInput("Preciso do PIX da fatura que venceu ontem")} className="w-full text-left text-xs bg-slate-950 border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
                       <QrCode size={14} className="shrink-0" /> "Preciso do PIX da fatura que venceu"
                     </button>
-                    <button onClick={() => setPromptInput("Quero fazer o desbloqueio em confiança")} className="w-full text-left text-xs bg-[#0b0f19] border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
+                    <button onClick={() => setPromptInput("Quero fazer o desbloqueio em confiança")} className="w-full text-left text-xs bg-slate-950 border border-white/5 hover:border-indigo-500/30 p-3 rounded-xl text-slate-300 hover:text-indigo-400 transition-colors  flex items-center gap-2">
                       <Clock size={14} className="shrink-0" /> "Quero fazer o desbloqueio provisório"
                     </button>
                   </div>
@@ -442,15 +442,15 @@ export default function Automacoes() {
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col bg-[#101726] border border-white/5 rounded-2xl  overflow-hidden relative">
+              <div className="flex-1 flex flex-col bg-slate-900 border border-white/5 rounded-2xl  overflow-hidden relative">
                 <textarea 
                   value={systemPrompt}
                   onChange={e => setSystemPrompt(e.target.value)}
-                  className="flex-1 w-full bg-[#0b0f19]/50 p-6 text-sm text-slate-300 resize-none outline-none focus:ring-2 focus:ring-indigo-500/50 leading-loose placeholder:text-slate-600 font-mono"
+                  className="flex-1 w-full bg-slate-950/50 p-6 text-sm text-slate-300 resize-none outline-none focus:ring-2 focus:ring-indigo-500/50 leading-loose placeholder:text-slate-600 font-mono"
                   placeholder="Ex: Você é um assistente virtual de um provedor de internet..."
                 />
                 
-                <div className="p-4 bg-[#101726] border-t border-white/5 flex justify-between items-center">
+                <div className="p-4 bg-slate-900 border-t border-white/5 flex justify-between items-center">
                   <div className="text-xs text-slate-500 flex items-center gap-2">
                     <Sparkles size={14} className="text-amber-400" />
                     Utilize markdown para estruturar. Aproximadamente {systemPrompt.length} caracteres.
@@ -477,17 +477,17 @@ export default function Automacoes() {
                   <h2 className="text-lg font-bold text-white font-outfit">Skills Habilitadas (SGP Integration)</h2>
                   <p className="text-xs text-slate-400">Ferramentas que o modelo pode chamar autonomamente para buscar dados ou realizar ações.</p>
                 </div>
-                <button className="bg-[#101726] border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ">
+                <button className="bg-slate-900 border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ">
                   <Database size={14} /> Sincronizar Endpoints SGP
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {tools.map(tool => (
-                  <div key={tool.id} className="bg-[#101726] border border-white/5 rounded-2xl p-5 hover:border-indigo-500/30 transition-all group ">
+                  <div key={tool.id} className="bg-slate-900 border border-white/5 rounded-2xl p-5 hover:border-indigo-500/30 transition-all group ">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#0b0f19] border border-white/5 rounded-xl flex items-center justify-center text-indigo-400  group-hover:bg-indigo-500/10 transition-colors">
+                        <div className="w-10 h-10 bg-slate-950 border border-white/5 rounded-xl flex items-center justify-center text-indigo-400  group-hover:bg-indigo-500/10 transition-colors">
                           <Wrench size={18} />
                         </div>
                         <div>
@@ -497,12 +497,12 @@ export default function Automacoes() {
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-9 h-5 bg-[#0b0f19] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500 border border-white/10"></div>
+                        <div className="w-9 h-5 bg-slate-950 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500 border border-white/10"></div>
                       </label>
                     </div>
                     <p className="text-xs text-slate-400 mb-4 h-10">{tool.description}</p>
                     
-                    <div className="bg-[#0b0f19]/80 rounded-xl p-3 border border-white/5">
+                    <div className="bg-slate-950/80 rounded-xl p-3 border border-white/5">
                       <p className="text-[10px] text-slate-500 font-bold mb-2 uppercase tracking-wider">Parameters Schema</p>
                       <div className="space-y-1">
                         {Object.entries(tool.parameters).map(([key, type]) => (
@@ -526,7 +526,7 @@ export default function Automacoes() {
             <div className="max-w-4xl mx-auto h-full space-y-4">
               <h2 className="text-lg font-bold text-white font-outfit mb-2">Integrações de Canais (Omnichannel)</h2>
               
-              <div className="bg-[#101726] border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-emerald-500/30 transition-all">
+              <div className="bg-slate-900 border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-emerald-500/30 transition-all">
                 <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-500 shrink-0">
                   <MessageSquare size={32} />
                 </div>
@@ -536,13 +536,13 @@ export default function Automacoes() {
                     <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">ATIVO</span>
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-4">A IA responde automaticamente números que chamarem no WABA oficial. Quando não conseguir resolver, transfere o chat (handoff) para o Inbox Unificado.</p>
-                  <button className="text-xs bg-[#0b0f19] border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-lg font-bold transition-all ">
+                  <button className="text-xs bg-slate-950 border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-lg font-bold transition-all ">
                     Configurar Webhooks (Meta)
                   </button>
                 </div>
               </div>
 
-              <div className="bg-[#101726] border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-indigo-500/30 transition-all">
+              <div className="bg-slate-900 border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-indigo-500/30 transition-all">
                 <div className="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 shrink-0">
                   <PhoneCall size={32} />
                 </div>
@@ -558,7 +558,7 @@ export default function Automacoes() {
                 </div>
               </div>
 
-              <div className="bg-[#101726] border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-blue-500/30 transition-all">
+              <div className="bg-slate-900 border border-white/5 rounded-3xl p-6  flex flex-col md:flex-row gap-6 items-center hover:border-blue-500/30 transition-all">
                 <div className="w-16 h-16 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 shrink-0">
                   <BrainCircuit size={32} />
                 </div>
@@ -568,7 +568,7 @@ export default function Automacoes() {
                     <span className="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-500/20">ATIVO</span>
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-4">O Widget flutuante no Portal do Assinante já está conectado à Inteligência Artificial. Clientes logados enviam requisições autenticadas, permitindo comandos seguros no SGP sem pedir CPF.</p>
-                  <button className="text-xs bg-[#0b0f19] border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-lg font-bold transition-all ">
+                  <button className="text-xs bg-slate-950 border border-white/10 hover:bg-white/5 text-slate-300 px-4 py-2 rounded-lg font-bold transition-all ">
                     Customizar Widget
                   </button>
                 </div>

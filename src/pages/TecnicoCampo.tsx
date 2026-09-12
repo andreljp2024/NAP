@@ -198,9 +198,9 @@ export default function TecnicoCampo() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 p-4 md:p-6 space-y-6 pb-24">
+    <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-6 space-y-6 pb-24">
       {/* Header Mobile-First do Técnico de Campo */}
-      <div className="bg-[#101726] border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-slate-900 border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
             <Wrench size={24} />
@@ -219,7 +219,7 @@ export default function TecnicoCampo() {
         </div>
 
         {/* Telemetria GPS em Tempo Real */}
-        <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 px-4 py-2.5 rounded-xl w-full md:w-auto justify-between">
+        <div className="flex items-center gap-3 bg-slate-950 border border-white/10 px-4 py-2.5 rounded-xl w-full md:w-auto justify-between">
           <div className="flex items-center gap-2 text-xs">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -279,7 +279,7 @@ export default function TecnicoCampo() {
                 className={`p-4 rounded-2xl border transition-all cursor-pointer ${
                   selectedOS?.id === os.id 
                     ? 'bg-[#151f33] border-blue-500/50 shadow-lg' 
-                    : 'bg-[#101726] border-white/5 hover:border-white/20'
+                    : 'bg-slate-900 border-white/5 hover:border-white/20'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2 mb-2">
@@ -319,7 +319,7 @@ export default function TecnicoCampo() {
         {/* Coluna Direita: Painel de Atendimento da OS Selecionada */}
         <div className="lg:col-span-7">
           {selectedOS ? (
-            <div className="bg-[#101726] border border-white/10 rounded-2xl p-5 md:p-6 space-y-6">
+            <div className="bg-slate-900 border border-white/10 rounded-2xl p-5 md:p-6 space-y-6">
               {/* Header da OS */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
                 <div>
@@ -352,7 +352,7 @@ export default function TecnicoCampo() {
               </div>
 
               {/* Endereço & Ações Rápidas de Deslocamento */}
-              <div className="bg-[#0b0f19] border border-white/10 rounded-xl p-4 space-y-3">
+              <div className="bg-slate-950 border border-white/10 rounded-xl p-4 space-y-3">
                 <div className="flex items-start gap-2.5">
                   <MapPin size={18} className="text-red-400 shrink-0 mt-0.5" />
                   <div>
@@ -406,7 +406,7 @@ export default function TecnicoCampo() {
               </div>
 
               {/* Ferramenta TR-069: Diagnóstico Óptico in loco */}
-              <div className="bg-[#0b0f19] border border-white/10 rounded-xl p-4 space-y-3">
+              <div className="bg-slate-950 border border-white/10 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Radio size={16} className="text-blue-400" />
@@ -425,7 +425,7 @@ export default function TecnicoCampo() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div className="p-3 bg-[#101726] border border-white/5 rounded-xl">
+                  <div className="p-3 bg-slate-900 border border-white/5 rounded-xl">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Potência RX Óptica</span>
                     <span className={`text-lg font-mono font-bold ${
                       (selectedOS.sinal_optico_dbm || 0) < -26 ? 'text-red-400' : 'text-emerald-400'
@@ -435,7 +435,7 @@ export default function TecnicoCampo() {
                     <span className="text-[10px] text-slate-500 block">Ideal: -18 a -24 dBm</span>
                   </div>
 
-                  <div className="p-3 bg-[#101726] border border-white/5 rounded-xl">
+                  <div className="p-3 bg-slate-900 border border-white/5 rounded-xl">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Serial da ONU</span>
                     <span className="text-xs font-mono font-bold text-slate-200 block truncate">
                       {selectedOS.onu_serial || 'ZTEG12345678'}
@@ -443,7 +443,7 @@ export default function TecnicoCampo() {
                     <span className="text-[10px] text-emerald-400">Provisionada TR-069</span>
                   </div>
 
-                  <div className="p-3 bg-[#101726] border border-white/5 rounded-xl col-span-2 sm:col-span-1">
+                  <div className="p-3 bg-slate-900 border border-white/5 rounded-xl col-span-2 sm:col-span-1">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">MAC da CPE</span>
                     <span className="text-xs font-mono font-bold text-slate-200 block truncate">
                       {selectedOS.onu_mac || 'E0:67:B3:91:AA:12'}
@@ -454,7 +454,7 @@ export default function TecnicoCampo() {
               </div>
 
               {/* Checklist de Validação em Campo */}
-              <div className="bg-[#0b0f19] border border-white/10 rounded-xl p-4 space-y-3">
+              <div className="bg-slate-950 border border-white/10 rounded-xl p-4 space-y-3">
                 <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                   Checklist de Conclusão Técnica
                 </h4>
@@ -503,8 +503,8 @@ export default function TecnicoCampo() {
       {/* Modal de Assinatura e Foto (Comprovação) */}
       {showAssinaturaModal && selectedOS && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#101726] border border-white/10 rounded-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#0b0f19]">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-950">
               <h3 className="font-bold text-white flex items-center gap-2">
                 <PenTool size={18} className="text-emerald-400" />
                 Comprovação de OS
@@ -538,7 +538,7 @@ export default function TecnicoCampo() {
                   <label className="text-xs font-bold text-slate-300 uppercase">2. Assinatura do Cliente</label>
                   <button onClick={clearSignature} className="text-xs text-slate-400 hover:text-white">Limpar</button>
                 </div>
-                <div className="bg-[#0b0f19] border border-white/10 rounded-xl overflow-hidden relative touch-none">
+                <div className="bg-slate-950 border border-white/10 rounded-xl overflow-hidden relative touch-none">
                   <canvas 
                     ref={canvasRef}
                     width={400}
@@ -559,7 +559,7 @@ export default function TecnicoCampo() {
               </div>
             </div>
 
-            <div className="p-4 border-t border-white/10 bg-[#0b0f19]">
+            <div className="p-4 border-t border-white/10 bg-slate-950">
               <button
                 onClick={() => {
                   saveSignature();

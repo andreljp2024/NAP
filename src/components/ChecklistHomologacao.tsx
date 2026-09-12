@@ -823,7 +823,7 @@ export default function ChecklistHomologacao() {
     <div id="checklist-homologacao-container" className="space-y-6 text-slate-200">
       
       {/* PAINEL DE CABEÇALHO & PROGRESSO GERAL CONSOLIDADO */}
-      <div className="p-6 bg-[#0b0f19] border border-white/5 rounded-3xl space-y-6 shadow-xl">
+      <div className="p-6 bg-slate-950 border border-white/5 rounded-3xl space-y-6 shadow-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/5">
           <div>
             <div className="flex items-center gap-2">
@@ -1009,7 +1009,7 @@ export default function ChecklistHomologacao() {
       </div>
 
       {/* BARRA DE FILTROS, BUSCA & VISIBILIDADE */}
-      <div className="p-4 bg-[#0b0f19] border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="p-4 bg-slate-950 border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Filtros Rápidos de Status */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
@@ -1090,10 +1090,10 @@ export default function ChecklistHomologacao() {
               id={`item-${item.id}`}
               className={`rounded-2xl border transition-all ${
                 item.progresso === 100
-                  ? 'bg-[#0b0f19] border-white/5 hover:border-white/10'
+                  ? 'bg-slate-950 border-white/5 hover:border-white/10'
                   : item.status === 'pendente_provedor'
-                  ? 'bg-[#0b0f19] border-amber-500/20 hover:border-amber-500/30'
-                  : 'bg-[#0b0f19] border-rose-500/20 hover:border-rose-500/30'
+                  ? 'bg-slate-950 border-amber-500/20 hover:border-amber-500/30'
+                  : 'bg-slate-950 border-rose-500/20 hover:border-rose-500/30'
               }`}
             >
               {/* Linha Principal do Item */}
@@ -1230,7 +1230,7 @@ export default function ChecklistHomologacao() {
 
                   {/* Comando / Rota e Critério de Aceite */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                    <div className="p-3 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+                    <div className="p-3 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] uppercase font-bold text-slate-400">Comando / Rota de Teste:</span>
                         <button
@@ -1251,7 +1251,7 @@ export default function ChecklistHomologacao() {
                       </code>
                     </div>
 
-                    <div className="p-3 bg-[#0b0f19] border border-white/5 rounded-xl space-y-1">
+                    <div className="p-3 bg-slate-950 border border-white/5 rounded-xl space-y-1">
                       <span className="text-[10px] uppercase font-bold text-emerald-400 block">Critério de Aceite Formal:</span>
                       <p className="text-slate-300 leading-relaxed font-sans">
                         {item.criterioAceite}
@@ -1312,7 +1312,7 @@ export default function ChecklistHomologacao() {
         })}
 
         {itensFiltrados.length === 0 && (
-          <div className="p-8 text-center bg-[#0b0f19] border border-white/5 rounded-2xl text-slate-400">
+          <div className="p-8 text-center bg-slate-950 border border-white/5 rounded-2xl text-slate-400">
             <ClipboardCheck size={32} className="mx-auto mb-2 text-slate-600" />
             <p className="text-sm font-semibold text-white">Nenhum item encontrado com os filtros atuais.</p>
             <p className="text-xs text-slate-500 mt-1">Experimente limpar o campo de busca ou selecionar "Todos os Status".</p>

@@ -95,12 +95,12 @@ export default function Layout() {
   };
 
   return (
-    <div className="flex h-screen bg-[#0b0f19] text-slate-300 font-sans overflow-hidden">
+    <div className="flex h-screen bg-slate-950 text-slate-300 font-sans overflow-hidden">
       {/* Backdrop para Mobile */}
       {isMobileOpen && (
         <div 
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 bg-[#0b0f19]/80 backdrop-blur-xs z-40 md:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-40 md:hidden transition-opacity"
           aria-hidden="true"
         />
       )}
@@ -108,7 +108,7 @@ export default function Layout() {
       {/* Sidebar Modernizada (Desktop Collapsible + Mobile Drawer) */}
       <aside 
         className={`
-          fixed inset-y-0 left-0 z-50 bg-[#070b14] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-50 bg-slate-950 border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out
           md:static md:translate-x-0
           ${isMobileOpen ? 'translate-x-0  w-72' : '-translate-x-full md:translate-x-0'}
           ${isCollapsed ? 'md:w-[72px]' : 'md:w-64'}
@@ -133,7 +133,7 @@ export default function Layout() {
           {/* Botão de Fechar no Mobile */}
           <button 
             onClick={() => setIsMobileOpen(false)}
-            className="md:hidden p-1.5 text-slate-400 hover:text-slate-200 hover:bg-[#101726]/5 rounded-lg transition-colors"
+            className="md:hidden p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900/5 rounded-lg transition-colors"
             title="Fechar menu"
           >
             <X size={20} />
@@ -142,7 +142,7 @@ export default function Layout() {
           {/* Botão de Recolher no Desktop */}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className={`hidden md:flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-[#101726]/5 border border-white/5 transition-colors ${isCollapsed ? 'mx-auto' : ''}`}
+            className={`hidden md:flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900/5 border border-white/5 transition-colors ${isCollapsed ? 'mx-auto' : ''}`}
             title={isCollapsed ? "Expandir menu (Ctrl+B)" : "Recolher menu (Ctrl+B)"}
           >
             {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -245,10 +245,10 @@ export default function Layout() {
         )}
         
         {/* Perfil do Usuário e Ramal Conectado */}
-        <div className={`p-3 border-t border-white/5 bg-[#0b0f19]/80 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
+        <div className={`p-3 border-t border-white/5 bg-slate-950/80 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
           <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="relative shrink-0">
-              <div className="w-9 h-9 rounded-xl bg-[#101726] flex items-center justify-center text-slate-300 font-bold border border-white/5  text-sm">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-slate-300 font-bold border border-white/5  text-sm">
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : 'JD'}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" title="Disponível no Asterisk"></div>
@@ -280,7 +280,7 @@ export default function Layout() {
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         
         {/* Topbar Moderno e Responsivo */}
-        <header className="h-16 border-b border-white/5 bg-[#0b0f19]/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
+        <header className="h-16 border-b border-white/5 bg-slate-950/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
           
           {/* Esquerda: Botão Mobile + Título da Página / Breadcrumb */}
           <div className="flex items-center gap-3">
@@ -359,7 +359,7 @@ export default function Layout() {
         <CTIReverso />
 
         {/* Conteúdo Dinâmico das Rotas */}
-        <main className="flex-1 overflow-hidden relative flex flex-col bg-[#0b0f19]">
+        <main className="flex-1 overflow-hidden relative flex flex-col bg-slate-950">
           <Outlet />
         </main>
       </div>
@@ -416,7 +416,7 @@ function NavItem({ to, icon, label, badge, isCollapsed }: NavItemProps) {
 
           {/* Tooltip Flutuante elegante quando recolhido (Modo Desktop) */}
           {isCollapsed && (
-            <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-[#101726] border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap  z-50 pointer-events-none flex items-center gap-2">
+            <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-900 border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap  z-50 pointer-events-none flex items-center gap-2">
               <span>{label}</span>
               {badge && (
                 <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[9px] px-1.5 py-0.5 rounded font-bold">

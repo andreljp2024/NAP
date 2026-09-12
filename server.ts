@@ -3221,7 +3221,7 @@ const callGenieAcs = async (path, options = {}) => {
   const url = `${acsUrl}${path}`;
   const res = await fetch(url, {
     ...options,
-    headers: { ...getGenieAcsHeaders(), ...options.headers }
+    headers: { ...getGenieAcsHeaders(), ...(options as any).headers }
   });
   if (!res.ok) throw new Error(`GenieACS API error: ${res.status} ${res.statusText}`);
   if (res.status === 204) return null;

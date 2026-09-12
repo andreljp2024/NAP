@@ -41,8 +41,8 @@ export default function CRM() {
   });
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0b0f19] overflow-hidden relative">
-      <div className="p-6 border-b border-white/5 bg-[#101726]/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-10">
+    <div className="flex-1 flex flex-col h-full bg-slate-950 overflow-hidden relative">
+      <div className="p-6 border-b border-white/5 bg-slate-900/80 backdrop-blur-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-10">
         <div>
           <h1 className="text-2xl font-bold text-white font-outfit">Base de Clientes (CRM)</h1>
           <p className="text-sm text-slate-400 mt-1">Gestão de assinantes, consulta avançada ao SGP e ações financeiras em tempo real.</p>
@@ -54,7 +54,7 @@ export default function CRM() {
               onClick={() => setCrmView('tabela')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 crmView === 'tabela' 
-                  ? 'bg-[#101726] text-white ' 
+                  ? 'bg-slate-900 text-white ' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -83,7 +83,7 @@ export default function CRM() {
                   setLoading(false);
                 });
             }}
-            className="flex items-center gap-2 bg-[#101726] hover:bg-[#0b0f19] border border-white/5 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors "
+            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-950 border border-white/5 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors "
           >
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Sync SGP
           </button>
@@ -115,8 +115,8 @@ export default function CRM() {
             />
           </div>
         ) : (
-          <div className="bg-[#101726] rounded-2xl border border-white/5   overflow-hidden flex flex-col">
-            <div className="p-5 border-b border-white/5 bg-[#101726] flex gap-4 items-center">
+          <div className="bg-slate-900 rounded-2xl border border-white/5   overflow-hidden flex flex-col">
+            <div className="p-5 border-b border-white/5 bg-slate-900 flex gap-4 items-center">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-4 top-3 text-slate-500" size={18} />
                 <input 
@@ -124,17 +124,17 @@ export default function CRM() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar por nome, CPF/CNPJ ou telefone..." 
-                  className="w-full pl-11 pr-4 py-2.5 bg-[#0b0f19] border border-white/5 rounded-lg text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 placeholder:text-slate-500 transition-all "
+                  className="w-full pl-11 pr-4 py-2.5 bg-slate-950 border border-white/5 rounded-lg text-sm text-white outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 placeholder:text-slate-500 transition-all "
                 />
               </div>
-              <button className="flex items-center gap-2 bg-[#0b0f19] border border-white/5 text-slate-400 hover:bg-white/5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
+              <button className="flex items-center gap-2 bg-slate-950 border border-white/5 text-slate-400 hover:bg-white/5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors">
                 <Filter size={16} /> Filtros
               </button>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-400">
-                <thead className="bg-[#101726] text-slate-500 font-bold uppercase tracking-wider text-[11px] border-b border-white/5">
+                <thead className="bg-slate-900 text-slate-500 font-bold uppercase tracking-wider text-[11px] border-b border-white/5">
                   <tr>
                     <th className="px-5 py-4">ID SGP</th>
                     <th className="px-5 py-4">Nome / Razão Social</th>
@@ -146,7 +146,7 @@ export default function CRM() {
                     <th className="px-5 py-4 text-center">Ações SGP</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 bg-[#101726]">
+                <tbody className="divide-y divide-slate-800/60 bg-slate-900">
                   {loading ? (
                     <tr><td colSpan={7} className="text-center py-8 text-slate-500">Carregando contatos...</td></tr>
                   ) : filteredContatos.length === 0 ? (
@@ -253,7 +253,7 @@ export default function CRM() {
                             </button>
                             <button 
                               onClick={() => setSelectedContato(contato)}
-                              className="px-2.5 py-1.5 bg-[#0b0f19] hover:bg-white/5 text-slate-400 border border-white/5 rounded-lg text-xs font-semibold transition-colors"
+                              className="px-2.5 py-1.5 bg-slate-950 hover:bg-white/5 text-slate-400 border border-white/5 rounded-lg text-xs font-semibold transition-colors"
                               title="Ver ficha 360"
                             >
                               Ficha
@@ -267,11 +267,11 @@ export default function CRM() {
               </table>
             </div>
             
-            <div className="p-4 border-t border-white/5 bg-[#101726] flex items-center justify-between text-xs text-slate-500 font-medium">
+            <div className="p-4 border-t border-white/5 bg-slate-900 flex items-center justify-between text-xs text-slate-500 font-medium">
               <span>Mostrando {filteredContatos.length} de {contatos.length} contatos</span>
               <div className="flex gap-2">
-                <button className="px-4 py-1.5 bg-[#0b0f19] border border-white/5 rounded-lg hover:bg-white/5 transition-colors text-slate-400">Anterior</button>
-                <button className="px-4 py-1.5 bg-[#0b0f19] border border-white/5 rounded-lg hover:bg-white/5 transition-colors text-slate-400">Próxima</button>
+                <button className="px-4 py-1.5 bg-slate-950 border border-white/5 rounded-lg hover:bg-white/5 transition-colors text-slate-400">Anterior</button>
+                <button className="px-4 py-1.5 bg-slate-950 border border-white/5 rounded-lg hover:bg-white/5 transition-colors text-slate-400">Próxima</button>
               </div>
             </div>
           </div>
@@ -283,11 +283,11 @@ export default function CRM() {
         <>
           <div 
             onClick={() => setSelectedContato(null)} 
-            className="fixed inset-0 bg-[#0b0f19]/40 backdrop-blur-2xs z-40 md:hidden"
+            className="fixed inset-0 bg-slate-950/40 backdrop-blur-2xs z-40 md:hidden"
             aria-hidden="true"
           />
-          <div className="absolute top-0 right-0 h-full w-full sm:max-w-xl bg-[#101726]  border-l border-white/5 animate-in slide-in-from-right flex flex-col z-50">
-          <div className="p-6 border-b border-white/5 bg-[#101726] flex justify-between items-start">
+          <div className="absolute top-0 right-0 h-full w-full sm:max-w-xl bg-slate-900  border-l border-white/5 animate-in slide-in-from-right flex flex-col z-50">
+          <div className="p-6 border-b border-white/5 bg-slate-900 flex justify-between items-start">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <h2 className="text-xl font-bold text-white font-outfit">{selectedContato.nome}</h2>
@@ -358,7 +358,7 @@ export default function CRM() {
               <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
                 <Phone size={16} className="text-blue-400" /> Histórico PABX (FreePBX)
               </h3>
-              <div className="bg-[#0b0f19] border border-white/5 rounded-xl divide-y divide-white/5 ">
+              <div className="bg-slate-950 border border-white/5 rounded-xl divide-y divide-white/5 ">
                 <div className="p-4 flex justify-between items-center hover:bg-white/5/40 transition-colors">
                   <div className="flex gap-3 items-center">
                     <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-200 flex items-center justify-center">
@@ -396,7 +396,7 @@ export default function CRM() {
               <h3 className="font-bold text-white font-outfit mb-3 text-sm flex items-center gap-2">
                 <Trello size={16} className="text-blue-400" /> Histórico de Chamados
               </h3>
-              <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-4  hover:border-slate-600 transition-colors">
+              <div className="bg-slate-950 border border-white/5 rounded-xl p-4  hover:border-slate-600 transition-colors">
                 <div className="flex justify-between items-start mb-3">
                   <span className="text-[10px] uppercase tracking-wider font-bold text-blue-400 bg-blue-600/10 border border-blue-500/20 px-2 py-0.5 rounded">Suporte</span>
                   <span className="text-xs font-medium text-slate-500">Há 2 dias</span>
@@ -407,13 +407,13 @@ export default function CRM() {
             </div>
           </div>
           
-          <div className="p-5 border-t border-white/5 bg-[#101726] flex gap-3 z-10">
+          <div className="p-5 border-t border-white/5 bg-slate-900 flex gap-3 z-10">
             <button 
               onClick={() => {
                 handleOpenSgpConsulta(selectedContato.id);
                 setSelectedContato(null);
               }}
-              className="flex-1 bg-[#0b0f19] hover:bg-white/5 border border-white/5 text-slate-300 px-4 py-3 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 bg-slate-950 hover:bg-white/5 border border-white/5 text-slate-300 px-4 py-3 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
             >
               <Zap size={14} className="text-blue-400" />
               <span>Abrir no SGP</span>

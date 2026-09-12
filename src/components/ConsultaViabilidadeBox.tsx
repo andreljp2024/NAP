@@ -88,7 +88,7 @@ export default function ConsultaViabilidadeBox({
   return (
     <div className={`w-full max-w-2xl mx-auto rounded-3xl p-6 sm:p-8 border shadow-2xl transition-all ${
       isDark 
-        ? 'bg-[#101726]/90 border-white/10 backdrop-blur-xl text-white' 
+        ? 'bg-slate-900/90 border-white/10 backdrop-blur-xl text-white' 
         : 'bg-white border-slate-200 text-slate-900'
     }`}>
       <div className="flex items-center gap-3 mb-4">
@@ -113,7 +113,7 @@ export default function ConsultaViabilidadeBox({
             required
             className={`w-full px-4 py-3.5 rounded-2xl border text-sm font-mono outline-none transition-all ${
               isDark 
-                ? 'bg-[#0b0f19] border-white/10 text-white placeholder:text-slate-600 focus:border-blue-500' 
+                ? 'bg-slate-950 border-white/10 text-white placeholder:text-slate-600 focus:border-blue-500' 
                 : 'bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-600'
             }`}
           />
