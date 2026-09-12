@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { DivIcon, Icon } from 'leaflet';
 import { 
   Search, Filter, MapPin, Router, Activity, 
-  CheckCircle2, XCircle, AlertTriangle, RefreshCw, Signal, X
+  CheckCircle2, XCircle, AlertTriangle, RefreshCw, Signal, X, Maximize, Minimize, Crosshair
 } from 'lucide-react';
 
 // Correção para ícones padrão do Leaflet no React
@@ -85,6 +85,15 @@ const createCustomIcon = (status: 'online' | 'offline' | 'alerta') => {
   });
 };
 
+// Componente para atualizar o centro do mapa dinamicamente
+const MapController = ({ center }: { center: [number, number] }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, 14, { animate: true, duration: 1.5 });
+  }, [center, map]);
+  return null;
+};
+
 export default function MapaRede() {
   const centralPos = { lat: -23.5505, lng: -46.6333 }; // São Paulo
   const [onts, setOnts] = useState<OntGeoNode[]>([]);
@@ -92,6 +101,11 @@ export default function MapaRede() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'todos' | 'online' | 'alerta' | 'offline'>('todos');
   const [selectedOnt, setSelectedOnt] = useState<OntGeoNode | null>(null);
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([centralPos.lat, centralPos.lng]);
+  const [locationQuery, setLocationQuery] = useState('');
+  const [searchingLocation, setSearchingLocation] = useState(false);
 
   useEffect(() => {
     // Simula carregamento do banco de dados (GenieACS + CRM Geocoding)
@@ -121,8 +135,27 @@ export default function MapaRede() {
     };
   }, [onts]);
 
+  const handleLocationSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!locationQuery) return;
+    setSearchingLocation(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationQuery)}&countrycodes=br`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        setMapCenter([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+      } else {
+        alert("Localização/CEP não encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro na busca de localização:", error);
+    } finally {
+      setSearchingLocation(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col h-full bg-slate-950 relative">
+    <div className={isFullScreen ? "fixed inset-0 z-[999] flex flex-col bg-slate-950" : "flex flex-col h-full bg-slate-950 relative"}>
       {/* HEADER DE CONTROLE */}
       <div className="p-6 border-b border-white/5 bg-slate-900/90 backdrop-blur-md z-20 shadow-md">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
@@ -153,7 +186,8 @@ export default function MapaRede() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex flex-col xl:flex-row gap-4 items-center">
+          {/* Busca ONTs */}
           <div className="relative flex-1 w-full">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search size={18} className="text-slate-500" />
@@ -162,7 +196,7 @@ export default function MapaRede() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar por Nome do Cliente, MAC ou ID da ONT..."
+              placeholder="Buscar por Nome, MAC ou ID..."
               className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
             />
             {searchTerm && (
@@ -175,18 +209,47 @@ export default function MapaRede() {
             )}
           </div>
           
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter size={18} className="text-slate-400" />
+          {/* Busca Localidade / CEP */}
+          <form onSubmit={handleLocationSearch} className="relative flex-1 w-full">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <MapPin size={18} className="text-slate-500" />
+            </div>
+            <input
+              type="text"
+              value={locationQuery}
+              onChange={(e) => setLocationQuery(e.target.value)}
+              placeholder="Buscar Endereço ou CEP..."
+              className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            <button 
+              type="submit"
+              disabled={searchingLocation}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-blue-500 hover:text-blue-400"
+            >
+              {searchingLocation ? <RefreshCw size={16} className="animate-spin" /> : <Crosshair size={16} />}
+            </button>
+          </form>
+
+          {/* Filtro & Fullscreen */}
+          <div className="flex items-center gap-2 w-full xl:w-auto">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 flex-1 sm:w-48 appearance-none"
+              className="bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 flex-1 xl:w-48 appearance-none"
             >
               <option value="todos">Todos os Status</option>
               <option value="online">Somente Online</option>
               <option value="alerta">Somente Alertas</option>
               <option value="offline">Somente Offline</option>
             </select>
+            
+            <button
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              className="bg-slate-800 hover:bg-slate-700 text-white p-2.5 rounded-xl border border-white/10 transition-colors flex-shrink-0"
+              title={isFullScreen ? "Sair da Tela Cheia" : "Tela Cheia"}
+            >
+              {isFullScreen ? <Minimize size={20} /> : <Maximize size={20} />}
+            </button>
           </div>
         </div>
       </div>
@@ -257,6 +320,7 @@ export default function MapaRede() {
           zoomControl={false}
           className="z-10"
         >
+          <MapController center={mapCenter} />
           {/* Usando o CartoDB Dark Matter para combinar com o tema dark do sistema */}
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
