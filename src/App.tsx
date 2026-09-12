@@ -27,6 +27,7 @@ import MapaRede from "./pages/MapaRede";
 import UsuariosHierarquia from "./pages/UsuariosHierarquia";
 import TecnicoCampo from "./pages/TecnicoCampo";
 import Auditoria from "./pages/Auditoria";
+import SetupWizard from "./pages/SetupWizard";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/setup" element={<SetupWizard />} />
             <Route path="/login" element={<Login />} />
 
             {/* Operador / Admin Routes */}

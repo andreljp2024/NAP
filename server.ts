@@ -4756,6 +4756,24 @@ Solicitação do assinante: "${prompt}"`;
     }
   });
 
+  // Setup Wizard Endpoints
+  app.post("/api/setup/install-genieacs", (req, res) => {
+    const { exec } = require("child_process");
+    exec("bash install_genieacs.sh", (error: any, stdout: any, stderr: any) => {
+      if (error) {
+        console.error(`GenieACS Install Error: ${error.message}`);
+        return res.status(500).json({ error: error.message });
+      }
+      res.json({ success: true, logs: stdout });
+    });
+  });
+
+  app.post("/api/setup/finish", (req, res) => {
+    const { adminEmail, adminPassword, localIpRange, domain } = req.body;
+    console.log(`[SETUP] Guardando configs para ${domain} e Range ${localIpRange}`);
+    res.json({ success: true });
+  });
+
   if (!process.env.VERCEL && process.env.NODE_ENV === "production") {
   const distPath = path.join(process.cwd(), "dist");
   app.use(express.static(distPath));
