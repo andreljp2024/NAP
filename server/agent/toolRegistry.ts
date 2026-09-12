@@ -257,24 +257,33 @@ agentToolRegistry.register({
   }
 });
 
-// 7. Tool: Pesquisa de Satisfação NPS
+// 8. Tool: Abertura de Ordem de Serviço (Técnico de Campo)
 agentToolRegistry.register({
-  name: "pesquisa_satisfacao_nps",
-  label: "Gatilho de Pesquisa NPS",
-  description: "Registra ou dispara avaliação de satisfação do cliente (escala 0 a 10) pós-atendimento.",
-  category: "qualidade",
-  keywords: ["avaliação", "avaliar", "nps", "satisfação", "nota", "atendimento ótimo", "gostei do atendimento", "péssimo atendimento"],
-  execute: async () => {
+  name: "abrir_os_campo",
+  label: "Agendamento de Técnico de Campo",
+  description: "Abre uma O.S. de manutenção física (ex: rompimento de fibra) e agenda o técnico de rua mais próximo via geolocalização.",
+  category: "suporte_noc",
+  keywords: ["visita", "técnico", "agendar", "rompeu", "cabo quebrado", "caminhão arrebentou", "luz vermelha piscando", "marcar visita"],
+  parametersSchema: {
+    type: "OBJECT",
+    properties: {
+      motivo: { type: "STRING", description: "Motivo relatado pelo cliente (ex: Cabo rompido)" },
+      urgencia: { type: "STRING", description: "Nível de urgência da visita (baixa, media, alta, critica)" }
+    }
+  },
+  execute: async ({ prompt }) => {
     const dados = {
-      scoreNpsAtual: 78,
-      pesquisaAgendada: true,
-      canal: "WhatsApp WABA"
+      os_numero: "OS-" + Math.floor(Math.random() * 90000 + 10000),
+      tecnico_alocado: "Carlos (Viatura 04)",
+      distancia_tecnico: "3.2 km",
+      previsao_chegada: "Hoje entre 14:00 e 16:00",
+      status: "agendado_radar"
     };
 
-    const resposta = `Agradecemos pelo feedback! Sua opinião é fundamental para mantermos nosso atendimento na Zona de Excelência (NPS +78). Enviamos uma breve confirmação interativa para seu WhatsApp. Tenha um excelente dia!`;
+    const resposta = `Ordem de Serviço ${dados.os_numero} aberta com sucesso! Identificamos pelo nosso Radar que a Viatura 04 (Técnico Carlos) está a ${dados.distancia_tecnico} da sua residência. O atendimento presencial foi agendado para ${dados.previsao_chegada}.`;
 
     return {
-      toolExecutada: "pesquisa_satisfacao_nps",
+      toolExecutada: "abrir_os_campo",
       toolDados: dados,
       respostaGerada: resposta
     };

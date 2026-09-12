@@ -3574,6 +3574,54 @@ let kanbanDeals = [
   });
 
   // --- CÉREBRO DE IA: ENGINE GEMINI COM DYNAMIC TOOL REGISTRY (TELECOM & CALL CENTER) ---
+  app.post("/api/gemini/voice/analyze", async (req, res) => {
+    // Rota usada pelo Webphone para exibir transcrição e sentimento em tempo real
+    // Em produção, isso seria extraído da stream da Gemini Live API
+    const { transcriptText, speaker, callContext } = req.body;
+    
+    // Análise heurística baseada no texto (Mock de IA rápida)
+    const txt = (transcriptText || "").toLowerCase();
+    let sentimento = "neutro";
+    let score = 0;
+    let urgencia = "media";
+    let topico = "Atendimento Geral";
+    let pilar = "suporte";
+    let sugestao = "";
+    
+    if (txt.includes("sem sinal") || txt.includes("caiu") || txt.includes("luz vermelha") || txt.includes("los")) {
+      urgencia = "alta";
+      topico = "Falha de Conectividade (LOS/Rompimento)";
+      sentimento = "frustrado";
+      score = -0.7;
+      sugestao = "Executar diagnóstico ONT via TR-069. Validar atenuação óptica (dbm).";
+    } else if (txt.includes("fatura") || txt.includes("pagar") || txt.includes("pix") || txt.includes("boleto") || txt.includes("bloqueado")) {
+      topico = "2ª Via / Desbloqueio";
+      pilar = "cobranca";
+      sugestao = "Oferecer chave PIX cópia e cola ou Desbloqueio em Confiança (48h).";
+    } else if (txt.includes("obrigado") || txt.includes("maravilha") || txt.includes("rapido") || txt.includes("excelente")) {
+      sentimento = "positivo";
+      score = 0.9;
+      topico = "Agradecimento / Feedback";
+    } else if (txt.includes("cancelar") || txt.includes("anatel") || txt.includes("procon") || txt.includes("processar") || txt.includes("lixo")) {
+      sentimento = "irritado";
+      score = -1.0;
+      urgencia = "critica";
+      topico = "Ameaça de Churn / Reclamação";
+      sugestao = "ALERTA DE CHURN: Manter empatia extrema, não discutir, transferir imediatamente para Retenção N2 se não resolver no primeiro contato.";
+    }
+
+    res.json({
+      transcricao: transcriptText,
+      sentimento,
+      score_sentimento: score,
+      urgencia,
+      topico_principal: topico,
+      pilar_sugerido: pilar,
+      sugestao_resposta: sugestao,
+      insights_operador: ["Análise de Sentimento Ativa", `Score: ${score}`]
+    });
+  });
+
   app.get("/api/gemini/agent/tools", (req, res) => {
     const tools = agentToolRegistry.getAllTools().map(t => ({
       name: t.name,
@@ -3595,53 +3643,88 @@ let kanbanDeals = [
     const { prompt = "", cliente_cpf, telefone, contexto } = req.body;
     const promptLower = prompt.toLowerCase();
 
-    // Identificação e Execução Dinâmica via Tool Registry
     let toolExecutada: string | undefined = undefined;
     let toolDados: any = null;
     let respostaGerada = "";
 
-    const matchedTool = agentToolRegistry.matchTool(prompt);
-
-    if (matchedTool) {
-      try {
-        const execution = await matchedTool.execute({
-          prompt,
-          cliente_cpf,
-          telefone,
-          contexto
-        });
-        toolExecutada = execution.toolExecutada;
-        toolDados = execution.toolDados;
-        respostaGerada = execution.respostaGerada;
-      } catch (err: any) {
-        console.error(`Erro ao executar ferramenta ${matchedTool.name}:`, err);
-        respostaGerada = `Houve uma falha ao consultar o serviço (${matchedTool.label}). Tentando rota alternativa de contingência...`;
-      }
-    } else {
-      // Conversação Geral / FAQ do Provedor
-      respostaGerada = `Olá! Sou a Inteligência Artificial humanizada do NAP Telecom. Posso emitir sua 2ª via e chave PIX, testar a potência óptica da sua fibra (TR-069), reiniciar remotamente seu roteador, consultar viabilidade técnica ou verificar manutenções da rede. Como posso te atender agora?`;
-    }
-
-    // Se houver chave do Gemini e usuário fez pergunta complexa sem tool direta, enriquece via IA
-    if (process.env.GEMINI_API_KEY && promptLower.length > 25 && !toolExecutada) {
-      try {
+    try {
+      if (process.env.GEMINI_API_KEY) {
         const { GoogleGenAI } = await import("@google/genai");
         const ai = new GoogleGenAI({
           apiKey: process.env.GEMINI_API_KEY,
           httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
         });
 
+        const tools = [{ functionDeclarations: agentToolRegistry.toGeminiFunctionDeclarations() }];
+        
+        // Contexto raiz
+        const promptRaiz = `Você é a inteligência artificial humanizada do provedor de internet NAP Telecom Fibra.
+Responda cordialmente em português (Brasil), com tom de especialista em telecomunicações, sendo prestativo, objetivo e empático. 
+Use as ferramentas disponíveis para consultar dados técnicos, gerar PIX, agendar visitas ou reiniciar equipamentos de acordo com o pedido do cliente. Nunca invente dados técnicos (sempre chame a ferramenta).
+Solicitação do assinante: "${prompt}"`;
+
         const response = await ai.models.generateContent({
           model: "gemini-2.5-flash",
-          contents: `Você é a inteligência artificial humanizada do provedor de internet NAP Telecom Fibra.
-O cliente disse: "${prompt}".
-Responda cordialmente em português, com tom de especialista em telecomunicações, sendo prestativo, objetivo e empático.`
+          contents: promptRaiz,
+          config: {
+            tools: tools
+          }
         });
-        if (response.text) {
-          respostaGerada = response.text;
+
+        if (response.functionCalls && response.functionCalls.length > 0) {
+          const functionCall = response.functionCalls[0];
+          console.log(`[Gemini Agent] Decisão Autônoma - Invocando Tool: ${functionCall.name}`, functionCall.args);
+          
+          try {
+             // Executa a função local na nossa infraestrutura
+             const execution = await agentToolRegistry.executeTool(functionCall.name, { 
+               prompt, 
+               cliente_cpf, 
+               telefone, 
+               contexto, 
+               ...functionCall.args 
+             });
+             
+             toolExecutada = execution.toolExecutada;
+             toolDados = execution.toolDados;
+             
+             // Envia o resultado de volta para o Gemini formatar uma resposta humanizada
+             const finalResponse = await ai.models.generateContent({
+               model: "gemini-2.5-flash",
+               contents: [
+                 { role: 'user', parts: [{ text: promptRaiz }] },
+                 { role: 'model', parts: [{ functionCall: functionCall }] },
+                 { role: 'user', parts: [{ functionResponse: { name: functionCall.name, response: execution.toolDados } }] }
+               ]
+             });
+             
+             respostaGerada = finalResponse.text || execution.respostaGerada;
+          } catch (e: any) {
+             console.error(`[Gemini Agent] Erro ao executar a tool ${functionCall.name}:`, e);
+             respostaGerada = `Houve uma falha ao acessar o serviço de integração. Por favor, aguarde enquanto transfiro para a central humana.`;
+          }
+        } else {
+          // O modelo não julgou necessário usar nenhuma ferramenta (Conversação normal)
+          respostaGerada = response.text || "Desculpe, não consegui gerar uma resposta.";
         }
-      } catch (err) {
-        console.warn("Fallback local para agente Gemini:", err);
+      } else {
+        throw new Error("Sem Chave de API configurada. Usando fallback heurístico.");
+      }
+    } catch (err: any) {
+      console.warn("[Gemini Agent] Fallback para keyword matcher:", err.message);
+      // Fallback: Heurística / Keyword Matcher Local
+      const matchedTool = agentToolRegistry.matchTool(prompt);
+      if (matchedTool) {
+        try {
+          const execution = await matchedTool.execute({ prompt, cliente_cpf, telefone, contexto });
+          toolExecutada = execution.toolExecutada;
+          toolDados = execution.toolDados;
+          respostaGerada = execution.respostaGerada;
+        } catch (e) {
+          respostaGerada = `Houve uma falha ao consultar o serviço de contingência.`;
+        }
+      } else {
+        respostaGerada = `Olá! Sou a IA humanizada do NAP Telecom (Modo Contingência). Posso emitir sua 2ª via, PIX, testar seu sinal ou reiniciar a ONU. Como posso ajudar?`;
       }
     }
 
@@ -3654,7 +3737,7 @@ Responda cordialmente em português, com tom de especialista em telecomunicaçõ
       tool_dados: toolDados,
       tempo_ms: Math.max(tempoTotal, 240),
       tokens: 185 + Math.floor(Math.random() * 80),
-      modelo: "gemini-2.5-flash (Telecom Engine)"
+      modelo: "gemini-2.5-flash (Telecom Engine com Tool Registry)"
     });
   });
 
