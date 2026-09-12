@@ -167,19 +167,19 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
   // Valores unificados de telemetria GenieACS vindos do hook periódico
   const acsStatus: 'online' | 'degradado' | 'offline' = 
     acsMonitor.status === 'validando' 
-      ? (data?.genieacs.status || 'online') 
+      ? (data?.genieacs?.status || 'online') 
       : (acsMonitor.status as 'online' | 'degradado' | 'offline');
-  const acsLatency = acsMonitor.latency || data?.genieacs.latencia_ms || 15;
-  const acsEndpoint = acsMonitor.endpoint || data?.genieacs.endpoint || 'http://127.0.0.1:7557';
-  const acsOnlineCount = acsMonitor.devices.online || data?.genieacs.cpes_online || 0;
-  const acsTotalCount = acsMonitor.devices.total || data?.genieacs.total_cpes || 0;
-  const acsAlarms = acsMonitor.devices.alarmes_opticos ?? (data?.genieacs.alarmes_opticos || 0);
+  const acsLatency = acsMonitor.latency || data?.genieacs?.latencia_ms || 15;
+  const acsEndpoint = acsMonitor.endpoint || data?.genieacs?.endpoint || 'http://127.0.0.1:7557';
+  const acsOnlineCount = acsMonitor.devices.online || data?.genieacs?.cpes_online || 0;
+  const acsTotalCount = acsMonitor.devices.total || data?.genieacs?.total_cpes || 0;
+  const acsAlarms = acsMonitor.devices.alarmes_opticos ?? (data?.genieacs?.alarmes_opticos || 0);
 
   // -------------------------------------------------------------
   // VARIANTE: TOPBAR (Botão interativo com flyout)
   // -------------------------------------------------------------
   if (variant === 'topbar') {
-    const isHealthy = data?.sgp.status === 'online' && acsStatus === 'online';
+    const isHealthy = data?.sgp?.status === 'online' && acsStatus === 'online';
 
     return (
       <div className={`relative ${className}`} ref={popoverRef}>
@@ -192,10 +192,10 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
         >
           {/* SGP LED */}
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full ${data?.sgp.status === 'online' ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+            <span className={`w-2 h-2 rounded-full ${data?.sgp?.status === 'online' ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
             <span className="text-[11px] font-bold text-slate-300">SGP</span>
-            <span className={`font-mono text-[10px] font-bold ${getLatencyColor(data?.sgp.latencia_ms)}`}>
-              {data?.sgp.latencia_ms ? `${data.sgp.latencia_ms}ms` : '--'}
+            <span className={`font-mono text-[10px] font-bold ${getLatencyColor(data?.sgp?.latencia_ms)}`}>
+              {data?.sgp?.latencia_ms ? `${data?.sgp?.latencia_ms}ms` : '--'}
             </span>
           </div>
 
@@ -256,29 +256,29 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
                   <Server size={15} className="text-blue-400" />
                   <div>
                     <span className="text-xs font-bold text-white block leading-tight">SGP (ERP Billing)</span>
-                    <span className="text-[10px] text-slate-400 font-mono block">{data?.sgp.protocolo || 'REST API'}</span>
+                    <span className="text-[10px] text-slate-400 font-mono block">{data?.sgp?.protocolo || 'REST API'}</span>
                   </div>
                 </div>
-                {getStatusBadge(data?.sgp.status)}
+                {getStatusBadge(data?.sgp?.status)}
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/5 text-[11px]">
                 <div>
                   <span className="text-slate-500 text-[10px] block">Latência</span>
-                  <span className={`font-mono font-bold ${getLatencyColor(data?.sgp.latencia_ms)}`}>
-                    {data?.sgp.latencia_ms} ms
+                  <span className={`font-mono font-bold ${getLatencyColor(data?.sgp?.latencia_ms)}`}>
+                    {data?.sgp?.latencia_ms} ms
                   </span>
                 </div>
                 <div>
                   <span className="text-slate-500 text-[10px] block">Clientes Espelhados</span>
                   <span className="font-mono font-bold text-slate-200">
-                    {data?.sgp.clientes_sincronizados} ativos
+                    {data?.sgp?.clientes_sincronizados} ativos
                   </span>
                 </div>
                 <div className="col-span-2">
                   <span className="text-slate-500 text-[10px] block">Endpoint</span>
                   <span className="font-mono text-[10px] text-slate-400 truncate block">
-                    {data?.sgp.endpoint}
+                    {data?.sgp?.endpoint}
                   </span>
                 </div>
               </div>
@@ -414,35 +414,35 @@ export default function SyncStatusMonitor({ variant = 'topbar', className = '' }
                 <span className="text-[10px] text-slate-400 font-mono">Faturamento, Clientes & Contratos</span>
               </div>
             </div>
-            {getStatusBadge(data?.sgp.status)}
+            {getStatusBadge(data?.sgp?.status)}
           </div>
 
           <div className="grid grid-cols-3 gap-2 p-2.5 rounded-lg bg-white/5 border border-white/5 text-xs">
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-bold block">Latência</span>
-              <span className={`font-mono font-bold text-sm ${getLatencyColor(data?.sgp.latencia_ms)}`}>
-                {data?.sgp.latencia_ms || '--'} ms
+              <span className={`font-mono font-bold text-sm ${getLatencyColor(data?.sgp?.latencia_ms)}`}>
+                {data?.sgp?.latencia_ms || '--'} ms
               </span>
             </div>
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-bold block">Clientes Sync</span>
               <span className="font-mono font-bold text-sm text-slate-200">
-                {data?.sgp.clientes_sincronizados || 0}
+                {data?.sgp?.clientes_sincronizados || 0}
               </span>
             </div>
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-bold block">Modo</span>
               <span className="font-mono font-bold text-sm text-slate-200 capitalize">
-                {data?.sgp.modo || 'Sandbox'}
+                {data?.sgp?.modo || 'Sandbox'}
               </span>
             </div>
           </div>
 
           <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-            <span className="font-mono truncate max-w-[200px]" title={data?.sgp.endpoint}>
-              {data?.sgp.endpoint}
+            <span className="font-mono truncate max-w-[200px]" title={data?.sgp?.endpoint}>
+              {data?.sgp?.endpoint}
             </span>
-            <span className="text-emerald-400 font-bold">{data?.sgp.ultima_resposta}</span>
+            <span className="text-emerald-400 font-bold">{data?.sgp?.ultima_resposta}</span>
           </div>
         </div>
 

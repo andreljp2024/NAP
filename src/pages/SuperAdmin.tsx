@@ -95,7 +95,7 @@ export default function SuperAdmin() {
 
   const handleSipTrunkDelete = (id: string) => {
     if(!window.confirm('Remover Tronco SIP? O Asterisk vai perder a rota.')) return;
-    const newTrunks = (config.telefonia.troncosSip || []).filter(t => t.id !== id);
+    const newTrunks = (config?.telefonia?.troncosSip || []).filter(t => t.id !== id);
     setConfig({ ...config, telefonia: { ...config.telefonia, troncosSip: newTrunks } });
     showToast('success', 'Tronco SIP removido.');
   };
@@ -1475,14 +1475,14 @@ export default function SuperAdmin() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {(config.telefonia.troncosSip || []).length === 0 ? (
+                    {(config?.telefonia?.troncosSip || []).length === 0 ? (
                       <div className="col-span-full p-6 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center text-center">
                         <PhoneForwarded size={24} className="text-slate-600 mb-2" />
                         <p className="text-sm font-bold text-slate-400">Nenhum Tronco SIP Configurado</p>
                         <p className="text-xs text-slate-500 mt-1">O Asterisk não poderá realizar nem receber chamadas externas (PSTN) até que um provedor VoIP seja adicionado.</p>
                       </div>
                     ) : (
-                      (config.telefonia.troncosSip || []).map(trunk => (
+                      (config?.telefonia?.troncosSip || []).map(trunk => (
                         <div key={trunk.id} className="p-4 bg-slate-950 border border-white/5 rounded-2xl flex flex-col justify-between group hover:border-blue-500/30 transition-all">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2.5">
