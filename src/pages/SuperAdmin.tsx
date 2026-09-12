@@ -114,10 +114,20 @@ export default function SuperAdmin() {
   };
 
   // Testes individuais de microsserviços
-  const runTest = async (service: 'sgp' | 'freepbx' | 'whatsapp' | 'gemini') => {
+  const runTest = async (service: 'sgp' | 'freepbx' | 'asterisk-ari' | 'whatsapp' | 'gemini') => {
     setTesting(prev => ({ ...prev, [service]: true }));
     try {
-      const res = await fetch(`/api/configuracoes/test-${service}`, { method: 'POST' });
+      const bodyPayload = service === 'asterisk-ari' ? {
+        url: config.telefonia.ariHost,
+        user: config.telefonia.ariUser,
+        password: config.telefonia.ariSecret
+      } : {};
+
+      const res = await fetch(`/api/configuracoes/test-${service}`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyPayload)
+      });
       const data = await res.json();
       setTestResults(prev => ({ ...prev, [service]: data }));
       if (data.success) {
@@ -1231,51 +1241,51 @@ export default function SuperAdmin() {
                 <div>
                   <h3 className="text-base font-bold text-white font-outfit flex items-center gap-2 mb-1">
                     <Server className="text-blue-400" size={18} />
-                    Telefonia Asterisk & FreePBX 17
+                    Telefonia Asterisk 20+ NATIVA (Engine ARI)
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Parâmetros para CTI Reverso, WebRTC SIP nos navegadores dos atendentes e integração com a interface AMI (Asterisk Manager Interface).
+                    Parâmetros para CTI Reverso, WebRTC SIP nos navegadores dos atendentes e integração com a interface ARI (Asterisk REST Interface) de alta performance.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Host Asterisk AMI (IP ou Domínio)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Host Asterisk ARI (IP ou Domínio)</label>
                     <input 
                       type="text" 
-                      value={config.telefonia.amiHost} 
-                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiHost: e.target.value } })}
+                      value={config.telefonia.ariHost || ''} 
+                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariHost: e.target.value } })}
                       className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Porta AMI (Padrão 5038)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Porta ARI (Padrão 8088 HTTP / 8089 HTTPS)</label>
                     <input 
                       type="number" 
-                      value={config.telefonia.amiPort} 
-                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiPort: Number(e.target.value) } })}
+                      value={config.telefonia.ariPort || 8088} 
+                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariPort: Number(e.target.value) } })}
                       className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Usuário AMI (Asterisk Manager)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Usuário ARI (App Engine)</label>
                     <input 
                       type="text" 
-                      value={config.telefonia.amiUser} 
-                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiUser: e.target.value } })}
+                      value={config.telefonia.ariUser || ''} 
+                      onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariUser: e.target.value } })}
                       className="w-full p-2.5 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Senha Secreta AMI</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Senha Secreta ARI</label>
                     <div className="relative">
                       <input 
                         type={showAmiSecret ? 'text' : 'password'} 
-                        value={config.telefonia.amiSecret} 
-                        onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, amiSecret: e.target.value } })}
+                        value={config.telefonia.ariSecret || ''} 
+                        onChange={(e) => setConfig({ ...config, telefonia: { ...config.telefonia, ariSecret: e.target.value } })}
                         className="w-full p-2.5 pr-10 bg-[#0b0f19] border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 font-mono"
                       />
                       <button 
@@ -1299,7 +1309,7 @@ export default function SuperAdmin() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">WebSocket WSS do FreePBX (WebRTC)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">WebSocket PJSIP (WebRTC / Trunk)</label>
                     <input 
                       type="text" 
                       value={config.telefonia.websocketUrl} 
@@ -1340,33 +1350,33 @@ export default function SuperAdmin() {
                   </label>
                 </div>
 
-                {/* Card de Teste FreePBX */}
+                {/* Card de Teste Asterisk ARI */}
                 <div className="p-4 bg-[#0b0f19] rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h4 className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5 mb-1">
-                      <Server size={14} className="text-blue-400" /> Diagnóstico de Conexão Asterisk / FreePBX
+                      <Server size={14} className="text-blue-400" /> Diagnóstico de Conexão Asterisk 20+ (Nativa)
                     </h4>
                     <p className="text-xs text-slate-400">
-                      Valida credenciais do socket AMI, canais simultâneos e registro de WebRTC.
+                      Valida credenciais do socket ARI, canais simultâneos e registro de WebRTC.
                     </p>
-                    {testResults.freepbx && (
+                    {testResults['asterisk-ari'] && (
                       <p className="text-xs font-mono text-blue-400 mt-2 font-bold bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg inline-block">
-                        ✓ Status: {testResults.freepbx.status.toUpperCase()} • Latência: {testResults.freepbx.latenciaMs}ms • {testResults.freepbx.versaoAsterisk} • {testResults.freepbx.ramaisRegistrados} Ramais Ativos
+                        ✓ Status: {testResults['asterisk-ari'].status.toUpperCase()} • Latência: {testResults['asterisk-ari'].latenciaMs}ms • {testResults['asterisk-ari'].versaoAsterisk} • {testResults['asterisk-ari'].ariStatus}
                       </p>
                     )}
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => runTest('freepbx')}
-                      disabled={testing.freepbx}
+                      onClick={() => runTest('asterisk-ari')}
+                      disabled={testing['asterisk-ari']}
                       type="button"
                       className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 active:scale-95 text-blue-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-blue-500/20 shrink-0"
                     >
-                      {testing.freepbx ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                      <span>{testing.freepbx ? 'Testando...' : 'Testar Conexão Asterisk'}</span>
+                      {testing['asterisk-ari'] ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                      <span>{testing['asterisk-ari'] ? 'Testando...' : 'Testar Conexão Asterisk'}</span>
                     </button>
                     <button
-                      onClick={() => fetch('/api/webhooks/freepbx/incoming', { method: 'POST' })}
+                      onClick={() => fetch('/api/webhooks/asterisk/incoming', { method: 'POST' })}
                       type="button"
                       className="px-3.5 py-2 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/5 rounded-xl text-xs font-bold transition-all shrink-0"
                     >

@@ -85,10 +85,10 @@ export interface SystemConfig {
     status: 'conectado' | 'desconectado' | 'alerta';
   };
   telefonia: {
-    amiHost: string;
-    amiPort: number;
-    amiUser: string;
-    amiSecret: string;
+    ariHost: string;
+    ariPort: number;
+    ariUser: string;
+    ariSecret: string;
     contextoDiscagem: string;
     ramalWebRTC: string;
     secretWebRTC: string;
@@ -284,10 +284,10 @@ export const DEFAULT_CONFIG: SystemConfig = {
     status: "conectado"
   },
   telefonia: {
-    amiHost: "192.168.10.250",
-    amiPort: 5038,
-    amiUser: "nap_ami_user",
-    amiSecret: "ami_asterisk_secret_2026",
+    ariHost: "192.168.10.250",
+    ariPort: 8088,
+    ariUser: "nap_admin",
+    ariSecret: "nap_ari_secret_2026",
     contextoDiscagem: "from-internal",
     ramalWebRTC: "2001",
     secretWebRTC: "sip_pass_2001_webrtc",

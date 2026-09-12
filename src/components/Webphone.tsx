@@ -141,7 +141,7 @@ export default function Webphone({
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  // Ramal simulado registrado no FreePBX 17
+  // Ramal simulado registrado no Asterisk nativo via WebRTC
   const sipStatus = "Registrado";
   const ramal = defaultExtension;
 
@@ -179,7 +179,7 @@ export default function Webphone({
             numero: dialNumber || '2001',
             duracao: formatDuration(callSeconds),
             ramal: ramal,
-            pbx: 'FreePBX 17 / Asterisk 21'
+            pbx: 'Asterisk 20+ Nativo (ARI)'
           }
         })
       });
@@ -339,7 +339,7 @@ export default function Webphone({
     try {
       const fullDialog = turns.map(t => `${t.speaker === 'cliente' ? 'Cliente' : 'Operador'}: ${t.transcription}`).join('\n');
       const promptText = turns.length > 0
-        ? `Você é o auditor de qualidade e inteligência do FreePBX/Asterisk de um provedor de internet (ISP).
+        ? `Você é o auditor de qualidade e inteligência do Asterisk Nativo de um provedor de internet (ISP).
 Gere um resumo técnico de 1 parágrafo para gravação no histórico do contrato no ERP SGP da ligação do número ${lastCallInfo.number} (Duração: ${lastCallInfo.duration}).
 Diálogo transcrito:
 ${fullDialog}
@@ -388,7 +388,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
               ? 'bg-emerald-50 border-emerald-300 text-emerald-800 animate-pulse' 
               : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
           }`}
-          title="WebRTC Softphone FreePBX"
+          title="WebRTC Asterisk Nativo"
         >
           <div className="relative">
             <Phone size={15} className={onCall ? 'text-emerald-600' : 'text-slate-600'} />
@@ -411,7 +411,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
             : "absolute top-12 right-0 w-80 max-w-[calc(100vw-1.5rem)] bg-white border border-slate-200  rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-3 duration-200"
         }>
           
-          {/* Header com Indicadores de Conexão Asterisk / FreePBX */}
+          {/* Header com Indicadores de Conexão Asterisk 20+ Nativo */}
           <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse "></div>

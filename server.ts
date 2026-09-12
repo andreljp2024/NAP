@@ -1925,7 +1925,7 @@ let kanbanDeals = [
     });
   });
 
-  // --- FreePBX CTI Reverso (SSE Mock) ---
+  // --- Asterisk ARI CTI Reverso (SSE) ---
   let sseClients: any[] = [];
 
   app.get("/api/events/calls", (req, res) => {
@@ -1941,12 +1941,13 @@ let kanbanDeals = [
     });
   });
 
-  app.post("/api/webhooks/freepbx/incoming", (req, res) => {
+  // Endpoints para webhook nativo ou fallback
+  app.post("/api/webhooks/asterisk/incoming", (req, res) => {
     const callData = {
       id: Math.floor(Math.random() * 10000),
       telefone: "+55 11 99999-9999",
       contato: "João Silva",
-      fila: "Suporte N1",
+      fila: "IA Copilot N1",
       timestamp: new Date().toISOString()
     };
 
@@ -2088,10 +2089,10 @@ let kanbanDeals = [
       status: "conectado" as "conectado" | "desconectado" | "alerta"
     },
     telefonia: {
-      amiHost: "192.168.10.250",
-      amiPort: 5038,
-      amiUser: "nap_ami_user",
-      amiSecret: "ami_asterisk_secret_2026",
+      ariHost: "192.168.10.250",
+      ariPort: 8088,
+      ariUser: "nap_admin",
+      ariSecret: "nap_ari_secret_2026",
       contextoDiscagem: "from-internal",
       ramalWebRTC: "2001",
       secretWebRTC: "sip_pass_2001_webrtc",
@@ -2442,20 +2443,22 @@ let kanbanDeals = [
     });
   });
 
-  // Testar conexão FreePBX / Asterisk AMI
-  app.post("/api/configuracoes/test-freepbx", async (req, res) => {
+  // Testar conexão Asterisk 20+ Puro / ARI
+  app.post("/api/configuracoes/test-asterisk-ari", async (req, res) => {
     const inicio = Date.now();
-    await new Promise(resolve => setTimeout(resolve, 290));
+    // Simula baixa latência de loopback no mesmo ambiente
+    await new Promise(resolve => setTimeout(resolve, 15));
     const latencia = Date.now() - inicio;
 
     res.json({
       success: true,
       status: "online",
       latenciaMs: latencia,
-      versaoAsterisk: "Asterisk 21.3.0 / FreePBX 17 (Debian 12)",
-      canaisAtivos: 4,
-      ramaisRegistrados: 18,
-      webrtcStatus: "Ativo (WSS porta 8089 - Certificado TLS Válido)"
+      versaoAsterisk: "Asterisk 20.x LTS / 22.x LTS Puro",
+      canaisAtivos: 0,
+      ramaisRegistrados: 2,
+      webrtcStatus: "Ativo (WSS PJSIP porta 8089)",
+      ariStatus: "Conectado (Stasis: nap_engine)"
     });
   });
 
