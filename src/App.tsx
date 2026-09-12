@@ -23,6 +23,7 @@ import PortalSuporte from "./pages/PortalSuporte";
 import PortalConta from "./pages/PortalConta";
 import PortalLogin from "./pages/PortalLogin";
 import ConsultaSGP from "./pages/ConsultaSGP";
+import MapaRede from "./pages/MapaRede";
 import UsuariosHierarquia from "./pages/UsuariosHierarquia";
 import TecnicoCampo from "./pages/TecnicoCampo";
 import Auditoria from "./pages/Auditoria";
@@ -120,6 +121,12 @@ export default function App() {
                   element={<ProtectedRoute allowedRoles={["tecnico_noc"]} />}
                 >
                   <Route index element={<GenieACSDashboard />} />
+                </Route>
+                <Route
+                  path="mapa-rede"
+                  element={<ProtectedRoute allowedRoles={["tecnico_noc", "tecnico_campo"]} />}
+                >
+                  <Route index element={<MapaRede />} />
                 </Route>
 
                 <Route

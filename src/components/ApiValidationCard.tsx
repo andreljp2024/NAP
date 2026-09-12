@@ -653,7 +653,9 @@ export default function ApiValidationCard() {
                 Relatório de Handshake Técnico:
               </span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {feedback.checklist.map((item) => (
+                {(feedback.checklist || []).map((item) => {
+                  if (!item) return null;
+                  return (
                   <div 
                     key={item.id}
                     className={`p-2.5 rounded-xl border flex items-start gap-2.5 text-xs ${
@@ -674,7 +676,7 @@ export default function ApiValidationCard() {
                       <span className="text-[11px] text-slate-400">{item.mensagem}</span>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           )}

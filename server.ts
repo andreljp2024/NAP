@@ -3520,18 +3520,6 @@ let kanbanDeals = [
         desbloqueios_pendentes: 0,
         ultima_resposta: "HTTP 200 OK (Homologado NAP)"
       },
-      erp: {
-        nome: activeErpData.nome || "ERP (ERP Telecom)",
-        protocolo: activeErpData.protocolo || "REST / HTTPS v2.4",
-        endpoint: activeErpData.urlBase || process.env.ERP_URL || "https://api.erp.net.br (Emulado)",
-        status: erpStatus,
-        latencia_ms: activeErpData.latenciaMs || erpLatency,
-        modo: erpConfigured ? 'producao' : 'sandbox',
-        clientes_sincronizados: erpDatabase_mock.length,
-        faturas_sincronizadas: 142,
-        desbloqueios_pendentes: 0,
-        ultima_resposta: "HTTP 200 OK"
-      },
       genieacs: {
         nome: "GenieACS (TR-069 CWMP)",
         protocolo: "NBI HTTP / CWMP v1.4",

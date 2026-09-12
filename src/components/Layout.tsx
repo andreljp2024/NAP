@@ -77,6 +77,7 @@ export default function Layout() {
     if (path.startsWith('/admin/crm')) return { title: 'Base CRM 360', category: 'Histórico & Sincronização SGP', icon: <Users size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/sgp')) return { title: `Workspace ERP (${erpAtivo.toUpperCase()})`, category: 'Diagnóstico & Ações de Rede', icon: <Server size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/genieacs')) return { title: 'GenieACS Dashboard', category: 'Monitoramento TR-069', icon: <Router size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/mapa-rede')) return { title: 'Mapa de Rede (GIS)', category: 'Geolocalização ONTs', icon: <MapPin size={18} className="text-emerald-400" /> };
     if (path.startsWith('/admin/automacoes')) return { title: 'Agente IA & Automações', category: 'Google Gemini Serverless (Sem n8n)', icon: <Sparkles size={18} className="text-indigo-600" /> };
     if (path.startsWith('/admin/operadores')) return { title: 'Gestão de Operadores', category: 'Escalas & Filas Asterisk', icon: <ShieldUser size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/auditoria')) return { title: 'Logs de Auditoria & Conformidade', category: 'LGPD Art. 37, ANATEL & Segurança', icon: <ShieldCheck size={18} className="text-emerald-400" /> };
@@ -171,6 +172,7 @@ export default function Layout() {
               {hasAccess(['operador', 'tecnico_noc']) && <NavItem to="/admin/crm" icon={<Users size={18} />} label="CRM Clientes" isCollapsed={isCollapsed} />}
               {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/sgp" icon={<Server size={18} />} label="Workspace ERP" badge={erpAtivo.toUpperCase()} isCollapsed={isCollapsed} />}
               {hasAccess(['tecnico_noc']) && <NavItem to="/admin/genieacs" icon={<Router size={18} />} label="GenieACS" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin/mapa-rede" icon={<MapPin size={18} />} label="Mapa de Rede (ONTs)" badge="GIS" isCollapsed={isCollapsed} />}
               <NavItem to="/admin/ajuda" icon={<BookOpen size={18} />} label="Ajuda & Documentação" isCollapsed={isCollapsed} />
             </nav>
           </div>
