@@ -6,7 +6,8 @@ import {
 import { 
   Users, Bot, Clock, TrendingUp, TrendingDown, Phone, MessageSquare, 
   Zap, Radio, Signal, Headphones, DollarSign, AlertCircle, CheckCircle2,
-  Star, HeartHandshake, Smile, Meh, Frown, ThumbsUp, Send, Filter, Sparkles, RefreshCw
+  Star, HeartHandshake, Smile, Meh, Frown, ThumbsUp, Send, Filter, Sparkles, RefreshCw,
+  MapPin, Wrench
 } from 'lucide-react';
 import Webphone from '../components/Webphone';
 import SyncStatusMonitor from '../components/SyncStatusMonitor';
@@ -38,7 +39,7 @@ const dataReceita = [
 ];
 
 export default function Analytics() {
-  const [abaAtiva, setAbaAtiva] = useState<'operacao' | 'nps'>('operacao');
+  const [abaAtiva, setAbaAtiva] = useState<'operacao' | 'nps' | 'radar'>('operacao');
   const [npsStats, setNpsStats] = useState<any>(null);
   const [npsFeed, setNpsFeed] = useState<any[]>([]);
   const [filtroNps, setFiltroNps] = useState<'todos' | 'promotor' | 'neutro' | 'detrator'>('todos');
@@ -119,6 +120,16 @@ export default function Analytics() {
                 }`}
               >
                 <Star size={14} className={abaAtiva === 'nps' ? "fill-current" : ""} /> NPS & Qualidade
+              </button>
+              <button
+                onClick={() => setAbaAtiva('radar')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  abaAtiva === 'radar' 
+                    ? 'bg-purple-600 text-white shadow-md' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Radio size={14} className={abaAtiva === 'radar' ? "animate-pulse" : ""} /> Radar NOC
               </button>
             </div>
 
@@ -638,6 +649,106 @@ export default function Analytics() {
           </div>
 
         </div>
+      )}
+
+      {abaAtiva === 'radar' && (
+         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
+            <div className="bg-[#101726] border border-white/5 p-6 rounded-2xl">
+              <h2 className="text-xl font-bold text-white font-outfit mb-4 flex items-center gap-2"><Radio className="text-purple-500 animate-pulse" /> Radar NOC (C.C.O)</h2>
+              <p className="text-slate-400 text-sm mb-6">Acompanhamento em tempo real das viaturas em campo via GPS (PWA Técnico), status do Asterisk PABX e contenção da IA Gemini.</p>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                 {/* COL 1: Grid Map */}
+                 <div className="lg:col-span-2 bg-[#0b0f19] border border-white/5 rounded-xl p-4 relative overflow-hidden">
+                    <div className="flex justify-between items-center mb-4 relative z-10">
+                       <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2"><MapPin size={16} className="text-emerald-400" /> Viaturas em Campo (GPS)</h3>
+                       <span className="flex items-center gap-1 text-xs text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full"><Signal size={12}/> Transmitindo ao vivo</span>
+                    </div>
+                    {/* Simulated Map Grid */}
+                    <div className="relative w-full h-[400px] border border-white/10 rounded-xl overflow-hidden bg-[#1a2133] shadow-inner">
+                        {/* Grid lines */}
+                        <div className="absolute inset-0" style={{backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '40px 40px'}}></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] to-transparent opacity-80 pointer-events-none z-10"></div>
+                        
+                        {/* Fake Technicians */}
+                        <div className="absolute top-[35%] left-[25%] group z-20 cursor-pointer">
+                           <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)] animate-pulse">
+                              <MapPin size={14} className="text-emerald-400" />
+                           </div>
+                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                              <p className="text-xs text-emerald-400 font-bold mb-1">Téc. Marcos (Carro 01)</p>
+                              <p className="text-[10px] text-slate-400 mb-1">Em deslocamento (OS 8841)</p>
+                              <div className="w-full bg-slate-800 rounded-full h-1"><div className="bg-emerald-500 h-1 rounded-full" style={{width: '60%'}}></div></div>
+                              <p className="text-[9px] text-slate-500 text-right mt-1">ETA: 5 min</p>
+                           </div>
+                        </div>
+
+                        <div className="absolute top-[65%] left-[70%] group z-20 cursor-pointer">
+                           <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                              <Wrench size={14} className="text-blue-400" />
+                           </div>
+                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                              <p className="text-xs text-blue-400 font-bold mb-1">Téc. Lucas (Carro 03)</p>
+                              <p className="text-[10px] text-slate-400">No Local (Instalação OS 8842)</p>
+                              <p className="text-[9px] text-slate-500 mt-1">Sinal ONU: -19.4 dBm</p>
+                           </div>
+                        </div>
+
+                        <div className="absolute top-[20%] left-[60%] group z-20 cursor-pointer">
+                           <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-bounce">
+                              <AlertCircle size={14} className="text-red-400" />
+                           </div>
+                           <div className="absolute top-10 -left-10 w-40 bg-[#101726] border border-white/10 rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity z-30 shadow-2xl">
+                              <p className="text-xs text-red-400 font-bold mb-1">Téc. Rafael (Carro 05)</p>
+                              <p className="text-[10px] text-slate-400">Pausa / Atraso Crítico (&gt; 30m)</p>
+                           </div>
+                        </div>
+                    </div>
+                 </div>
+
+                 {/* COL 2: Status Live */}
+                 <div className="space-y-6">
+                    <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                       <div className="absolute top-0 right-0 p-4 opacity-5"><Phone size={64}/></div>
+                       <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"><Phone size={16} className="text-blue-400" /> PABX (Asterisk/WebRTC)</h3>
+                       <div className="space-y-3 relative z-10">
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Chamadas Ativas</span>
+                             <span className="text-sm font-bold text-emerald-400">12</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Fila de Espera</span>
+                             <span className="text-sm font-bold text-orange-400">3</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Tempo Médio Espera (TME)</span>
+                             <span className="text-sm font-bold text-white">01m 45s</span>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                       <div className="absolute top-0 right-0 p-4 opacity-5"><Bot size={64}/></div>
+                       <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"><Bot size={16} className="text-indigo-400" /> Cérebro IA (Gemini)</h3>
+                       <div className="space-y-3 relative z-10">
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Resolução Contida (FCR)</span>
+                             <span className="text-sm font-bold text-emerald-400">72%</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Transferências (Handoff)</span>
+                             <span className="text-sm font-bold text-orange-400">28%</span>
+                          </div>
+                          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                             <span className="text-xs text-slate-400">Erros de Compreensão</span>
+                             <span className="text-sm font-bold text-slate-500">0.4%</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
+         </div>
       )}
       </div>
     </div>

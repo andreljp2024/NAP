@@ -67,7 +67,7 @@ export default function Layout() {
   // Mapeamento dinâmico de títulos para o Topbar
   const getPageInfo = (path: string) => {
     if (path === '/admin' || path === '/admin/') return { title: 'Inbox Unificado', category: 'Atendimento Omnichannel', icon: <MessageSquare size={18} className="text-blue-400" /> };
-    if (path.startsWith('/admin/dashboard')) return { title: 'Analytics Operacional', category: 'Monitoramento & KPIs', icon: <PieChart size={18} className="text-blue-400" /> };
+    if (path.startsWith('/admin/dashboard')) return { title: 'NOC & Analytics', category: 'Centro de Controle Operacional', icon: <PieChart size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/cobranca')) return { title: 'Régua de Cobrança', category: 'Inadimplência, PIX & Desbloqueio 48h', icon: <CreditCard size={18} className="text-amber-600" /> };
     if (path.startsWith('/admin/suporte')) return { title: 'Kanban de Suporte', category: 'N1 & N2 Técnico', icon: <Headphones size={18} className="text-blue-400" /> };
     if (path.startsWith('/admin/campo')) return { title: 'Técnico de Campo (PWA)', category: 'Ordens de Serviço & GPS', icon: <Wrench size={18} className="text-emerald-400" /> };
@@ -161,7 +161,7 @@ export default function Layout() {
             )}
             
             <nav className="flex flex-col gap-0.5 px-3">
-              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="Analytics" isCollapsed={isCollapsed} />}
+              {hasAccess(['tecnico_noc']) && <NavItem to="/admin/dashboard" icon={<PieChart size={18} />} label="NOC & Analytics" isCollapsed={isCollapsed} />}
               {hasAccess(['operador', 'tecnico_noc', 'tecnico_campo']) && <NavItem to="/admin" icon={<MessageSquare size={18} />} label="Inbox Unificado" badge="2" isCollapsed={isCollapsed} />}
               {hasAccess(['tecnico_campo']) && <NavItem to="/admin/campo" icon={<Wrench size={18} />} label="Técnico de Campo" badge="GPS" isCollapsed={isCollapsed} />}
               {hasAccess(['operador']) && <NavItem to="/admin/cobranca" icon={<CreditCard size={18} />} label="Cobrança & PIX" isCollapsed={isCollapsed} />}
