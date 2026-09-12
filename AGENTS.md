@@ -8,7 +8,7 @@ It is designed to run completely isolated per ISP on its own dedicated VPS/VM in
 The core stack includes Debian 12, FreePBX 17, GenieACS (TR-069), WABA (WhatsApp Cloud API), and SGP (Billing/ERP Emulator). The NAP (Node.js backend) acts directly as the AI Voice Agent via Gemini, connecting with Asterisk via AMI/ARI.
 
 ## 2. Tech Stack
-- **Frontend:** React 18, Vite, Tailwind CSS, Lucide React (Icons).
+- **Frontend:** React 18, Vite, Tailwind CSS, Lucide React (Icons), Leaflet & React-Leaflet (GIS Mapping).
 - **Backend:** Node.js, Express (running from `server.ts`).
 - **PWA Portal:** Mobile-first customer portal (`/portal`) using `vite-plugin-pwa` for Service Workers, caching, Web App Manifests, push notifications, direct Webchat queues, and WebRTC Webphone for direct voice calls to the operator.
 - **Build System:** Vite builds the SPA, esbuild bundles `server.ts` into a CommonJS server (`dist/server.cjs`).
@@ -23,6 +23,7 @@ The core stack includes Debian 12, FreePBX 17, GenieACS (TR-069), WABA (WhatsApp
 
 ## 4. Key Modules to Preserve
 - **Inbox Unificado & Triagem IA:** Handles WhatsApp WABA and Webchat integrations. Inclui modo Triagem IA com o Cérebro Gemini operando como Copiloto e filtro dedicado para Handoff (transferência humano-IA).
+- **Centro de Controle Operacional (NOC & GIS):** Integra dashboards em `/admin/dashboard` (Radar de técnicos, PABX) e o mapa georreferenciado `/admin/mapa-rede` que renderiza clusters dinâmicos (Leaflet) de milhares de ONTs simuladas conectadas ao TR-069.
 - **CRM 360 & Kanban:** Uses Slide-over panels to show customer context and manages SGP billing operations (PIX, Unblocks).
 - **GenieACS:** Dashboard for CPE telemetry (ONU Power, Uptime).
 - **Portal do Cliente (PWA):** Mobile-first auto-service app (`/portal`). Features Webchat routing, invoice payments, and WebRTC Webphone.
