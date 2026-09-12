@@ -31,6 +31,31 @@ export default function PortalSuporte() {
   const [ligacaoMotivo, setLigacaoMotivo] = useState('');
   const [showWebphoneModal, setShowWebphoneModal] = useState(false);
 
+  /*
+   * ARQUITETURA WEBRTC (CLIENTE -> OPERADOR via ASTERISK PJSIP):
+   * 1. O Portal web inicializa uma conexão wss:// (WebSocket Secure) com o Asterisk (porta 8089).
+   * 2. O Asterisk possui um endpoint PJSIP genérico configurado no pjsip.conf (ex: [webrtc_client_guest]) 
+   *    com 'webrtc=yes' e 'max_contacts=1000' (permitindo múltiplas chamadas simultâneas anônimas/guests).
+   * 3. Na inicialização do INVITE SIP pelo frontend (via SIP.js), injetamos custom headers (X-Client-CPF, X-Call-Reason).
+   * 4. O Dialplan do Asterisk (extensions.conf) intercepta o INVITE, lê os cabeçalhos, altera o CALLERID(name) para o
+   *    nome do cliente, e joga a chamada na Fila (Queue) solicitada (Ex: Queue(suporte_tecnico)).
+   * 5. O operador logado no seu respectivo Webphone (extensão estática, ex: 2001) recebe a chamada distribuída
+   *    pela fila. O Webphone do operador (React) lê os custom headers que o Asterisk repassou e exibe a Ficha 360 (CRM).
+   */
+
+  useEffect(() => {
+    if (modalLigacaoOpen) {
+      const msg = new SpeechSynthesisUtterance("Olá! Sou a Maia. Para eu direcionar sua ligação gratuita ao especialista mais rápido, qual o motivo do seu contato?");
+      msg.lang = 'pt-BR';
+      msg.rate = 1.1;
+      msg.pitch = 1.2;
+      window.speechSynthesis.cancel(); // Parar fala anterior
+      window.speechSynthesis.speak(msg);
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  }, [modalLigacaoOpen]);
+
   // Modal Detalhes do Chamado
   const [chamadoSelecionado, setChamadoSelecionado] = useState<Deal | null>(null);
 
@@ -700,7 +725,18 @@ export default function PortalSuporte() {
       {showWebphoneModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-4">
           <div className="w-full max-w-sm mb-4">
-            <Webphone embedded={true} defaultExtension="9999" />
+            <Webphone 
+              embedded={true} 
+              defaultExtension="9999" 
+              clientMode={true}
+              incomingCallData={{
+                nome: clientData.nome || 'Cliente Portal',
+                cpf: '123.456.789-00',
+                motivo: ligacaoMotivo === 'suporte' ? 'Suporte Técnico' : 
+                        ligacaoMotivo === 'financeiro' ? 'Financeiro' : 
+                        ligacaoMotivo === 'vendas' ? 'Vendas' : 'Atendimento'
+              }}
+            />
           </div>
           <button
             onClick={() => setShowWebphoneModal(false)}

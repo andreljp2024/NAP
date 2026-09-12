@@ -32,13 +32,21 @@ export interface WebphoneProps {
   className?: string;
   defaultExtension?: string;
   onCallStateChange?: (onCall: boolean, details?: { number: string; duration: number }) => void;
+  clientMode?: boolean;
+  incomingCallData?: {
+    nome: string;
+    cpf: string;
+    motivo: string;
+  } | null;
 }
 
 export default function Webphone({ 
   embedded = false, 
   className = '', 
   defaultExtension = '2001',
-  onCallStateChange 
+  onCallStateChange,
+  clientMode = false,
+  incomingCallData = null
 }: WebphoneProps) {
   const [isOpen, setIsOpen] = useState(embedded);
   const [dialNumber, setDialNumber] = useState('');
@@ -319,7 +327,23 @@ export default function Webphone({
         toggleMicrophoneRecording();
       }
     } else {
-      if (dialNumber.trim().length > 0) {
+      if (clientMode) {
+        // Simulação: 20% de chance do operador estar ocupado
+        const isOperatorBusy = Math.random() > 0.8;
+        if (isOperatorBusy) {
+          const msg = new SpeechSynthesisUtterance("Desculpe, todos os nossos operadores estão ocupados no momento. Por favor, tente novamente em instantes ou mande uma mensagem no chat.");
+          msg.lang = 'pt-BR';
+          msg.rate = 1.1;
+          msg.pitch = 1.2;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(msg);
+          alert('Asterisk SIP: 486 Busy Here - Operadores ocupados.');
+          return;
+        } else {
+          setDialNumber(incomingCallData?.motivo || 'Fila de Atendimento');
+          setOnCall(true);
+        }
+      } else if (dialNumber.trim().length > 0) {
         setShowPostCallSummary(false);
         setSavedToSgp(false);
         setTurns([]);
@@ -390,11 +414,11 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
           }`}
           title="WebRTC Asterisk Nativo"
         >
-          <div className="relative">
+          <div className="relative shrink-0">
             <Phone size={15} className={onCall ? 'text-emerald-600' : 'text-slate-600'} />
             <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 border-2 border-white"></div>
           </div>
-          <div className="flex flex-col text-left leading-none">
+          <div className="hidden sm:flex flex-col text-left leading-none">
             <span className="text-xs font-bold font-mono">
               {onCall ? formatDuration(callSeconds) : `Ramal ${ramal}`}
             </span>
@@ -407,8 +431,8 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
       {(isOpen || embedded) && (
         <div className={
           embedded 
-            ? `w-full bg-white border border-slate-200  rounded-3xl overflow-hidden flex flex-col ${className}` 
-            : "absolute top-12 right-0 w-80 max-w-[calc(100vw-1.5rem)] bg-white border border-slate-200  rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-3 duration-200"
+            ? `w-full bg-white border border-slate-200  rounded-3xl overflow-hidden flex flex-col ${className || ''}` 
+            : "fixed left-3 right-3 top-20 sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:w-80 bg-white border border-slate-200 rounded-3xl overflow-hidden z-50 animate-in slide-in-from-top-3 duration-200 shadow-2xl sm:shadow-lg"
         }>
           
           {/* Header com Indicadores de Conexão Asterisk 20+ Nativo */}
@@ -465,6 +489,30 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                     Gemini Ativo
                   </span>
                 </div>
+
+                {/* MOCK: Dados do Cliente recebidos via SIP Headers (X-Client-Reason) */}
+                {!clientMode && (
+                  <div className="mt-3 p-2 bg-blue-50 border border-blue-100 rounded-xl text-left shadow-inner">
+                    <div className="flex items-center gap-1.5 mb-1 text-blue-900">
+                      <User size={12} className="text-blue-600" />
+                      <span className="text-[11px] font-bold">João Silva (App Portal)</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1 text-[10px]">
+                      <div className="text-slate-600">
+                        Motivo: <span className="font-semibold text-slate-800">Suporte Técnico</span>
+                      </div>
+                      <div className="text-slate-600">
+                        Protocolo: <span className="font-semibold text-slate-800">20268841</span>
+                      </div>
+                      <div className="text-slate-600">
+                        Plano: <span className="font-semibold text-slate-800">Fibra 500 Mega</span>
+                      </div>
+                      <div className="text-slate-600">
+                        Status SGP: <span className="font-semibold text-emerald-600">Adimplente</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="w-full text-center">
@@ -630,51 +678,75 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
             </div>
           )}
 
-          {/* Teclado de Discagem */}
+          {/* Teclado de Discagem / Tela de Conexão Cliente */}
           {!onCall ? (
             <div className="p-4 bg-slate-50">
-              <div className="grid grid-cols-3 gap-2.5 mb-3">
-                {['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'].map((key) => (
+              {clientMode ? (
+                <div className="flex flex-col items-center justify-center py-6 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center relative">
+                     <div className="absolute inset-0 rounded-full border-2 border-blue-400 animate-ping"></div>
+                     <Phone className="text-blue-600" size={32} />
+                  </div>
+                  <div className="text-center">
+                    <h4 className="text-lg font-bold font-outfit text-slate-900">Discando...</h4>
+                    <p className="text-sm text-slate-500">
+                      Conectando ao setor: <span className="font-bold">{incomingCallData?.motivo || 'Atendimento'}</span>
+                    </p>
+                  </div>
                   <button 
-                    key={key}
-                    onClick={() => handleKeyPress(key)}
-                    className="h-11 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-lg font-bold text-slate-800 flex items-center justify-center transition-all active:scale-95  hover:border-slate-300"
+                    onClick={toggleCall}
+                    className="mt-4 w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all active:scale-95"
                   >
-                    {key}
+                    <Phone size={18} />
+                    <span>Ligar Agora</span>
                   </button>
-                ))}
-              </div>
-
-              {/* Botões de Ação */}
-              <div className="flex gap-2">
-                <button 
-                  onClick={toggleCall}
-                  disabled={dialNumber.trim().length === 0}
-                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all  active:scale-95"
-                >
-                  <Phone size={18} />
-                  <span>Chamar</span>
-                </button>
-                
-                <button 
-                  onClick={handleBackspace}
-                  disabled={dialNumber.length === 0}
-                  className="w-12 h-12 bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-500 hover:text-slate-800 rounded-xl flex items-center justify-center transition-all active:scale-95 "
-                  title="Apagar dígito"
-                >
-                  <Delete size={18} />
-                </button>
-              </div>
-
-              {/* Atalhos Rápidos de Ramais ISP */}
-              <div className="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
-                <span className="font-semibold">Atalhos:</span>
-                <div className="flex gap-1">
-                  <button onClick={() => setDialNumber('1001')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">1001 (N2)</button>
-                  <button onClick={() => setDialNumber('1002')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">1002 (NOC)</button>
-                  <button onClick={() => setDialNumber('*97')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">*97 (VM)</button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-3 gap-2.5 mb-3">
+                    {['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'].map((key) => (
+                      <button 
+                        key={key}
+                        onClick={() => handleKeyPress(key)}
+                        className="h-11 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-lg font-bold text-slate-800 flex items-center justify-center transition-all active:scale-95  hover:border-slate-300"
+                      >
+                        {key}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Botões de Ação */}
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={toggleCall}
+                      disabled={dialNumber.trim().length === 0}
+                      className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all  active:scale-95"
+                    >
+                      <Phone size={18} />
+                      <span>Chamar</span>
+                    </button>
+                    
+                    <button 
+                      onClick={handleBackspace}
+                      disabled={dialNumber.length === 0}
+                      className="w-12 h-12 bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-500 hover:text-slate-800 rounded-xl flex items-center justify-center transition-all active:scale-95 "
+                      title="Apagar dígito"
+                    >
+                      <Delete size={18} />
+                    </button>
+                  </div>
+
+                  {/* Atalhos Rápidos de Ramais ISP */}
+                  <div className="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+                    <span className="font-semibold">Atalhos:</span>
+                    <div className="flex gap-1">
+                      <button onClick={() => setDialNumber('1001')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">1001 (N2)</button>
+                      <button onClick={() => setDialNumber('1002')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">1002 (NOC)</button>
+                      <button onClick={() => setDialNumber('*97')} className="px-2 py-0.5 rounded bg-white border border-slate-200 hover:bg-slate-100 font-mono">*97 (VM)</button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             /* Controles Durante a Chamada */
