@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { DivIcon, Icon } from 'leaflet';
 import { 
   Search, Filter, MapPin, Router, Activity, 
-  CheckCircle2, XCircle, AlertTriangle, RefreshCw, Signal, X, Maximize, Minimize, Crosshair
+  CheckCircle2, XCircle, AlertTriangle, RefreshCw, Signal, X, Maximize, Minimize, Crosshair, ChevronUp, ChevronDown
 } from 'lucide-react';
 
 // Correção para ícones padrão do Leaflet no React
@@ -103,6 +103,7 @@ export default function MapaRede() {
   const [selectedOnt, setSelectedOnt] = useState<OntGeoNode | null>(null);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showControls, setShowControls] = useState(true);
   const [mapCenter, setMapCenter] = useState<[number, number]>([centralPos.lat, centralPos.lng]);
   const [locationQuery, setLocationQuery] = useState('');
   const [searchingLocation, setSearchingLocation] = useState(false);
@@ -154,10 +155,27 @@ export default function MapaRede() {
     }
   };
 
+  const toggleControls = () => {
+    setShowControls(prev => !prev);
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+  };
+
   return (
-    <div className={isFullScreen ? "fixed inset-0 z-[999] flex flex-col bg-slate-950" : "flex flex-col h-full bg-slate-950 relative"}>
+    <div className={isFullScreen ? "fixed inset-0 z-[999] flex flex-col bg-slate-950" : "flex flex-col h-full bg-slate-950 relative overflow-hidden"}>
+      {/* Toggle Panel Button - Global & Responsive */}
+      <div className="absolute top-4 right-4 z-[400] max-sm:fixed max-sm:bottom-8 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-auto max-sm:right-auto">
+        <button
+          onClick={toggleControls}
+          className="bg-blue-600/90 hover:bg-blue-500 backdrop-blur-md text-white px-4 py-2.5 rounded-full border border-blue-400/50 shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-colors flex items-center gap-2 font-bold"
+          title={showControls ? "Esconder Filtros" : "Mostrar Filtros"}
+        >
+          {showControls ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          <span className="text-sm">{showControls ? "Esconder Painel" : "Filtros & Buscas"}</span>
+        </button>
+      </div>
+
       {/* HEADER DE CONTROLE */}
-      <div className="p-6 border-b border-white/5 bg-slate-900/90 backdrop-blur-md z-20 shadow-md">
+      <div className={`p-6 border-b border-white/5 bg-slate-900/90 backdrop-blur-md z-20 shadow-md flex-shrink-0 transition-all duration-300 ${showControls ? 'max-h-[800px] opacity-100 overflow-visible' : 'max-h-0 opacity-0 overflow-hidden !p-0 !border-0'}`}>
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white font-outfit flex items-center gap-2">
@@ -167,19 +185,31 @@ export default function MapaRede() {
           </div>
           
           <div className="flex flex-wrap gap-3">
-            <div className="bg-slate-950 border border-white/10 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px]">
+            <div 
+              className={`bg-slate-950 border ${statusFilter === 'todos' ? 'border-white bg-slate-800 ring-2 ring-white/20' : 'border-white/10'} rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-slate-800 transition-all`} 
+              onClick={() => setStatusFilter('todos')}
+            >
               <span className="text-xl font-bold text-white">{stats.total}</span>
               <span className="text-[10px] text-slate-400 uppercase tracking-wider">Total Ativos</span>
             </div>
-            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-emerald-500/20 transition-colors" onClick={() => setStatusFilter(statusFilter === 'online' ? 'todos' : 'online')}>
+            <div 
+              className={`bg-emerald-500/10 border ${statusFilter === 'online' ? 'border-emerald-500 bg-emerald-500/30 ring-2 ring-emerald-500/50' : 'border-emerald-500/20'} rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-emerald-500/30 transition-all`} 
+              onClick={() => setStatusFilter('online')}
+            >
               <span className="text-xl font-bold text-emerald-400">{stats.online}</span>
               <span className="text-[10px] text-emerald-500 uppercase tracking-wider">Online</span>
             </div>
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-amber-500/20 transition-colors" onClick={() => setStatusFilter(statusFilter === 'alerta' ? 'todos' : 'alerta')}>
+            <div 
+              className={`bg-amber-500/10 border ${statusFilter === 'alerta' ? 'border-amber-500 bg-amber-500/30 ring-2 ring-amber-500/50' : 'border-amber-500/20'} rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-amber-500/30 transition-all`} 
+              onClick={() => setStatusFilter('alerta')}
+            >
               <span className="text-xl font-bold text-amber-400">{stats.alertas}</span>
               <span className="text-[10px] text-amber-500 uppercase tracking-wider">Atenção</span>
             </div>
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-red-500/20 transition-colors" onClick={() => setStatusFilter(statusFilter === 'offline' ? 'todos' : 'offline')}>
+            <div 
+              className={`bg-red-500/10 border ${statusFilter === 'offline' ? 'border-red-500 bg-red-500/30 ring-2 ring-red-500/50' : 'border-red-500/20'} rounded-xl px-4 py-2 flex flex-col items-center justify-center min-w-[100px] cursor-pointer hover:bg-red-500/30 transition-all`} 
+              onClick={() => setStatusFilter('offline')}
+            >
               <span className="text-xl font-bold text-red-400">{stats.offline}</span>
               <span className="text-[10px] text-red-500 uppercase tracking-wider">LOS/Offline</span>
             </div>
@@ -255,7 +285,8 @@ export default function MapaRede() {
       </div>
 
       {/* ÁREA DO MAPA */}
-      <div className="flex-1 relative z-10 bg-slate-900">
+      <div className="flex-1 relative z-10 bg-slate-900 min-h-0">
+        
         {loading ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
             <RefreshCw size={32} className="text-blue-500 animate-spin mb-4" />
