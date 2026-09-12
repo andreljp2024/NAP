@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import type { Deal } from '../types';
 import AutoDiagnosticoModal from '../components/AutoDiagnosticoModal';
+import Webphone from '../components/Webphone';
 
 export default function PortalSuporte() {
   const authData = localStorage.getItem('@nap_client_auth');
@@ -24,6 +25,11 @@ export default function PortalSuporte() {
   const [novoPreferencia, setNovoPreferencia] = useState<'WhatsApp' | 'Telefone' | 'Portal'>('WhatsApp');
   const [criandoChamado, setCriandoChamado] = useState(false);
   const [protocoloSucesso, setProtocoloSucesso] = useState<string | null>(null);
+
+  // Modal Ligação MaIa
+  const [modalLigacaoOpen, setModalLigacaoOpen] = useState(false);
+  const [ligacaoMotivo, setLigacaoMotivo] = useState('');
+  const [showWebphoneModal, setShowWebphoneModal] = useState(false);
 
   // Modal Detalhes do Chamado
   const [chamadoSelecionado, setChamadoSelecionado] = useState<Deal | null>(null);
@@ -197,26 +203,6 @@ export default function PortalSuporte() {
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto w-full pb-24">
-      {/* CTI / Webphone Banner */}
-      {activeCall && (
-        <div className="bg-slate-900 rounded-3xl p-6 mb-8 text-white  flex flex-col items-center justify-center animate-in fade-in slide-in-from-top-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center mb-4 relative">
-            <div className="absolute inset-0 rounded-full border border-emerald-500 animate-ping"></div>
-            <PhoneCall className="text-emerald-500" size={32} />
-          </div>
-          <h3 className="text-xl font-bold font-outfit mb-1">Chamada em Andamento</h3>
-          <p className="text-slate-400 text-sm mb-6">Falando com: Operador (Suporte N1)</p>
-          <div className="text-3xl font-mono font-light text-emerald-400 mb-8">{formatTime(callDuration)}</div>
-          
-          <button 
-            onClick={handleWebphone}
-            className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-full font-bold  -500/20 transition-all active:scale-95 flex items-center gap-2"
-          >
-            <PhoneCall className="rotate-[135deg]" size={18} /> Encerrar Ligação
-          </button>
-        </div>
-      )}
-
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-outfit mb-2">Suporte Técnico</h1>
@@ -264,11 +250,10 @@ export default function PortalSuporte() {
           <h3 className="text-xl font-bold font-outfit mb-2">Ligação Gratuita</h3>
           <p className="text-blue-100 text-sm mb-6 max-w-[250px]">Fale agora mesmo com um de nossos especialistas usando a internet do seu dispositivo, sem gastar seus créditos.</p>
           <button 
-            onClick={handleWebphone}
-            disabled={activeCall}
-            className="bg-white text-blue-900 px-5 py-2.5 rounded-xl text-sm font-bold  hover:bg-blue-50 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+            onClick={() => setModalLigacaoOpen(true)}
+            className="bg-white text-blue-900 px-5 py-2.5 rounded-xl text-sm font-bold  hover:bg-blue-50 transition-all active:scale-95 flex items-center gap-2"
           >
-            {activeCall ? 'Ligação em andamento...' : 'Iniciar Chamada de Voz'}
+            Iniciar Chamada de Voz
           </button>
         </div>
 
@@ -649,6 +634,80 @@ export default function PortalSuporte() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {/* MODAL LIGAÇÃO GRATUITA (MaIa) */}
+      {modalLigacaoOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 relative overflow-hidden">
+            {/* Decoração bg */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-50 to-white -z-10"></div>
+            
+            <button 
+              onClick={() => setModalLigacaoOpen(false)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex flex-col items-center text-center mt-2">
+              <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4 relative shadow-sm border border-blue-200">
+                <Bot size={32} />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
+              </div>
+              <h3 className="text-xl font-bold font-outfit text-slate-900 mb-1">Olá! Sou a MaIa</h3>
+              <p className="text-sm text-slate-500 mb-6 px-4">
+                Para eu direcionar sua ligação gratuita ao especialista mais rápido, qual o motivo do seu contato?
+              </p>
+            </div>
+
+            <div className="space-y-2 mb-6">
+              {[
+                { label: 'Suporte Técnico (Internet Lenta/Caindo)', val: 'suporte' },
+                { label: 'Financeiro (Faturas, 2ª via, PIX)', val: 'financeiro' },
+                { label: 'Vendas e Novos Planos', val: 'vendas' },
+                { label: 'Outros Assuntos', val: 'outros' }
+              ].map(opt => (
+                <button
+                  key={opt.val}
+                  onClick={() => setLigacaoMotivo(opt.val)}
+                  className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
+                    ligacaoMotivo === opt.val 
+                      ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm' 
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              disabled={!ligacaoMotivo}
+              onClick={() => {
+                setModalLigacaoOpen(false);
+                setShowWebphoneModal(true);
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            >
+              <PhoneCall size={18} /> Ligar Agora
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL WEBPHONE EMBARCADO */}
+      {showWebphoneModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+          <div className="w-full max-w-sm mb-4">
+            <Webphone embedded={true} defaultExtension="9999" />
+          </div>
+          <button
+            onClick={() => setShowWebphoneModal(false)}
+            className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-sm transition-all"
+          >
+            Fechar Ligação
+          </button>
         </div>
       )}
     </div>

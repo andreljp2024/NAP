@@ -378,7 +378,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
   };
 
   return (
-    <div className={embedded ? `w-full max-w-sm ${className}` : "relative"}>
+    <div className={embedded ? `w-full max-w-[100vw] sm:max-w-sm mx-auto ${className || ''}` : "relative z-50"}>
       {/* Botão de Toggle do Webphone (Apenas quando NÃO for embedded) */}
       {!embedded && (
         <button 
