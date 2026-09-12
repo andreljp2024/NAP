@@ -4,7 +4,7 @@ import {
   Shield, Activity, Save, Loader2, Key, PhoneCall, CheckCircle2, 
   AlertTriangle, RefreshCw, Download, Upload, Copy, Check, Eye, 
   EyeOff, Clock, Sparkles, Globe, Lock, Sliders, Radio, 
-  Terminal, ShieldCheck, ChevronRight, Zap, Plus, Trash2, Edit3, X,
+  Terminal, ShieldCheck, Network, PhoneForwarded, ChevronRight, Zap, Plus, Trash2, Edit3, X,
   LayoutTemplate, Monitor, ExternalLink, CheckSquare, ClipboardCheck
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,9 @@ type TabType = 'identidade' | 'landingpage' | 'sgp' | 'telefonia' | 'whatsapp' |
 export default function SuperAdmin() {
   const { uploadLogo: contextUploadLogo, updateConfig: contextUpdateConfig } = useConfig();
   const [activeTab, setActiveTab] = useState<TabType>('identidade');
+  const [isSipTrunkModalOpen, setIsSipTrunkModalOpen] = useState(false);
+  const [editingSipTrunkId, setEditingSipTrunkId] = useState<string | null>(null);
+  const [formSipTrunk, setFormSipTrunk] = useState<any>({ nome: '', host: '', porta: 5060, usuario: '', senha: '', codecs: 'alaw, ulaw', status: 'ativo' });
   const [config, setConfig] = useState<SystemConfig>(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -74,6 +77,39 @@ export default function SuperAdmin() {
     }
     loadData();
   }, []);
+
+
+  const handleSipTrunkSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newTrunks = [...(config.telefonia.troncosSip || [])];
+    if (editingSipTrunkId) {
+      const idx = newTrunks.findIndex(t => t.id === editingSipTrunkId);
+      if (idx !== -1) newTrunks[idx] = { ...formSipTrunk, id: editingSipTrunkId };
+    } else {
+      newTrunks.push({ ...formSipTrunk, id: Math.random().toString(36).substr(2, 9) });
+    }
+    setConfig({ ...config, telefonia: { ...config.telefonia, troncosSip: newTrunks } });
+    setIsSipTrunkModalOpen(false);
+    showToast('success', 'Tronco SIP salvo com sucesso!');
+  };
+
+  const handleSipTrunkDelete = (id: string) => {
+    if(!window.confirm('Remover Tronco SIP? O Asterisk vai perder a rota.')) return;
+    const newTrunks = (config.telefonia.troncosSip || []).filter(t => t.id !== id);
+    setConfig({ ...config, telefonia: { ...config.telefonia, troncosSip: newTrunks } });
+    showToast('success', 'Tronco SIP removido.');
+  };
+
+  const openSipTrunkModal = (trunk?: any) => {
+    if (trunk) {
+      setEditingSipTrunkId(trunk.id);
+      setFormSipTrunk(trunk);
+    } else {
+      setEditingSipTrunkId(null);
+      setFormSipTrunk({ nome: '', host: '', porta: 5060, usuario: '', senha: '', codecs: 'alaw, ulaw', status: 'ativo' });
+    }
+    setIsSipTrunkModalOpen(true);
+  };
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
@@ -338,7 +374,76 @@ export default function SuperAdmin() {
         </div>
 
         {/* Toast Notifier */}
-        {toastMessage && (
+        
+      {/* Modal Tronco SIP */}
+      {isSipTrunkModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-4 border-b border-white/5 flex items-center justify-between bg-slate-950">
+              <h3 className="font-bold text-white flex items-center gap-2">
+                <Network className="text-blue-400" size={18} />
+                {editingSipTrunkId ? 'Editar Tronco SIP' : 'Novo Tronco SIP (Provedor VoIP)'}
+              </h3>
+              <button onClick={() => setIsSipTrunkModalOpen(false)} className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5">
+                <X size={18} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSipTrunkSave} className="p-5 flex-1 overflow-y-auto space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nome de Identificação (Ex: Vono, Algar)</label>
+                <input required type="text" value={formSipTrunk.nome} onChange={e => setFormSipTrunk({...formSipTrunk, nome: e.target.value})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" />
+              </div>
+              
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Host ou IP do Provedor</label>
+                  <input required type="text" value={formSipTrunk.host} onChange={e => setFormSipTrunk({...formSipTrunk, host: e.target.value})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" placeholder="sip.provedor.com.br" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Porta</label>
+                  <input required type="number" value={formSipTrunk.porta} onChange={e => setFormSipTrunk({...formSipTrunk, porta: Number(e.target.value)})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Usuário SIP</label>
+                  <input type="text" value={formSipTrunk.usuario} onChange={e => setFormSipTrunk({...formSipTrunk, usuario: e.target.value})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Senha SIP</label>
+                  <input type="password" value={formSipTrunk.senha} onChange={e => setFormSipTrunk({...formSipTrunk, senha: e.target.value})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-mono text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Codecs Permitidos (separados por vírgula)</label>
+                <input required type="text" value={formSipTrunk.codecs} onChange={e => setFormSipTrunk({...formSipTrunk, codecs: e.target.value})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600" placeholder="alaw, ulaw, g729" />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Status do Tronco</label>
+                <select value={formSipTrunk.status} onChange={e => setFormSipTrunk({...formSipTrunk, status: e.target.value as any})} className="w-full p-2.5 bg-slate-950 border border-white/5 rounded-xl text-sm font-medium text-white outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600">
+                  <option value="ativo">🟢 Ativo (Registrar e Operar)</option>
+                  <option value="inativo">🔴 Inativo (Desabilitado)</option>
+                </select>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-white/5 mt-4">
+                <button type="button" onClick={() => setIsSipTrunkModalOpen(false)} className="px-4 py-2 hover:bg-white/5 text-slate-300 rounded-xl text-sm font-bold transition-colors">
+                  Cancelar
+                </button>
+                <button type="submit" className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+                  Salvar Tronco PJSIP
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {toastMessage && (
           <div className={`p-4 rounded-xl text-sm font-medium flex items-center justify-between transition-all ${
             toastMessage.type === 'success' 
               ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
@@ -1348,6 +1453,71 @@ export default function SuperAdmin() {
                       <span className="text-[11px] text-slate-500">Transcreve a conversa operador-cliente, detectando sentimento e alerta de churn ou cliente irritado.</span>
                     </div>
                   </label>
+                </div>
+
+                
+
+                {/* Troncos SIP Section */}
+                <div className="pt-6 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 className="text-[13px] font-bold uppercase tracking-wider text-white flex items-center gap-1.5 mb-1">
+                        <Network size={14} className="text-blue-400" /> Troncos SIP (Entrada/Saída)
+                      </h4>
+                      <p className="text-[11px] text-slate-500">Configuração visual de rotas PSTN, Provedores VoIP e entroncamento SIP para chamadas externas.</p>
+                    </div>
+                    <button 
+                      onClick={() => openSipTrunkModal()}
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+                    >
+                      <Plus size={14} /> Adicionar Tronco
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {(config.telefonia.troncosSip || []).length === 0 ? (
+                      <div className="col-span-full p-6 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center text-center">
+                        <PhoneForwarded size={24} className="text-slate-600 mb-2" />
+                        <p className="text-sm font-bold text-slate-400">Nenhum Tronco SIP Configurado</p>
+                        <p className="text-xs text-slate-500 mt-1">O Asterisk não poderá realizar nem receber chamadas externas (PSTN) até que um provedor VoIP seja adicionado.</p>
+                      </div>
+                    ) : (
+                      (config.telefonia.troncosSip || []).map(trunk => (
+                        <div key={trunk.id} className="p-4 bg-slate-950 border border-white/5 rounded-2xl flex flex-col justify-between group hover:border-blue-500/30 transition-all">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2.5">
+                              <div className={`w-2 h-2 rounded-full ${trunk.status === 'ativo' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-rose-500'}`}></div>
+                              <h5 className="font-bold text-sm text-white">{trunk.nome}</h5>
+                            </div>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={() => openSipTrunkModal(trunk)} className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-white/5 rounded-md"><Edit3 size={14} /></button>
+                              <button onClick={() => handleSipTrunkDelete(trunk.id)} className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/5 rounded-md"><Trash2 size={14} /></button>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-1.5 mb-3">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-slate-500">Host / IP:</span>
+                              <span className="text-slate-300 font-mono">{trunk.host}:{trunk.porta}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-slate-500">Usuário SIP:</span>
+                              <span className="text-slate-300 font-mono">{trunk.usuario || 'N/A'}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-slate-500">Codecs:</span>
+                              <span className="text-slate-300">{trunk.codecs}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] uppercase font-bold tracking-wider">
+                            <span className="text-slate-500">Asterisk PJSIP Trunk</span>
+                            <span className={trunk.status === 'ativo' ? 'text-emerald-400' : 'text-rose-400'}>{trunk.status}</span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
 
                 {/* Card de Teste Asterisk ARI */}

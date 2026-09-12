@@ -55,6 +55,17 @@ export interface ErpItemConfig {
   latenciaMs?: number;
 }
 
+export interface SipTrunkConfig {
+  id: string;
+  nome: string;
+  host: string;
+  porta: number;
+  usuario: string;
+  senha?: string;
+  codecs: string;
+  status: 'ativo' | 'inativo';
+}
+
 export interface SystemConfig {
   provedor: {
     nomeFantasia: string;
@@ -85,6 +96,7 @@ export interface SystemConfig {
     status: 'conectado' | 'desconectado' | 'alerta';
   };
   telefonia: {
+    troncosSip: SipTrunkConfig[];
     ariHost: string;
     ariPort: number;
     ariUser: string;
@@ -284,6 +296,9 @@ export const DEFAULT_CONFIG: SystemConfig = {
     status: "conectado"
   },
   telefonia: {
+    troncosSip: [
+      { id: '1', nome: 'Vono Telecom', host: 'sip.vono.net.br', porta: 5060, usuario: 'vono_nap', senha: '***', codecs: 'alaw, ulaw, g729', status: 'ativo' }
+    ],
     ariHost: "192.168.10.250",
     ariPort: 8088,
     ariUser: "nap_admin",
@@ -312,9 +327,9 @@ export const DEFAULT_CONFIG: SystemConfig = {
     temperatura: 0.6,
     topP: 0.95,
     maxTokens: 1024,
-    promptSuporte: "Você é o assistente virtual do {nome_provedor}. Atenda clientes de internet fibra óptica com empatia e precisão técnica.",
-    promptVendas: "Você é consultor comercial do {nome_provedor}. Oferte planos residenciais de fibra óptica simétrica com Wi-Fi 6 Mesh.",
-    promptCobranca: "Você atua no setor financeiro do {nome_provedor}. Forneça a chave PIX copia-e-cola e código de barras instantâneo.",
+    promptSuporte: "Você é a MaIA, a inteligência artificial humanizada do {nome_provedor}. Atenda os clientes com extrema empatia, como uma pessoa real conversando de forma leve, amigável e natural. Evite parecer um robô. Entenda o problema da internet do cliente com carinho e precisão técnica.",
+    promptVendas: "Você é a MaIA, consultora comercial humanizada do {nome_provedor}. Converse com o cliente de forma muito amigável, próxima e natural, ouvindo suas necessidades antes de oferecer nossos planos de fibra óptica simétrica.",
+    promptCobranca: "Você é a MaIA, do suporte financeiro do {nome_provedor}. Haja com empatia, respeito e de forma extremamente humana. Ajude o cliente a resolver pendências fornecendo o PIX sem julgamentos, tornando a conversa leve.",
     gatilhoTransbordo: "solicitacao_cliente",
     copilotoAtivo: true,
     status: "conectado"

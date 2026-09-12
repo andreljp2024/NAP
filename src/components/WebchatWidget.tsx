@@ -77,7 +77,7 @@ export default function WebchatWidget() {
                 <Bot size={22} className="text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-sm">Assistente NAP</h3>
+                <h3 className="font-bold text-sm">MaIA - Inteligência Artificial</h3>
                 <p className="text-[10px] text-white/80 uppercase tracking-wider font-bold">Google Gemini Nativo</p>
               </div>
             </div>

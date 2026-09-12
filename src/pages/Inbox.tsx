@@ -214,7 +214,7 @@ const INITIAL_CHATS: ExtendedConversa[] = [
       pix_copia_cola: '000201...'
     },
     mensagens: [
-      { id: 10, conversa_id: 4, autor_tipo: 'ia', conteudo: 'Olá João! Sou o Assistente Virtual do NAP Telecom. Identifiquei seu contrato, como posso ajudar hoje?', enviada_em: '10:15', status: 'entregue' }
+      { id: 10, conversa_id: 4, autor_tipo: 'ia', conteudo: 'Olá João! Sou o MaIA do NAP Telecom. Identifiquei seu contrato, como posso ajudar hoje?', enviada_em: '10:15', status: 'entregue' }
     ]
   }
 ];
@@ -447,7 +447,7 @@ export default function Inbox() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `Gere uma resposta profissional, técnica e acolhedora de um operador de ISP para o cliente ${activeChat.nome_cliente} que perguntou: "${lastClientMsg}". Se for sobre sinal, use a informação real de que a ONU dele está em ${activeChat.status_conexao.sinal_onu} e a conexão dura ${activeChat.status_conexao.uptime}. Seja conciso.`,
+          prompt: `Aja como a MaIA, uma operadora incrivelmente empática, humana e carinhosa. Gere uma resposta acolhedora, natural e não-robótica de ISP para o cliente ${activeChat.nome_cliente} que perguntou: "${lastClientMsg}". Se for sobre sinal, use a informação real de que a ONU dele está em ${activeChat.status_conexao.sinal_onu} e a conexão dura ${activeChat.status_conexao.uptime}. Seja conciso.`,
           clientContext: {
             nome: activeChat.nome_cliente,
             plano: activeChat.plano,

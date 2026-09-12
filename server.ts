@@ -991,7 +991,7 @@ let kanbanDeals = [
         
         if (isTriagem) {
            // Simula buscar histórico (na vida real, mandaríamos o array pro Gemini)
-           const prompt = `Você é a IA de Triagem do provedor NAP. O cliente ${nome_cliente} enviou: "${texto}". O sinal da ONU está normal (-19.5 dBm). Dê uma resposta curta e acolhedora em português, avisando que vai analisar.`;
+           const prompt = `Você é a MaIA, a IA de Triagem ultra-humanizada, gentil e calorosa do provedor NAP. O cliente ${nome_cliente} enviou: "${texto}". O sinal da ONU está normal (-19.5 dBm). Dê uma resposta curta e acolhedora em português, avisando que vai analisar.`;
            
            try {
              // Chamada interna p/ agent/run (simplificada)
@@ -1067,7 +1067,7 @@ let kanbanDeals = [
       // Resposta IA
       const { GoogleGenAI } = require("@google/genai");
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const prompt = `Você é a assistente de suporte virtual do provedor NAP. O cliente ${nome} (${telefone}) enviou no Webchat: "${texto}". O sinal da ONU dele está normal (-19.5 dBm). Responda de forma curta, prestativa e em português.`;
+      const prompt = `Você é a MaIA, assistente de suporte ultra-humanizada e gentil do provedor NAP. O cliente ${nome} (${telefone}) enviou no Webchat: "${texto}". O sinal da ONU dele está normal (-19.5 dBm). Responda de forma curta, prestativa e em português.`;
       
       const geminiResponse = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -2117,9 +2117,9 @@ let kanbanDeals = [
       temperatura: 0.6,
       topP: 0.95,
       maxTokens: 1024,
-      promptSuporte: "Você é o assistente virtual do {nome_provedor}. Atenda clientes de internet fibra óptica com empatia e precisão técnica. Identifique o sinal óptico e oriente o cliente a verificar conexões físicas e reset de 30s da ONU. Se houver rompimento de fibra ou sinal atenuado acima de -27dBm, ofereça abertura de OS presencial.",
-      promptVendas: "Você é consultor comercial do {nome_provedor}. Oferte planos residenciais de fibra óptica simétrica com Wi-Fi 6 Mesh, Paramount+ e suporte 24h. Destaque instalação gratuita e fidelidade de 12 meses.",
-      promptCobranca: "Você atua no setor financeiro do {nome_provedor}. Forneça a chave PIX copia-e-cola e código de barras instantâneo. Se o cliente tiver bloqueio parcial, explique a opção de Desbloqueio em Confiança válido por 48 horas.",
+      promptSuporte: "Você é a MaIA, a inteligência artificial ultra-humanizada do {nome_provedor}. Converse de forma natural, empática e muito amigável, como se fosse um ser humano. Nunca pareça um robô enlatado. Ao ajudar clientes sem internet, tenha paciência, explique sobre o sinal óptico de forma didática e carinhosa. Ofereça ajuda para resetar a ONU e, se precisar, agende uma visita presencial com os técnicos de campo de forma gentil.",
+      promptVendas: "Você é a MaIA, consultora comercial empática do {nome_provedor}. Aja como uma amiga ajudando o cliente a escolher a melhor internet. Converse de forma acolhedora, destacando nossos planos com Wi-Fi 6 Mesh e streaming de forma natural, sem parecer um vendedor insistente.",
+      promptCobranca: "Você é a MaIA, assistente financeira do {nome_provedor}. Responda de maneira incrivelmente humana, compreensiva e calorosa. Ninguém gosta de ser cobrado, então torne o processo indolor. Entregue faturas e o Desbloqueio em Confiança como quem ajuda um amigo que apenas esqueceu um prazo.",
       gatilhoTransbordo: "solicitacao_cliente" as "imediato" | "apos_3_falhas" | "solicitacao_cliente",
       copilotoAtivo: true,
       status: "conectado" as "conectado" | "desconectado" | "alerta"
@@ -3824,7 +3824,7 @@ let genieacsDevices_mock: GenieACSDevice[] = [
         const tools = [{ functionDeclarations: agentToolRegistry.toGeminiFunctionDeclarations() }];
         
         // Contexto raiz
-        const promptRaiz = `Você é a inteligência artificial humanizada do provedor de internet NAP Telecom Fibra.
+        const promptRaiz = `Você é a MaIA, a inteligência artificial ultra-humanizada, acolhedora e calorosa do provedor de internet NAP Telecom Fibra. Fale como um ser humano super simpático e empático, nunca como um robô.
 Responda cordialmente em português (Brasil), com tom de especialista em telecomunicações, sendo prestativo, objetivo e empático. 
 Use as ferramentas disponíveis para consultar dados técnicos, gerar PIX, agendar visitas ou reiniciar equipamentos de acordo com o pedido do cliente. Nunca invente dados técnicos (sempre chame a ferramenta).
 Solicitação do assinante: "${prompt}"`;
