@@ -485,7 +485,7 @@ export default function Inbox() {
   const handleDesbloqueio48h = async () => {
     if (!activeChat) return;
     try {
-      const res = await fetch(`/api/sgp/desbloqueio-confianca/${activeChat.id}`, { method: 'POST' });
+      const res = await fetch(`/api/erp/desbloqueio-confianca/${activeChat.id}`, { method: 'POST' });
       if (res.ok) {
         const desbloqueioText = `Olá ${activeChat.nome_cliente.split(' ')[0]}! Registramos no SGP o seu Desbloqueio em Confiança válido por 48 horas. Sua conexão já foi liberada no MikroTik.`;
         setMessageText(desbloqueioText);

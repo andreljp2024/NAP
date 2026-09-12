@@ -21,7 +21,7 @@ export default function PortalFaturas() {
           setFaturas(client.faturas);
           setLoading(false);
         } else {
-          fetch('/api/sgp/faturas')
+          fetch('/api/erp/faturas')
             .then(res => res.json())
             .then(data => {
               setFaturas(data);
@@ -30,7 +30,7 @@ export default function PortalFaturas() {
             .catch(() => setLoading(false));
         }
       } catch (e) {
-        fetch('/api/sgp/faturas')
+        fetch('/api/erp/faturas')
           .then(res => res.json())
           .then(data => {
             setFaturas(data);
@@ -39,7 +39,7 @@ export default function PortalFaturas() {
           .catch(() => setLoading(false));
       }
     } else {
-      fetch('/api/sgp/faturas')
+      fetch('/api/erp/faturas')
         .then(res => res.json())
         .then(data => {
           setFaturas(data);
@@ -66,7 +66,7 @@ export default function PortalFaturas() {
     setDesbloqueioLoading(true);
     setDesbloqueioMsg(null);
     try {
-      const res = await fetch('/api/sgp/desbloqueio-confianca/1001', { method: 'POST' });
+      const res = await fetch('/api/erp/desbloqueio-confianca/1001', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         const dataExpiracao = new Date(Date.now() + 48 * 60 * 60 * 1000);
@@ -84,7 +84,7 @@ export default function PortalFaturas() {
   const handleGeneratePix = async (id: number) => {
     setActionStates(prev => ({ ...prev, [id]: { type: 'pix', status: 'loading' } }));
     try {
-      const response = await fetch(`/api/sgp/pix/${id}`, { method: 'POST' });
+      const response = await fetch(`/api/erp/pix/${id}`, { method: 'POST' });
       const data = await response.json();
       setActionStates(prev => ({ ...prev, [id]: { type: 'pix', status: 'success', data: data.codigo_pix } }));
     } catch {
@@ -95,7 +95,7 @@ export default function PortalFaturas() {
   const handleGenerateBoleto = async (id: number) => {
     setActionStates(prev => ({ ...prev, [id]: { type: 'boleto', status: 'loading' } }));
     try {
-      const response = await fetch(`/api/sgp/boleto/${id}`, { method: 'POST' });
+      const response = await fetch(`/api/erp/boleto/${id}`, { method: 'POST' });
       const data = await response.json();
       // Open boleto
       window.open(data.url_pdf, '_blank');

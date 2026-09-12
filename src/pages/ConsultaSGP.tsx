@@ -23,7 +23,7 @@ export default function ConsultaSGP() {
     
     setLoading(true);
     try {
-      const res = await fetch(`/api/sgp/busca?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`/api/erp/busca?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       setResultados(data.resultados);
       setActiveTab('geral');

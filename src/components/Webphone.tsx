@@ -364,11 +364,11 @@ export default function Webphone({
       const fullDialog = turns.map(t => `${t.speaker === 'cliente' ? 'Cliente' : 'Operador'}: ${t.transcription}`).join('\n');
       const promptText = turns.length > 0
         ? `Você é o auditor de qualidade e inteligência do Asterisk Nativo de um provedor de internet (ISP).
-Gere um resumo técnico de 1 parágrafo para gravação no histórico do contrato no ERP SGP da ligação do número ${lastCallInfo.number} (Duração: ${lastCallInfo.duration}).
+Gere um resumo técnico de 1 parágrafo para gravação no histórico do contrato no ERP ERP da ligação do número ${lastCallInfo.number} (Duração: ${lastCallInfo.duration}).
 Diálogo transcrito:
 ${fullDialog}
 Inclua: motivo do contato, problema relatado, ação executada pelo atendente e encaminhamento final.`
-        : `Gere um resumo técnico conciso de 1 parágrafo para gravação no SGP/Asterisk de uma ligação telefônica de suporte de internet com o número ${lastCallInfo.number} que durou ${lastCallInfo.duration}. Inclua: motivo provável, ação tomada pelo operador e status final.`;
+        : `Gere um resumo técnico conciso de 1 parágrafo para gravação no ERP/Asterisk de uma ligação telefônica de suporte de internet com o número ${lastCallInfo.number} que durou ${lastCallInfo.duration}. Inclua: motivo provável, ação tomada pelo operador e status final.`;
 
       const res = await fetch('/api/gemini/agent/run', {
         method: 'POST',
@@ -508,7 +508,7 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                         Plano: <span className="font-semibold text-slate-800">Fibra 500 Mega</span>
                       </div>
                       <div className="text-slate-600">
-                        Status SGP: <span className="font-semibold text-emerald-600">Adimplente</span>
+                        Status: <span className="font-semibold text-emerald-600">Adimplente</span>
                       </div>
                     </div>
                   </div>
@@ -666,11 +666,11 @@ Inclua: motivo do contato, problema relatado, ação executada pelo atendente e 
                 >
                   {savedToSgp ? (
                     <>
-                      <Check size={12} /> Salvo no SGP!
+                      <Check size={12} /> Salvo no ERP!
                     </>
                   ) : (
                     <>
-                      <span>Gravar no SGP / CRM</span>
+                      <span>Gravar no ERP / CRM</span>
                     </>
                   )}
                 </button>

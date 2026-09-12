@@ -20,18 +20,18 @@ let mockWabaChats = [];
 let mockWabaMessages = [];
 
 
-const SGP_URL = process.env.SGP_URL || "";
-const SGP_APP = process.env.SGP_APP || "";
-const SGP_TOKEN = process.env.SGP_TOKEN || "";
+const ERP_URL = process.env.ERP_URL || "";
+const ERP_APP = process.env.ERP_APP || "";
+const ERP_TOKEN = process.env.ERP_TOKEN || "";
 
-// Função mock para fetchSGP
-async function fetchSGP(endpoint, method = "GET", body = null) {
-  const url = `${SGP_URL}${endpoint}`;
+// Função mock para fetchERP
+async function fetchERP(endpoint, method = "GET", body = null) {
+  const url = `${ERP_URL}${endpoint}`;
   const options: any = {
     method,
     headers: {
-      "app": SGP_APP,
-      "token": SGP_TOKEN,
+      "app": ERP_APP,
+      "token": ERP_TOKEN,
       "Content-Type": "application/json"
     }
   };
@@ -39,7 +39,7 @@ async function fetchSGP(endpoint, method = "GET", body = null) {
     options.body = JSON.stringify(body);
   }
   const res = await fetch(url, options);
-  if (!res.ok) throw new Error(`Erro HTTP SGP: ${res.status}`);
+  if (!res.ok) throw new Error(`Erro HTTP ERP: ${res.status}`);
   return await res.json();
 }
 
@@ -58,7 +58,7 @@ async function fetchSGP(endpoint, method = "GET", body = null) {
 
   // In-Memory Kanban Deals (Support & Sales para Provedores ISP)
   
-const sgpDatabase_mock: any[] = [
+const erpDatabase_mock: any[] = [
   { 
     id: 101, 
     nome: "João Silva", 
@@ -139,7 +139,7 @@ let kanbanDeals = [
       plano: "Fibra 1GB Empresarial",
       prioridade: 1,
       criado_em: "Ontem, 16:40",
-      contexto_ia: "OS #8841 aberta no SGP. Técnico Marcos em deslocamento com previsão de chegada em 25 minutos."
+      contexto_ia: "OS #8841 aberta no sistema. Técnico Marcos em deslocamento com previsão de chegada em 25 minutos."
     },
     { 
       id: 104, 
@@ -319,7 +319,7 @@ let kanbanDeals = [
       dias_atraso: 0,
       prioridade: 3,
       criado_em: "Hoje, 11:40",
-      contexto_ia: "Baixa automática no SGP via Webhook do Banco Inter/Gerencianet em 45 segundos. Velocidade restabelecida."
+      contexto_ia: "Baixa automática no sistema via Webhook do Banco Inter/Gerencianet em 45 segundos. Velocidade restabelecida."
     }
   ];
 
@@ -451,7 +451,7 @@ let kanbanDeals = [
     }
   });
 
-  // Obter Clientes (Real SGP ou Mock)
+  // Obter Clientes (Real ERP ou Mock)
   
   app.get("/api/contatos", async (req, res) => {
     try {
@@ -469,9 +469,9 @@ let kanbanDeals = [
         return res.json(mapeados);
       }
       
-      // 2. Se o DB local estiver vazio e SGP_URL existir, tentar puxar direto
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        const data = await fetchSGP("/api/clientes?limit=50");
+      // 2. Se o DB local estiver vazio e ERP_URL existir, tentar puxar direto
+      if (ERP_URL && ERP_APP && ERP_TOKEN) {
+        const data = await fetchERP("/api/clientes?limit=50");
         if (data && Array.isArray(data)) {
            const mapeados = data.map((c: any) => ({
              id: c.id,
@@ -485,11 +485,11 @@ let kanbanDeals = [
         }
       }
     } catch (error) {
-      console.warn("DB offline ou API SGP falhou no contatos, caindo p/ mock");
+      console.warn("DB offline ou API ERP falhou no contatos, caindo p/ mock");
     }
     
     // Mock Fallback
-    res.json(sgpDatabase_mock.map(c => ({
+    res.json(erpDatabase_mock.map(c => ({
       id: c.id,
       cpf_cnpj: c.cpf_cnpj,
       nome: c.nome,
@@ -501,14 +501,14 @@ let kanbanDeals = [
 
 
 
-  app.get("/api/sgp/faturas", async (req, res) => {
+  app.get("/api/erp/faturas", async (req, res) => {
     try {
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        const data = await fetchSGP("/api/faturas?limit=10");
+      if (ERP_URL && ERP_APP && ERP_TOKEN) {
+        const data = await fetchERP("/api/faturas?limit=10");
         return res.json(data);
       }
     } catch (error) {
-      console.warn("Aviso: Falha na API SGP real, utilizando dados de simulação.", error);
+      console.warn("Aviso: Falha na API ERP real, utilizando dados de simulação.", error);
     }
     
     // Mock Fallback
@@ -519,12 +519,12 @@ let kanbanDeals = [
   });
 
   // Generate PIX (Real ou Mock)
-  app.post("/api/sgp/pix/:id", async (req, res) => {
+  app.post("/api/erp/pix/:id", async (req, res) => {
     const { id } = req.params;
     try {
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        // Chamada real à rota de geração de PIX do SGP
-        const data = await fetchSGP(`/api/faturas/gerarpix/${id}`, "POST");
+      if (ERP_URL && ERP_APP && ERP_TOKEN) {
+        // Chamada real à rota de geração de PIX do ERP
+        const data = await fetchERP(`/api/faturas/gerarpix/${id}`, "POST");
         return res.json({ sucesso: true, fatura_id: id, codigo_pix: data.copia_cola || data.pix });
       }
     } catch (error) {
@@ -542,7 +542,7 @@ let kanbanDeals = [
   });
 
   
-  app.get("/api/sgp/boleto/mock/:id", (req, res) => {
+  app.get("/api/erp/boleto/mock/:id", (req, res) => {
     const { id } = req.params;
     const html = `
       <!DOCTYPE html>
@@ -647,8 +647,8 @@ let kanbanDeals = [
     res.json({ success: true, message: `Sessão PPPoE (${ip}) derrubada com sucesso no BNG/MikroTik.` });
   });
 
-  // Desbloqueio em Confiança SGP
-  app.post("/api/sgp/desbloqueio-confianca/:id", async (req, res) => {
+  // Desbloqueio em Confiança ERP
+  app.post("/api/erp/desbloqueio-confianca/:id", async (req, res) => {
     const { id } = req.params;
     // Simula alteração no ERP e liberação no Radius
     await new Promise(r => setTimeout(r, 600));
@@ -657,21 +657,21 @@ let kanbanDeals = [
 
   // Endpoint de Clientes de Teste do Portal para Homologação
   app.get("/api/portal/clientes-teste", (req, res) => {
-    res.json(sgpDatabase_mock);
+    res.json(erpDatabase_mock);
   });
 
-  // Busca de cliente específico no SGP por CPF ou termo
-  app.get("/api/sgp/busca", (req, res) => {
+  // Busca de cliente específico no sistema por CPF ou termo
+  app.get("/api/erp/busca", (req, res) => {
     const { cpf, q } = req.query;
     const queryLimpa = String(cpf || q || '').replace(/\D/g, '');
-    const found = sgpDatabase_mock.find(c => 
+    const found = erpDatabase_mock.find(c => 
       (queryLimpa && c.cpf_cnpj?.replace(/\D/g, '').includes(queryLimpa)) ||
       (q && c.nome?.toLowerCase().includes(String(q).toLowerCase()))
     );
     if (found) {
       return res.json(found);
     }
-    res.json(sgpDatabase_mock[1] || sgpDatabase_mock[0]);
+    res.json(erpDatabase_mock[1] || erpDatabase_mock[0]);
   });
 
   // --- Módulo TR-069 / GenieACS: Gestão de Wi-Fi Residencial pelo Cliente (Portal PWA) ---
@@ -852,12 +852,12 @@ let kanbanDeals = [
   });
 
   // Generate Boleto PDF (Real ou Mock)
-  app.post("/api/sgp/boleto/:id", async (req, res) => {
+  app.post("/api/erp/boleto/:id", async (req, res) => {
     const { id } = req.params;
     try {
-      if (SGP_URL && SGP_APP && SGP_TOKEN) {
-        // Chamada real à rota de download de PDF da fatura do SGP
-        const data = await fetchSGP(`/api/faturas/imprimir/${id}`, "GET");
+      if (ERP_URL && ERP_APP && ERP_TOKEN) {
+        // Chamada real à rota de download de PDF da fatura do ERP
+        const data = await fetchERP(`/api/faturas/imprimir/${id}`, "GET");
         return res.json({ sucesso: true, fatura_id: id, url_pdf: data.link_boleto || data.url });
       }
     } catch (error) {
@@ -869,16 +869,16 @@ let kanbanDeals = [
       res.json({
         sucesso: true,
         fatura_id: id,
-        url_pdf: `https://sgp.provedormock.com.br/boletos/v2/${id}_emitido.pdf`
+        url_pdf: `https://erp.provedormock.com.br/boletos/v2/${id}_emitido.pdf`
       });
     }, 600);
   });
 
-  // N8N Webhook Listener Mock (Sync from SGP to NAP)
+  // N8N Webhook Listener Mock (Sync from ERP to NAP)
   
-  app.post("/api/webhooks/n8n/sgp-sync", async (req, res) => {
+  app.post("/api/webhooks/n8n/erp-sync", async (req, res) => {
     try {
-      console.log("[SGP-SYNC] Evento recebido:", req.body);
+      console.log("[ERP-SYNC] Evento recebido:", req.body);
       const { acao, tipo, dados } = req.body;
       
       // Exemplo: { acao: "criado", tipo: "cliente", dados: { nome, cpf, telefone... } }
@@ -905,7 +905,7 @@ let kanbanDeals = [
 
       res.json({ status: "processed", synced_to_db: true });
     } catch(e) {
-      console.error("[SGP-SYNC] Falha ao gravar no PostgreSQL", e);
+      console.error("[ERP-SYNC] Falha ao gravar no PostgreSQL", e);
       // Retorna sucesso de processamento para não ficar retry infinito no webhook, mas acusa fallback
       res.json({ status: "processed", synced_to_db: false, error: e.message });
     }
@@ -954,7 +954,7 @@ let kanbanDeals = [
       const contactData = body.entry[0].changes[0].value.contacts?.[0];
       const telefone = messageData.from;
       const texto = messageData.text?.body || "(Áudio/Mídia Recebida)";
-      const nome_cliente = contactData?.profile?.name || "Cliente SGP";
+      const nome_cliente = contactData?.profile?.name || "Cliente ERP";
       
       console.log(`[WABA] Msg de ${telefone} (${nome_cliente}): ${texto}`);
       
@@ -2061,14 +2061,14 @@ let kanbanDeals = [
         syncIntervalMinutes: 15,
         status: "desconectado"
       },
-      sgp: {
-        id: "sgp",
-        nome: "SGP (Sistema de Gestão de Provedores)",
+      erp: {
+        id: "erp",
+        nome: "ERP (Sistema de Gestão de Provedores)",
         categoria: "ERP Telecom Integrado",
         protocolo: "REST / HTTPS v2.4",
-        urlBase: "https://api.sgp.provedor.com.br/v1",
-        appId: "NAP_SGP_PROD_991",
-        token: "sgp_sec_token_99182374981729",
+        urlBase: "https://api.erp.provedor.com.br/v1",
+        appId: "NAP_ERP_PROD_991",
+        token: "erp_sec_token_99182374981729",
         autoDesbloqueio48h: true,
         avisoSonoroInadimplente: true,
         habilitarConsultaRadius: true,
@@ -2078,10 +2078,10 @@ let kanbanDeals = [
         ultimaSincronizacao: new Date().toISOString()
       }
     },
-    sgp: {
-      urlBase: "https://api.sgp.provedor.com.br/v1",
-      appId: "NAP_SGP_PROD_991",
-      token: "sgp_sec_token_99182374981729",
+    erp: {
+      urlBase: "https://api.erp.provedor.com.br/v1",
+      appId: "NAP_ERP_PROD_991",
+      token: "erp_sec_token_99182374981729",
       syncIntervalMinutes: 15,
       autoDesbloqueio48h: true,
       avisoSonoroInadimplente: true,
@@ -2226,7 +2226,7 @@ let kanbanDeals = [
       usuario: "Roberto Oliveira",
       usuarioEmail: "admin@provedor.com.br",
       usuarioRole: "admin",
-      modulo: "SGP / ERP",
+      modulo: "ERP / ERP",
       acao: "Alteração de Parâmetros de Integração ERP",
       detalhes: "Atualização da URL de webhook do IXC Soft e revalidação do token Bearer com 18ms de latência.",
       categoria: "configuracao",
@@ -2296,7 +2296,7 @@ let kanbanDeals = [
     usuario: string;
     usuarioEmail?: string;
     usuarioRole?: string;
-    modulo: 'Acessos' | 'SGP / ERP' | 'GenieACS (TR-069)' | 'Campanhas' | 'Segurança' | 'Configurações' | 'Sistema' | string;
+    modulo: 'Acessos' | 'ERP / ERP' | 'GenieACS (TR-069)' | 'Campanhas' | 'Segurança' | 'Configurações' | 'Sistema' | string;
     acao: string;
     detalhes: string;
     categoria?: 'acesso' | 'configuracao' | 'disparo' | 'comando' | 'seguranca' | string;
@@ -2354,7 +2354,7 @@ let kanbanDeals = [
         landingPage: { ...systemConfig.landingPage, ...(novosDados.landingPage || {}) },
         erpAtivo: novosDados.erpAtivo || systemConfig.erpAtivo,
         erps: { ...systemConfig.erps, ...(novosDados.erps || {}) },
-        sgp: { ...systemConfig.sgp, ...(novosDados.sgp || {}) },
+        erp: { ...systemConfig.erp, ...(novosDados.erp || {}) },
         telefonia: { ...systemConfig.telefonia, ...(novosDados.telefonia || {}) },
         whatsapp: { ...systemConfig.whatsapp, ...(novosDados.whatsapp || {}) },
         ia: { ...systemConfig.ia, ...(novosDados.ia || {}) },
@@ -2423,9 +2423,9 @@ let kanbanDeals = [
     }
   });
 
-  // Testar conexão SGP
-  app.post("/api/configuracoes/test-sgp", async (req, res) => {
-    // Simula teste de latência e saúde da API SGP
+  // Testar conexão ERP
+  app.post("/api/configuracoes/test-erp", async (req, res) => {
+    // Simula teste de latência e saúde da API ERP
     const inicio = Date.now();
     await new Promise(resolve => setTimeout(resolve, 380));
     const latencia = Date.now() - inicio;
@@ -2434,7 +2434,7 @@ let kanbanDeals = [
       success: true,
       status: "online",
       latenciaMs: latencia,
-      versaoApi: "SGP REST v8.4.2 Enterprise",
+      versaoApi: "ERP REST v8.4.2 Enterprise",
       servicos: {
         radius: "Operacional (Porta 1812/1813)",
         financeiro: "Operacional (Banco de Faturas Conectado)",
@@ -2554,7 +2554,7 @@ let kanbanDeals = [
       const criticos = auditLogs.filter(l => l.severidade === "critico").length;
       const atencao = auditLogs.filter(l => l.severidade === "atencao").length;
       const acessos = auditLogs.filter(l => l.modulo === "Acessos" || l.categoria === "acesso").length;
-      const sgpErp = auditLogs.filter(l => l.modulo.includes("SGP") || l.modulo.includes("ERP")).length;
+      const erpErp = auditLogs.filter(l => l.modulo.includes("ERP") || l.modulo.includes("ERP")).length;
       const genieacs = auditLogs.filter(l => l.modulo.includes("GenieACS")).length;
       const campanhas = auditLogs.filter(l => l.modulo.includes("Campanha") || l.categoria === "disparo").length;
 
@@ -2566,7 +2566,7 @@ let kanbanDeals = [
           criticos,
           atencao,
           acessos,
-          sgpErp,
+          erpErp,
           genieacs,
           campanhas,
           conformidade: {
@@ -3452,37 +3452,37 @@ let kanbanDeals = [
     });
   });
 
-  // --- MONITOR DE SINCRONIZAÇÃO EM TEMPO REAL (SGP & GENIEACS) ---
+  // --- MONITOR DE SINCRONIZAÇÃO EM TEMPO REAL (ERP & GENIEACS) ---
   let lastManualSyncTime = new Date().toISOString();
 
   app.get("/api/sync/status", async (req, res) => {
     const now = new Date();
     
-    // Conexão SGP
-    const sgpConfigured = Boolean(process.env.SGP_URL && process.env.SGP_APP && process.env.SGP_TOKEN);
-    let sgpLatency = 24 + Math.floor(Math.random() * 16);
-    let sgpStatus: 'online' | 'degradado' | 'offline' = 'online';
+    // Conexão ERP
+    const erpConfigured = Boolean(process.env.ERP_URL && process.env.ERP_APP && process.env.ERP_TOKEN);
+    let erpLatency = 24 + Math.floor(Math.random() * 16);
+    let erpStatus: 'online' | 'degradado' | 'offline' = 'online';
 
-    if (sgpConfigured) {
+    if (erpConfigured) {
       const startTime = Date.now();
       try {
         const timeoutCtrl = new AbortController();
         const timeoutId = setTimeout(() => timeoutCtrl.abort(), 2500);
-        const testRes = await fetch(`${process.env.SGP_URL}/api/v1/ping`, {
+        const testRes = await fetch(`${process.env.ERP_URL}/api/v1/ping`, {
           signal: timeoutCtrl.signal,
           headers: {
-            "app": process.env.SGP_APP || "",
-            "token": process.env.SGP_TOKEN || ""
+            "app": process.env.ERP_APP || "",
+            "token": process.env.ERP_TOKEN || ""
           }
         });
         clearTimeout(timeoutId);
-        sgpLatency = Date.now() - startTime;
+        erpLatency = Date.now() - startTime;
         if (!testRes.ok && testRes.status >= 500) {
-          sgpStatus = 'degradado';
+          erpStatus = 'degradado';
         }
       } catch (err) {
-        sgpStatus = 'online';
-        sgpLatency = 32;
+        erpStatus = 'online';
+        erpLatency = 32;
       }
     }
 
@@ -3503,7 +3503,7 @@ let kanbanDeals = [
     res.json({
       sucesso: true,
       timestamp: now.toISOString(),
-      status_geral: (sgpStatus === 'online' && acsStatus === 'online') ? 'operacional' : 'atencao',
+      status_geral: (erpStatus === 'online' && acsStatus === 'online') ? 'operacional' : 'atencao',
       uptime_pct: 99.98,
       ultima_sincronizacao: lastManualSyncTime,
       erpAtivo: erpAtivoId,
@@ -3511,23 +3511,23 @@ let kanbanDeals = [
         id: erpAtivoId,
         nome: activeErpData.nome || "IXC Soft (ERP Ativo)",
         protocolo: activeErpData.protocolo || "Webservice REST JSON",
-        endpoint: activeErpData.urlBase || process.env.SGP_URL || "https://ixc.naptelecom.com.br/webservice/v1",
-        status: sgpStatus,
-        latencia_ms: activeErpData.latenciaMs || sgpLatency,
-        modo: sgpConfigured ? 'producao' : 'sandbox',
-        clientes_sincronizados: sgpDatabase_mock.length,
+        endpoint: activeErpData.urlBase || process.env.ERP_URL || "https://ixc.naptelecom.com.br/webservice/v1",
+        status: erpStatus,
+        latencia_ms: activeErpData.latenciaMs || erpLatency,
+        modo: erpConfigured ? 'producao' : 'sandbox',
+        clientes_sincronizados: erpDatabase_mock.length,
         faturas_sincronizadas: 142,
         desbloqueios_pendentes: 0,
         ultima_resposta: "HTTP 200 OK (Homologado NAP)"
       },
-      sgp: {
-        nome: activeErpData.nome || "SGP (ERP Telecom)",
+      erp: {
+        nome: activeErpData.nome || "ERP (ERP Telecom)",
         protocolo: activeErpData.protocolo || "REST / HTTPS v2.4",
-        endpoint: activeErpData.urlBase || process.env.SGP_URL || "https://api.sgp.net.br (Emulado)",
-        status: sgpStatus,
-        latencia_ms: activeErpData.latenciaMs || sgpLatency,
-        modo: sgpConfigured ? 'producao' : 'sandbox',
-        clientes_sincronizados: sgpDatabase_mock.length,
+        endpoint: activeErpData.urlBase || process.env.ERP_URL || "https://api.erp.net.br (Emulado)",
+        status: erpStatus,
+        latencia_ms: activeErpData.latenciaMs || erpLatency,
+        modo: erpConfigured ? 'producao' : 'sandbox',
+        clientes_sincronizados: erpDatabase_mock.length,
         faturas_sincronizadas: 142,
         desbloqueios_pendentes: 0,
         ultima_resposta: "HTTP 200 OK"
@@ -3565,8 +3565,8 @@ let kanbanDeals = [
       timestamp: lastManualSyncTime,
       tempo_gasto_ms: duration,
       detalhes: {
-        sgp_novos_clientes: 0,
-        sgp_faturas_atualizadas: 2,
+        erp_novos_clientes: 0,
+        erp_faturas_atualizadas: 2,
         genieacs_telemetrias_atualizadas: genieacsDevices.length,
         status: "sincronizado"
       }
@@ -3922,19 +3922,19 @@ Solicitação do assinante: "${prompt}"`;
       ]
     },
     {
-      id: "sgp",
-      nome: "SGP (Sistema de Gestão de Provedores)",
-      sigla: "SGP",
+      id: "erp",
+      nome: "ERP (Sistema de Gestão de Provedores)",
+      sigla: "ERP",
       categoria: "ERP Telecom Integrado",
       protocolo: "REST / HTTPS v2.4",
       corBadge: "from-slate-700 to-slate-900",
-      versaoApiHomologada: "SGP REST v8.4.2 Enterprise",
-      docUrl: "https://sgp.net.br",
+      versaoApiHomologada: "ERP REST v8.4.2 Enterprise",
+      docUrl: "https://erp.net.br",
       descricao: "ERP telecom nativo integrado com suporte completo a clientes, financeiro, emissão de PIX dinâmico e controle de Radius.",
       campos: [
-        { key: "urlBase", label: "URL Base do SGP", placeholder: "https://api.sgp.provedor.com.br/v1", tipo: "url", obrigatorio: true, ajuda: "Endereço da API do seu SGP" },
-        { key: "appId", label: "App ID / Código da Aplicação", placeholder: "NAP_SGP_PROD_991", tipo: "text", obrigatorio: true, ajuda: "Identificador da aplicação cadastrada no SGP" },
-        { key: "token", label: "Token de Acesso SGP", placeholder: "sgp_sec_token_99182374981729", tipo: "password", obrigatorio: true, ajuda: "Token gerado no painel do SGP" }
+        { key: "urlBase", label: "URL Base do ERP", placeholder: "https://api.erp.provedor.com.br/v1", tipo: "url", obrigatorio: true, ajuda: "Endereço da API do seu ERP" },
+        { key: "appId", label: "App ID / Código da Aplicação", placeholder: "NAP_ERP_PROD_991", tipo: "text", obrigatorio: true, ajuda: "Identificador da aplicação cadastrada no sistema" },
+        { key: "token", label: "Token de Acesso ERP", placeholder: "erp_sec_token_99182374981729", tipo: "password", obrigatorio: true, ajuda: "Token gerado no painel do ERP" }
       ],
       recursos: [
         "Visão 360 do Cliente e Histórico Financeiro",
@@ -3944,7 +3944,7 @@ Solicitação do assinante: "${prompt}"`;
         "Status de Conexão no Servidor Radius"
       ],
       passoAPasso: [
-        "No painel do SGP, vá em Configurações > Integrações > API SGP.",
+        "No painel do ERP, vá em Configurações > Integrações > API ERP.",
         "Crie ou recupere o App ID e Token de acesso do seu provedor.",
         "Habilite os módulos de atendimento, financeiro e desbloqueio.",
         "Preencha as credenciais no NAP e clique em Testar Conexão.",
@@ -4026,7 +4026,7 @@ Solicitação do assinante: "${prompt}"`;
     // Auditoria
     registrarAuditoria({
       usuario: "Admin NAP (Operador)",
-      modulo: "SGP / ERP",
+      modulo: "ERP / ERP",
       acao: `Ativação do ERP Primário: ${encontrado.nome}`,
       detalhes: `Provedor definiu o ERP ativo como ${encontrado.nome} (${encontrado.protocolo}).`,
       categoria: "configuracao",
@@ -4074,7 +4074,7 @@ Solicitação do assinante: "${prompt}"`;
 
     registrarAuditoria({
       usuario: "Admin NAP (Operador)",
-      modulo: "SGP / ERP",
+      modulo: "ERP / ERP",
       acao: `Atualização de Parâmetros: ${encontrado.nome}`,
       detalhes: `Parâmetros de conexão e credenciais do ERP ${encontrado.nome} (${encontrado.sigla}) foram salvos e revalidados pelo operador.`,
       categoria: "configuracao",
@@ -4100,7 +4100,7 @@ Solicitação do assinante: "${prompt}"`;
       ixc: { base: 36, jitter: 12 },
       hubsoft: { base: 29, jitter: 8 },
       mikweb: { base: 24, jitter: 6 },
-      sgp: { base: 31, jitter: 9 },
+      erp: { base: 31, jitter: 9 },
       mksolutions: { base: 45, jitter: 15 },
       ispfy: { base: 38, jitter: 10 },
       radiusnet: { base: 41, jitter: 11 }

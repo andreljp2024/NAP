@@ -78,7 +78,7 @@ export default function PortalDashboard() {
     if (clientData.faturas && Array.isArray(clientData.faturas) && clientData.faturas.length > 0) {
       setFaturas(clientData.faturas);
     } else {
-      fetch('/api/sgp/faturas')
+      fetch('/api/erp/faturas')
         .then(res => res.json())
         .then(data => setFaturas(data))
         .catch(() => {});
@@ -120,7 +120,7 @@ export default function PortalDashboard() {
         setPixCopiado(true);
         setTimeout(() => setPixCopiado(false), 3500);
       } else {
-        const res = await fetch(`/api/sgp/pix/${faturaPendente.id}`, { method: 'POST' });
+        const res = await fetch(`/api/erp/pix/${faturaPendente.id}`, { method: 'POST' });
         const data = await res.json();
         if (data.sucesso && data.codigo_pix) {
           setPixCode(data.codigo_pix);
@@ -140,7 +140,7 @@ export default function PortalDashboard() {
     if (!faturaPendente) return;
     setLoadingBoleto(true);
     try {
-      const res = await fetch(`/api/sgp/boleto/${faturaPendente.id}`, { method: 'POST' });
+      const res = await fetch(`/api/erp/boleto/${faturaPendente.id}`, { method: 'POST' });
       const data = await res.json();
       if (data.sucesso && data.url_pdf) {
         setBoletoGerado(data.url_pdf);
@@ -376,7 +376,7 @@ export default function PortalDashboard() {
         <QuickAction icon={<Wifi size={20} />} label="Wi-Fi & Senha" onClick={() => setIsWifiModalOpen(true)} />
         <QuickAction icon={<Gauge size={20} />} label="Speedtest" onClick={() => setIsSpeedtestModalOpen(true)} />
         <QuickAction icon={<BarChart2 size={20} />} label="Consumo" onClick={() => setIsConsumoModalOpen(true)} />
-        <QuickAction icon={<CreditCard size={20} />} label="Faturas SGP" onClick={() => navigate('/portal/faturas')} />
+        <QuickAction icon={<CreditCard size={20} />} label="Faturas" onClick={() => navigate('/portal/faturas')} />
         <QuickAction icon={<HeadphonesIcon size={20} />} label="Suporte Técnico" onClick={() => navigate('/portal/suporte')} />
         <QuickAction icon={<Settings size={20} />} label="Minha Conta" onClick={() => navigate('/portal/conta')} />
       </div>
